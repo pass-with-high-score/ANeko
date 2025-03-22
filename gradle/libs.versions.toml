@@ -13,6 +13,7 @@ monetcompat = "0.4.1"
 paletteKtx = "1.0.0"
 preferenceKtx = "1.2.1"
 timber = "4.7.1"
+coreKtx = "1.15.0"
 
 [libraries]
 androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraintlayout" }
@@ -27,8 +28,10 @@ material = { module = "com.google.android.material:material", version.ref = "mat
 kotlin-stdlib-jdk8 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlinStdlibJdk8" }
 monetcompat = { module = "com.github.KieronQuinn:MonetCompat", version.ref = "monetcompat" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+android-library = { id = "com.android.library", version.ref = "agp" }
 

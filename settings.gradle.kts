@@ -27,3 +27,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "ANeko"
 include(":app")
+include(":skin")
+include(":skin:sample")

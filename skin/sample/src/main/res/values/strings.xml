@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SampleSkin</string>
+
+    <string name="skin_name">Sample</string>
+
+    <string name="msg_usage">Choose skin from ANeko settings.</string>
+    <string name="msg_no_package">This is skin for ANeko.\nTo use this, install ANeko and choose skin.</string>
+
+    <string name="msg_unexpected_err">Something is wrong.</string>
+</resources>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<motion-params acceleration="160"
+    maxVelocity="100"
+    deaccelerationDistance="60"
+    proximityDistance="10"
+    initialState="stop"
+    awakeState="awake"
+    moveStatePrefix="move"
+    wallStatePrefix="wall"
+    >
+    <motion state="stop" nextState="wait" checkWall="true">
+        <item drawable="@drawable/stop" duration="5000" />
+    </motion>
+
+    <motion state="wait">
+        <item drawable="@drawable/wait" />
+    </motion>
+
+    <motion state="awake" nextState="stop" checkMove="true">
+        <item drawable="@drawable/awake" duration="750" />
+    </motion>
+
+    <motion state="moveUp">
+        <repeat-item>
+            <item drawable="@drawable/up1" duration="250" />
+            <item drawable="@drawable/up2" duration="250" />
+        </repeat-item>
+    </motion>
+
+    <motion state="moveDown">
+        <repeat-item>
+            <item drawable="@drawable/down1" duration="250" />
+            <item drawable="@drawable/down2" duration="250" />
+        </repeat-item>
+    </motion>
+
+    <motion state="moveLeft">
+        <repeat-item>
+            <item drawable="@drawable/left1" duration="250" />
+            <item drawable="@drawable/left2" duration="250" />
+        </repeat-item>
+    </motion>
+
+    <motion state="moveRight">
+        <repeat-item>
+            <item drawable="@drawable/right1" duration="250" />
+            <item drawable="@drawable/right2" duration="250" />
+        </repeat-item>
+    </motion>
+
+    <motion state="moveUpLeft">
+        <repeat-item>
+            <item drawable="@drawable/upleft1" duration="250" />
+            <item drawable="@drawable/upleft2" duration="250" />
+        </repeat-item>
+    </motion>
+
+    <motion state="moveUpRight">
+        <repeat-item>
+            <item drawable="@drawable/upright1" duration="250" />
+            <item drawable="@drawable/upright2" duration="250" />
+        </repeat-item>
+    </motion>
+
+    <motion state="moveDownRight">
+        <repeat-item>
+            <item drawable="@drawable/dwright1" duration="250" />
+            <item drawable="@drawable/dwright2" duration="250" />
+        </repeat-item>
+    </motion>
+
+    <motion state="moveDownLeft">
+        <repeat-item>
+            <item drawable="@drawable/dwleft1" duration="250" />
+            <item drawable="@drawable/dwleft2" duration="250" />
+        </repeat-item>
+    </motion>
+
+    <!-- optional: when left side of display -->
+    <motion state="wallLeft" nextState="wait">
+        <repeat-item repeatCount="3">
+            <item drawable="@drawable/wallleft1" duration="250" />
+            <item drawable="@drawable/wallleft2" duration="250" />
+        </repeat-item>
+    </motion>
+
+    <!-- optional: when right side of display -->
+    <motion state="wallRight" nextState="wait">
+        <repeat-item repeatCount="3">
+            <item drawable="@drawable/wallright1" duration="250" />
+            <item drawable="@drawable/wallright2" duration="250" />
+        </repeat-item>
+    </motion>
+</motion-params>
