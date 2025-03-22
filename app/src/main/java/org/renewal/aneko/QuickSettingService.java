@@ -7,14 +7,12 @@ import android.provider.Settings;
 import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
 
-import androidx.annotation.RequiresApi;
-
-@RequiresApi(api = Build.VERSION_CODES.N)
 public class QuickSettingService extends TileService {
     private Tile tile;
     private SharedPreferences prefs;
 
     SharedPreferences.OnSharedPreferenceChangeListener prefsListener = (sharedPreferences, key) -> {
+        assert key != null;
         if (key.equals(AnimationService.PREF_KEY_ENABLE)) {
             if (isServiceAvailable()) {
                 if (prefs.getBoolean(AnimationService.PREF_KEY_ENABLE, false)) {
@@ -67,6 +65,6 @@ public class QuickSettingService extends TileService {
     }
 
     private boolean isServiceAvailable() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Settings.canDrawOverlays(this);
+        return Settings.canDrawOverlays(this);
     }
 }

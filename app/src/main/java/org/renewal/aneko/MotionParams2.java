@@ -3,7 +3,6 @@ package org.renewal.aneko;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.Xml;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -17,41 +16,15 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Locale;
 
+import timber.log.Timber;
+
 public class MotionParams2 extends MotionParams {
-//  public enum MoveDirection {
-//    UP, DOWN, LEFT, RIGHT, UP_LEFT, UP_RIGHT, DOWN_LEFT, DOWN_RIGHT
-//  }
-
-//  public enum WallDirection {
-//    UP, DOWN, LEFT, RIGHT
-//  }
-
-//  public float acceleration;
-//  public float max_velocity;
-//  public float deacceleration_distance;
-//  public float proximity_distance;
-//
-//  public String initial_state;
-//  public String awake_state;
-//  public String move_state_prefix;
-//  public String wall_state_prefix;
 
 
-    private String resourceBaseDir;
+    private final String resourceBaseDir;
 
-    private HashMap<String, Motion> motions = new HashMap<>();
+    private final HashMap<String, Motion> motions = new HashMap<>();
 
-//  public static class Motion {
-//    public String name;
-//    public String next_state = null;
-//
-//    public boolean check_move = false;
-//    public boolean check_wall = false;
-//
-//    public MotionDrawable items = null;
-//  }
-
-    //  public MotionParams2(Context context, Resources res, int resid) {
     MotionParams2(Resources res, File baseDir, String xmlFile) {
 
         this.resourceBaseDir = baseDir.getAbsolutePath();
@@ -64,18 +37,9 @@ public class MotionParams2 extends MotionParams {
             parseXml(res, parser, attrs);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            Timber.e(e);
             throw new IllegalArgumentException(e);
         }
-
-//    XmlPullParser xml = res.getXml(resid);
-//    AttributeSet attrs = Xml.asAttributeSet(xml);
-//    try {
-//      parseXml(res, xml, attrs);
-//    } catch (Exception e) {
-//      throw new IllegalArgumentException(
-//          "Load failed: " + res.getResourceName(resid), e);
-//    }
     }
 
     public float getAcceleration() {
@@ -86,8 +50,8 @@ public class MotionParams2 extends MotionParams {
         return max_velocity;
     }
 
-    public float getDeaccelerationDistance() {
-        return deacceleration_distance;
+    public float getDecelerationDistance() {
+        return deceleration_distance;
     }
 
     public float getProximityDistance() {
@@ -112,20 +76,9 @@ public class MotionParams2 extends MotionParams {
             case DOWN_LEFT:
             case LEFT:
                 return move_state_prefix + "Left";
-//        break;
             default:
                 return move_state_prefix + "Right";
         }
-//    return move_state_prefix +
-//        (dir == MoveDirection.UP ? "Up" :
-//            dir == MoveDirection.DOWN ? "Down" :
-//                dir == MoveDirection.LEFT ? "Left" :
-//                    dir == MoveDirection.RIGHT ? "Right" :
-//                        dir == MoveDirection.UP_LEFT ? "UpLeft" :
-//                            dir == MoveDirection.UP_RIGHT ? "UpRight" :
-//                                dir == MoveDirection.DOWN_LEFT ? "DownLeft" :
-//                                    dir == MoveDirection.DOWN_RIGHT ? "DownRight" :
-//                                        "");
     }
 
     public String getWallState(WallDirection dir) {
@@ -187,8 +140,8 @@ public class MotionParams2 extends MotionParams {
         float density = res.getDisplayMetrics().density;
         acceleration = density * attrs.getAttributeIntValue(
                 null, ATTR_ACCELERATION, DEF_ACCELERATION);
-        deacceleration_distance = density * attrs.getAttributeIntValue(
-                null, ATTR_DEACCELERATION, DEF_DEACCELERATE_DISTANCE);
+        deceleration_distance = density * attrs.getAttributeIntValue(
+                null, ATTR_ACCELERATION, DEF_DECELERATE_DISTANCE);
         max_velocity = density * attrs.getAttributeIntValue(
                 null, ATTR_MAX_VELOCITY, DEF_MAX_VELOCITY);
         proximity_distance = density * attrs.getAttributeIntValue(
@@ -281,8 +234,6 @@ public class MotionParams2 extends MotionParams {
 
     public void parseItem(Resources res, MotionDrawable items,
                           XmlPullParser xml, AttributeSet attrs) {
-//    int drawable = attrs.getAttributeResourceValue(
-//        null, ATTR_ITEM_DRAWABLE, 0);
         int duration = attrs.getAttributeIntValue(
                 null, ATTR_ITEM_DURATION, -1);
         String filename = attrs.getAttributeValue(null, ATTR_ITEM_DRAWABLE);
@@ -300,8 +251,6 @@ public class MotionParams2 extends MotionParams {
         } else {
             Drawable d = Drawable.createFromPath(resourceBaseDir + "/" + filename + ".png");
             assert d != null;
-            Log.d("AAAA", "png :" + filename + " bs=" + d.getBounds());
-//    items.addFrame(res.getDrawable(drawable), duration);
             items.addFrame(d, duration);
         }
     }

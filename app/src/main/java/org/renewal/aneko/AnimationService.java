@@ -14,6 +14,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ServiceInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Point;
@@ -24,7 +25,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -43,6 +43,8 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Random;
+
+import timber.log.Timber;
 
 public class AnimationService extends Service {
     public static final String ACTION_START = "org.renewal.aneko.action.START";
@@ -171,24 +173,8 @@ public class AnimationService extends Service {
             wm.addView(this.touch_view, touch_params);
             this.image_view = new ImageView(this);
             this.image_params = new LayoutParams(this.image_width, this.image_height, Build.VERSION.SDK_INT > 25 ? 2038 : 2006, 536, -3);
-            this.image_params.gravity = 51; //TODO : Gravity == 51?
+            this.image_params.gravity = 51;
             wm.addView(this.image_view, this.image_params);
-
-            //TODO : balloon
-            /*
-            this.balloonV = new ImageView(this);
-            this.balloonV.setImageResource(R.drawable.balloon);
-            this.balloonParams = new LayoutParams(100, 80, Build.VERSION.SDK_INT > 25 ? 2038 : 2006, 536, -3);
-            this.balloonParams.gravity = 51;
-            wm.addView(this.balloonV, this.balloonParams);
-            this.textV = new TextView(this);
-            this.textParams = new LayoutParams(100, (int) (((double) 80) * 0.75d), Build.VERSION.SDK_INT > 25 ? 2038 : 2006, 536, -3);
-            this.textParams.gravity = 51;
-            this.textV.setTextColor(-16777216);
-            this.textV.setGravity(17);
-            this.textV.setTextSize(2, 10.0f);
-            wm.addView(this.textV, this.textParams);
-            setBalloonVisible(this.showTimeBattery);*/
             requestAnimate();
         }
 
@@ -248,7 +234,7 @@ public class AnimationService extends Service {
         PendingIntent intent = PendingIntent.getService(
                 this, 0,
                 new Intent(this, AnimationService.class).setAction(ACTION_TOGGLE),
-                Build.VERSION.SDK_INT >= 23 ? PendingIntent.FLAG_IMMUTABLE : 0);
+                PendingIntent.FLAG_IMMUTABLE);
 
         if (Build.VERSION.SDK_INT > 25) {
             NotificationChannel channel = new NotificationChannel("ANeko", "ANeko Service",
@@ -271,7 +257,12 @@ public class AnimationService extends Service {
         Notification notify = builder.build();
         stopForeground(true);
         if (start) {
-            startForeground(1, notify);
+            // Modified to add foreground service type for Android Q (API 29) and above
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                startForeground(1, notify, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK);
+            } else {
+                startForeground(1, notify);
+            }
             return;
         }
         if (this.prefs.getBoolean(PREF_KEY_ENABLE, true)) {
@@ -281,7 +272,7 @@ public class AnimationService extends Service {
 
     private boolean loadMotionState() {
         String skin = prefs.getString(PREF_KEY_SKIN_COMPONENT, "");
-        if (skin.contains(".xml") || skin.equals("")) return loadMotion_dir();
+        if (skin.contains(".xml") || skin.isEmpty()) return loadMotion_dir();
         else return loadMotion_apk();
     }
 
@@ -320,8 +311,8 @@ public class AnimationService extends Service {
 
             loaded = true;
         } catch (Exception e) {
-            Toast.makeText(this, "" + e.getMessage(), Toast.LENGTH_LONG).show();
-            e.printStackTrace();
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+            Timber.e(e);
         }
         if (loaded) {
             afterMotionLoaded();
@@ -346,7 +337,7 @@ public class AnimationService extends Service {
             MotionParams params = new MotionParams(res, rid);
             motion_state.setParams(params);
         } catch (Exception e) {
-            e.printStackTrace();
+           Timber.e(e);
             Toast.makeText(this, R.string.msg_skin_load_failed,
                             Toast.LENGTH_LONG)
                     .show();
@@ -401,7 +392,7 @@ public class AnimationService extends Service {
         try {
             v = Integer.parseInt(prefs.getString(PREF_KEY_SIZE, "240"));
         } catch (NumberFormatException e) {
-            e.printStackTrace();
+            Timber.e(e);
         }
         this.image_width = this.image_height = v;
 
@@ -440,18 +431,6 @@ public class AnimationService extends Service {
         image_view.setImageDrawable(drawable);
         drawable.stop();
         drawable.start();
-
-        //TODO : balloon
-        //balloonV.getDrawable().setAlpha(motion_state.alpha);
-    }
-
-    void updateTextV() {
-        WindowManager wm =
-                (WindowManager) getSystemService(WINDOW_SERVICE);
-        wm.updateViewLayout(image_view, image_params);
-//    textParams.x = pt.x + 100;
-//    textParams.y = pt.y;
-        wm.updateViewLayout(textV, textParams);
     }
 
     private void updatePosition() {
@@ -459,14 +438,11 @@ public class AnimationService extends Service {
         image_params.x = pt.x;
         image_params.y = pt.y;
 
-        WindowManager wm =
-                (WindowManager) getSystemService(WINDOW_SERVICE);
+        WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
         assert wm != null;
         wm.updateViewLayout(image_view, image_params);
 
-        if (
-                textV != null
-                        && balloonV != null) {
+        if (textV != null && balloonV != null) {
             int w = image_view.getWidth();
             int cx = pt.x + w / 2;
             balloonParams.x = cx - balloonV.getWidth() / 2;
@@ -494,7 +470,6 @@ public class AnimationService extends Service {
             Calendar cal = Calendar.getInstance();
             String ts = String.format(Locale.KOREAN, "%02d:%02d", cal.get(Calendar.HOUR), cal.get(Calendar.MINUTE));
             if (batteryInfo != null) {
-//      batteryInfo.getLevel() + batteryInfo.get
                 textV.setText(MessageFormat.format("{0}\n{1}%", ts, batteryInfo.level));
             } else {
                 textV.setText(MessageFormat.format("{0}\nno battery info.", ts));
@@ -570,69 +545,20 @@ public class AnimationService extends Service {
                 AnimationService.this.batteryInfo = new BatteryInfo(intent);
 
                 requestAnimate();
-//        Intent updateIntent = new Intent(context, UpdateService.class);
-//        updateIntent.setAction(UpdateService.ACTION_BATTERY_CHANGED);
-//        batteryInfo.saveToIntent(updateIntent);
-//        context.startService(updateIntent);
             } else if (Intent.ACTION_BATTERY_LOW.equals(intent.getAction())) {
 
                 batteryOk = false;
                 requestAnimate();
-
-//        Intent updateIntent = new Intent(context, UpdateService.class);
-//        updateIntent.setAction(UpdateService.ACTION_BATTERY_LOW);
-//        context.startService(updateIntent);
             } else if (Intent.ACTION_BATTERY_OKAY.equals(intent.getAction())) {
                 batteryOk = true;
                 requestAnimate();
-//        Intent updateIntent = new Intent(context, UpdateService.class);
-//        updateIntent.setAction(UpdateService.ACTION_BATTERY_OKAY);
-//        context.startService(updateIntent);
             }
-
-
-//      String[] pkgnames = null;
-//      if (Intent.ACTION_PACKAGE_ADDED.equals(intent.getAction()) &&
-//          intent.getData() != null) {
-//        pkgnames = new String[]{
-//            intent.getData().getEncodedSchemeSpecificPart()};
-//      } else if (ACTION_EXTERNAL_APPLICATIONS_AVAILABLE.equals(
-//          intent.getAction())) {
-//        pkgnames = intent.getStringArrayExtra(
-//            EXTRA_CHANGED_PACKAGE_LIST);
-//      }
-//      if (pkgnames == null) {
-//        return;
-//      }
-//
-//      String skin = prefs.getString(PREF_KEY_SKIN_COMPONENT, null);
-//      ComponentName skin_comp =
-//          (skin == null ? null :
-//              ComponentName.unflattenFromString(skin));
-//      if (skin_comp == null) {
-//        return;
-//      }
-//
-//      String skin_pkg = skin_comp.getPackageName();
-//      for (String pkgname : pkgnames) {
-//        if (skin_pkg.equals(pkgname)) {
-//          if (loadMotionState()) {
-//            requestAnimate();
-//          }
-//          break;
-//        }
-//      }
         }
     }
 
     private class TouchListener implements View.OnTouchListener {
         @SuppressLint("ClickableViewAccessibility")
         public boolean onTouch(View v, MotionEvent ev) {
-
-            Log.d("AAAA", ev.getRawX() + " , " + ev.getRawY() + " , act=" + ev.getAction());
-//      Log.d("AAAA", "image: " + image_view.getWidth() + " , " + image_view.getHeight());
-
-
             if (motion_state == null) {
                 return false;
             }
@@ -649,7 +575,6 @@ public class AnimationService extends Service {
                 float x = random.nextInt(dw);
                 float y = random.nextInt(dh);
                 motion_state.setTargetPosition(x, y);
-//        motion_state.setTargetPosition(ev.getX(), ev.getY());
                 requestAnimate();
             } else if (ev.getAction() == MotionEvent.ACTION_CANCEL) {
                 motion_state.forceStop();
@@ -715,7 +640,7 @@ public class AnimationService extends Service {
 
             float acceleration = params.getAcceleration();
             float max_velocity = params.getMaxVelocity();
-            float decelerate_distance = params.getDeaccelerationDistance();
+            float decelerate_distance = params.getDecelerationDistance();
 
             vx += acceleration * interval * dx / len;
             vy += acceleration * interval * dy / len;
@@ -826,18 +751,6 @@ public class AnimationService extends Service {
         }
 
         private void changeToMovingState() {
-//      int dir = (int) (Math.atan2(vy, vx) * 4 / Math.PI + 8.5) % 8;
-//      MotionParams.MoveDirection dirs[] = {
-//          MotionParams.MoveDirection.RIGHT,
-//          MotionParams.MoveDirection.DOWN_RIGHT,
-//          MotionParams.MoveDirection.DOWN,
-//          MotionParams.MoveDirection.DOWN_LEFT,
-//          MotionParams.MoveDirection.LEFT,
-//          MotionParams.MoveDirection.UP_LEFT,
-//          MotionParams.MoveDirection.UP,
-//          MotionParams.MoveDirection.UP_RIGHT
-//      };
-//      String nstate = params.getMoveState(dirs[dir]);
 
             MotionParams.MoveDirection d = vx >= 0
                     ? MotionParams.MoveDirection.RIGHT
@@ -875,8 +788,6 @@ public class AnimationService extends Service {
         }
 
         private void setTargetPosition(float x, float y) {
-
-//      Log.d("AAAA", "x=" + x + " y=" + y);
 
             if (!ICS_OR_LATER) {
                 long cur_time = System.currentTimeMillis();

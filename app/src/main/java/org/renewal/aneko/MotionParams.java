@@ -29,7 +29,7 @@ public class MotionParams {
 
   static final String ATTR_ACCELERATION = "acceleration";
   static final String ATTR_MAX_VELOCITY = "maxVelocity";
-  static final String ATTR_DEACCELERATION = "deaccelerationDistance";
+  static final String ATTR_DECELERATION = "decelerationDistance";
   static final String ATTR_PROXIMITY = "proximityDistance";
 
   static final String ATTR_INITIAL_STATE = "initialState";
@@ -49,7 +49,7 @@ public class MotionParams {
 
   static final int DEF_ACCELERATION = 160; // dp per sec^2
   static final int DEF_MAX_VELOCITY = 100; // dp per sec
-  static final int DEF_DEACCELERATE_DISTANCE = 100; // dp
+  static final int DEF_DECELERATE_DISTANCE = 100; // dp
   static final int DEF_PROXIMITY_DISTANCE = 10; // dp
 
   static final String DEF_INITIAL_STATE = "stop";
@@ -59,7 +59,7 @@ public class MotionParams {
 
   public float acceleration;
   public float max_velocity;
-  public float deacceleration_distance;
+  public float deceleration_distance;
   public float proximity_distance;
 
   public String initial_state;
@@ -79,14 +79,14 @@ public class MotionParams {
     public MotionDrawable items = null;
   }
   public MotionParams() {}
-  public MotionParams(Resources res, int resid) {
-    XmlPullParser xml = res.getXml(resid);
+  public MotionParams(Resources res, int resId) {
+    XmlPullParser xml = res.getXml(resId);
     AttributeSet attrs = Xml.asAttributeSet(xml);
     try {
       parseXml(res, xml, attrs);
     } catch (Exception e) {
       throw new IllegalArgumentException(
-          "Load failed: " + res.getResourceName(resid), e);
+          "Load failed: " + res.getResourceName(resId), e);
     }
   }
 
@@ -98,8 +98,8 @@ public class MotionParams {
     return max_velocity;
   }
 
-  public float getDeaccelerationDistance() {
-    return deacceleration_distance;
+  public float getDecelerationDistance() {
+    return deceleration_distance;
   }
 
   public float getProximityDistance() {
@@ -188,8 +188,8 @@ public class MotionParams {
     float density = res.getDisplayMetrics().density;
     acceleration = density * attrs.getAttributeIntValue(
         null, ATTR_ACCELERATION, DEF_ACCELERATION);
-    deacceleration_distance = density * attrs.getAttributeIntValue(
-        null, ATTR_DEACCELERATION, DEF_DEACCELERATE_DISTANCE);
+    deceleration_distance = density * attrs.getAttributeIntValue(
+        null, ATTR_DECELERATION, DEF_DECELERATE_DISTANCE);
     max_velocity = density * attrs.getAttributeIntValue(
         null, ATTR_MAX_VELOCITY, DEF_MAX_VELOCITY);
     proximity_distance = density * attrs.getAttributeIntValue(

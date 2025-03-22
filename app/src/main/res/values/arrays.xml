@@ -1,54 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <!-- transparency -->
-  <string-array name="pref_motion_transparency_entries">
-    <item>0% (opaque)</item>
-    <item>20%</item>
-    <item>40%</item>
-    <item>60%</item>
-    <item>80%</item>
-  </string-array>
+    <!-- transparency -->
+    <string-array name="pref_motion_transparency_entries">
+        <item>0% (opaque)</item>
+        <item>20%</item>
+        <item>40%</item>
+        <item>60%</item>
+        <item>80%</item>
+    </string-array>
 
-  <string-array name="pref_motion_transparency_entry_values">
-    <item>0.0</item>
-    <item>0.2</item>
-    <item>0.4</item>
-    <item>0.6</item>
-    <item>0.8</item>
-  </string-array>
+    <string-array name="pref_motion_transparency_entry_values">
+        <item>0.0</item>
+        <item>0.2</item>
+        <item>0.4</item>
+        <item>0.6</item>
+        <item>0.8</item>
+    </string-array>
 
-  <string-array name="pref_motion_size">
-    <item>40x40</item>
-    <item>80x80</item>
-    <item>120x120</item>
-    <item>160x160</item>
-    <item>200x200</item>
-    <item>240x240</item>
-    <item>280x280</item>
-    <item>320x320</item>
-    <item>360x360</item>
-    <item>400x400</item>
-    <item>440x440</item>
-    <item>480x480</item>
-    <item>520x520</item>
-  </string-array>
+    <string-array name="pref_motion_size">
+        <item>40x40</item>
+        <item>80x80</item>
+        <item>120x120</item>
+        <item>160x160</item>
+        <item>200x200</item>
+        <item>240x240</item>
+        <item>280x280</item>
+        <item>320x320</item>
+        <item>360x360</item>
+        <item>400x400</item>
+        <item>440x440</item>
+        <item>480x480</item>
+        <item>520x520</item>
+    </string-array>
 
-  <string-array name="pref_motion_size_entry_values">
-    <item>40</item>
-    <item>80</item>
-    <item>120</item>
-    <item>160</item>
-    <item>200</item>
-    <item>240</item>
-    <item>280</item>
-    <item>320</item>
-    <item>360</item>
-    <item>400</item>
-    <item>440</item>
-    <item>480</item>
-    <item>520</item>
-  </string-array>
+    <string-array name="pref_motion_size_entry_values">
+        <item>40</item>
+        <item>80</item>
+        <item>120</item>
+        <item>160</item>
+        <item>200</item>
+        <item>240</item>
+        <item>280</item>
+        <item>320</item>
+        <item>360</item>
+        <item>400</item>
+        <item>440</item>
+        <item>480</item>
+        <item>520</item>
+    </string-array>
 
-  <!-- behaviour -->
+    <!-- behaviour -->
 
 </resources>

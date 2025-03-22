@@ -1,0 +1,34 @@
+[versions]
+agp = "8.9.0"
+androidxJunit = "1.2.1"
+appcompat = "1.7.0"
+constraintlayout = "2.2.1"
+espressoCoreVersion = "3.6.1"
+fluentSystemIcons = "1.1.184"
+kotlin = "2.0.21"
+junit = "4.13.2"
+kotlinStdlibJdk8 = "2.1.0"
+material = "1.12.0"
+monetcompat = "0.4.1"
+paletteKtx = "1.0.0"
+preferenceKtx = "1.2.1"
+timber = "4.7.1"
+
+[libraries]
+androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraintlayout" }
+androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
+androidx-espresso-core-v350 = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCoreVersion" }
+androidx-junit-v114 = { module = "androidx.test.ext:junit", version.ref = "androidxJunit" }
+androidx-palette-ktx = { module = "androidx.palette:palette-ktx", version.ref = "paletteKtx" }
+androidx-preference-ktx = { module = "androidx.preference:preference-ktx", version.ref = "preferenceKtx" }
+fluent-system-icons = { module = "com.microsoft.design:fluent-system-icons", version.ref = "fluentSystemIcons" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+material = { module = "com.google.android.material:material", version.ref = "material" }
+kotlin-stdlib-jdk8 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlinStdlibJdk8" }
+monetcompat = { module = "com.github.KieronQuinn:MonetCompat", version.ref = "monetcompat" }
+timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+

@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="fill_parent"
-              android:layout_height="wrap_content"
-              android:orientation="horizontal"
-              android:gravity="center_vertical"
-              android:minHeight="?android:attr/listPreferredItemHeight"
-              android:paddingLeft="10dip"
-              android:paddingRight="15dip"
-              >
-  <ImageView
-     android:id="@+id/item_icon"
-     android:layout_width="@android:dimen/app_icon_size"
-     android:layout_height="@android:dimen/app_icon_size"
-     android:scaleType="fitCenter"
-     />
-  <TextView
-     android:id="@+id/item_label"
-     android:layout_width="wrap_content"
-     android:layout_height="wrap_content"
-     android:layout_weight="1"
-     android:textAppearance="?android:attr/textAppearanceMedium"
-     android:textColor="?android:attr/textColorAlertDialogListItem"
-     android:maxLines="2"
-     android:paddingLeft="16dp"
-     android:paddingRight="16dip"
-     />
-  <RadioButton
-     android:id="@+id/item_check"
-     android:layout_width="wrap_content"
-     android:layout_height="wrap_content"
-     android:clickable="false"
-     android:focusable="false"
-     />
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:minHeight="?android:attr/listPreferredItemHeight"
+    android:orientation="horizontal"
+    android:paddingStart="10dip"
+    android:paddingEnd="15dip">
+
+    <ImageView
+        android:id="@+id/item_icon"
+        android:layout_width="@android:dimen/app_icon_size"
+        android:layout_height="@android:dimen/app_icon_size"
+        android:contentDescription="@string/app_name"
+        android:scaleType="fitCenter" />
+
+    <TextView
+        android:id="@+id/item_label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:maxLines="2"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dip"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="?android:attr/textColorAlertDialogListItem" />
+
+    <RadioButton
+        android:id="@+id/item_check"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="false"
+        android:focusable="false" />
 </LinearLayout>

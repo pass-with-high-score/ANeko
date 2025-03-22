@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="Theme.App" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:colorBackground">@color/ui_bg</item>
         <item name="colorBackgroundFloating">@color/ui_bg</item>

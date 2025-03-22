@@ -1,37 +1,48 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
+
     <style name="Theme.MonetCompat" parent="Theme.MaterialComponents.DayNight">
         <item name="android:colorPrimary">@color/primary</item>
         <item name="colorPrimaryVariant">@color/primary_variant</item>
         <item name="android:colorAccent">@color/accent</item>
-        <item name="android:windowLightStatusBar" tools:targetApi="o_mr1">@bool/light_status_nav</item>
-        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">@bool/light_status_nav</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="o_mr1">@bool/light_status_nav
+        </item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">
+            @bool/light_status_nav
+        </item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@color/navigation_bar</item>
         <item name="colorControlActivated">@color/accent</item>
     </style>
+
     <style name="Theme.MonetCompat.Legacy" parent="Theme.AppCompat.DayNight">
         <item name="android:colorPrimary">@color/primary</item>
         <item name="colorPrimaryVariant">@color/primary_variant</item>
         <item name="android:colorAccent">@color/accent</item>
-        <item name="android:windowLightStatusBar" tools:targetApi="o_mr1">@bool/light_status_nav</item>
-        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">@bool/light_status_nav</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="o_mr1">@bool/light_status_nav
+        </item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">
+            @bool/light_status_nav
+        </item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@color/navigation_bar</item>
         <item name="colorControlActivated">@color/accent</item>
     </style>
+
     <style name="MaterialAlertDialog.Material3" parent="MaterialAlertDialog.MaterialComponents">
         <item name="enforceMaterialTheme">true</item>
         <item name="android:layout">@layout/m3_alert_dialog</item>
-        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.MaterialAlertDialog.Material3</item>
+        <item name="shapeAppearanceOverlay">
+            @style/ShapeAppearanceOverlay.MaterialAlertDialog.Material3
+        </item>
     </style>
+
     <style name="AppTheme" parent="Theme.AppCompat.DayNight">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="TextAppearance.SearchBar"
-        parent="Widget.MaterialComponents.TimePicker.Display.TextInputEditText">
+    <style name="TextAppearance.SearchBar" parent="Widget.MaterialComponents.TimePicker.Display.TextInputEditText">
         <item name="android:textSize">16sp</item>
     </style>
 

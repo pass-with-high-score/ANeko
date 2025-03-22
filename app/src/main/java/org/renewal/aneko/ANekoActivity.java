@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.widget.Toast;
@@ -40,6 +39,7 @@ public class ANekoActivity extends MonetCompatActivity {
     MonetSwitch motionToggle;
 
     SharedPreferences.OnSharedPreferenceChangeListener prefsListener = (sharedPreferences, key) -> {
+        assert key != null;
         if (key.equals(AnimationService.PREF_KEY_ENABLE)) {
             motionToggle.setChecked(prefs.getBoolean(AnimationService.PREF_KEY_ENABLE, false));
         }
@@ -57,7 +57,7 @@ public class ANekoActivity extends MonetCompatActivity {
         if (motionToggle.isChecked()) startAnimationService();
 
         motionToggle.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
+            if (!Settings.canDrawOverlays(this)) {
                 Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
                 startActivity(intent);
                 motionToggle.setChecked(false);
@@ -89,7 +89,7 @@ public class ANekoActivity extends MonetCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 0 && Build.VERSION.SDK_INT >= 23 && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+        if (requestCode == 0 && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             Toast.makeText(getApplicationContext(), "Storage Permission wasn't granted!!", Toast.LENGTH_SHORT).show();
             this.finish();
         }
@@ -144,7 +144,7 @@ public class ANekoActivity extends MonetCompatActivity {
                 String component = (map.get(KEY_COMPONENT) + "").replace("ComponentInfo{", "").replace("}", "");
                 String name = map.get(KEY_LABEL) + " " + external;
                 if (component.equals("org.renewal.aneko/org.tamanegi.aneko.NekoSkin")) continue;
-                list[count++] = PreValue.equals("") ? component : name;
+                list[count++] = PreValue.isEmpty() ? component : name;
             }
             return list;
         }

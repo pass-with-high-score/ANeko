@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="app_name">ANeko</string>
+    <string name="app_name">ANeko</string>
 
-  <string name="skin_name_neko">neko</string>
+    <string name="skin_name_neko">neko</string>
 
-  <string name="notification_enable">neko is running.</string>
-  <string name="notification_disable">neko is sleeping.</string>
+    <string name="notification_enable">neko is running.</string>
+    <string name="notification_disable">neko is sleeping.</string>
 
-  <string name="pref_cat_motion">Settings</string>
+    <string name="pref_cat_motion">Settings</string>
 
-  <string name="pref_motion_enable_title">Enable a neko</string>
-  <string name="pref_motion_enable_summary">To neko, or not to neko.</string>
+    <string name="pref_motion_enable_title">Enable a neko</string>
+    <string name="pref_motion_enable_summary">To neko, or not to neko.</string>
 
-  <string name="pref_motion_size_title">Size</string>
-  <string name="pref_motion_size_summary">Size of neko</string>
+    <string name="pref_motion_size_title">Size</string>
+    <string name="pref_motion_size_summary">Size of neko</string>
 
-  <string name="pref_motion_behaviour_title">Behaviour</string>
-  <string name="pref_motion_behaviour_summary">Behaviour of neko</string>
-  <string name="pref_motion_behaviour_default" translatable="false">closer</string>
+    <string name="pref_motion_behaviour_title">Behaviour</string>
+    <string name="pref_motion_behaviour_summary">Behaviour of neko</string>
+    <string name="pref_motion_behaviour_default" translatable="false">closer</string>
 
-  <string name="pref_motion_transparency_title">Transparency</string>
-  <string name="pref_motion_transparency_summary">Transparency of neko</string>
+    <string name="pref_motion_transparency_title">Transparency</string>
+    <string name="pref_motion_transparency_summary">Transparency of neko</string>
 
-  <string name="pref_motion_skin_title">Skin</string>
-  <string name="pref_motion_skin_summary">Skin of neko</string>
-  <string name="pref_skin_dialog_title">Skin</string>
-  <string name="pref_skin_search_button">Search Skin</string>
+    <string name="pref_motion_skin_title">Skin</string>
+    <string name="pref_motion_skin_summary">Skin of neko</string>
+    <string name="pref_skin_dialog_title">Skin</string>
+    <string name="pref_skin_search_button">Search Skin</string>
 
-  <string name="msg_skin_load_failed">Failed to load skin.</string>
-  <string name="msg_market_not_found">Market application is not found.</string>
+    <string name="msg_skin_load_failed">Failed to load skin.</string>
+    <string name="msg_market_not_found">Market application is not found.</string>
 
-  <string name="skin_search_uri" translatable="false">market://search?q=ANeko%20skin</string>
+    <string name="skin_search_uri" translatable="false">market://search?q=ANeko%20skin</string>
 </resources>
