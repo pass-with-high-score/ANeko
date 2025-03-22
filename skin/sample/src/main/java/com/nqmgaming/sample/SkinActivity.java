@@ -1,4 +1,4 @@
-package com.nqmgaming.cat;
+package com.nqmgaming.sample;
 
 import android.app.Activity;
 import android.app.AlertDialog;

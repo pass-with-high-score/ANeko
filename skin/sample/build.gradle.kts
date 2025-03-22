@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.nqmgaming.cat"
+    namespace = "com.nqmgaming.sample"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.nqmgaming.cat"
+        applicationId = "com.nqmgaming.sample"
         minSdk = 24
         targetSdk = 35
         versionCode = 1

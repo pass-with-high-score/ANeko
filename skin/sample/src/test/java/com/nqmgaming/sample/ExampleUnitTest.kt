@@ -1,4 +1,4 @@
-package com.nqmgaming.cat
+package com.nqmgaming.sample
 
 import org.junit.Test
 
