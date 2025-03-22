@@ -1,15 +1,13 @@
-package com.nqmgaming.sample;
+package com.nqmgaming.sample
 
-import android.app.Application;
+import android.app.Application
+import timber.log.Timber
 
-import timber.log.Timber;
-
-public class SkinApp extends Application {
-    @Override
-    public void onCreate() {
-        super.onCreate();
+class SkinApp : Application() {
+    override fun onCreate() {
+        super.onCreate()
         if (BuildConfig.DEBUG) {
-            Timber.plant(new Timber.DebugTree());
+            Timber.plant(Timber.DebugTree())
         }
     }
 }

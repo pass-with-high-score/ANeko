@@ -134,7 +134,7 @@ public class ANekoActivity extends MonetCompatActivity {
         }
 
         private CharSequence[] getEntries(String PreValue, String external) {
-            List<Map<String, Object>> InstalledList = createListData_apk();
+            List<Map<String, Object>> InstalledList = createListDataApk();
 
             CharSequence[] list = new CharSequence[InstalledList.size()];
             list[0] = PreValue;
@@ -149,7 +149,7 @@ public class ANekoActivity extends MonetCompatActivity {
             return list;
         }
 
-        private List<Map<String, Object>> createListData_apk() {
+        private List<Map<String, Object>> createListDataApk() {
             PackageManager pm = context.getPackageManager();
 
             Intent[] internals = {new Intent(context, NekoSkin.class),};

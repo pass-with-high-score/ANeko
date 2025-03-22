@@ -311,7 +311,7 @@ public class AnimationService extends Service {
 
             loaded = true;
         } catch (Exception e) {
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Use default skin", Toast.LENGTH_LONG).show();
             Timber.e(e);
         }
         if (loaded) {
