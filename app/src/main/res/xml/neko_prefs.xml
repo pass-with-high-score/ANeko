@@ -10,7 +10,7 @@
             android:defaultValue="0.0"
             android:entries="@array/pref_motion_transparency_entries"
             android:entryValues="@array/pref_motion_transparency_entry_values"
-            android:icon="@drawable/ic_fluent_shape_exclude_24_regular"
+            android:icon="@drawable/ic_shape_exclude"
             android:key="motion.transparency"
             android:summary="Adjust the transparency level of motion effects."
             android:title="Motion Transparency" />
@@ -19,14 +19,14 @@
             android:defaultValue="240"
             android:entries="@array/pref_motion_size"
             android:entryValues="@array/pref_motion_size_entry_values"
-            android:icon="@drawable/ic_fluent_slide_size_24_regular"
+            android:icon="@drawable/ic_slide_size"
             android:key="motion.size"
             android:summary="Set the size of motion elements."
             android:title="Motion Size" />
 
         <ListPreference
             android:dialogTitle="Choose a Skin"
-            android:icon="@drawable/ic_fluent_animal_cat_24_regular"
+            android:icon="@drawable/ic_animal_cat"
             android:key="motion.skin"
             android:summary="Select a skin to customize the motion appearance."
             android:title="Motion Skin" />
@@ -38,7 +38,7 @@
         android:title="Customization">
 
         <Preference
-            android:icon="@drawable/ic_fluent_slide_multiple_search_24_regular"
+            android:icon="@drawable/ic_slide_multiple_search"
             android:key="get.skin"
             android:summary="Browse and download additional skins from Google Play."
             android:title="Browse Skins" />
