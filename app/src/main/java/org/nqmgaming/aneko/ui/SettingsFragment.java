@@ -52,18 +52,26 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     @Override
     public boolean onPreferenceTreeClick(Preference preference) {
         String key = preference.getKey();
-        if ("get.skin".equals(key)) {
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse(context.getString(R.string.skin_search_uri)));
+        String url = null;
 
+        if ("get.skin".equals(key)) {
+            url = context.getString(R.string.skin_search_uri);
+        } else if ("get.github".equals(key)) {
+            url = context.getString(R.string.github_repo_uri);
+        }
+
+        if (url != null) {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             try {
                 context.startActivity(intent);
             } catch (ActivityNotFoundException e) {
                 Toast.makeText(context, R.string.msg_market_not_found, Toast.LENGTH_SHORT).show();
             }
         }
+
         return super.onPreferenceTreeClick(preference);
     }
+
 
     private CharSequence[] getEntries(String PreValue, String external) {
         List<Map<String, Object>> InstalledList = createListDataApk();

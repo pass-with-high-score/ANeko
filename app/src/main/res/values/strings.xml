@@ -31,4 +31,5 @@
     <string name="msg_market_not_found">Market application is not found.</string>
 
     <string name="skin_search_uri" translatable="false">market://search?q=ANeko%20skin</string>
+    <string name="github_repo_uri">https://github.com/pass-with-high-score/ANeko</string>
 </resources>

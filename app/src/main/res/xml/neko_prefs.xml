@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
     <ListPreference
         android:defaultValue="0.0"
         android:entries="@array/pref_motion_transparency_entries"
         android:entryValues="@array/pref_motion_transparency_entry_values"
         android:icon="@drawable/ic_fluent_shape_exclude_24_regular"
         android:key="motion.transparency"
-        android:summary="@string/pref_motion_transparency_summary"
-        android:title="@string/pref_motion_transparency_title" />
+        android:summary="Adjust the transparency level of motion effects."
+        android:title="Motion Transparency" />
 
     <ListPreference
         android:defaultValue="240"
@@ -15,19 +16,26 @@
         android:entryValues="@array/pref_motion_size_entry_values"
         android:icon="@drawable/ic_fluent_slide_size_24_regular"
         android:key="motion.size"
-        android:summary="@string/pref_motion_size_summary"
-        android:title="@string/pref_motion_size_title" />
+        android:summary="Set the size of motion elements."
+        android:title="Motion Size" />
 
     <ListPreference
-        android:dialogTitle="@string/pref_skin_dialog_title"
+        android:dialogTitle="Choose a Skin"
         android:icon="@drawable/ic_fluent_animal_cat_24_regular"
         android:key="motion.skin"
-        android:summary="@string/pref_motion_skin_summary"
-        android:title="@string/pref_motion_skin_title" />
+        android:summary="Select a skin to customize the motion appearance."
+        android:title="Motion Skin" />
 
     <Preference
         android:icon="@drawable/ic_fluent_slide_multiple_search_24_regular"
         android:key="get.skin"
-        android:summary="Find other skins on Google Play"
-        android:title="Search Skin" />
+        android:summary="Browse and download additional skins from Google Play."
+        android:title="Browse Skins" />
+
+    <Preference
+        android:icon="@drawable/ic_github_mark"
+        android:key="get.github"
+        android:summary="Explore the source code and contribute new features on GitHub!"
+        android:title="Contribute on GitHub" />
+
 </PreferenceScreen>
