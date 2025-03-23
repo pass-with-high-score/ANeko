@@ -53,10 +53,15 @@ Make sure you have the following installed:
 
 ANeko supports **both app-based skins and manual file-based skins**.
 
-- **For app-based skins** →
-  See [Skin Documentation](http://www.tamanegi.org/prog/android-apps/aneko-skin.html#create-skin).
-- **For file-based skins** → You can manually place skin files in the correct directory (More
-  details in upcoming documentation).
+- **For app-based skins** →  
+  See [Skin Documentation](http://www.tamanegi.org/prog/android-apps/aneko-skin.html#create-skin).  
+  If you are developing a custom skin within the project, you can create a new module, such as
+  `skin:sample`, to define your skin assets and logic. Ensure that your module follows the ANeko
+  skin structure.
+
+- **For file-based skins** →  
+  You can manually place skin files in the correct directory (More details in upcoming
+  documentation).
 
 ---
 
@@ -95,13 +100,13 @@ This project is licensed under the **GNU Lesser General Public License v2.1**.
 license information.
 
 For full license details,
-see: [LICENSE](https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html).
+see: [LICENSE](LICENSE).
 
 ---
 
 ## **Credits & Acknowledgments** 💡
 
-🙏 Original **ANeko** by **Tamanegi**.  
+🙏 Original **ANeko** by [Tamanegi](https://github.com/lllllT).  
 🙏 Forked and maintained by [choiman1559](https://github.com/choiman1559/ANeko).  
 🙏 Further updates & improvements by [Nguyen Quang Minh](https://github.com/nqmgaming).
 
