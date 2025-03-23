@@ -1,4 +1,4 @@
-package org.renewal.aneko;
+package org.nqmgaming.aneko.motion;
 
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
@@ -18,14 +18,14 @@ import java.util.Locale;
 
 import timber.log.Timber;
 
-public class MotionParams2 extends MotionParams {
+public class MotionConfigParser extends MotionParams {
 
 
     private final String resourceBaseDir;
 
     private final HashMap<String, Motion> motions = new HashMap<>();
 
-    MotionParams2(Resources res, File baseDir, String xmlFile) {
+    public MotionConfigParser(Resources res, File baseDir, String xmlFile) {
 
         this.resourceBaseDir = baseDir.getAbsolutePath();
 

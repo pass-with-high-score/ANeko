@@ -19,13 +19,13 @@
     </queries>
 
     <application
-        android:name="org.renewal.aneko.Applications"
+        android:name=".Applications"
         android:icon="@drawable/icon"
         android:label="@string/app_name"
         tools:ignore="AllowBackup">
 
         <activity
-            android:name="org.renewal.aneko.ANekoActivity"
+            android:name=".ui.ANekoActivity"
             android:exported="true"
             android:theme="@style/Theme.App.Palette">
             <intent-filter>
@@ -36,7 +36,7 @@
 
         <!-- Consolidated AnimationService declaration -->
         <service
-            android:name="org.renewal.aneko.AnimationService"
+            android:name=".service.AnimationService"
             android:foregroundServiceType="mediaPlayback" />
 
         <activity

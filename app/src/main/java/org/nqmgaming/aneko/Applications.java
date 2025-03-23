@@ -1,4 +1,4 @@
-package org.renewal.aneko;
+package org.nqmgaming.aneko;
 
 import android.app.Application;
 

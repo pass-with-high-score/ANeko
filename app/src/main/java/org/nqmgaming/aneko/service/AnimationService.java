@@ -1,4 +1,4 @@
-package org.renewal.aneko;
+package org.nqmgaming.aneko.service;
 
 import android.annotation.SuppressLint;
 import android.app.Notification;
@@ -24,7 +24,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.preference.PreferenceManager;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -35,6 +34,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.nqmgaming.aneko.device.BatteryInfo;
+import org.nqmgaming.aneko.motion.MotionDrawable;
+import org.nqmgaming.aneko.motion.MotionParams;
+import org.nqmgaming.aneko.motion.MotionConfigParser;
+import org.nqmgaming.aneko.R;
 import org.tamanegi.aneko.NekoSkin;
 
 import java.io.File;
@@ -47,9 +51,9 @@ import java.util.Random;
 import timber.log.Timber;
 
 public class AnimationService extends Service {
-    public static final String ACTION_START = "org.renewal.aneko.action.START";
-    public static final String ACTION_STOP = "org.renewal.aneko.action.STOP";
-    public static final String ACTION_TOGGLE = "org.renewal.aneko.action.TOGGLE";
+    public static final String ACTION_START = "org.nqmgaming.aneko.action.START";
+    public static final String ACTION_STOP = "org.nqmgaming.aneko.action.STOP";
+    public static final String ACTION_TOGGLE = "org.nqmgaming.aneko.action.TOGGLE";
 
     public static final String ACTION_GET_SKIN = "org.tamanegi.aneko.action.GET_SKIN";
     public static final String META_KEY_SKIN = "org.tamanegi.aneko.skin";
@@ -112,7 +116,7 @@ public class AnimationService extends Service {
         tvHandler = new Handler(this::onTextVHandleMessage);
 
         random = new Random();
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        prefs = getSharedPreferences(getPackageName() + "_preferences", MODE_PRIVATE);
     }
 
     @Override
@@ -305,13 +309,12 @@ public class AnimationService extends Service {
             ComponentName skin_comp = new ComponentName(this, NekoSkin.class);
             Resources res = pm.getResourcesForActivity(skin_comp);
 
-            MotionParams params2 = new MotionParams2(res, dir, xmlFile);
+            MotionParams params2 = new MotionConfigParser(res, dir, xmlFile);
             motion_state = new MotionState();
             motion_state.setParams(params2);
 
             loaded = true;
         } catch (Exception e) {
-            Toast.makeText(this, "Use default skin", Toast.LENGTH_LONG).show();
             Timber.e(e);
         }
         if (loaded) {
@@ -337,7 +340,7 @@ public class AnimationService extends Service {
             MotionParams params = new MotionParams(res, rid);
             motion_state.setParams(params);
         } catch (Exception e) {
-           Timber.e(e);
+            Timber.e(e);
             Toast.makeText(this, R.string.msg_skin_load_failed,
                             Toast.LENGTH_LONG)
                     .show();

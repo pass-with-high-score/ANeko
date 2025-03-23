@@ -1,4 +1,4 @@
-package org.renewal.aneko;
+package org.nqmgaming.aneko.motion;
 
 import android.content.res.Resources;
 import android.graphics.Canvas;
@@ -75,7 +75,7 @@ public class MotionDrawable extends Drawable implements Animatable {
         return state.getFrame(cur_frame);
     }
 
-    void setOnMotionEndListener(OnMotionEndListener listener) {
+    public void setOnMotionEndListener(OnMotionEndListener listener) {
         on_end = listener;
     }
 

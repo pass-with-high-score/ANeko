@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "org.renewal.aneko"
+    namespace = "org.nqmgaming.aneko"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "org.renewal.aneko"
+        applicationId = "org.nqmgaming.aneko"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
