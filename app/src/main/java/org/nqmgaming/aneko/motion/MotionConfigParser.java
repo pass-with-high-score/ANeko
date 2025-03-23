@@ -42,32 +42,38 @@ public class MotionConfigParser extends MotionParams {
         }
     }
 
+    @Override
     public float getAcceleration() {
-        return acceleration;
+        return super.getAcceleration();
     }
 
+    @Override
     public float getMaxVelocity() {
-        return max_velocity;
+        return super.getMaxVelocity();
     }
 
+    @Override
     public float getDecelerationDistance() {
-        return deceleration_distance;
+        return super.getDecelerationDistance();
     }
 
+    @Override
     public float getProximityDistance() {
-        return proximity_distance;
+        return super.getProximityDistance();
     }
 
     public boolean hasState(String state) {
         return motions.containsKey(state);
     }
 
+    @Override
     public String getInitialState() {
-        return initial_state;
+        return super.getInitialState();
     }
 
+    @Override
     public String getAwakeState() {
-        return awake_state;
+        return super.getAwakeState();
     }
 
     public String getMoveState(MoveDirection dir) {
@@ -82,12 +88,11 @@ public class MotionConfigParser extends MotionParams {
     }
 
     public String getWallState(WallDirection dir) {
-        return wall_state_prefix +
+        return super.getWallState(dir) +
                 (dir == WallDirection.UP ? "Up" :
                         dir == WallDirection.DOWN ? "Down" :
                                 dir == WallDirection.LEFT ? "Left" :
-                                        dir == WallDirection.RIGHT ? "Right" :
-                                                "");
+                                        dir == WallDirection.RIGHT ? "Right" : "");
     }
 
     public String getNextState(String state) {
