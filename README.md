@@ -1,6 +1,6 @@
-# **ANeko Reborn** 🐱
+# **ANeko Reborn**
 
-![ANeko Logo](https://play-lh.googleusercontent.com/icon.png)
+![ANeko Logo](icon.png)
 
 ## **Introduction**
 
