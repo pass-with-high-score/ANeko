@@ -121,7 +121,7 @@ reports and feature requests.
 
 ### 🔗 **Follow & Support**
 
-📌 GitHub Repository: [YOUR_GITHUB_LINK]  
+📌 GitHub Repository: https://github.com/pass-with-high-score/ANeko
 📌 Play Store (Coming Soon)
 
 ---
