@@ -34,6 +34,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import org.nqmgaming.aneko.device.BatteryInfo;
 import org.nqmgaming.aneko.motion.MotionDrawable;
 import org.nqmgaming.aneko.motion.MotionParams;
@@ -294,22 +296,7 @@ public class AnimationService extends Service {
         boolean loaded = false;
         String skinPath = prefs.getString(PREF_KEY_SKIN_COMPONENT, "");
         try {
-            File externalStorageDirectory = Environment.getExternalStorageDirectory();
-            File skinsDir = new File(externalStorageDirectory, ANeko_SKINS);
-            skinsDir.mkdirs();
-
-            String[] ts = skinPath.split("/");
-
-            String folder = ts[0];
-            String xmlFile = ts[1];
-
-            File dir = new File(skinsDir, "/" + folder);
-
-            PackageManager pm = getPackageManager();
-            ComponentName skin_comp = new ComponentName(this, NekoSkin.class);
-            Resources res = pm.getResourcesForActivity(skin_comp);
-
-            MotionParams params2 = new MotionConfigParser(res, dir, xmlFile);
+            MotionParams params2 = getMotionParams(skinPath);
             motion_state = new MotionState();
             motion_state.setParams(params2);
 
@@ -325,6 +312,26 @@ public class AnimationService extends Service {
         ComponentName skin_comp;
         skin_comp = new ComponentName(this, NekoSkin.class);
         return loadMotionState(skin_comp);
+    }
+
+    @NonNull
+    private MotionParams getMotionParams(String skinPath) throws PackageManager.NameNotFoundException {
+        File externalStorageDirectory = Environment.getExternalStorageDirectory();
+        File skinsDir = new File(externalStorageDirectory, ANeko_SKINS);
+        skinsDir.mkdirs();
+
+        String[] ts = skinPath.split("/");
+
+        String folder = ts[0];
+        String xmlFile = ts[1];
+
+        File dir = new File(skinsDir, "/" + folder);
+
+        PackageManager pm = getPackageManager();
+        ComponentName skin_comp = new ComponentName(this, NekoSkin.class);
+        Resources res = pm.getResourcesForActivity(skin_comp);
+
+        return new MotionConfigParser(res, dir, xmlFile);
     }
 
     private boolean loadMotionState(ComponentName skin_comp) {
