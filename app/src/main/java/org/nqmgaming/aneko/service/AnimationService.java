@@ -68,6 +68,8 @@ public class AnimationService extends Service {
     public static final String PREF_KEY_BEHAVIOUR = "motion.behaviour";
     public static final String PREF_KEY_SKIN_COMPONENT = "motion.skin";
 
+    public static final String PREF_KEY_NOTIFICATION_ENABLE = "notification.enable";
+
     private static final int MSG_ANIMATE = 1;
     private static final int MSG_TXT = 1;
 

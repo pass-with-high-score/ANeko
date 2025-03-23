@@ -5,11 +5,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.kieronquinn.monetcompat.app.MonetCompatActivity;
@@ -20,8 +24,18 @@ import org.nqmgaming.aneko.R;
 
 public class ANekoActivity extends MonetCompatActivity {
 
+    private static final int REQUEST_STORAGE_PERMISSION = 1;
     SharedPreferences prefs;
     MonetSwitch motionToggle;
+
+    private final ActivityResultLauncher<String> requestNotificationPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    prefs.edit().putBoolean(AnimationService.PREF_KEY_NOTIFICATION_ENABLE, true).apply();
+                } else {
+                    prefs.edit().putBoolean(AnimationService.PREF_KEY_NOTIFICATION_ENABLE, false).apply();
+                }
+            });
 
     SharedPreferences.OnSharedPreferenceChangeListener prefsListener = (sharedPreferences, key) -> {
         assert key != null;
@@ -48,9 +62,10 @@ public class ANekoActivity extends MonetCompatActivity {
                 motionToggle.setChecked(false);
             } else {
                 prefs.edit().putBoolean(AnimationService.PREF_KEY_ENABLE, isChecked).apply();
-                startAnimationService();
+                checkNotificationPermission();
             }
         });
+
 
         Fragment fragment;
         fragment = getSupportFragmentManager().findFragmentById(R.id.neko_prefs);
@@ -66,6 +81,21 @@ public class ANekoActivity extends MonetCompatActivity {
                 .commit();
     }
 
+    /**
+     * Check and request notification permission if needed (Android 13+)
+     */
+    private void checkNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) !=
+                    PackageManager.PERMISSION_GRANTED) {
+                requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+            }
+
+        }
+        startAnimationService();
+    }
+
+
     private void startAnimationService() {
         prefs.edit().putBoolean(AnimationService.PREF_KEY_VISIBLE, true).apply();
         startService(new Intent(this, AnimationService.class).setAction(AnimationService.ACTION_START));
@@ -74,7 +104,7 @@ public class ANekoActivity extends MonetCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 0 && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+        if (requestCode == REQUEST_STORAGE_PERMISSION && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             Toast.makeText(getApplicationContext(), "Storage Permission wasn't granted!!", Toast.LENGTH_SHORT).show();
             this.finish();
         }
