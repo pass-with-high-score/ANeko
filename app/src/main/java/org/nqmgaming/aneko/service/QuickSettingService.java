@@ -18,11 +18,7 @@ public class QuickSettingService extends TileService {
                 if (prefs.getBoolean(AnimationService.PREF_KEY_ENABLE, false)) {
                     tile.setState(Tile.STATE_ACTIVE);
                     Intent intent = new Intent(this, AnimationService.class).setAction(AnimationService.ACTION_START);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        startForegroundService(intent);
-                    } else {
-                        startService(intent);
-                    }
+                    startForegroundService(intent);
                 } else tile.setState(Tile.STATE_INACTIVE);
             } else tile.setState(Tile.STATE_UNAVAILABLE);
             tile.updateTile();

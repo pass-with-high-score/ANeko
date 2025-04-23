@@ -79,8 +79,8 @@ public class AnimationService extends Service {
 
     public static final String ANeko_SKINS = "/ANeko/skins";
 
-    private int image_width = 240;
-    private int image_height = 240;
+    private int image_width = 80;
+    private int image_height = 80;
 
     boolean showTimeBattery = true;
 
@@ -175,12 +175,12 @@ public class AnimationService extends Service {
             WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
             this.touch_view = new View(this);
             this.touch_view.setOnTouchListener(new TouchListener());
-            LayoutParams touch_params = new LayoutParams(-2, -2, Build.VERSION.SDK_INT > 25 ? 2038 : 2002, 262168, -3);
+            LayoutParams touch_params = new LayoutParams(-2, -2, 2038, 262168, -3);
             touch_params.gravity = Gravity.CENTER;
             assert wm != null;
             wm.addView(this.touch_view, touch_params);
             this.image_view = new ImageView(this);
-            this.image_params = new LayoutParams(this.image_width, this.image_height, Build.VERSION.SDK_INT > 25 ? 2038 : 2006, 536, -3);
+            this.image_params = new LayoutParams(this.image_width, this.image_height, 2038, 536, -3);
             this.image_params.gravity = 51;
             wm.addView(this.image_view, this.image_params);
             requestAnimate();
@@ -244,14 +244,12 @@ public class AnimationService extends Service {
                 new Intent(this, AnimationService.class).setAction(ACTION_TOGGLE),
                 PendingIntent.FLAG_IMMUTABLE);
 
-        if (Build.VERSION.SDK_INT > 25) {
-            NotificationChannel channel = new NotificationChannel("ANeko", "ANeko Service",
-                    NotificationManager.IMPORTANCE_MIN);
-            ((NotificationManager) Objects.requireNonNull(getSystemService(Context.NOTIFICATION_SERVICE)))
-                    .createNotificationChannel(channel);
-        }
+        NotificationChannel channel = new NotificationChannel("ANeko", "ANeko Service",
+                NotificationManager.IMPORTANCE_MIN);
+        ((NotificationManager) Objects.requireNonNull(getSystemService(Context.NOTIFICATION_SERVICE)))
+                .createNotificationChannel(channel);
 
-        Notification.Builder builder = Build.VERSION.SDK_INT > 25 ? new Notification.Builder(this, "ANeko") : new Notification.Builder(this);
+        Notification.Builder builder = new Notification.Builder(this, "ANeko");
         builder
                 .setContentIntent(intent)
                 .setSmallIcon(R.drawable.icon)
@@ -400,9 +398,9 @@ public class AnimationService extends Service {
     }
 
     private void refreshMotionSize() {
-        int v = 240;
+        int v = 80;
         try {
-            v = Integer.parseInt(prefs.getString(PREF_KEY_SIZE, "240"));
+            v = Integer.parseInt(prefs.getString(PREF_KEY_SIZE, "80"));
         } catch (NumberFormatException e) {
             Timber.e(e);
         }

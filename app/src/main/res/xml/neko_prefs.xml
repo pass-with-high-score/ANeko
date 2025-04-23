@@ -16,7 +16,7 @@
             android:title="Motion Transparency" />
 
         <ListPreference
-            android:defaultValue="240"
+            android:defaultValue="80"
             android:entries="@array/pref_motion_size"
             android:entryValues="@array/pref_motion_size_entry_values"
             android:icon="@drawable/ic_slide_size"

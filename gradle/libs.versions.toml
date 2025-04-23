@@ -1,4 +1,11 @@
 [versions]
+# default versions
+compileSdk = "35"
+minSdk = "28"
+targetSdk = "35"
+versionCode = "2"
+versionName = "1.0.1"
+jvmTarget = "11"
 agp = "8.9.0"
 androidxJunit = "1.2.1"
 appcompat = "1.7.0"
@@ -18,8 +25,8 @@ coreKtx = "1.15.0"
 [libraries]
 androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraintlayout" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
-androidx-espresso-core-v350 = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCoreVersion" }
-androidx-junit-v114 = { module = "androidx.test.ext:junit", version.ref = "androidxJunit" }
+androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCoreVersion" }
+androidx-junit = { module = "androidx.test.ext:junit", version.ref = "androidxJunit" }
 androidx-palette-ktx = { module = "androidx.palette:palette-ktx", version.ref = "paletteKtx" }
 androidx-preference-ktx = { module = "androidx.preference:preference-ktx", version.ref = "preferenceKtx" }
 fluent-system-icons = { module = "com.microsoft.design:fluent-system-icons", version.ref = "fluentSystemIcons" }
