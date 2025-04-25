@@ -19,7 +19,9 @@ fun PreferenceContainer(
     @StringRes title: Int,
     content: @Composable () -> Unit
 ) {
-    Column {
+    Column(
+        modifier = modifier
+    ) {
         Text(
             stringResource(title),
             style = MaterialTheme.typography.titleMedium,
@@ -27,7 +29,7 @@ fun PreferenceContainer(
         )
         Spacer(Modifier.height(8.dp))
         Card(
-            modifier = modifier,
+            modifier = Modifier,
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.surface
             )

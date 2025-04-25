@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">ANeko</string>
+    <string name="app_name" translatable="false">ANeko</string>
 
     <string name="notification_enabled">Aneko is running.</string>
     <string name="notification_disabled">Aneko is sleeping.</string>
@@ -36,7 +36,7 @@
     <!-- Rate App -->
     <string name="rate_app_title">Rate this app</string>
     <string name="rate_app_summary">If you enjoy using ANeko, please consider rating it!</string>
-    <string name="rate_app_url">https://play.google.com/store/apps/details?id=org.nqmgaming.aneko</string>
+    <string name="rate_app_url" translatable="false">https://play.google.com/store/apps/details?id=org.nqmgaming.aneko</string>
 
 
     <string name="select_prompt">Select %1$s</string>

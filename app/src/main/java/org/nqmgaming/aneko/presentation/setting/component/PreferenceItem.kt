@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -27,7 +28,8 @@ fun PreferenceItem(
     Row(
         modifier = Modifier
             .clickable { onClick() }
-            .padding(16.dp),
+            .padding(16.dp)
+            .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(

@@ -43,6 +43,10 @@ android {
         buildConfig = true
         compose = true
     }
+
+    androidResources {
+        generateLocaleConfig = true
+    }
 }
 
 dependencies {
