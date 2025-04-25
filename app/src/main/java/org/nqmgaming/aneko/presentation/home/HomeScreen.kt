@@ -80,7 +80,7 @@ fun HomeScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(220.dp)
-                .padding(top = 8.dp),
+                .padding(top = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             contentPadding = PaddingValues(horizontal = 24.dp)
         ) {
@@ -105,8 +105,9 @@ fun HomeScreen(
 
         Text(
             text = stringResource(R.string.choose_skin),
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.padding(bottom = 8.dp)
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.padding(bottom = 8.dp),
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
         Row(
@@ -177,7 +178,9 @@ fun HomeScreen(
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
 private fun HomeScreenPreview() {
-    ANekoTheme {
+    ANekoTheme(
+        dynamicColor = false
+    ) {
         HomeScreen()
     }
 }
