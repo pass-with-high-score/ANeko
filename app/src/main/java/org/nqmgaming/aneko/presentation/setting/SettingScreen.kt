@@ -84,7 +84,21 @@ fun SettingsScreen() {
                     openUrl(context, context.getString(R.string.github_uri))
                 }
             )
+
+            HorizontalDivider(
+                color = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f),
+            )
+
+            PreferenceItem(
+                title = stringResource(R.string.rate_app_title),
+                summary = stringResource(R.string.rate_app_summary),
+                icon = R.drawable.ic_star, // Or any icon you have
+                onClick = {
+                    openUrl(context, context.getString(R.string.rate_app_url))
+                }
+            )
         }
+
     }
 }
 

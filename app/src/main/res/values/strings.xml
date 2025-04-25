@@ -33,6 +33,12 @@
     <string name="github_contribute_title">Contribute on GitHub</string>
     <string name="github_contribute_summary">Explore the source code and contribute new features on GitHub!</string>
 
+    <!-- Rate App -->
+    <string name="rate_app_title">Rate this app</string>
+    <string name="rate_app_summary">If you enjoy using ANeko, please consider rating it!</string>
+    <string name="rate_app_url">https://play.google.com/store/apps/details?id=org.nqmgaming.aneko</string>
+
+
     <string name="select_prompt">Select %1$s</string>
     <string name="make_with_love">Made with ❤️ for ANeko</string>
     <string name="app_version">Version: %1$s</string>
