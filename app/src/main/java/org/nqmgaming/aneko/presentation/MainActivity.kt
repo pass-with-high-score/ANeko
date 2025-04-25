@@ -84,7 +84,7 @@ class ANekoActivity : ComponentActivity() {
                 }
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
-                    contentColor = MaterialTheme.colorScheme.background,
+                    containerColor = MaterialTheme.colorScheme.background,
                     topBar = {
                         CenterAlignedTopAppBar(
                             title = {
