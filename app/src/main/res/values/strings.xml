@@ -4,32 +4,37 @@
 
     <string name="skin_name_neko">neko</string>
 
-    <string name="notification_enable">neko is running.</string>
-    <string name="notification_disable">neko is sleeping.</string>
-
-    <string name="pref_cat_motion">Settings</string>
-
-    <string name="pref_motion_enable_title">Enable a neko</string>
-    <string name="pref_motion_enable_summary">To neko, or not to neko.</string>
-
-    <string name="pref_motion_size_title">Size</string>
-    <string name="pref_motion_size_summary">Size of neko</string>
-
-    <string name="pref_motion_behaviour_title">Behaviour</string>
-    <string name="pref_motion_behaviour_summary">Behaviour of neko</string>
-    <string name="pref_motion_behaviour_default" translatable="false">closer</string>
-
-    <string name="pref_motion_transparency_title">Transparency</string>
-    <string name="pref_motion_transparency_summary">Transparency of neko</string>
-
-    <string name="pref_motion_skin_title">Skin</string>
-    <string name="pref_motion_skin_summary">Skin of neko</string>
-    <string name="pref_skin_dialog_title">Skin</string>
-    <string name="pref_skin_search_button">Search Skin</string>
-
-    <string name="msg_skin_load_failed">Failed to load skin.</string>
-    <string name="msg_market_not_found">Market application is not found.</string>
+    <string name="notification_enabled">neko is running.</string>
+    <string name="notification_disabled">neko is sleeping.</string>
 
     <string name="skin_search_uri" translatable="false">market://search?q=ANeko%20skin</string>
-    <string name="github_repo_uri">https://github.com/pass-with-high-score/ANeko</string>
+    <string name="github_uri">https://github.com/pass-with-high-score/ANeko</string>
+    <string name="main_activity_title">MainActivity</string>
+    <string name="download_skins">Download more skins</string>
+    <string name="power_on">Power On</string>
+    <string name="power_off">Power Off</string>
+    <string name="download_skins_link">https://drive.google.com/file/d/1-VYQrPB_IdOTaFZWxE_uA9n91SILgFZe/view</string>
+    <string name="choose_skin">Choose your Skin</string>
+    <string name="invalid_selection">Invalid Selection</string>
+    <string name="cancel">Cancel</string>
+    <string name="msg_skin_load_failed">Failed to load skin. Please check the skin application.</string>
+
+    <!-- Motion Settings -->
+    <string name="motion_transparency_title">Motion Transparency</string>
+    <string name="motion_transparency_summary">Adjust the transparency level of motion effects.</string>
+    <string name="motion_size_title">Motion Size</string>
+    <string name="motion_size_summary">Set the size of motion elements.</string>
+    <string name="motion_settings_title">Motion Settings</string>
+
+    <!-- Customization -->
+    <string name="customization_title">Customization</string>
+    <string name="browse_skins_title">Browse Skins</string>
+    <string name="browse_skins_summary">Browse and download additional skins from Google Play.</string>
+
+    <!-- Community & Contributions -->
+    <string name="community_title">Community &amp; Contributions</string>
+    <string name="github_contribute_title">Contribute on GitHub</string>
+    <string name="github_contribute_summary">Explore the source code and contribute new features on GitHub!</string>
+
+    <string name="select_prompt">Select %1$s</string>
 </resources>

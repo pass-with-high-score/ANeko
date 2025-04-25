@@ -1,4 +1,4 @@
-package org.nqmgaming.aneko.motion;
+package org.nqmgaming.aneko.core.motion;
 
 import java.io.IOException;
 import java.util.HashMap;
