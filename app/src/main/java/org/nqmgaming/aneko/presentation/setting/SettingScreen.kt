@@ -33,13 +33,14 @@ fun SettingsScreen() {
         Column {
             Text(
                 stringResource(R.string.motion_settings_title),
-                style = MaterialTheme.typography.titleSmall
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.onSurface
             )
             Spacer(Modifier.height(8.dp))
 
             Card(
                 colors = CardDefaults.cardColors(
-                    containerColor = Color.White
+                    containerColor = MaterialTheme.colorScheme.surface
                 )
             ) {
                 // Motion Transparency
@@ -78,13 +79,14 @@ fun SettingsScreen() {
             // Customization Category
             Text(
                 stringResource(R.string.customization_title),
-                style = MaterialTheme.typography.titleSmall
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.onSurface
             )
             Spacer(Modifier.height(8.dp))
 
             Card(
                 colors = CardDefaults.cardColors(
-                    containerColor = Color.White
+                    containerColor = MaterialTheme.colorScheme.surface
                 )
             ) {
 
@@ -106,13 +108,14 @@ fun SettingsScreen() {
             // Community & Contributions Category
             Text(
                 stringResource(R.string.community_title),
-                style = MaterialTheme.typography.titleLarge
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.onSurface
             )
             Spacer(Modifier.height(8.dp))
 
             Card(
                 colors = CardDefaults.cardColors(
-                    containerColor = Color.White
+                    containerColor = MaterialTheme.colorScheme.surface
                 )
             ) {
                 // Contribute on GitHub
@@ -132,7 +135,9 @@ fun SettingsScreen() {
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
 private fun SettingScreenPreview() {
-    ANekoTheme {
+    ANekoTheme(
+        dynamicColor = false
+    ) {
         SettingsScreen()
     }
 }

@@ -11,15 +11,20 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.core.content.ContextCompat
 import androidx.core.content.edit
+import org.nqmgaming.aneko.R
 import org.nqmgaming.aneko.core.service.AnimationService
 import org.nqmgaming.aneko.presentation.home.HomeScreen
 import org.nqmgaming.aneko.presentation.ui.theme.ANekoTheme
@@ -31,14 +36,18 @@ class ANekoActivity : ComponentActivity() {
     private val requestNotificationPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             prefs.edit { putBoolean(AnimationService.PREF_KEY_NOTIFICATION_ENABLE, isGranted) }
+            startAnimationService()
         }
 
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         prefs = getSharedPreferences(packageName + "_preferences", MODE_PRIVATE)
 
         setContent {
-            ANekoTheme {
+            ANekoTheme(
+                dynamicColor = false
+            ) {
                 var isEnabled by remember {
                     mutableStateOf(
                         prefs.getBoolean(
@@ -49,7 +58,19 @@ class ANekoActivity : ComponentActivity() {
                 }
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
-                    contentColor = MaterialTheme.colorScheme.background
+                    contentColor = MaterialTheme.colorScheme.background,
+                    topBar = {
+                        CenterAlignedTopAppBar(
+                            title = {
+                                Text(
+                                    text = getString(R.string.app_name),
+                                    style = MaterialTheme.typography.headlineSmall.copy(
+                                        fontWeight = FontWeight.Black
+                                    ),
+                                )
+                            }
+                        )
+                    }
                 ) { innerPadding ->
                     HomeScreen(
                         modifier = Modifier.padding(innerPadding),
@@ -98,6 +119,7 @@ class ANekoActivity : ComponentActivity() {
                 PackageManager.PERMISSION_GRANTED
             ) {
                 requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                return
             }
         }
         startAnimationService()

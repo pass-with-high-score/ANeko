@@ -27,7 +27,7 @@ import org.nqmgaming.aneko.data.SkinInfo
 
 @Composable
 fun SkinCard(skin: SkinInfo, isSelected: Boolean, onClick: () -> Unit) {
-    val borderColor = if (isSelected) Color(0xFF3F51B5) else Color.Transparent
+    val borderColor = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent
     Card(
         modifier = Modifier
             .width(160.dp)

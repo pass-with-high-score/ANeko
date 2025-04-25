@@ -53,19 +53,19 @@ dependencies {
     implementation(libs.androidx.palette.ktx)
 
     // Compose
-    implementation(platform("androidx.compose:compose-bom:2025.04.01"))
+    implementation(platform(libs.androidx.compose.bom))
     // Core UI
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.material3:material3") // or use material if you want legacy Material Design 2
-    implementation("androidx.compose.ui:ui-tooling-preview")
+    implementation(libs.ui)
+    implementation(libs.material3) // or use material if you want legacy Material Design 2
+    implementation(libs.ui.tooling.preview)
 
     // Runtime
-    implementation("androidx.activity:activity-compose")
-    implementation("androidx.lifecycle:lifecycle-runtime-compose")
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.lifecycle.runtime.compose)
 
-    implementation("com.google.accompanist:accompanist-permissions:0.36.0")
-    implementation("io.coil-kt:coil-compose:2.7.0")
-    implementation("androidx.compose.material:material-icons-extended:1.7.8")
+    implementation(libs.accompanist.permissions)
+    implementation(libs.coil.compose)
+    implementation(libs.androidx.material.icons.extended)
 
 
     implementation(libs.kotlin.stdlib.jdk8)

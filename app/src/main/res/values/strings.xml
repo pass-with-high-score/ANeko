@@ -2,20 +2,17 @@
 <resources>
     <string name="app_name">ANeko</string>
 
-    <string name="skin_name_neko">neko</string>
-
     <string name="notification_enabled">neko is running.</string>
     <string name="notification_disabled">neko is sleeping.</string>
 
     <string name="skin_search_uri" translatable="false">market://search?q=ANeko%20skin</string>
-    <string name="github_uri">https://github.com/pass-with-high-score/ANeko</string>
-    <string name="main_activity_title">MainActivity</string>
+    <string name="github_uri" translatable="false">https://github.com/pass-with-high-score/ANeko</string>
     <string name="download_skins">Download more skins</string>
-    <string name="power_on">Power On</string>
-    <string name="power_off">Power Off</string>
-    <string name="download_skins_link">https://drive.google.com/file/d/1-VYQrPB_IdOTaFZWxE_uA9n91SILgFZe/view</string>
-    <string name="choose_skin">Choose your Skin</string>
-    <string name="invalid_selection">Invalid Selection</string>
+    <string name="power_on">Power on</string>
+    <string name="power_off">Power off</string>
+    <string name="download_skins_link" translatable="false">https://drive.google.com/file/d/1-VYQrPB_IdOTaFZWxE_uA9n91SILgFZe/view</string>
+    <string name="choose_skin">Choose your skin</string>
+    <string name="invalid_selection">Invalid selection</string>
     <string name="cancel">Cancel</string>
     <string name="msg_skin_load_failed">Failed to load skin. Please check the skin application.</string>
 
@@ -37,4 +34,7 @@
     <string name="github_contribute_summary">Explore the source code and contribute new features on GitHub!</string>
 
     <string name="select_prompt">Select %1$s</string>
+    <string name="make_with_love">Make with ❤️ for ANeko</string>
+    <string name="app_version">Version: %1$s</string>
+    <string name="unknown_value">Unknown</string>
 </resources>

@@ -77,6 +77,7 @@ fun ListPreferenceItem(
         AlertDialog(
             onDismissRequest = { showDialog = false },
             title = { Text(stringResource(R.string.select_prompt, title)) },
+            containerColor = MaterialTheme.colorScheme.surface,
             text = {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -91,7 +92,8 @@ fun ListPreferenceItem(
                                     showDialog = false
                                 }
                                 .padding(vertical = 8.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(entry, style = MaterialTheme.typography.bodyMedium)
                             RadioButton(
