@@ -2,8 +2,8 @@
 <resources>
     <string name="app_name">ANeko</string>
 
-    <string name="notification_enabled">neko is running.</string>
-    <string name="notification_disabled">neko is sleeping.</string>
+    <string name="notification_enabled">Aneko is running.</string>
+    <string name="notification_disabled">Aneko is sleeping.</string>
 
     <string name="skin_search_uri" translatable="false">market://search?q=ANeko%20skin</string>
     <string name="github_uri" translatable="false">https://github.com/pass-with-high-score/ANeko</string>
@@ -34,7 +34,7 @@
     <string name="github_contribute_summary">Explore the source code and contribute new features on GitHub!</string>
 
     <string name="select_prompt">Select %1$s</string>
-    <string name="make_with_love">Make with ❤️ for ANeko</string>
+    <string name="make_with_love">Made with ❤️ for ANeko</string>
     <string name="app_version">Version: %1$s</string>
     <string name="unknown_value">Unknown</string>
     <string name="toggle_theme_title">Toggle Theme</string>
