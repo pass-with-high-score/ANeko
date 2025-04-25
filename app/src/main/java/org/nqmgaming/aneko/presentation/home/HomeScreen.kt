@@ -26,6 +26,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -40,12 +41,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.nqmgaming.aneko.R
 import org.nqmgaming.aneko.core.service.AnimationService
+import org.nqmgaming.aneko.data.SkinInfo
 import org.nqmgaming.aneko.presentation.home.component.AddSkinCard
 import org.nqmgaming.aneko.presentation.home.component.PowerToggleButton
 import org.nqmgaming.aneko.presentation.home.component.SkinCard
 import org.nqmgaming.aneko.presentation.setting.SettingsScreen
 import org.nqmgaming.aneko.presentation.ui.theme.ANekoTheme
-import org.nqmgaming.aneko.util.createSkinList
+import org.nqmgaming.aneko.util.loadSkinList
 import org.nqmgaming.aneko.util.openUrl
 
 
@@ -58,10 +60,16 @@ fun HomeScreen(
     onSkinSelected: (ComponentName) -> Unit = {}
 ) {
     val context = LocalContext.current
-    var isRefreshing by remember { mutableStateOf(false) }
-    var skins = createSkinList(context, onFinished = {
-        isRefreshing = false
-    })
+    var refreshing by remember { mutableStateOf(true) }
+    var skinList by remember { mutableStateOf<List<SkinInfo>>(emptyList()) }
+    LaunchedEffect(refreshing) {
+        if (refreshing) {
+            val skins = loadSkinList(context)
+            skinList = skins
+            refreshing = false
+        }
+    }
+
 
     val initialSkinComponentString = context.getSharedPreferences(
         context.packageName + "_preferences",
@@ -70,19 +78,16 @@ fun HomeScreen(
 
     var selectedIndex by remember {
         mutableIntStateOf(
-            skins.indexOfFirst { it.component.flattenToString() == initialSkinComponentString }
+            skinList.indexOfFirst { it.component.flattenToString() == initialSkinComponentString }
                 .takeIf { it != -1 } ?: 0
         )
     }
 
     PullToRefreshBox(
-        isRefreshing = isRefreshing,
+        isRefreshing = refreshing,
         onRefresh = {
-            isRefreshing = true
-            skins = createSkinList(context, onFinished = {
-                isRefreshing = false
-            })
-        }
+            refreshing = true
+        },
     ) {
         Column(
             modifier = modifier
@@ -98,7 +103,7 @@ fun HomeScreen(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 contentPadding = PaddingValues(horizontal = 24.dp)
             ) {
-                itemsIndexed(skins) { index, skin ->
+                itemsIndexed(skinList) { index, skin ->
                     SkinCard(
                         skin = skin,
                         isSelected = index == selectedIndex,
@@ -128,7 +133,7 @@ fun HomeScreen(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                skins.forEachIndexed { index, _ ->
+                skinList.forEachIndexed { index, _ ->
                     val targetColor = if (index == selectedIndex) {
                         MaterialTheme.colorScheme.primary
                     } else {
@@ -143,7 +148,7 @@ fun HomeScreen(
                             .background(color)
                             .padding(4.dp)
                     )
-                    if (index != skins.lastIndex) Spacer(modifier = Modifier.width(8.dp))
+                    if (index != skinList.lastIndex) Spacer(modifier = Modifier.width(8.dp))
                 }
             }
 

@@ -3,23 +3,21 @@ package org.nqmgaming.aneko.util
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.nqmgaming.aneko.core.service.AnimationService
 import org.nqmgaming.aneko.data.SkinInfo
 
-fun createSkinList(context: Context, onFinished: () -> Unit): List<SkinInfo> {
+suspend fun loadSkinList(context: Context): List<SkinInfo> = withContext(Dispatchers.IO) {
     val pm = context.packageManager
     val intent = Intent(AnimationService.ACTION_GET_SKIN)
-    val skinList = pm.queryIntentActivities(intent, 0).map { info ->
+    pm.queryIntentActivities(intent, 0).map {
         SkinInfo(
-            icon = info.loadIcon(pm),
-            label = info.loadLabel(pm).toString(),
-            component = ComponentName(
-                info.activityInfo.packageName,
-                info.activityInfo.name
-            )
+            icon = it.loadIcon(pm),
+            label = it.loadLabel(pm).toString(),
+            component = ComponentName(it.activityInfo.packageName, it.activityInfo.name)
         )
     }
-    onFinished()
-    return skinList
 }
+
 
