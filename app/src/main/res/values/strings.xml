@@ -37,4 +37,7 @@
     <string name="make_with_love">Make with ❤️ for ANeko</string>
     <string name="app_version">Version: %1$s</string>
     <string name="unknown_value">Unknown</string>
+    <string name="toggle_theme_title">Toggle Theme</string>
+    <string name="app_store_uri"><![CDATA[https://play.google.com/store/apps/details?id=org.nqmgaming.aneko&hl=en-US]]></string>
+    <string name="share_title">Share</string>
 </resources>
