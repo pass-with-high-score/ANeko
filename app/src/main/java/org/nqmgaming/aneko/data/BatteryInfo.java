@@ -1,4 +1,4 @@
-package org.nqmgaming.aneko.device;
+package org.nqmgaming.aneko.data;
 
 import android.content.Intent;
 

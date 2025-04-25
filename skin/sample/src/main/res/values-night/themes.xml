@@ -1,5 +1,5 @@
 <resources>
-    <style name="Theme.ANeko" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.ANeko" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/purple_200</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
         <item name="colorOnPrimary">@color/black</item>

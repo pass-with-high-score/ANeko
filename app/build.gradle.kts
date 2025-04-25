@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose)
 }
 
 android {
@@ -40,6 +41,11 @@ android {
     }
     buildFeatures {
         buildConfig = true
+        compose = true
+    }
+
+    androidResources {
+        generateLocaleConfig = true
     }
 }
 
@@ -50,13 +56,34 @@ dependencies {
     implementation(libs.androidx.preference.ktx)
     implementation(libs.androidx.palette.ktx)
 
+    // Compose
+    implementation(platform(libs.androidx.compose.bom))
+    // Core UI
+    implementation(libs.ui)
+    implementation(libs.material3) // or use material if you want legacy Material Design 2
+    implementation(libs.ui.tooling.preview)
+
+    // Runtime
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+
+    implementation(libs.accompanist.permissions)
+    implementation(libs.coil.compose)
+    implementation(libs.androidx.material.icons.extended)
+
+
     implementation(libs.kotlin.stdlib.jdk8)
     implementation(libs.material)
-    implementation(libs.monetcompat)
     implementation(libs.timber)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.ui.graphics)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.ui.test.junit4)
 
     debugImplementation(libs.fluent.system.icons)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    debugImplementation(libs.androidx.ui.tooling)
+    debugImplementation(libs.androidx.ui.test.manifest)
 }

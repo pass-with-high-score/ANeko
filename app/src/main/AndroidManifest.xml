@@ -22,48 +22,46 @@
     </queries>
 
     <application
-        android:name=".Applications"
+        android:name=".AnekoApp"
         android:icon="@drawable/icon"
         android:label="@string/app_name"
         tools:ignore="AllowBackup">
-
         <activity
-            android:name=".ui.ANekoActivity"
+            android:name=".presentation.ANekoActivity"
             android:exported="true"
             android:theme="@style/Theme.App.Palette">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <!-- Consolidated AnimationService declaration -->
         <service
-            android:name=".service.AnimationService"
+            android:name=".core.service.AnimationService"
             android:foregroundServiceType="mediaPlayback" />
-
         <service
-            android:name=".service.QuickSettingService"
+            android:name=".core.service.QuickSettingService"
             android:exported="true"
-            android:label="Aneko"
+            android:label="@string/app_name"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
             </intent-filter>
         </service>
 
-
         <activity
             android:name="org.tamanegi.aneko.NekoSkin"
-            android:exported="true"
-            android:label="@string/skin_name_neko">
+            android:exported="true">
             <intent-filter>
                 <action android:name="org.tamanegi.aneko.action.GET_SKIN" />
             </intent-filter>
+
             <meta-data
                 android:name="org.tamanegi.aneko.skin"
                 android:resource="@xml/neko" />
         </activity>
-
     </application>
+
 </manifest>

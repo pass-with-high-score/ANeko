@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="notification_enabled">Aneko đang chạy nè~</string>
+    <string name="notification_disabled">Aneko đang ngủ rồi zzz~</string>
+
+    <string name="download_skins">Tải thêm skin</string>
+    <string name="power_on">Bật nguồn</string>
+    <string name="power_off">Tắt nguồn</string>
+    <string name="choose_skin">Chọn skin bạn thích</string>
+    <string name="invalid_selection">Lựa chọn không hợp lệ</string>
+    <string name="cancel">Huỷ</string>
+    <string name="msg_skin_load_failed">Không thể tải skin. Vui lòng kiểm tra lại gói skin nhé.</string>
+
+    <!-- Motion Settings -->
+    <string name="motion_transparency_title">Độ trong suốt chuyển động</string>
+    <string name="motion_transparency_summary">Điều chỉnh mức độ trong suốt của hiệu ứng chuyển động.</string>
+    <string name="motion_size_title">Kích thước chuyển động</string>
+    <string name="motion_size_summary">Tuỳ chỉnh kích thước cho các hiệu ứng chuyển động.</string>
+    <string name="motion_settings_title">Cài đặt chuyển động</string>
+
+    <!-- Customization -->
+    <string name="customization_title">Tuỳ biến</string>
+    <string name="browse_skins_title">Duyệt skin</string>
+    <string name="browse_skins_summary">Xem và tải thêm skin từ Google Play.</string>
+
+    <!-- Community & Contributions -->
+    <string name="community_title">Cộng đồng &amp; Đóng góp</string>
+    <string name="github_contribute_title">Đóng góp trên GitHub</string>
+    <string name="github_contribute_summary">Khám phá mã nguồn và đóng góp thêm tính năng mới trên GitHub nha!</string>
+
+    <!-- Rate App -->
+    <string name="rate_app_title">Đánh giá ứng dụng</string>
+    <string name="rate_app_summary">Nếu bạn thích ANeko, hãy để lại một đánh giá dễ thương nha!</string>
+
+    <string name="select_prompt">Chọn %1$s</string>
+    <string name="make_with_love">Làm bằng cả ❤️ vì ANeko</string>
+    <string name="app_version">Phiên bản: %1$s</string>
+    <string name="unknown_value">Không rõ</string>
+    <string name="toggle_theme_title">Chuyển skin</string>
+    <string name="share_title">Chia sẻ</string>
+    <string name="notification_permission_title">Quyền thông báo</string>
+    <string name="notification_permission_description">ANeko cần quyền gửi thông báo để báo cho bạn biết khi nào đang chạy hoặc nghỉ. Hãy cấp quyền này để ứng dụng hoạt động trọn vẹn nha!</string>
+    <string name="allow_button">Cho phép</string>
+    <string name="cancel_button">Không cho</string>
+    <string name="overlay_permission_title">Cần quyền hiển thị trên ứng dụng khác</string>
+    <string name="overlay_permission_description">Aneko sẽ không chạy được nếu không có quyền hiển thị đè lên ứng dụng khác. Vui lòng bật quyền trong phần cài đặt nha.</string>
+    <string name="notification_permission_denied_msg">Bạn đã từ chối quyền thông báo. Một số tính năng có thể sẽ không hoạt động.</string>
+</resources>

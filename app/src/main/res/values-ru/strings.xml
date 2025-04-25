@@ -1,0 +1,47 @@
+<resources>
+    <string name="notification_enabled">ANeko запущен.</string>
+    <string name="notification_disabled">ANeko отдыхает.</string>
+
+    <string name="download_skins">Загрузить больше скинов</string>
+    <string name="power_on">Включить</string>
+    <string name="power_off">Выключить</string>
+    <string name="choose_skin">Выберите скин</string>
+    <string name="invalid_selection">Неверный выбор</string>
+    <string name="cancel">Отмена</string>
+    <string name="msg_skin_load_failed">Не удалось загрузить скин. Пожалуйста, проверьте приложение скина.</string>
+
+    <!-- Motion Settings -->
+    <string name="motion_transparency_title">Прозрачность движения</string>
+    <string name="motion_transparency_summary">Настройте уровень прозрачности эффектов движения.</string>
+    <string name="motion_size_title">Размер движения</string>
+    <string name="motion_size_summary">Установите размер элементов движения.</string>
+    <string name="motion_settings_title">Настройки движения</string>
+
+    <!-- Customization -->
+    <string name="customization_title">Настройка</string>
+    <string name="browse_skins_title">Просмотр скинов</string>
+    <string name="browse_skins_summary">Просматривайте и загружайте дополнительные скины из Google Play.</string>
+
+    <!-- Community & Contributions -->
+    <string name="community_title">Сообщество и вклад</string>
+    <string name="github_contribute_title">Внести вклад на GitHub</string>
+    <string name="github_contribute_summary">Изучите исходный код и добавьте новые функции на GitHub!</string>
+
+    <!-- Rate App -->
+    <string name="rate_app_title">Оцените это приложение</string>
+    <string name="rate_app_summary">Если вам нравится использовать ANeko, пожалуйста, оцените его!</string>
+
+    <string name="select_prompt">Выберите %1$s</string>
+    <string name="make_with_love">Сделано с ❤️ для ANeko</string>
+    <string name="app_version">Версия: %1$s</string>
+    <string name="unknown_value">Неизвестно</string>
+    <string name="toggle_theme_title">Переключить тему</string>
+    <string name="share_title">Поделиться</string>
+    <string name="notification_permission_title">Разрешение на уведомления</string>
+    <string name="notification_permission_description">ANeko требует разрешения на уведомления, чтобы показывать вам обновления о своем состоянии, например, когда ANeko работает или отдыхает. Пожалуйста, предоставьте это разрешение для полноценной работы приложения.</string>
+    <string name="allow_button">Разрешить</string>
+    <string name="cancel_button">Отмена</string>
+    <string name="overlay_permission_title">Требуется разрешение на наложение</string>
+    <string name="overlay_permission_description">ANeko не будет работать без разрешения на отображение поверх других приложений. Пожалуйста, разрешите это в настройках.</string>
+    <string name="notification_permission_denied_msg">Разрешение на уведомления отклонено. Некоторые функции могут не работать.</string>
+</resources>

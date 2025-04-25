@@ -1,4 +1,4 @@
-package org.nqmgaming.aneko.service;
+package org.nqmgaming.aneko.core.service;
 
 import android.annotation.SuppressLint;
 import android.app.Notification;
@@ -36,10 +36,10 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import org.nqmgaming.aneko.device.BatteryInfo;
-import org.nqmgaming.aneko.motion.MotionDrawable;
-import org.nqmgaming.aneko.motion.MotionParams;
-import org.nqmgaming.aneko.motion.MotionConfigParser;
+import org.nqmgaming.aneko.data.BatteryInfo;
+import org.nqmgaming.aneko.core.motion.MotionDrawable;
+import org.nqmgaming.aneko.core.motion.MotionParams;
+import org.nqmgaming.aneko.core.motion.MotionConfigParser;
 import org.nqmgaming.aneko.R;
 import org.tamanegi.aneko.NekoSkin;
 
@@ -254,7 +254,7 @@ public class AnimationService extends Service {
                 .setContentIntent(intent)
                 .setSmallIcon(R.drawable.icon)
                 .setContentTitle(getString(R.string.app_name))
-                .setContentText(getString(start ? R.string.notification_enable : R.string.notification_disable))
+                .setContentText(getString(start ? R.string.notification_enabled : R.string.notification_disabled))
                 .setPriority(Notification.PRIORITY_LOW)
                 .setOnlyAlertOnce(true)
                 .setOngoing(true)

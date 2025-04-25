@@ -27,11 +27,6 @@
         <item>240x240</item>
         <item>280x280</item>
         <item>320x320</item>
-        <item>360x360</item>
-        <item>400x400</item>
-        <item>440x440</item>
-        <item>480x480</item>
-        <item>520x520</item>
     </string-array>
 
     <string-array name="pref_motion_size_entry_values">
@@ -43,11 +38,6 @@
         <item>240</item>
         <item>280</item>
         <item>320</item>
-        <item>360</item>
-        <item>400</item>
-        <item>440</item>
-        <item>480</item>
-        <item>520</item>
     </string-array>
 
 </resources>

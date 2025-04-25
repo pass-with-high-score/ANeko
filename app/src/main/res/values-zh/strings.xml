@@ -1,0 +1,47 @@
+<resources>
+    <string name="notification_enabled">Aneko 正在运行。</string>
+    <string name="notification_disabled">Aneko 正在休息。</string>
+
+    <string name="download_skins">下载更多 skin</string>
+    <string name="power_on">启动</string>
+    <string name="power_off">关闭</string>
+    <string name="choose_skin">选择你的 skin</string>
+    <string name="invalid_selection">选择无效</string>
+    <string name="cancel">取消</string>
+    <string name="msg_skin_load_failed">skin 加载失败，请检查 skin 应用是否正常。</string>
+
+    <!-- Motion Settings -->
+    <string name="motion_transparency_title">动作透明度</string>
+    <string name="motion_transparency_summary">调整动作效果的透明程度。</string>
+    <string name="motion_size_title">动作大小</string>
+    <string name="motion_size_summary">设置动作元素的大小。</string>
+    <string name="motion_settings_title">动作设置</string>
+
+    <!-- Customization -->
+    <string name="customization_title">个性化</string>
+    <string name="browse_skins_title">查看 skin</string>
+    <string name="browse_skins_summary">从 Google Play 浏览并下载更多 skin。</string>
+
+    <!-- Community & Contributions -->
+    <string name="community_title">社区与贡献</string>
+    <string name="github_contribute_title">在 GitHub 上贡献</string>
+    <string name="github_contribute_summary">查看源码，也欢迎你来贡献新功能！</string>
+
+    <!-- Rate App -->
+    <string name="rate_app_title">为应用评分</string>
+    <string name="rate_app_summary">如果你喜欢 ANeko，请为我们打个分吧！</string>
+
+    <string name="select_prompt">选择 %1$s</string>
+    <string name="make_with_love">用 ❤️ 为 ANeko 打造</string>
+    <string name="app_version">版本：%1$s</string>
+    <string name="unknown_value">未知</string>
+    <string name="toggle_theme_title">切换主题</string>
+    <string name="share_title">分享</string>
+    <string name="notification_permission_title">通知权限</string>
+    <string name="notification_permission_description">ANeko 需要通知权限来告诉你它当前的状态，例如运行中或休眠中。请授予权限以确保功能完整。</string>
+    <string name="allow_button">允许</string>
+    <string name="cancel_button">取消</string>
+    <string name="overlay_permission_title">需要悬浮窗权限</string>
+    <string name="overlay_permission_description">如果没有“显示在其他应用上方”的权限，Aneko 将无法正常工作。请前往设置中开启。</string>
+    <string name="notification_permission_denied_msg">通知权限被拒，一些功能可能无法使用。</string>
+</resources>
