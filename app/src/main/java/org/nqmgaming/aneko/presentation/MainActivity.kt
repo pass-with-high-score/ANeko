@@ -169,14 +169,6 @@ class ANekoActivity : ComponentActivity() {
                                     component.flattenToString()
                                 )
                             }
-                            if (prefs.getBoolean(AnimationService.PREF_KEY_ENABLE, false)) {
-                                stopService(
-                                    Intent(
-                                        this,
-                                        AnimationService::class.java
-                                    ).setAction(AnimationService.ACTION_TOGGLE)
-                                )
-                            }
                         }
                     )
                 }

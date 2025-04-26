@@ -132,6 +132,9 @@ public class AnimationService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (!is_started &&
                 (intent == null || ACTION_START.equals(intent.getAction()))) {
+            if (is_started) {
+                stopAnimation();
+            }
             startAnimation();
             setForegroundNotification(true);
             is_started = true;
@@ -915,5 +918,12 @@ public class AnimationService extends Service {
         }
     }
 
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (receiver != null) {
+            unregisterReceiver(receiver);
+            receiver = null;
+        }
+    }
 }
