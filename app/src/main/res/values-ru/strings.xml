@@ -44,4 +44,5 @@
     <string name="overlay_permission_title">Требуется разрешение на наложение</string>
     <string name="overlay_permission_description">ANeko не будет работать без разрешения на отображение поверх других приложений. Пожалуйста, разрешите это в настройках.</string>
     <string name="notification_permission_denied_msg">Разрешение на уведомления отклонено. Некоторые функции могут не работать.</string>
+    <string name="loading_skins_label">Загрузка skins…</string>
 </resources>

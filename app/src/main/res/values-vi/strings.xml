@@ -46,4 +46,5 @@
     <string name="overlay_permission_title">Cần quyền hiển thị trên ứng dụng khác</string>
     <string name="overlay_permission_description">Aneko sẽ không chạy được nếu không có quyền hiển thị đè lên ứng dụng khác. Vui lòng bật quyền trong phần cài đặt nha.</string>
     <string name="notification_permission_denied_msg">Bạn đã từ chối quyền thông báo. Một số tính năng có thể sẽ không hoạt động.</string>
+    <string name="loading_skins_label">Đang tải skins…</string>
 </resources>

@@ -2,6 +2,7 @@ package org.nqmgaming.aneko.presentation.home
 
 import android.content.ComponentName
 import android.content.Context
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -25,6 +26,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -62,31 +65,42 @@ fun HomeScreen(
     val context = LocalContext.current
     var refreshing by remember { mutableStateOf(true) }
     var skinList by remember { mutableStateOf<List<SkinInfo>>(emptyList()) }
+
+    var selectedIndex by remember { mutableIntStateOf(0) }
+    val state = rememberPullToRefreshState()
     LaunchedEffect(refreshing) {
         if (refreshing) {
             val skins = loadSkinList(context)
             skinList = skins
+
+            // Set selected index after skinList is loaded
+            val initialSkinComponentString = context.getSharedPreferences(
+                context.packageName + "_preferences",
+                Context.MODE_PRIVATE
+            ).getString(AnimationService.PREF_KEY_SKIN_COMPONENT, "")
+
+            selectedIndex =
+                skins.indexOfFirst { it.component.flattenToString() == initialSkinComponentString }
+                    .takeIf { it != -1 } ?: 0
+
             refreshing = false
         }
-    }
-
-
-    val initialSkinComponentString = context.getSharedPreferences(
-        context.packageName + "_preferences",
-        Context.MODE_PRIVATE
-    ).getString(AnimationService.PREF_KEY_SKIN_COMPONENT, "")
-
-    var selectedIndex by remember {
-        mutableIntStateOf(
-            skinList.indexOfFirst { it.component.flattenToString() == initialSkinComponentString }
-                .takeIf { it != -1 } ?: 0
-        )
     }
 
     PullToRefreshBox(
         isRefreshing = refreshing,
         onRefresh = {
             refreshing = true
+        },
+        state = state,
+        indicator = {
+            Indicator(
+                modifier = Modifier.align(Alignment.TopCenter),
+                isRefreshing = refreshing,
+                containerColor = MaterialTheme.colorScheme.onPrimary,
+                color = MaterialTheme.colorScheme.primary,
+                state = state
+            )
         },
     ) {
         Column(
@@ -95,28 +109,43 @@ fun HomeScreen(
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            LazyRow(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(220.dp)
-                    .padding(top = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                contentPadding = PaddingValues(horizontal = 24.dp)
-            ) {
-                itemsIndexed(skinList) { index, skin ->
-                    SkinCard(
-                        skin = skin,
-                        isSelected = index == selectedIndex,
-                        onClick = {
-                            selectedIndex = index
-                            onSkinSelected(skin.component)
+            Crossfade(
+                targetState = skinList.isNotEmpty()
+            ) { isReady ->
+                if(isReady) {
+                    LazyRow(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(220.dp)
+                            .padding(top = 16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        contentPadding = PaddingValues(horizontal = 24.dp)
+                    ) {
+                        itemsIndexed(skinList) { index, skin ->
+                            SkinCard(
+                                skin = skin,
+                                isSelected = index == selectedIndex,
+                                onClick = {
+                                    selectedIndex = index
+                                    onSkinSelected(skin.component)
+                                }
+                            )
                         }
-                    )
-                }
-                item {
-                    AddSkinCard(onClick = {
-                        openUrl(context, context.getString(R.string.download_skins_link))
-                    })
+                        item {
+                            AddSkinCard(onClick = {
+                                openUrl(context, context.getString(R.string.download_skins_link))
+                            })
+                        }
+                    }
+                } else {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(220.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(stringResource(R.string.loading_skins_label))
+                    }
                 }
             }
 

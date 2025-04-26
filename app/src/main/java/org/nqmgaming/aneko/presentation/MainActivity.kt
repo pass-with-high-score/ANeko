@@ -23,6 +23,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -51,6 +52,18 @@ class ANekoActivity : ComponentActivity() {
             startAnimationService()
         }
 
+    private val prefsListener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+        if (key == AnimationService.PREF_KEY_ENABLE) {
+            val isEnabled = prefs.getBoolean(AnimationService.PREF_KEY_ENABLE, false)
+            runOnUiThread {
+                // Update UI with the latest value
+                isEnabledState?.value = isEnabled
+            }
+        }
+    }
+
+    private var isEnabledState: MutableState<Boolean>? = null
+
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,6 +72,8 @@ class ANekoActivity : ComponentActivity() {
         if (prefs.getBoolean(AnimationService.PREF_KEY_ENABLE, false)) {
             startAnimationService()
         }
+
+        prefs.registerOnSharedPreferenceChangeListener(prefsListener)
 
         setContent {
             val defaultDark = isSystemInDarkTheme()
@@ -74,14 +89,10 @@ class ANekoActivity : ComponentActivity() {
                 darkTheme = isDarkTheme,
                 dynamicColor = false
             ) {
-                var isEnabled by remember {
-                    mutableStateOf(
-                        prefs.getBoolean(
-                            AnimationService.PREF_KEY_ENABLE,
-                            false
-                        )
-                    )
+                isEnabledState = remember {
+                    mutableStateOf(prefs.getBoolean(AnimationService.PREF_KEY_ENABLE, false))
                 }
+
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     containerColor = MaterialTheme.colorScheme.background,
@@ -135,9 +146,9 @@ class ANekoActivity : ComponentActivity() {
                 ) { innerPadding ->
                     HomeScreen(
                         modifier = Modifier.padding(innerPadding),
-                        isEnabled = isEnabled,
+                        isEnabled = isEnabledState?.value == true,
                         onChangeEnable = { enabled ->
-                            isEnabled = enabled
+                            isEnabledState?.value = enabled
                             prefs.edit { putBoolean(AnimationService.PREF_KEY_ENABLE, enabled) }
                             if (enabled) {
                                 checkNotificationPermission()
@@ -193,5 +204,10 @@ class ANekoActivity : ComponentActivity() {
                 AnimationService::class.java
             ).setAction(AnimationService.ACTION_START)
         )
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        prefs.unregisterOnSharedPreferenceChangeListener(prefsListener)
     }
 }

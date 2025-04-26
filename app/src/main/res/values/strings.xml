@@ -53,4 +53,5 @@
     <string name="overlay_permission_title">Overlay Permission Required</string>
     <string name="overlay_permission_description">Aneko will not work without the permission to draw over other apps. Please allow it in the settings.</string>
     <string name="notification_permission_denied_msg">Notification permission denied. Some features may not work.</string>
+    <string name="loading_skins_label">Loading skins…</string>
 </resources>
