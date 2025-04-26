@@ -1,0 +1,12 @@
+ANeko Reborn is an updated version of the classic ANeko app. This is an interactive cat animation that runs on your Android screen, inspired by nekoDA, xneko, oneko, and other similar programs.
+
+This version is based on the original ANeko project but has been updated to support modern Android versions with improved performance and compatibility.
+
+<br><b>Features:</b>
+
+- Cute neko (cat) follows your touch around the screen.
+- Updated UI with Material You styling.
+- Improved compatibility for Android 13+.
+- Overlay permission handling for newer Android versions.
+- Performance optimizations for smoother animations.
+- Supports custom skins for neko.
