@@ -1,0 +1,4 @@
+* Update new UI
+* Support new languages Chinese, Russian, and Vietnamese
+* Add Dark Mode
+* Fix bugs
