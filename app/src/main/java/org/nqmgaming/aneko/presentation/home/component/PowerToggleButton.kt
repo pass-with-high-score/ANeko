@@ -74,25 +74,35 @@ fun PowerToggleButton(
 
     Box(
         modifier = Modifier
-            .size(100.dp)
+            .size(110.dp)
             .clip(CircleShape)
-            .background(backgroundColor)
-            .clickable {
-                if (!Settings.canDrawOverlays(context)) {
-                    showPermissionDialog = true
-                } else {
-                    onChangeEnable(!isEnabled)
-                }
-            },
+            .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)),
         contentAlignment = Alignment.Center
     ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = if (isEnabled) stringResource(R.string.power_on) else stringResource(
-                R.string.power_off
-            ),
-            tint = iconColor,
-            modifier = Modifier.size(40.dp)
-        )
+        Box(
+            modifier = Modifier
+                .size(100.dp)
+                .align(Alignment.Center)
+                .clip(CircleShape)
+                .background(backgroundColor)
+                .clickable {
+                    if (!Settings.canDrawOverlays(context)) {
+                        showPermissionDialog = true
+                    } else {
+                        onChangeEnable(!isEnabled)
+                    }
+                },
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = if (isEnabled) stringResource(R.string.power_on) else stringResource(
+                    R.string.power_off
+                ),
+                tint = iconColor,
+                modifier = Modifier.size(40.dp)
+            )
+        }
     }
+
 }
