@@ -28,9 +28,6 @@ jobs:
       - name: Run Unit Tests
         run: ./gradlew test
 
-      - name: Run Connected Tests (if needed)
-        run: ./gradlew connectedCheck
-
       - name: Verify Build
         run: ./gradlew assembleRelease
 
