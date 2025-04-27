@@ -328,3 +328,4 @@ obj/
 
 # End of https://www.toptal.com/developers/gitignore/api/android,androidstudio,intellij,gradle,java,kotlin
 app/release
+fastlane/report.xml

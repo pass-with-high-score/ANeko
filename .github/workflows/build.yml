@@ -1,0 +1,44 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [ "**" ]
+  pull_request:
+    branches: [ "**" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Run Unit Tests
+        run: ./gradlew test
+
+      - name: Run Connected Tests (if needed)
+        run: ./gradlew connectedCheck
+
+      - name: Verify Build
+        run: ./gradlew assembleRelease
+
+      - name: Check if Build was Successful
+        run: |
+          if [ ! -f app/build/outputs/apk/release/app-release.apk ]; then
+            echo "Build failed: APK not found!"
+            exit 1
+          else
+            echo "Build succeeded: APK found."
+          fi

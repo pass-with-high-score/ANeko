@@ -1,0 +1,55 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+
+default_platform(:android)
+
+platform :android do
+  desc "Runs all the tests"
+  lane :test do
+    gradle(
+      task: "test",
+      gradle_path: "./gradlew"
+    )
+  end
+
+  desc "Submit a new Build to Google Play Internal"
+  lane :internal do
+    gradle(
+      task: ":android:bundleRelease",
+      gradle_path: "./gradlew"
+    )
+    upload_to_play_store(track: 'internal')
+  end
+
+  desc "Submit a new Alpha Build to Google Play Close"
+  lane :alpha do
+    gradle(
+      task: ":android:bundleRelease",
+      gradle_path: "./gradlew"
+    )
+    upload_to_play_store(track: 'alpha')
+  end
+
+  desc "Submit a new Beta Build to Google Play Open"
+  lane :beta do
+    gradle(
+      task: ":android:bundleRelease",
+      gradle_path: "./gradlew"
+    )
+    upload_to_play_store(track: 'beta')
+  end
+
+  desc "Deploy a new version to the Google Play"
+  lane :release do
+    gradle(
+      task: "clean bundleRelease",
+      gradle_path: "./gradlew"
+    )
+    upload_to_play_store(
+      root_url: "https://androidpublisher.googleapis.com/",
+      skip_upload_images: true,
+      skip_upload_screenshots: true,
+      release_status: 'completed'  # Optional: to ensure the release is set as "completed"
+    )
+  end
+end
