@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.nqmgaming.sample"
+    namespace = "com.nqmgaming.skin_sample"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "com.nqmgaming.sample"
+        applicationId = "com.nqmgaming.skin_sample"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = libs.versions.versionCode.get().toInt()

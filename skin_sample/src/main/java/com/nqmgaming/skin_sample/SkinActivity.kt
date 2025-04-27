@@ -1,4 +1,4 @@
-package com.nqmgaming.sample
+package com.nqmgaming.skin_sample
 
 import android.app.Activity
 import android.app.AlertDialog
@@ -23,6 +23,7 @@ class SkinActivity : Activity() {
             packageManager.getPackageInfo(ANEKO_PACKAGE, 0)
             true
         } catch (e: PackageManager.NameNotFoundException) {
+            Timber.e(e)
             false
         }
 

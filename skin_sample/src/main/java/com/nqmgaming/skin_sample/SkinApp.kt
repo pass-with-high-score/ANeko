@@ -1,4 +1,4 @@
-package com.nqmgaming.sample
+package com.nqmgaming.skin_sample
 
 import android.app.Application
 import timber.log.Timber
