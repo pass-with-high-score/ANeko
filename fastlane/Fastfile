@@ -8,7 +8,6 @@ platform :android do
   lane :test do
     gradle(
       task: "test",
-      gradle_path: "./gradlew"
     )
   end
 
@@ -16,7 +15,6 @@ platform :android do
   lane :internal do
     gradle(
       task: ":android:bundleRelease",
-      gradle_path: "./gradlew"
     )
     upload_to_play_store(track: 'internal')
   end
@@ -25,7 +23,6 @@ platform :android do
   lane :alpha do
     gradle(
       task: ":android:bundleRelease",
-      gradle_path: "./gradlew"
     )
     upload_to_play_store(track: 'alpha')
   end
@@ -34,7 +31,6 @@ platform :android do
   lane :beta do
     gradle(
       task: ":android:bundleRelease",
-      gradle_path: "./gradlew"
     )
     upload_to_play_store(track: 'beta')
   end
@@ -43,13 +39,14 @@ platform :android do
   lane :release do
     gradle(
       task: "clean bundleRelease",
-      gradle_path: "./gradlew"
     )
     upload_to_play_store(
-      root_url: "https://androidpublisher.googleapis.com/",
+      track: 'production',
+      aab: 'app/build/outputs/bundle/release/app-release.aab',
+      release_status: 'completed',
       skip_upload_images: true,
       skip_upload_screenshots: true,
-      release_status: 'completed'  # Optional: to ensure the release is set as "completed"
     )
   end
+
 end

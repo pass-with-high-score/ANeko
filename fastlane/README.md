@@ -55,6 +55,14 @@ Submit a new Beta Build to Google Play Open
 
 Deploy a new version to the Google Play
 
+### android notify_telegram
+
+```sh
+[bundle exec] fastlane android notify_telegram
+```
+
+
+
 ----
 
 This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.
