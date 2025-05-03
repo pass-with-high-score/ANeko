@@ -1,11 +1,11 @@
 name: Publish Releases
 
 on:
-  tags:
-    - 'v*'
   push:
     branches:
       - 'update/v*'
+    tags:
+      - "v*"
 
 jobs:
   build-and-publish-github-release:
