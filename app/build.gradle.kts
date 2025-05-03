@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -22,6 +24,29 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        val keystoreProperties = Properties()
+        try {
+            file(rootProject.file("local.properties")).inputStream()
+                .use { keystoreProperties.load(it) }.let {
+                    create("release") {
+                        storeFile = file(keystoreProperties.getProperty("KEYSTORE_FILE"))
+                        storePassword = keystoreProperties.getProperty("KEYSTORE_PASSWORD")
+                        keyAlias = keystoreProperties.getProperty("KEY_ALIAS")
+                        keyPassword = keystoreProperties.getProperty("KEY_PASSWORD")
+                    }
+                }
+        } catch (_: Exception) {
+            println("local.properties not found, using default values")
+            create("release") {
+                storeFile = file(System.getenv("KEYSTORE_FILE"))
+                storePassword = System.getenv("KEYSTORE_PASSWORD")
+                keyAlias = System.getenv("KEY_ALIAS")
+                keyPassword = System.getenv("KEY_PASSWORD")
+            }
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = true
@@ -30,6 +55,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {

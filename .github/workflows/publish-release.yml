@@ -4,6 +4,8 @@ on:
   push:
     tags:
       - 'v*'
+    branches:
+      - 'update/v*'
 
 jobs:
   build-and-publish-github-release:
@@ -48,7 +50,7 @@ jobs:
       - name: Get version name
         id: get_version
         run: |
-          VERSION_NAME=$(echo ${GITHUB_REF#refs/tags/v})
+          VERSION_NAME=$(echo ${GITHUB_REF#refs/heads/})
           echo "VERSION_NAME=$VERSION_NAME" >> $GITHUB_ENV
 
       - name: Create GitHub Release
