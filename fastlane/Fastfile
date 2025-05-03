@@ -45,7 +45,7 @@ platform :android do
       aab: 'app/build/outputs/bundle/release/app-release.aab',
       release_status: 'completed',
       skip_upload_images: true,
-      skip_upload_screenshots: true,
+      skip_upload_screenshots: false,
     )
   end
 

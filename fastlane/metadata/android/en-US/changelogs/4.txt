@@ -1,0 +1,4 @@
+- Add bottom sheet user can view, share, delete skin
+- Remove unused resource
+
+Nice
