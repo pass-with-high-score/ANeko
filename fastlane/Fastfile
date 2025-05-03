@@ -16,15 +16,23 @@ platform :android do
     gradle(
       task: "bundleRelease",
     )
-    upload_to_play_store(track: 'internal')
+    upload_to_play_store(
+      track: 'internal',
+      aab: 'app/build/outputs/bundle/release/app-release.aab',
+      skip_upload_images: true,
+    )
   end
 
-  desc "Submit a new Alpha Build to Google Play Close"
+  desc "Submit a new Alpha Build to Google Play Internal (formerly Close)"
   lane :alpha do
     gradle(
       task: "bundleRelease",
     )
-    upload_to_play_store(track: 'alpha')
+    upload_to_play_store(
+      track: 'alpha'
+      aab: 'app/build/outputs/bundle/release/app-release.aab',
+      skip_upload_images: true,
+    )
   end
 
   desc "Submit a new Beta Build to Google Play Open"
@@ -32,11 +40,15 @@ platform :android do
     gradle(
       task: "bundleRelease",
     )
-    upload_to_play_store(track: 'beta')
+    upload_to_play_store(
+      track: 'beta',
+      aab: 'app/build/outputs/bundle/release/app-release.aab',
+      skip_upload_images: true,
+    )
   end
 
   desc "Deploy a new version to the Google Play"
-  lane :release do
+  lane :production do
   gradle(
     tasks: ["clean", "bundleRelease"],
   )
@@ -48,5 +60,13 @@ platform :android do
       skip_upload_screenshots: false,
     )
   end
+
+  desc "Deploy to all tracks"
+  lane :release_all do
+      internal
+      alpha
+      beta
+      production
+    end
 
 end
