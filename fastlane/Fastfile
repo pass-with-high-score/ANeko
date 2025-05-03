@@ -16,7 +16,10 @@ platform :android do
     gradle(
       task: "bundleRelease",
     )
-    upload_to_play_store(track: 'internal')
+    upload_to_play_store(
+      track: 'internal',
+      aab: 'app/build/outputs/bundle/release/app-release.aab',
+    )
   end
 
   desc "Submit a new Alpha Build to Google Play Close"
@@ -24,7 +27,10 @@ platform :android do
     gradle(
       task: "bundleRelease",
     )
-    upload_to_play_store(track: 'alpha')
+    upload_to_play_store(
+      track: 'internal',
+      aab: 'app/build/outputs/bundle/release/app-release.aab',
+    )
   end
 
   desc "Submit a new Beta Build to Google Play Open"
@@ -32,7 +38,10 @@ platform :android do
     gradle(
       task: "bundleRelease",
     )
-    upload_to_play_store(track: 'beta')
+    upload_to_play_store(
+      track: 'internal',
+      aab: 'app/build/outputs/bundle/release/app-release.aab',
+    )
   end
 
   desc "Deploy a new version to the Google Play"
