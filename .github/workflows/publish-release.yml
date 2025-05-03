@@ -36,7 +36,7 @@ jobs:
 
       - name: Build Signed Release APK
         env:
-          KEYSTORE_FILE: keystore
+          KEYSTORE_FILE: app/keystore
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
