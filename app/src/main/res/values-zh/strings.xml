@@ -45,4 +45,10 @@
     <string name="overlay_permission_description">如果没有“显示在其他应用上方”的权限，Aneko 将无法正常工作。请前往设置中开启。</string>
     <string name="notification_permission_denied_msg">通知权限被拒，一些功能可能无法使用。</string>
     <string name="loading_skins_label">正在加载 skins…</string>
+    <string name="default_label"> (默认)</string>
+    <string name="share_apk_label">分享 %1$s APK</string>
+    <string name="failed_to_share_apk_label">分享 %1$s APK 失败</string>
+    <string name="package_skin_label">Skin 包名：%1$s</string>
+    <string name="version_skin_label">Skin 版本：%1$s</string>
+    <string name="delete_skin_label">删除 Skin</string>
 </resources>

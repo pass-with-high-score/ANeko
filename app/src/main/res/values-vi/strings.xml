@@ -47,4 +47,10 @@
     <string name="overlay_permission_description">Aneko sẽ không chạy được nếu không có quyền hiển thị đè lên ứng dụng khác. Vui lòng bật quyền trong phần cài đặt nha.</string>
     <string name="notification_permission_denied_msg">Bạn đã từ chối quyền thông báo. Một số tính năng có thể sẽ không hoạt động.</string>
     <string name="loading_skins_label">Đang tải skins…</string>
+    <string name="default_label"> (Default)</string>
+    <string name="share_apk_label">Chia sẻ APK %1$s</string>
+    <string name="failed_to_share_apk_label">Không thể chia sẻ APK %1$s</string>
+    <string name="package_skin_label">Gói Skin: %1$s</string>
+    <string name="version_skin_label">Phiên bản Skin: %1$s</string>
+    <string name="delete_skin_label">Xóa Skin</string>
 </resources>

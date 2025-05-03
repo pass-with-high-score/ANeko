@@ -41,7 +41,7 @@ import org.nqmgaming.aneko.core.motion.MotionDrawable;
 import org.nqmgaming.aneko.core.motion.MotionParams;
 import org.nqmgaming.aneko.core.motion.MotionConfigParser;
 import org.nqmgaming.aneko.R;
-import org.tamanegi.aneko.NekoSkin;
+import org.tamanegi.aneko.ANekoActivity;
 
 import java.io.File;
 import java.text.MessageFormat;
@@ -291,7 +291,7 @@ public class AnimationService extends Service {
         if (skin_comp != null && loadMotionState(skin_comp)) {
             return true;
         }
-        skin_comp = new ComponentName(this, NekoSkin.class);
+        skin_comp = new ComponentName(this, ANekoActivity.class);
         return loadMotionState(skin_comp);
     }
 
@@ -313,7 +313,7 @@ public class AnimationService extends Service {
         }
 
         ComponentName skin_comp;
-        skin_comp = new ComponentName(this, NekoSkin.class);
+        skin_comp = new ComponentName(this, ANekoActivity.class);
         return loadMotionState(skin_comp);
     }
 
@@ -331,7 +331,7 @@ public class AnimationService extends Service {
         File dir = new File(skinsDir, "/" + folder);
 
         PackageManager pm = getPackageManager();
-        ComponentName skin_comp = new ComponentName(this, NekoSkin.class);
+        ComponentName skin_comp = new ComponentName(this, ANekoActivity.class);
         Resources res = pm.getResourcesForActivity(skin_comp);
 
         return new MotionConfigParser(res, dir, xmlFile);

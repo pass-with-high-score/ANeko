@@ -52,7 +52,7 @@
         </service>
 
         <activity
-            android:name="org.tamanegi.aneko.NekoSkin"
+            android:name="org.tamanegi.aneko.ANekoActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="org.tamanegi.aneko.action.GET_SKIN" />
@@ -62,6 +62,16 @@
                 android:name="org.tamanegi.aneko.skin"
                 android:resource="@xml/neko" />
         </activity>
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
     </application>
 
 </manifest>

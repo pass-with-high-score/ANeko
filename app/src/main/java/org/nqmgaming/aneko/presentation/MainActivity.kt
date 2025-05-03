@@ -169,7 +169,7 @@ class ANekoActivity : ComponentActivity() {
                                     component.flattenToString()
                                 )
                             }
-                        }
+                        },
                     )
                 }
             }

@@ -45,4 +45,10 @@
     <string name="overlay_permission_description">ANeko не будет работать без разрешения на отображение поверх других приложений. Пожалуйста, разрешите это в настройках.</string>
     <string name="notification_permission_denied_msg">Разрешение на уведомления отклонено. Некоторые функции могут не работать.</string>
     <string name="loading_skins_label">Загрузка skins…</string>
+    <string name="default_label"> (По умолчанию)</string>
+    <string name="share_apk_label">Поделиться APK %1$s</string>
+    <string name="failed_to_share_apk_label">Не удалось поделиться APK %1$s</string>
+    <string name="package_skin_label">Пакет skin: %1$s</string>
+    <string name="version_skin_label">Версия skin: %1$s</string>
+    <string name="delete_skin_label">Удалить skin</string>
 </resources>

@@ -11,8 +11,8 @@ import androidx.core.net.toUri
 
 class SkinActivity : Activity() {
     companion object {
-        private const val ANEKO_PACKAGE = "org.tamanegi.aneko"
-        private const val ANEKO_ACTIVITY = "org.tamanegi.aneko.ANekoActivity"
+        private const val ANEKO_PACKAGE = "org.nqmgaming.aneko"
+        private const val ANEKO_ACTIVITY = "org.nqmgaming.aneko.MainActivity"
         private val ANEKO_MARKET_URI = "market://search?q=$ANEKO_PACKAGE".toUri()
     }
 

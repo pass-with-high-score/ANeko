@@ -2,6 +2,10 @@ package org.nqmgaming.aneko.presentation.home
 
 import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
@@ -34,6 +38,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,6 +47,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.nqmgaming.aneko.R
 import org.nqmgaming.aneko.core.service.AnimationService
 import org.nqmgaming.aneko.data.SkinInfo
@@ -60,14 +68,43 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     isEnabled: Boolean = false,
     onChangeEnable: (Boolean) -> Unit = {},
-    onSkinSelected: (ComponentName) -> Unit = {}
+    onSkinSelected: (ComponentName) -> Unit = {},
 ) {
     val context = LocalContext.current
     var refreshing by remember { mutableStateOf(true) }
     var skinList by remember { mutableStateOf<List<SkinInfo>>(emptyList()) }
+    val scope = rememberCoroutineScope()
 
     var selectedIndex by remember { mutableIntStateOf(0) }
     val state = rememberPullToRefreshState()
+
+    fun isPackageInstalled(context: Context, packageName: String): Boolean {
+        return try {
+            context.packageManager.getPackageInfo(packageName, 0)
+            true
+        } catch (_: PackageManager.NameNotFoundException) {
+            false
+        }
+    }
+
+    val uninstallLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { _ ->
+        scope.launch {
+            delay(500)
+            if (!isPackageInstalled(context, skinList[selectedIndex].component.packageName)) {
+                skinList = loadSkinList(context)
+                val defaultSkin = skinList.firstOrNull()
+                if (defaultSkin != null) {
+                    selectedIndex = skinList.indexOf(defaultSkin)
+                    onSkinSelected(defaultSkin.component)
+                }
+            }
+            refreshing = false
+        }
+    }
+
+
     LaunchedEffect(refreshing) {
         if (refreshing) {
             val skins = loadSkinList(context)
@@ -112,7 +149,7 @@ fun HomeScreen(
             Crossfade(
                 targetState = skinList.isNotEmpty()
             ) { isReady ->
-                if(isReady) {
+                if (isReady) {
                     LazyRow(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -125,9 +162,17 @@ fun HomeScreen(
                             SkinCard(
                                 skin = skin,
                                 isSelected = index == selectedIndex,
-                                onClick = {
+                                onSkinSelected = {
                                     selectedIndex = index
                                     onSkinSelected(skin.component)
+                                },
+                                onRequestDeleteSkin = {
+                                    val intent = Intent(
+                                        Intent.ACTION_DELETE,
+                                        "package:${skin.component.packageName}".toUri()
+                                    )
+                                    uninstallLauncher.launch(intent)
+                                    refreshing = true
                                 }
                             )
                         }

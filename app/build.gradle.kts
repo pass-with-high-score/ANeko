@@ -60,13 +60,11 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.preference.ktx)
-    implementation(libs.androidx.palette.ktx)
-
     // Compose
     implementation(platform(libs.androidx.compose.bom))
     // Core UI
     implementation(libs.ui)
-    implementation(libs.material3) // or use material if you want legacy Material Design 2
+    implementation(libs.material3)
     implementation(libs.ui.tooling.preview)
 
     // Runtime
@@ -86,7 +84,6 @@ dependencies {
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
 
-    debugImplementation(libs.fluent.system.icons)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
