@@ -51,4 +51,5 @@
     <string name="package_skin_label">Пакет skin: %1$s</string>
     <string name="version_skin_label">Версия skin: %1$s</string>
     <string name="delete_skin_label">Удалить skin</string>
+    <string name="unknown_skin_version">Unknown</string>
 </resources>

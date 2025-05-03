@@ -8,13 +8,11 @@
         android:label="@string/app_name"
         android:roundIcon="@drawable/icon"
         android:supportsRtl="true"
-        android:theme="@style/Theme.ANeko">
+        android:theme="@style/AppTheme">
         <!-- main Activity -->
         <activity
             android:name=".SkinActivity"
-            android:exported="true"
-            android:label="@string/skin_name"
-            android:theme="@android:style/Theme.NoDisplay">
+            android:exported="true">
             <!-- launch from "open" -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

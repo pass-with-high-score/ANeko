@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.nqmgaming.aneko.R
 import org.nqmgaming.aneko.core.service.AnimationService
 import org.nqmgaming.aneko.data.SkinInfo
 
@@ -15,9 +16,10 @@ suspend fun loadSkinList(context: Context): List<SkinInfo> = withContext(Dispatc
     pm.queryIntentActivities(intent, 0).map { resolveInfo ->
         val packageName = resolveInfo.activityInfo.packageName
         val versionName = try {
-            pm.getPackageInfo(packageName, 0).versionName ?: "Unknown"
+            pm.getPackageInfo(packageName, 0).versionName
+                ?: context.getString(R.string.unknown_skin_version)
         } catch (_: PackageManager.NameNotFoundException) {
-            "Unknown"
+            context.getString(R.string.unknown_skin_version)
         }
         SkinInfo(
             icon = resolveInfo.loadIcon(pm),

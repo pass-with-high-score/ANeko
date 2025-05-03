@@ -29,7 +29,7 @@
         <activity
             android:name=".presentation.ANekoActivity"
             android:exported="true"
-            android:theme="@style/Theme.App.Palette">
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
