@@ -92,11 +92,11 @@ jobs:
         env:
           ENCODED_KEYSTORE: ${{ secrets.ENCODED_KEYSTORE }}
         run: |
-          echo $ENCODED_KEYSTORE | base64 -d > app/keystore.jks
+          echo $ENCODED_KEYSTORE | base64 -d > app/keystore
 
       - name: Build Release AAB
         env:
-          KEYSTORE_FILE: keystore.jks
+          KEYSTORE_FILE: keystore
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
