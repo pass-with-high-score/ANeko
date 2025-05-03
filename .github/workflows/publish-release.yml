@@ -102,6 +102,12 @@ jobs:
           mkdir -p app
           echo "$ENCODED_KEYSTORE" | base64 -d > app/keystore
 
+      - name: Create local.properties (Optional)
+        run: |
+          echo "KEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}" >> local.properties
+          echo "KEY_ALIAS=${{ secrets.KEY_ALIAS }}" >> local.properties
+          echo "KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> local.properties
+
       - name: Check keystore
         run: |
           if [ ! -f app/keystore ]; then

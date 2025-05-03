@@ -30,7 +30,7 @@ android {
             file(rootProject.file("local.properties")).inputStream()
                 .use { keystoreProperties.load(it) }.let {
                     create("release") {
-                        storeFile = file(keystoreProperties.getProperty("KEYSTORE_FILE"))
+                        storeFile = file(rootProject.file("app/keystore"))
                         storePassword = keystoreProperties.getProperty("KEYSTORE_PASSWORD")
                         keyAlias = keystoreProperties.getProperty("KEY_ALIAS")
                         keyPassword = keystoreProperties.getProperty("KEY_PASSWORD")
@@ -39,7 +39,7 @@ android {
         } catch (_: Exception) {
             println("local.properties not found, using default values")
             create("release") {
-                storeFile = file("keystore")
+                storeFile = file(rootProject.file("app/keystore"))
                 storePassword = System.getenv("KEYSTORE_PASSWORD")
                 keyAlias = System.getenv("KEY_ALIAS")
                 keyPassword = System.getenv("KEY_PASSWORD")
