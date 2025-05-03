@@ -42,6 +42,13 @@ jobs:
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: ./gradlew assembleRelease
 
+      - name: Check keystore
+        run: |
+          if [ ! -f app/keystore ]; then
+            echo "Keystore not found!"
+            exit 1
+          fi
+
       - name: Run Unit Tests
         run: ./gradlew test
 
@@ -92,7 +99,15 @@ jobs:
         env:
           ENCODED_KEYSTORE: ${{ secrets.ENCODED_KEYSTORE }}
         run: |
-          echo $ENCODED_KEYSTORE | base64 -d > app/keystore
+          mkdir -p app
+          echo "$ENCODED_KEYSTORE" | base64 -d > app/keystore
+
+      - name: Check keystore
+        run: |
+          if [ ! -f app/keystore ]; then
+            echo "Keystore not found!"
+            exit 1
+          fi
 
       - name: Build Release AAB
         env:
