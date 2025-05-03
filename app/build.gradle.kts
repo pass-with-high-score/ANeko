@@ -39,7 +39,7 @@ android {
         } catch (_: Exception) {
             println("local.properties not found, using default values")
             create("release") {
-                storeFile = file("app/keystore")
+                storeFile = file("keystore")
                 storePassword = System.getenv("KEYSTORE_PASSWORD")
                 keyAlias = System.getenv("KEY_ALIAS")
                 keyPassword = System.getenv("KEY_PASSWORD")
