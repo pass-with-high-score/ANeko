@@ -36,28 +36,28 @@ jobs:
         run: |
           echo $ENCODED_KEYSTORE | base64 -d > app/keystore
 
-      - name: Build Signed Release APK
+      - name: Build Signed Release APK and AAB
         env:
-          KEYSTORE_FILE: keystore
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-        run: ./gradlew assembleRelease
-
-      - name: Check keystore
-        run: |
-          if [ ! -f app/keystore ]; then
-            echo "Keystore not found!"
-            exit 1
-          fi
+        run: ./gradlew assembleRelease bundleRelease
 
       - name: Run Unit Tests
         run: ./gradlew test
 
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-builds
+          path: |
+            app/build/outputs/apk/release/app-release.apk
+            app/build/outputs/bundle/release/app-release.aab
+
       - name: Get version name
         id: get_version
         run: |
-          VERSION_NAME=$(echo ${GITHUB_REF#refs/heads/})
+          VERSION_NAME=$(echo ${GITHUB_REF#refs/tags/})
           echo "VERSION_NAME=$VERSION_NAME" >> $GITHUB_ENV
 
       - name: Create GitHub Release
@@ -69,6 +69,11 @@ jobs:
           prerelease: false
           files: app/build/outputs/apk/release/app-release.apk
           token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Cleanup sensitive files
+        run: |
+          rm -f play-store-config.json
+          rm -f app/keystore
 
   build-and-publish-play-store:
     name: Build and publish to Play Store
@@ -85,63 +90,29 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Set up Ruby
+      - name: Set up Ruby and Bundler
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.2'
           bundler-cache: true
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
-
-      - name: Grant Permission to Execute
-        run: chmod +x gradlew
-
-      - name: Decode Keystore
-        env:
-          ENCODED_KEYSTORE: ${{ secrets.ENCODED_KEYSTORE }}
-        run: |
-          mkdir -p app
-          echo "$ENCODED_KEYSTORE" | base64 -d > app/keystore
-
-      - name: Create local.properties (Optional)
-        run: |
-          echo "KEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}" >> local.properties
-          echo "KEY_ALIAS=${{ secrets.KEY_ALIAS }}" >> local.properties
-          echo "KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> local.properties
-
-      - name: Check keystore
-        run: |
-          if [ ! -f app/keystore ]; then
-            echo "Keystore not found!"
-            exit 1
-          fi
-
-      - name: Build Release AAB
-        env:
-          KEYSTORE_FILE: keystore
-          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-        run: ./gradlew bundleRelease
-
       - name: Setup Fastlane
-        run: |
-          gem install fastlane
+        run: gem install fastlane
+
+      - name: Download Build Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: release-builds
 
       - name: Decode service account key
         env:
           PLAY_STORE_CONFIG_JSON: ${{ secrets.PLAY_STORE_CONFIG_JSON }}
         run: echo $PLAY_STORE_CONFIG_JSON > play-store-config.json
 
-      - name: Deploy to Internal
-        run: fastlane android internal
+      - name: Deploy to Play Store (All Tracks)
+        run: fastlane android release_all
 
-      - name: Deploy to Alpha
-        run: fastlane android alpha
-
-      - name: Deploy to Beta
-        run: fastlane android beta
-
-      - name: Deploy to Production
-        run: fastlane android production
+      - name: Cleanup sensitive files
+        run: |
+          rm -f play-store-config.json
+          rm -f app/keystore

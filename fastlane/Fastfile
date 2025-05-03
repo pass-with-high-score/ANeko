@@ -61,4 +61,12 @@ platform :android do
     )
   end
 
+  desc "Deploy to all tracks"
+  lane :release_all do
+      internal
+      alpha
+      beta
+      production
+    end
+
 end

@@ -30,7 +30,7 @@ android {
             file(rootProject.file("local.properties")).inputStream()
                 .use { keystoreProperties.load(it) }.let {
                     create("release") {
-                        storeFile = file(rootProject.file("app/keystore"))
+                        storeFile = file(keystoreProperties.getProperty("KEYSTORE_FILE"))
                         storePassword = keystoreProperties.getProperty("KEYSTORE_PASSWORD")
                         keyAlias = keystoreProperties.getProperty("KEY_ALIAS")
                         keyPassword = keystoreProperties.getProperty("KEY_PASSWORD")
