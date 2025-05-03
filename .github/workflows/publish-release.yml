@@ -32,11 +32,11 @@ jobs:
         env:
           ENCODED_KEYSTORE: ${{ secrets.ENCODED_KEYSTORE }}
         run: |
-          echo $ENCODED_KEYSTORE | base64 -d > app/keystore
+          echo $ENCODED_KEYSTORE | base64 -d > keystore
 
       - name: Build Signed Release APK
         env:
-          KEYSTORE_FILE: app/keystore
+          KEYSTORE_FILE: keystore
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
