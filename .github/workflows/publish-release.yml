@@ -2,8 +2,6 @@ name: Publish Releases
 
 on:
   push:
-    tags:
-      - 'v*'
     branches:
       - 'update/v*'
 
@@ -36,9 +34,6 @@ jobs:
         run: |
           echo $ENCODED_KEYSTORE | base64 -d > app/keystore
 
-      - name: Run Unit Tests
-        run: ./gradlew test
-
       - name: Build Signed Release APK
         env:
           KEYSTORE_FILE: keystore
@@ -46,6 +41,9 @@ jobs:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: ./gradlew assembleRelease
+
+      - name: Run Unit Tests
+        run: ./gradlew test
 
       - name: Get version name
         id: get_version
