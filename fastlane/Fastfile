@@ -23,13 +23,13 @@ platform :android do
     )
   end
 
-  desc "Submit a new Alpha Build to Google Play Close"
+  desc "Submit a new Alpha Build to Google Play Internal (formerly Close)"
   lane :alpha do
     gradle(
       task: "bundleRelease",
     )
     upload_to_play_store(
-      track: 'internal',
+      track: 'alpha'
       aab: 'app/build/outputs/bundle/release/app-release.aab',
       skip_upload_images: true,
     )
@@ -41,7 +41,7 @@ platform :android do
       task: "bundleRelease",
     )
     upload_to_play_store(
-      track: 'internal',
+      track: 'beta',
       aab: 'app/build/outputs/bundle/release/app-release.aab',
       skip_upload_images: true,
     )
@@ -66,7 +66,7 @@ platform :android do
       internal
       alpha
       beta
-      production
+      release
     end
 
 end
