@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.ksp)
 }
 
 android {
@@ -100,6 +101,11 @@ dependencies {
     implementation(libs.accompanist.permissions)
     implementation(libs.coil.compose)
     implementation(libs.androidx.material.icons.extended)
+
+    // Compose Destination
+    implementation(libs.compose.destination.animation.core)
+    implementation(libs.compose.destination.core)
+    ksp(libs.compose.destination.ksp)
 
 
     implementation(libs.kotlin.stdlib.jdk8)

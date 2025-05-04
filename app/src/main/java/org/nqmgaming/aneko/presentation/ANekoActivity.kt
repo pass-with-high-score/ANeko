@@ -9,11 +9,20 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.filled.Draw
 import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -30,13 +39,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.core.content.ContextCompat
 import androidx.core.content.edit
 import org.nqmgaming.aneko.R
 import org.nqmgaming.aneko.core.service.AnimationService
 import org.nqmgaming.aneko.presentation.home.HomeScreen
+import org.nqmgaming.aneko.presentation.home.component.ExpandableFab
+import org.nqmgaming.aneko.presentation.home.component.SmallFab
 import org.nqmgaming.aneko.presentation.ui.theme.ANekoTheme
 
 class ANekoActivity : ComponentActivity() {
@@ -85,6 +100,9 @@ class ANekoActivity : ComponentActivity() {
                     ) == "dark"
                 )
             }
+            val context = LocalContext.current
+            var isFabOpen by remember { mutableStateOf(false) }
+
             ANekoTheme(
                 darkTheme = isDarkTheme,
                 dynamicColor = false
@@ -142,34 +160,90 @@ class ANekoActivity : ComponentActivity() {
                                 }
                             }
                         )
-                    }
+                    },
+                    floatingActionButton = {
+
+                    },
                 ) { innerPadding ->
-                    HomeScreen(
-                        modifier = Modifier.padding(innerPadding),
-                        isEnabled = isEnabledState?.value == true,
-                        onChangeEnable = { enabled ->
-                            isEnabledState?.value = enabled
-                            prefs.edit { putBoolean(AnimationService.PREF_KEY_ENABLE, enabled) }
-                            if (enabled) {
-                                checkNotificationPermission()
-                            } else {
-                                prefs.edit { putBoolean(AnimationService.PREF_KEY_VISIBLE, false) }
-                                stopService(
-                                    Intent(
-                                        this,
-                                        AnimationService::class.java
-                                    ).setAction(AnimationService.ACTION_STOP)
+                    Box(
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        HomeScreen(
+                            modifier = Modifier.padding(innerPadding),
+                            isEnabled = isEnabledState?.value == true,
+                            onChangeEnable = { enabled ->
+                                isEnabledState?.value = enabled
+                                prefs.edit { putBoolean(AnimationService.PREF_KEY_ENABLE, enabled) }
+                                if (enabled) {
+                                    checkNotificationPermission()
+                                } else {
+                                    prefs.edit {
+                                        putBoolean(
+                                            AnimationService.PREF_KEY_VISIBLE,
+                                            false
+                                        )
+                                    }
+                                    stopService(
+                                        Intent(
+                                            context,
+                                            AnimationService::class.java
+                                        ).setAction(AnimationService.ACTION_STOP)
+                                    )
+                                }
+                            },
+                            onSkinSelected = { component ->
+                                prefs.edit {
+                                    putString(
+                                        AnimationService.PREF_KEY_SKIN_COMPONENT,
+                                        component.flattenToString()
+                                    )
+                                }
+                            },
+                        )
+                    }
+                    AnimatedVisibility(
+                        visible = isFabOpen,
+                        enter = fadeIn(animationSpec = tween(durationMillis = 300)),
+                        exit = fadeOut(animationSpec = tween(durationMillis = 300)),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .zIndex(1f)
+                    ) {
+                        Box(
+                            Modifier
+                                .fillMaxSize()
+                                .background(Color.Black.copy(alpha = 0.4f))
+                                .clickable { isFabOpen = false }
+
+                        )
+                    }
+                    ExpandableFab(
+                        modifier = Modifier
+                            .zIndex(2f)
+                            .padding(
+                                end = 16.dp,
+                                bottom = 50.dp
+                            ),
+                        isOpen = isFabOpen,
+                        onToggle = { isFabOpen = !isFabOpen },
+                        children = listOf(
+                            {
+                                SmallFab(
+                                    icon = Icons.Filled.Draw,
+                                    onClick = { /*...*/ },
+                                    text = "Edit",
+                                    isExpanded = isFabOpen
                                 )
-                            }
-                        },
-                        onSkinSelected = { component ->
-                            prefs.edit {
-                                putString(
-                                    AnimationService.PREF_KEY_SKIN_COMPONENT,
-                                    component.flattenToString()
+                            },
+                            {
+                                SmallFab(
+                                    icon = Icons.Filled.Create,
+                                    onClick = { /*...*/ },
+                                    text = "Create",
+                                    isExpanded = isFabOpen
                                 )
-                            }
-                        },
+                            },
+                        )
                     )
                 }
             }

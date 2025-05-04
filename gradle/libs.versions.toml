@@ -1,15 +1,13 @@
 [versions]
 # default versions
-accompanistPermissions = "0.36.0"
-coilCompose = "2.7.0"
 compileSdk = "35"
-materialIconsExtended = "1.7.8"
 minSdk = "28"
 targetSdk = "35"
 versionCode = "4"
 versionName = "1.0.3"
 jvmTarget = "11"
 agp = "8.9.2"
+
 androidxJunit = "1.2.1"
 appcompat = "1.7.0"
 constraintlayout = "2.2.1"
@@ -24,6 +22,13 @@ coreKtx = "1.16.0"
 lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.10.1"
 composeBom = "2025.04.01"
+# Compose Destinations
+composeDestinations = "2.1.0-beta09"
+composeAnimations = "1.11.6"
+ksp = "2.0.21-1.0.28"
+materialIconsExtended = "1.7.8"
+accompanistPermissions = "0.36.0"
+coilCompose = "2.7.0"
 
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
@@ -50,10 +55,15 @@ androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-man
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
 ui = { module = "androidx.compose.ui:ui" }
+# Compose Destinations
+compose-destination-core = { module = "io.github.raamcosta.compose-destinations:core", version.ref = "composeDestinations" }
+compose-destination-animation-core = { module = "io.github.raamcosta.compose-destinations:animations-core", version.ref = "composeAnimations" }
+compose-destination-ksp = { module = "io.github.raamcosta.compose-destinations:ksp", version.ref = "composeDestinations" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
