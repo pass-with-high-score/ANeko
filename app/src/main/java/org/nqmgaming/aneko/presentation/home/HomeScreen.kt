@@ -36,6 +36,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.RootGraph
+import com.ramcosta.composedestinations.generated.destinations.CreateSkinScreenDestination
+import com.ramcosta.composedestinations.generated.destinations.EditSkinScreenDestination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import org.nqmgaming.aneko.R
 import org.nqmgaming.aneko.core.service.AnimationService
 import org.nqmgaming.aneko.presentation.AnekoViewModel
@@ -45,10 +50,12 @@ import org.nqmgaming.aneko.presentation.home.component.SmallFab
 import org.nqmgaming.aneko.util.extension.checkNotificationPermission
 
 
+@Destination<RootGraph>(start = true)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     viewModel: AnekoViewModel = hiltViewModel(),
+    navigator: DestinationsNavigator,
 ) {
     val isDarkTheme by viewModel.isDarkTheme.collectAsState()
     val isFabOpen by viewModel.isFabOpen.collectAsState()
@@ -175,7 +182,9 @@ fun HomeScreen(
                 {
                     SmallFab(
                         icon = Icons.Filled.Draw,
-                        onClick = { /*...*/ },
+                        onClick = {
+                            navigator.navigate(EditSkinScreenDestination())
+                        },
                         text = "Edit",
                         isExpanded = isFabOpen
                     )
@@ -183,7 +192,9 @@ fun HomeScreen(
                 {
                     SmallFab(
                         icon = Icons.Filled.Create,
-                        onClick = { /*...*/ },
+                        onClick = {
+                            navigator.navigate(CreateSkinScreenDestination())
+                        },
                         text = "Create",
                         isExpanded = isFabOpen
                     )

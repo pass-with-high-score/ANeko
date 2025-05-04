@@ -7,11 +7,15 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.core.content.edit
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.compose.rememberNavController
+import com.ramcosta.composedestinations.DestinationsNavHost
+import com.ramcosta.composedestinations.generated.NavGraphs
+import com.ramcosta.composedestinations.rememberNavHostEngine
 import dagger.hilt.android.AndroidEntryPoint
 import org.nqmgaming.aneko.core.service.AnimationService
-import org.nqmgaming.aneko.presentation.home.HomeScreen
 import org.nqmgaming.aneko.presentation.ui.theme.ANekoTheme
 
 @AndroidEntryPoint
@@ -29,12 +33,20 @@ class ANekoActivity : ComponentActivity() {
         setContent {
             val viewModel: AnekoViewModel = hiltViewModel()
             val isDarkTheme by viewModel.isDarkTheme.collectAsState()
+            val navController = rememberNavController()
+            val navHostEngine = rememberNavHostEngine(
+                navHostContentAlignment = Alignment.TopCenter,
+            )
 
             ANekoTheme(
                 darkTheme = isDarkTheme,
                 dynamicColor = false
             ) {
-                HomeScreen()
+                DestinationsNavHost(
+                    navGraph = NavGraphs.root,
+                    navController = navController,
+                    engine = navHostEngine,
+                )
             }
         }
     }

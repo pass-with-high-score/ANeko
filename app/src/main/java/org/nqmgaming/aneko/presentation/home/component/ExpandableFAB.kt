@@ -118,7 +118,11 @@ fun ExpandableFab(
 
         // Main FAB
         FloatingActionButton(
-            onClick = { onToggle() },
+            onClick = {
+                // if is animating do nothing
+                if (transitionState.currentState != transitionState.targetState) return@FloatingActionButton
+                onToggle()
+            },
             containerColor = MaterialTheme.colorScheme.primary,
             elevation = FloatingActionButtonDefaults.elevation(),
             modifier = Modifier
