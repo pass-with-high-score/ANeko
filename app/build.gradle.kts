@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.ksp)
+    alias(libs.plugins.hilt)
 }
 
 android {
@@ -107,6 +108,14 @@ dependencies {
     implementation(libs.compose.destination.core)
     ksp(libs.compose.destination.ksp)
 
+    // Hilt
+    implementation(libs.hilt.android)
+    implementation(libs.hilt.navigation.compose)
+    ksp(libs.hilt.compiler)
+    implementation(libs.hilt.work)
+
+    // WorkManager
+    implementation(libs.androidx.work.runtime)
 
     implementation(libs.kotlin.stdlib.jdk8)
     implementation(libs.material)

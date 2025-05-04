@@ -12,7 +12,7 @@ androidxJunit = "1.2.1"
 appcompat = "1.7.0"
 constraintlayout = "2.2.1"
 espressoCoreVersion = "3.6.1"
-kotlin = "2.1.20"
+kotlin = "2.0.21"
 junit = "4.13.2"
 kotlinStdlibJdk8 = "2.1.0"
 material = "1.12.0"
@@ -25,6 +25,11 @@ composeBom = "2025.04.01"
 # Compose Destinations
 composeDestinations = "2.1.0-beta09"
 composeAnimations = "1.11.6"
+# Hilt
+hilt = "2.51.1"
+hilt-work = "1.2.0"
+hilt-compose = "1.2.0"
+workRuntime = "2.10.0"
 ksp = "2.0.21-1.0.28"
 materialIconsExtended = "1.7.8"
 accompanistPermissions = "0.36.0"
@@ -60,10 +65,20 @@ compose-destination-core = { module = "io.github.raamcosta.compose-destinations:
 compose-destination-animation-core = { module = "io.github.raamcosta.compose-destinations:animations-core", version.ref = "composeAnimations" }
 compose-destination-ksp = { module = "io.github.raamcosta.compose-destinations:ksp", version.ref = "composeDestinations" }
 
+# Hilt
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
+hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
+hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hilt-compose" }
+hilt-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "hilt-work" }
+
+# Worker
+androidx-work-runtime = { module = "androidx.work:work-runtime", version.ref = "workRuntime" }
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 
