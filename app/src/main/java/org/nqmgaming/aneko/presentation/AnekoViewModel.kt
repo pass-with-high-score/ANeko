@@ -10,6 +10,7 @@ import org.nqmgaming.aneko.core.service.AnimationService
 import androidx.core.content.edit
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,21 +22,41 @@ class AnekoViewModel @Inject constructor(application: Application) : AndroidView
     private val prefs: SharedPreferences =
         PreferenceManager.getDefaultSharedPreferences(application)
 
+    private val preferenceChangeListener =
+        SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
+            when (key) {
+                AnimationService.PREF_KEY_ENABLE -> {
+                    _isEnabledState.value = sharedPreferences.getBoolean(key, false)
+                }
+                PREF_KEY_THEME -> {
+                    _isDarkTheme.value = sharedPreferences.getString(key, "light") == "dark"
+                }
+            }
+        }
+
+    init {
+        prefs.registerOnSharedPreferenceChangeListener(preferenceChangeListener)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        prefs.unregisterOnSharedPreferenceChangeListener(preferenceChangeListener)
+    }
+
     private val _isEnabledState =
         MutableStateFlow(prefs.getBoolean(AnimationService.PREF_KEY_ENABLE, false))
-    val isEnabledState: StateFlow<Boolean> = _isEnabledState
+    val isEnabledState: StateFlow<Boolean> = _isEnabledState.asStateFlow()
 
     private val _isDarkTheme =
         MutableStateFlow(prefs.getString(PREF_KEY_THEME, "light") == "dark")
-    val isDarkTheme: StateFlow<Boolean> = _isDarkTheme
+    val isDarkTheme: StateFlow<Boolean> = _isDarkTheme.asStateFlow()
 
     private val _isFabOpen = MutableStateFlow(false)
-    val isFabOpen: StateFlow<Boolean> = _isFabOpen
+    val isFabOpen: StateFlow<Boolean> = _isFabOpen.asStateFlow()
 
     fun toggleTheme() {
         val newTheme = if (_isDarkTheme.value) "light" else "dark"
         prefs.edit { putString(PREF_KEY_THEME, newTheme) }
-        _isDarkTheme.value = !_isDarkTheme.value
     }
 
     fun toggleFabState() {
@@ -44,7 +65,6 @@ class AnekoViewModel @Inject constructor(application: Application) : AndroidView
 
     fun updateAnimationEnabled(enabled: Boolean) {
         prefs.edit { putBoolean(AnimationService.PREF_KEY_ENABLE, enabled) }
-        _isEnabledState.value = enabled
     }
 
     fun updateSkin(componentName: ComponentName) {
