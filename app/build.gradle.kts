@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.ksp)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -116,6 +117,9 @@ dependencies {
 
     // WorkManager
     implementation(libs.androidx.work.runtime)
+
+    // Serialization
+    implementation(libs.bundles.serialization)
 
     implementation(libs.kotlin.stdlib.jdk8)
     implementation(libs.material)

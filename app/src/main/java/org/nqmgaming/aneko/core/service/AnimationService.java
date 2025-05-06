@@ -19,11 +19,13 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.provider.Settings;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -130,6 +132,13 @@ public class AnimationService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        if (!Settings.canDrawOverlays(this)) {
+            Intent overlayIntent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    Uri.parse("package:" + getPackageName()));
+            overlayIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(overlayIntent);
+            return START_NOT_STICKY;
+        }
         if (!is_started &&
                 (intent == null || ACTION_START.equals(intent.getAction()))) {
             if (is_started) {
@@ -387,7 +396,6 @@ public class AnimationService extends Service {
         String alpha_str = prefs.getString(PREF_KEY_TRANSPARENCY, "0.0");
         float opacity = 1 - Float.parseFloat(alpha_str);
         motion_state.alpha = (int) (opacity * 0xff);
-        //textV.setAlpha(opacity);
 
         motion_state.setBehaviour(
                 Behaviour.valueOf(

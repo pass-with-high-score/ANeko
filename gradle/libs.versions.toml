@@ -30,6 +30,8 @@ hilt = "2.51.1"
 hilt-work = "1.2.0"
 hilt-compose = "1.2.0"
 workRuntime = "2.10.0"
+# Serialization
+serialization = "1.7.3"
 ksp = "2.0.21-1.0.28"
 materialIconsExtended = "1.7.8"
 accompanistPermissions = "0.36.0"
@@ -74,6 +76,16 @@ hilt-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "hilt-w
 # Worker
 androidx-work-runtime = { module = "androidx.work:work-runtime", version.ref = "workRuntime" }
 
+# Serialization
+kotlinx-serialization-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core", version.ref = "serialization" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
+
+[bundles]
+serialization = [
+    "kotlinx-serialization-core",
+    "kotlinx-serialization-json",
+]
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
@@ -81,4 +93,5 @@ android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
