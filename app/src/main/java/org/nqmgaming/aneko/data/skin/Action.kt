@@ -21,3 +21,30 @@ sealed class Action {
         val actions: List<Action>
     ) : Action()
 }
+
+fun Action.getDrawable(): String? {
+    return when (this) {
+        is Action.Item -> drawable
+        is Action.RepeatItem -> actions.firstNotNullOfOrNull { it.getDrawable() }
+    }
+}
+
+data class DrawableFrame(
+    val drawableName: String,
+    val durationMillis: Int
+)
+
+fun Action.flattenToDrawableFrames(): List<DrawableFrame> {
+    return when (this) {
+        is Action.Item -> listOf(DrawableFrame(drawable, duration))
+        is Action.RepeatItem -> {
+            val repeat = repeatCount ?: 1
+            val innerFrames = actions.flatMap { it.flattenToDrawableFrames() }
+            List(repeat) { innerFrames }.flatten()
+        }
+    }
+}
+
+fun List<Action>.flattenToDrawableFrames(): List<DrawableFrame> {
+    return flatMap { it.flattenToDrawableFrames() }
+}

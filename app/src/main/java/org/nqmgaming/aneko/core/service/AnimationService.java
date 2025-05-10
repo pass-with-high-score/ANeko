@@ -1,5 +1,10 @@
 package org.nqmgaming.aneko.core.service;
 
+import static android.view.WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+import static android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
+import static android.view.WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;
+import static android.view.WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+
 import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -17,6 +22,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ServiceInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.net.Uri;
@@ -187,7 +193,10 @@ public class AnimationService extends Service {
             WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
             this.touch_view = new View(this);
             this.touch_view.setOnTouchListener(new TouchListener());
-            LayoutParams touch_params = new LayoutParams(-2, -2, 2038, 262168, -3);
+            LayoutParams touch_params = new LayoutParams(1, 1, TYPE_APPLICATION_OVERLAY,
+                    FLAG_NOT_FOCUSABLE | FLAG_WATCH_OUTSIDE_TOUCH | FLAG_NOT_TOUCHABLE,
+                    PixelFormat.TRANSLUCENT);
+
             touch_params.gravity = Gravity.CENTER;
             assert wm != null;
             wm.addView(this.touch_view, touch_params);

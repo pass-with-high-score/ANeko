@@ -2,18 +2,15 @@ package org.nqmgaming.aneko.presentation.home
 
 import android.content.Intent
 import android.net.Uri
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -35,36 +32,25 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
 import com.ramcosta.composedestinations.generated.destinations.CreateSkinScreenDestination
 import com.ramcosta.composedestinations.generated.destinations.EditSkinScreenDestination
+import com.ramcosta.composedestinations.generated.destinations.SkinDetailScreenDestination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import org.nqmgaming.aneko.R
 import org.nqmgaming.aneko.core.service.AnimationService
-import org.nqmgaming.aneko.data.skin.Action
 import org.nqmgaming.aneko.presentation.AnekoViewModel
 import org.nqmgaming.aneko.presentation.home.component.ExpandableFab
 import org.nqmgaming.aneko.presentation.home.component.HomeContent
 import org.nqmgaming.aneko.presentation.home.component.SmallFab
-import org.nqmgaming.aneko.util.copyFileToAppDirectory
-import org.nqmgaming.aneko.util.deleteFile
 import org.nqmgaming.aneko.util.extension.checkNotificationPermission
-import org.nqmgaming.aneko.util.getFileNameFromUri
-import org.nqmgaming.aneko.util.getSkinConfigJsonFile
-import org.nqmgaming.aneko.util.readSkinConfigJson
-import org.nqmgaming.aneko.util.unzipFile
-import timber.log.Timber
-import java.io.File
 
 
 @Destination<RootGraph>(start = true)
@@ -100,28 +86,7 @@ fun HomeScreen(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         uri?.let {
-            val fileName = getFileNameFromUri(context, it)
-            if (fileName != null) {
-                val destFile = File(context.filesDir, "skins/$fileName")
-
-                copyFileToAppDirectory(context, it, destFile)
-                val destinationDir = File(context.filesDir, "skins/unzipped")
-                try {
-                    val extractedDir = unzipFile(destFile, destinationDir)
-                    viewModel.updateSkinDir(extractedDir?.path)
-                    extractedDir?.let { skinDir ->
-                        val configFile = getSkinConfigJsonFile(skinDir)
-                        configFile?.let { config ->
-                            val skinConfig = readSkinConfigJson(config)
-                            Timber.d("Skin Config: $skinConfig")
-                            viewModel.updateSkinConfig(skinConfig)
-                        }
-                    }
-                    deleteFile(destFile)
-                } catch (e: Exception) {
-                    Timber.e("Failed to unzip file: $e")
-                }
-            }
+            navigator.navigate(SkinDetailScreenDestination(skinPath = it.toString()))
         }
     }
 
@@ -200,67 +165,67 @@ fun HomeScreen(
                 },
             )
         }
-        AnimatedVisibility(
-            visible = isFabOpen,
-            enter = fadeIn(animationSpec = tween(durationMillis = 300)),
-            exit = fadeOut(animationSpec = tween(durationMillis = 300)),
-            modifier = Modifier
-                .fillMaxSize()
-                .zIndex(1f)
-        ) {
-            Box(
-                Modifier
-                    .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.4f))
-                    .clickable { viewModel.toggleFabState() }
-
-            )
-        }
-        ExpandableFab(
-            modifier = Modifier
-                .zIndex(2f)
-                .padding(
-                    end = 16.dp,
-                    bottom = 50.dp
-                ),
-            isOpen = isFabOpen,
-            onToggle = { viewModel.toggleFabState() },
-            children = listOf(
-                {
-                    SmallFab(
-                        icon = Icons.Filled.Draw,
-                        onClick = {
-                            navigator.navigate(EditSkinScreenDestination())
-                            viewModel.toggleFabState()
-                        },
-                        text = "Edit",
-                        isExpanded = isFabOpen
-                    )
-                },
-                {
-                    SmallFab(
-                        icon = Icons.Filled.Create,
-                        onClick = {
-                            navigator.navigate(CreateSkinScreenDestination())
-                            viewModel.toggleFabState()
-                        },
-                        text = "Create",
-                        isExpanded = isFabOpen
-                    )
-                },
-                {
-                    SmallFab(
-                        icon = Icons.Filled.Download,
-                        onClick = {
-                            importSkinLauncher.launch("*/*")
-                            viewModel.toggleFabState()
-                        },
-                        text = "Import",
-                        isExpanded = isFabOpen
-                    )
-                },
-            )
-        )
+//        AnimatedVisibility(
+//            visible = isFabOpen,
+//            enter = fadeIn(animationSpec = tween(durationMillis = 300)),
+//            exit = fadeOut(animationSpec = tween(durationMillis = 300)),
+//            modifier = Modifier
+//                .fillMaxSize()
+//                .zIndex(1f)
+//        ) {
+//            Box(
+//                Modifier
+//                    .fillMaxSize()
+//                    .background(Color.Black.copy(alpha = 0.4f))
+//                    .clickable { viewModel.toggleFabState() }
+//
+//            )
+//        }
+//        ExpandableFab(
+//            modifier = Modifier
+//                .zIndex(2f)
+//                .padding(
+//                    end = 16.dp,
+//                    bottom = 50.dp
+//                ),
+//            isOpen = isFabOpen,
+//            onToggle = { viewModel.toggleFabState() },
+//            children = listOf(
+//                {
+//                    SmallFab(
+//                        icon = Icons.Filled.Draw,
+//                        onClick = {
+//                            navigator.navigate(EditSkinScreenDestination())
+//                            viewModel.toggleFabState()
+//                        },
+//                        text = "Edit",
+//                        isExpanded = isFabOpen
+//                    )
+//                },
+//                {
+//                    SmallFab(
+//                        icon = Icons.Filled.Create,
+//                        onClick = {
+//                            navigator.navigate(CreateSkinScreenDestination())
+//                            viewModel.toggleFabState()
+//                        },
+//                        text = "Create",
+//                        isExpanded = isFabOpen
+//                    )
+//                },
+//                {
+//                    SmallFab(
+//                        icon = Icons.Filled.Download,
+//                        onClick = {
+//                            importSkinLauncher.launch("*/*")
+//                            viewModel.toggleFabState()
+//                        },
+//                        text = "Import",
+//                        isExpanded = isFabOpen
+//                    )
+//                },
+//            )
+//        )
     }
 }
 

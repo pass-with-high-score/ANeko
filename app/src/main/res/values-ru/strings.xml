@@ -52,4 +52,10 @@
     <string name="version_skin_label">Версия skin: %1$s</string>
     <string name="delete_skin_label">Удалить skin</string>
     <string name="unknown_skin_version">Unknown</string>
+    <string name="choose_skin_source_title">Выберите источник skin\'ов</string>
+    <string name="skin_source_option_download_from_collection">Вариант 1: Скачать коллекцию skin\'ов (рекомендуется)</string>
+    <string name="skin_source_option_download_from_store">Вариант 2: Найти skin\'ы в Play Маркете \n\nПримечание: Большинство старых skin\'ов были удалены Google. Возможно, вы их больше не найдёте. Попробуйте поискать APK в интернете, но будьте осторожны — это может быть рискованно.</string>
+    <string name="download_collection_label">Скачать коллекцию</string>
+    <string name="search_on_play_store_label">Искать в Play Маркете</string>
+
 </resources>

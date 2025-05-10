@@ -101,6 +101,7 @@ fun HomeContent(
             refreshing = false
         }
     }
+    var showDialog by remember { mutableStateOf(false) }
 
 
     LaunchedEffect(refreshing) {
@@ -176,7 +177,7 @@ fun HomeContent(
                         }
                         item {
                             AddSkinCard(onClick = {
-                                openUrl(context, context.getString(R.string.download_skins_link))
+                                showDialog = true
                             })
                         }
                     }
@@ -263,6 +264,20 @@ fun HomeContent(
                 )
             }
         }
+    }
+
+    if (showDialog) {
+        SkinSourceDialog(
+            onDismiss = { showDialog = false },
+            onDownloadCollection = {
+                showDialog = false
+                openUrl(context, context.getString(R.string.download_skins_link))
+            },
+            onSearchPlayStore = {
+                showDialog = false
+                openUrl(context, "https://play.google.com/store/search?q=aneko%20skin&c=apps")
+            }
+        )
     }
 }
 

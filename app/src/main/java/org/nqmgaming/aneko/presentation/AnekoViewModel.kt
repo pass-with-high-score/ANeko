@@ -11,7 +11,6 @@ import androidx.core.content.edit
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import org.nqmgaming.aneko.data.skin.SkinConfig
 import javax.inject.Inject
 
 @HiltViewModel
@@ -29,6 +28,7 @@ class AnekoViewModel @Inject constructor(application: Application) : AndroidView
                 AnimationService.PREF_KEY_ENABLE -> {
                     _isEnabledState.value = sharedPreferences.getBoolean(key, false)
                 }
+
                 PREF_KEY_THEME -> {
                     _isDarkTheme.value = sharedPreferences.getString(key, "light") == "dark"
                 }
@@ -54,12 +54,6 @@ class AnekoViewModel @Inject constructor(application: Application) : AndroidView
 
     private val _isFabOpen = MutableStateFlow(false)
     val isFabOpen: StateFlow<Boolean> = _isFabOpen.asStateFlow()
-
-    private val _skinConfig = MutableStateFlow<SkinConfig?>(null)
-    val skinConfig: StateFlow<SkinConfig?> = _skinConfig.asStateFlow()
-
-    private val extractedDir = MutableStateFlow<String?>(null)
-    val skinDir: StateFlow<String?> = extractedDir.asStateFlow()
 
     fun toggleTheme() {
         val newTheme = if (_isDarkTheme.value) "light" else "dark"
@@ -108,13 +102,5 @@ class AnekoViewModel @Inject constructor(application: Application) : AndroidView
                 granted
             )
         }
-    }
-
-    fun updateSkinConfig(config: SkinConfig?) {
-        _skinConfig.value = config
-    }
-
-    fun updateSkinDir(dir: String?) {
-        extractedDir.value = dir
     }
 }
