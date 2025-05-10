@@ -1,57 +1,11 @@
-# This file contains the fastlane.tools configuration
-# You can find the documentation at https://docs.fastlane.tools
-
 default_platform(:android)
 
 platform :android do
-  desc "Runs all the tests"
-  lane :test do
-    gradle(
-      task: "test",
-    )
-  end
-
-  desc "Submit a new Build to Google Play Internal"
-  lane :internal do
-    gradle(
-      task: "bundleRelease",
-    )
-    upload_to_play_store(
-      track: 'internal',
-      aab: 'app/build/outputs/bundle/release/app-release.aab',
-      skip_upload_images: true,
-    )
-  end
-
-  desc "Submit a new Alpha Build to Google Play Internal (formerly Close)"
-  lane :alpha do
-    gradle(
-      task: "bundleRelease",
-    )
-    upload_to_play_store(
-      track: 'alpha'
-      aab: 'app/build/outputs/bundle/release/app-release.aab',
-      skip_upload_images: true,
-    )
-  end
-
-  desc "Submit a new Beta Build to Google Play Open"
-  lane :beta do
-    gradle(
-      task: "bundleRelease",
-    )
-    upload_to_play_store(
-      track: 'beta',
-      aab: 'app/build/outputs/bundle/release/app-release.aab',
-      skip_upload_images: true,
-    )
-  end
-
   desc "Deploy a new version to the Google Play"
   lane :production do
-  gradle(
-    tasks: ["clean", "bundleRelease"],
-  )
+    gradle(
+      tasks: ["clean", "bundleRelease"],
+    )
     upload_to_play_store(
       track: 'production',
       aab: 'app/build/outputs/bundle/release/app-release.aab',
@@ -61,12 +15,8 @@ platform :android do
     )
   end
 
-  desc "Deploy to all tracks"
+  desc "Deploy to production"
   lane :release_all do
-      internal
-      alpha
-      beta
-      production
-    end
-
+    production
+  end
 end
