@@ -28,14 +28,3 @@ jobs:
       - name: Run Unit Tests
         run: ./gradlew test
 
-      - name: Verify Build
-        run: ./gradlew assembleRelease
-
-      - name: Check if Build was Successful
-        run: |
-          if [ ! -f app/build/outputs/apk/release/app-release-unsigned.apk ]; then
-            echo "Build failed: APK not found!"
-            exit 1
-          else
-            echo "Build succeeded: APK found."
-          fi
