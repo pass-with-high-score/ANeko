@@ -1,25 +1,34 @@
-# ANeko Reborn – A maintained and modernized version of the classic ANeko app
+<div align="center">      
+  <img src="fastlane/metadata/android/en-US/images/icon.png" width="128" height="128">
+  <h1>ANeko Reborn</h1>
+  <p><strong>ANeko Reborn</strong> is a modern version of the classic <strong>ANeko</strong> app.</p>
+<p>It features a cute cat animation that follows your finger on the Android screen, inspired by apps like <strong>nekoDA, xneko, oneko</strong>, and more.</p>
+<p>This version is built for modern Android devices with better performance and compatibility.</p>
+  <br><br>
+  <a href="https://github.com/pass-with-high-score/ANeko/releases">
+    <img src="https://img.shields.io/github/v/release/pass-with-high-score/ANeko">
+  </a>
+  <a href="https://github.com/pass-with-high-score/ANeko/releases">
+    <img src="https://img.shields.io/github/downloads/pass-with-high-score/ANeko/total">
+  </a>
+  <br><br>
+  <h4>Download</h4>
+  <a href="https://play.google.com/store/apps/details?id=org.nqmgaming.aneko">
+    <img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" height="80">
+  </a>
+  <a href="https://github.com/pass-with-high-score/ANeko/releases">
+    <img src="https://raw.githubusercontent.com/NeoApplications/Neo-Backup/034b226cea5c1b30eb4f6a6f313e4dadcbb0ece4/badge_github.png" height="80">
+  </a>
+  <a href="https://www.openapk.net/vi/aneko/org.nqmgaming.aneko/">
+    <img src="https://www.openapk.net/images/openapk-badge.png" height="80">
+  </a>
+  <a href="https://f-droid.org/">
+    <img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" height="80">
+  </a>
+  </a>
+</div> 
 
-<img src="icon.png" width="96" alt="logo">
-
-## Download and Enjoy
-
-**ANeko Reborn** is available on
-the [Google Play Store](https://play.google.com/store/apps/details?id=org.nqmgaming.aneko).
-Stay tuned for updates and new features.
-Enjoy your virtual cat companion.
-
----
-
-## Introduction
-
-**ANeko Reborn** is a modern version of the classic **ANeko** app.
-It features a cute cat animation that follows your finger on the Android screen, inspired by apps
-like **nekoDA, xneko, oneko**, and more.
-
-This version is built for modern Android devices with better performance and compatibility.
-
----
+---  
 
 ## Features
 
@@ -30,7 +39,7 @@ This version is built for modern Android devices with better performance and com
 * Smoother animations and improved performance
 * Supports custom cat skins
 
----
+---  
 
 ## Build Instructions
 
@@ -42,15 +51,15 @@ This version is built for modern Android devices with better performance and com
 ### Steps
 
 1. Clone the repository:
-
    ```bash
-   git clone https://github.com/pass-with-high-score/ANeko.git
-   cd ANeko
+   git clone https://github.com/pass-with-high-score/ANeko.git 
+   cd ANeko 
    ```
 2. Open the project in Android Studio
+
 3. Sync Gradle and run the app on a device or emulator
 
----
+---  
 
 ## Creating Custom Skins
 
@@ -59,7 +68,7 @@ ANeko supports two skin types:
 ### App-based Skins
 
 * Create a new module with your assets and logic
-* Refer to
+* Refer to  
   the [skin documentation](http://www.tamanegi.org/prog/android-apps/aneko-skin.html#create-skin)
 
 ### File-based Skins
@@ -67,15 +76,16 @@ ANeko supports two skin types:
 * Manually place skin files in the correct directory
 * More detailed instructions will be provided soon
 
----
+---  
 
 ## License
 
-This project is licensed under the **GNU Lesser General Public License v2.1**.
-You are free to use, modify, and distribute it, but you must include proper credits and the license.
+This project is licensed under the **GNU Lesser General Public License v2.1**.  
+You are free to use, modify, and distribute it, but you must include proper credits and the
+license.  
 See the full [LICENSE](LICENSE) file for details.
-
----
+  
+---  
 
 ## Credits
 
@@ -83,11 +93,9 @@ See the full [LICENSE](LICENSE) file for details.
 * Fork maintained by [choiman1559](https://github.com/choiman1559/ANeko)
 * Updated and improved by [Nguyen Quang Minh](https://github.com/nqmgaming)
 
----
+---  
 
 ## Contributing
 
-Pull requests and issue reports are welcome.
+Pull requests and issue reports are welcome.  
 Help us improve ANeko Reborn!
-
-
