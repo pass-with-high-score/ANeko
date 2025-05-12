@@ -22,7 +22,7 @@
   <a href="https://www.openapk.net/vi/aneko/org.nqmgaming.aneko/">
     <img src="https://www.openapk.net/images/openapk-badge.png" height="80">
   </a>
-  <a href="https://f-droid.org/">
+  <a href="https://f-droid.org/en/packages/org.nqmgaming.aneko/">
     <img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" height="80">
   </a>
   </a>
