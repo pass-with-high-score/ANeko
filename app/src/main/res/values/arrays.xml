@@ -17,6 +17,24 @@
         <item>0.8</item>
     </string-array>
 
+    <!-- Motion Speed -->
+    <string-array name="pref_motion_speed_entries">
+        <item>Very Slow</item>
+        <item>Slow</item>
+        <item>Normal</item>
+        <item>Fast</item>
+        <item>Very Fast</item>
+    </string-array>
+
+    <string-array name="pref_motion_speed_entry_values">
+        <item>0.5</item>
+        <item>0.75</item>
+        <item>1.0</item>
+        <item>1.25</item>
+        <item>1.5</item>
+    </string-array>
+
+
     <!-- Motion Size -->
     <string-array name="pref_motion_size">
         <item>40x40</item>

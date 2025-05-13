@@ -86,8 +86,10 @@ fun getFileNameFromUri(context: Context, uri: Uri): String? {
 
 fun copyFileToAppDirectory(context: Context, uri: Uri, destFile: File) {
     val destDir = destFile.parentFile
-    if (!destDir.exists()) {
-        destDir.mkdirs()
+    if (destDir != null) {
+        if (!destDir.exists()) {
+            destDir.mkdirs()
+        }
     }
 
     try {

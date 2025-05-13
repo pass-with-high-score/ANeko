@@ -16,6 +16,8 @@
     <string name="motion_size_title">Размер движения</string>
     <string name="motion_size_summary">Установите размер элементов движения.</string>
     <string name="motion_settings_title">Настройки движения</string>
+    <string name="motion_speed_title">Скорость движения</string>
+    <string name="motion_speed_summary">Настройте скорость эффектов движения.</string>
 
     <!-- Customization -->
     <string name="customization_title">Настройка</string>
@@ -45,7 +47,7 @@
     <string name="overlay_permission_description">ANeko не будет работать без разрешения на отображение поверх других приложений. Пожалуйста, разрешите это в настройках.</string>
     <string name="notification_permission_denied_msg">Разрешение на уведомления отклонено. Некоторые функции могут не работать.</string>
     <string name="loading_skins_label">Загрузка skins…</string>
-    <string name="default_label"> (По умолчанию)</string>
+    <string name="default_label">(По умолчанию)</string>
     <string name="share_apk_label">Поделиться APK %1$s</string>
     <string name="failed_to_share_apk_label">Не удалось поделиться APK %1$s</string>
     <string name="package_skin_label">Пакет skin: %1$s</string>

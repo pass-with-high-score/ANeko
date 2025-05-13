@@ -22,6 +22,8 @@
     <string name="motion_size_title">Motion Size</string>
     <string name="motion_size_summary">Set the size of motion elements.</string>
     <string name="motion_settings_title">Motion Settings</string>
+    <string name="motion_speed_title">Motion Speed</string>
+    <string name="motion_speed_summary">Adjust the speed of motion effects.</string>
 
     <!-- Customization -->
     <string name="customization_title">Customization</string>
@@ -54,7 +56,7 @@
     <string name="overlay_permission_description">Aneko will not work without the permission to draw over other apps. Please allow it in the settings.</string>
     <string name="notification_permission_denied_msg">Notification permission denied. Some features may not work.</string>
     <string name="loading_skins_label">Loading skins…</string>
-    <string name="default_label"> (Default)</string>
+    <string name="default_label">(Default)</string>
     <string name="share_apk_label">Share %1$s APK</string>
     <string name="failed_to_share_apk_label">Failed to share %1$s APK</string>
     <string name="package_skin_label">Package: %1$s</string>

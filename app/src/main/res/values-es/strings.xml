@@ -22,6 +22,8 @@
     <string name="motion_size_title">Tamaño de Movimiento</string>
     <string name="motion_size_summary">Configura el tamaño de los elementos de movimiento.</string>
     <string name="motion_settings_title">Configuraciones de Movimiento</string>
+    <string name="motion_speed_title">Velocidad de Movimiento</string>
+    <string name="motion_speed_summary">Ajusta la velocidad de los efectos de movimiento.</string>
 
     <!-- Personalización -->
     <string name="customization_title">Personalización</string>
@@ -65,4 +67,5 @@
     <string name="skin_source_option_download_from_store">Opción 2: Buscar skins en Play Store\n\nNota: La mayoría de los skins antiguos han sido eliminados por Google. Es posible que no los encuentres más. Intenta buscar APKs en Google, pero ten cuidado y comprende los riesgos.</string>
     <string name="download_collection_label">Descargar colección</string>
     <string name="search_on_play_store_label">Buscar en Play Store</string>
+
 </resources>

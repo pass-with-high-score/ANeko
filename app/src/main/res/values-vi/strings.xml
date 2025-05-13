@@ -18,10 +18,12 @@
     <string name="motion_size_title">Kích thước chuyển động</string>
     <string name="motion_size_summary">Tuỳ chỉnh kích thước cho các hiệu ứng chuyển động.</string>
     <string name="motion_settings_title">Cài đặt chuyển động</string>
+    <string name="motion_speed_title">Tốc độ di chuyển</string>
+    <string name="motion_speed_summary">Điều chỉnh tốc độ của hiệu ứng di chuyển.</string>
 
     <!-- Customization -->
     <string name="customization_title">Tuỳ biến</string>
-    <string name="browse_skins_title">Duyệt skin</string>
+    <string name="browse_skins_title">Tìm skin</string>
     <string name="browse_skins_summary">Xem và tải thêm skin từ Google Play.</string>
 
     <!-- Community & Contributions -->
@@ -47,7 +49,7 @@
     <string name="overlay_permission_description">Aneko sẽ không chạy được nếu không có quyền hiển thị đè lên ứng dụng khác. Vui lòng bật quyền trong phần cài đặt nha.</string>
     <string name="notification_permission_denied_msg">Bạn đã từ chối quyền thông báo. Một số tính năng có thể sẽ không hoạt động.</string>
     <string name="loading_skins_label">Đang tải skins…</string>
-    <string name="default_label"> (Default)</string>
+    <string name="default_label">(Mặc định)</string>
     <string name="share_apk_label">Chia sẻ APK %1$s</string>
     <string name="failed_to_share_apk_label">Không thể chia sẻ APK %1$s</string>
     <string name="package_skin_label">Gói Skin: %1$s</string>

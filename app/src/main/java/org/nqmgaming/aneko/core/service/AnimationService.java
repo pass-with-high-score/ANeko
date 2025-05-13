@@ -73,6 +73,7 @@ public class AnimationService extends Service {
     public static final String PREF_KEY_VISIBLE = "motion.visible";
     public static final String PREF_KEY_TRANSPARENCY = "motion.transparency";
     public static final String PREF_KEY_SIZE = "motion.size";
+    public static final String PREF_KEY_SPEED = "motion.speed";
     public static final String PREF_KEY_BEHAVIOUR = "motion.behaviour";
     public static final String PREF_KEY_SKIN_COMPONENT = "motion.skin";
 
@@ -184,6 +185,7 @@ public class AnimationService extends Service {
         this.pref_listener = new PreferenceChangeListener();
         this.prefs.registerOnSharedPreferenceChangeListener(this.pref_listener);
         if (checkPrefEnable() && loadMotionState()) {
+            refreshMotionSpeed();
             this.receiver = new Receiver();
             IntentFilter filter = new IntentFilter();
             filter.addAction("android.intent.action.BATTERY_CHANGED");
@@ -437,6 +439,22 @@ public class AnimationService extends Service {
 
     }
 
+    // Motion Speed
+    private void refreshMotionSpeed() {
+        if (motion_state == null) {
+            return;
+        }
+        String speedStr = prefs.getString(PREF_KEY_SPEED, "1.0");
+        float speedFactor = 1.0f;
+        try {
+            speedFactor = Float.parseFloat(speedStr);
+        } catch (NumberFormatException e) {
+            Timber.e(e, "Invalid speed factor in preferences: %s. Using default 1.0f.", speedStr);
+        }
+
+        motion_state.setSpeedFactor(speedFactor);
+    }
+
 
     private void requestAnimate() {
         if (!handler.hasMessages(MSG_ANIMATE)) {
@@ -554,6 +572,8 @@ public class AnimationService extends Service {
                 checkPrefEnable();
             } else if (PREF_KEY_SIZE.equals(key)) {
                 refreshMotionSize();
+            } else if (PREF_KEY_SPEED.equals(key)) {
+                refreshMotionSpeed();
             } else if (PREF_KEY_BATTERY.equals(key)) {
                 showTimeBattery = prefs.getBoolean(PREF_KEY_BATTERY, false);
                 setBalloonVisible(showTimeBattery);
@@ -639,8 +659,18 @@ public class AnimationService extends Service {
         private boolean moving_state = false;
         private boolean state_changed = false;
         private boolean position_moved = false;
+        private float speedFactor = 1.0f;
 
         private final MotionEndListener on_motion_end = new MotionEndListener();
+
+        public void setSpeedFactor(float factor) {
+            if (factor <= 0) {
+                Timber.w("Attempted to set non-positive speed factor: %f. Using 1.0f.", factor);
+                this.speedFactor = 1.0f;
+            } else {
+                this.speedFactor = factor;
+            }
+        }
 
         private void updateState() {
             state_changed = false;
@@ -666,21 +696,33 @@ public class AnimationService extends Service {
                 return;
             }
 
-            float interval = ANIMATION_INTERVAL / 1000f;
+            float interval = ANIMATION_INTERVAL / 1000f; // Time step in seconds
 
-            float acceleration = params.getAcceleration();
-            float max_velocity = params.getMaxVelocity();
+            float baseAcceleration = params.getAcceleration();
+            float baseMaxVelocity = params.getMaxVelocity();
             float decelerate_distance = params.getDecelerationDistance();
 
-            vx += acceleration * interval * dx / len;
-            vy += acceleration * interval * dy / len;
-            float vec = (float) Math.sqrt(vx * vx + vy * vy);
-            float vmax = max_velocity *
-                    Math.min((len + 1) / (decelerate_distance + 1), 1);
-            if (vec > vmax) {
-                float vr = vmax / vec;
-                vx *= vr;
-                vy *= vr;
+            float effectiveAcceleration = baseAcceleration * this.speedFactor;
+            float effectiveMaxVelocity = baseMaxVelocity * this.speedFactor;
+
+            if (len > 0) {
+                vx += (effectiveAcceleration * interval * dx / len);
+                vy += (effectiveAcceleration * interval * dy / len);
+            }
+
+            float currentSpeedMag = (float) Math.sqrt(vx * vx + vy * vy);
+
+            float dynamicMaxSpeed = effectiveMaxVelocity * Math.min((len + 1.0f) / (decelerate_distance + 1.0f), 1.0f);
+
+            if (currentSpeedMag > dynamicMaxSpeed) {
+                if (dynamicMaxSpeed <= 0 && currentSpeedMag > 0) {
+                    vx = 0;
+                    vy = 0;
+                } else if (currentSpeedMag > 0) {
+                    float ratio = dynamicMaxSpeed / currentSpeedMag;
+                    vx *= ratio;
+                    vy *= ratio;
+                }
             }
 
             cur_x += vx * interval;

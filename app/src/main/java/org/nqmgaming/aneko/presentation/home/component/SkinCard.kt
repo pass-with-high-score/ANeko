@@ -109,7 +109,7 @@ fun SkinCard(
             )
             Spacer(modifier = Modifier.height(12.dp))
             Text(
-                text = skin.label + if (isDefaultSkin) stringResource(R.string.default_label) else "",
+                text = "${skin.label} ${if (isDefaultSkin) stringResource(R.string.default_label) else ""}",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface
             )

@@ -16,6 +16,8 @@
     <string name="motion_size_title">动作大小</string>
     <string name="motion_size_summary">设置动作元素的大小。</string>
     <string name="motion_settings_title">动作设置</string>
+    <string name="motion_speed_title">运动速度</string>
+    <string name="motion_speed_summary">调整运动效果的速度。</string>
 
     <!-- Customization -->
     <string name="customization_title">个性化</string>
@@ -45,7 +47,7 @@
     <string name="overlay_permission_description">如果没有“显示在其他应用上方”的权限，Aneko 将无法正常工作。请前往设置中开启。</string>
     <string name="notification_permission_denied_msg">通知权限被拒，一些功能可能无法使用。</string>
     <string name="loading_skins_label">正在加载 skins…</string>
-    <string name="default_label"> (默认)</string>
+    <string name="default_label">(默认)</string>
     <string name="share_apk_label">分享 %1$s APK</string>
     <string name="failed_to_share_apk_label">分享 %1$s APK 失败</string>
     <string name="package_skin_label">Skin 包名：%1$s</string>
@@ -57,4 +59,5 @@
     <string name="skin_source_option_download_from_store">选项 2: 在 Play 商店搜索皮肤\n\n注意: 大多数旧版皮肤已被 Google 删除，您可能找不到它们了。可以尝试在 Google 上搜索 APK，但请小心并理解风险。</string>
     <string name="download_collection_label">下载集合</string>
     <string name="search_on_play_store_label">在 Play 商店搜索</string>
+
 </resources>

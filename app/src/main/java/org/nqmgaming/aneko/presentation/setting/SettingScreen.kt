@@ -45,6 +45,21 @@ fun SettingsScreen() {
                 ),
             )
             ListPreferenceItem(
+                title = stringResource(R.string.motion_speed_title),
+                summary = stringResource(R.string.motion_speed_summary),
+                icon = R.drawable.ic_speed,
+                entries = context.resources.getStringArray(R.array.pref_motion_speed_entries),
+                entryValues = context.resources.getStringArray(R.array.pref_motion_speed_entry_values),
+                key = "motion.speed",
+                defaultValue = "1.0",
+                prefs = prefs
+            )
+            HorizontalDivider(
+                color = MaterialTheme.colorScheme.outline.copy(
+                    alpha = 0.5f
+                ),
+            )
+            ListPreferenceItem(
                 title = stringResource(R.string.motion_size_title),
                 summary = stringResource(R.string.motion_size_summary),
                 icon = R.drawable.ic_slide_size,
