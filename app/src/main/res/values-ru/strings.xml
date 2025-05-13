@@ -18,6 +18,8 @@
     <string name="motion_settings_title">Настройки движения</string>
     <string name="motion_speed_title">Скорость движения</string>
     <string name="motion_speed_summary">Настройте скорость эффектов движения.</string>
+    <string name="motion_keep_alive_title">Разрешить работу в фоновом режиме</string>
+    <string name="motion_keep_alive_summary">Оставлять skin активным при закрытии приложения</string>
 
     <!-- Customization -->
     <string name="customization_title">Настройка</string>

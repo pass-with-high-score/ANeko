@@ -14,9 +14,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.preference.PreferenceManager
 import org.nqmgaming.aneko.R
+import org.nqmgaming.aneko.core.service.AnimationService
 import org.nqmgaming.aneko.presentation.setting.component.ListPreferenceItem
 import org.nqmgaming.aneko.presentation.setting.component.PreferenceContainer
 import org.nqmgaming.aneko.presentation.setting.component.PreferenceItem
+import org.nqmgaming.aneko.presentation.setting.component.PreferenceSwitchItem
 import org.nqmgaming.aneko.presentation.ui.theme.ANekoTheme
 import org.nqmgaming.aneko.util.openUrl
 
@@ -35,7 +37,7 @@ fun SettingsScreen() {
                 icon = R.drawable.ic_shape_exclude,
                 entries = context.resources.getStringArray(R.array.pref_motion_transparency_entries),
                 entryValues = context.resources.getStringArray(R.array.pref_motion_transparency_entry_values),
-                key = "motion.transparency",
+                key = AnimationService.PREF_KEY_TRANSPARENCY,
                 defaultValue = "0.0",
                 prefs = prefs
             )
@@ -50,7 +52,7 @@ fun SettingsScreen() {
                 icon = R.drawable.ic_speed,
                 entries = context.resources.getStringArray(R.array.pref_motion_speed_entries),
                 entryValues = context.resources.getStringArray(R.array.pref_motion_speed_entry_values),
-                key = "motion.speed",
+                key = AnimationService.PREF_KEY_SPEED,
                 defaultValue = "1.0",
                 prefs = prefs
             )
@@ -65,8 +67,22 @@ fun SettingsScreen() {
                 icon = R.drawable.ic_slide_size,
                 entries = context.resources.getStringArray(R.array.pref_motion_size),
                 entryValues = context.resources.getStringArray(R.array.pref_motion_size_entry_values),
-                key = "motion.size",
+                key = AnimationService.PREF_KEY_SIZE,
                 defaultValue = "80",
+                prefs = prefs
+            )
+            HorizontalDivider(
+                color = MaterialTheme.colorScheme.outline.copy(
+                    alpha = 0.5f
+                ),
+            )
+
+            PreferenceSwitchItem(
+                title = stringResource(R.string.motion_keep_alive_title),
+                summary = stringResource(R.string.motion_keep_alive_summary),
+                icon = R.drawable.ic_auto_renew,
+                key = AnimationService.PREF_KEY_KEEP_ALIVE,
+                defaultValue = true,
                 prefs = prefs
             )
         }

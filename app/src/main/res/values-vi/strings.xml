@@ -20,6 +20,8 @@
     <string name="motion_settings_title">Cài đặt chuyển động</string>
     <string name="motion_speed_title">Tốc độ di chuyển</string>
     <string name="motion_speed_summary">Điều chỉnh tốc độ của hiệu ứng di chuyển.</string>
+    <string name="motion_keep_alive_title">Cho phép chạy nền</string>
+    <string name="motion_keep_alive_summary">Giữ skin hoạt động khi đóng ứng dụng</string>
 
     <!-- Customization -->
     <string name="customization_title">Tuỳ biến</string>

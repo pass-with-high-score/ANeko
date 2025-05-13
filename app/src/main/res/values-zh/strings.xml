@@ -18,6 +18,8 @@
     <string name="motion_settings_title">动作设置</string>
     <string name="motion_speed_title">运动速度</string>
     <string name="motion_speed_summary">调整运动效果的速度。</string>
+    <string name="motion_keep_alive_title">允许后台运行</string>
+    <string name="motion_keep_alive_summary">关闭应用时保持 skin 活动</string>
 
     <!-- Customization -->
     <string name="customization_title">个性化</string>

@@ -24,6 +24,8 @@
     <string name="motion_settings_title">Motion Settings</string>
     <string name="motion_speed_title">Motion Speed</string>
     <string name="motion_speed_summary">Adjust the speed of motion effects.</string>
+    <string name="motion_keep_alive_title">Allow background running</string>
+    <string name="motion_keep_alive_summary">Keep the skin active when the app is closed</string>
 
     <!-- Customization -->
     <string name="customization_title">Customization</string>

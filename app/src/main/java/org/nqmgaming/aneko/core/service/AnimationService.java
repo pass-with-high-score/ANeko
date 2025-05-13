@@ -76,6 +76,7 @@ public class AnimationService extends Service {
     public static final String PREF_KEY_SPEED = "motion.speed";
     public static final String PREF_KEY_BEHAVIOUR = "motion.behaviour";
     public static final String PREF_KEY_SKIN_COMPONENT = "motion.skin";
+    public static final String PREF_KEY_KEEP_ALIVE = "motion.keep_alive";
 
     public static final String PREF_KEY_NOTIFICATION_ENABLE = "notification.enable";
 
@@ -551,8 +552,8 @@ public class AnimationService extends Service {
     }
 
     private boolean checkPrefEnable() {
-        boolean enable = prefs.getBoolean(PREF_KEY_ENABLE, true);
-        boolean visible = prefs.getBoolean(PREF_KEY_VISIBLE, true);
+        boolean enable = prefs.getBoolean(PREF_KEY_ENABLE, false);
+        boolean visible = prefs.getBoolean(PREF_KEY_VISIBLE, false);
         showTimeBattery = prefs.getBoolean(PREF_KEY_BATTERY, false);
 
         if (!enable || !visible) {
@@ -577,6 +578,9 @@ public class AnimationService extends Service {
             } else if (PREF_KEY_BATTERY.equals(key)) {
                 showTimeBattery = prefs.getBoolean(PREF_KEY_BATTERY, false);
                 setBalloonVisible(showTimeBattery);
+            } else if (PREF_KEY_KEEP_ALIVE.equals(key)) {
+                // Do nothing
+                Timber.d("Keep alive preference changed, but no action taken.");
             } else if (loadMotionState()) {
                 requestAnimate();
             }
