@@ -1,0 +1,2 @@
+- add change speed and background running option for skin
+Hope you like it :)
