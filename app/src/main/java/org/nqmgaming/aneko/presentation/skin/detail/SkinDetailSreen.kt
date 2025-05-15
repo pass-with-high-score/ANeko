@@ -130,7 +130,7 @@ fun SkinDetail(
             val motions = skinConfig.motionParams.motion
 
             LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
+                columns = GridCells.Fixed(3),
                 modifier = Modifier.padding(innerPadding),
             ) {
                 items(motions) { motion ->
@@ -152,8 +152,13 @@ fun SkinDetail(
                                 .padding(8.dp)
                                 .fillMaxWidth(),
                             shape = MaterialTheme.shapes.medium,
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.onPrimary,
+                                contentColor = MaterialTheme.colorScheme.onSurface,
+                            ),
                             elevation = CardDefaults.cardElevation(
                                 defaultElevation = 4.dp,
+                                pressedElevation = 8.dp,
                             )
                         ) {
                             Column(modifier = Modifier.padding(16.dp)) {
