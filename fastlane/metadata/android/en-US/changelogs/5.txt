@@ -1,4 +1,4 @@
 - fix can not interact, scrollable with some apps
-- add language support fot Spanish
+- add language support for Spanish
 
 Thank for your feedback!
