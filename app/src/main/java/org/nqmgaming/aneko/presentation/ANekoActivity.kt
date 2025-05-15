@@ -65,7 +65,7 @@ class ANekoActivity : ComponentActivity() {
     override fun onDestroy() {
         super.onDestroy()
 
-        val isKeepAlive = prefs.getBoolean(AnimationService.PREF_KEY_KEEP_ALIVE, false)
+        val isKeepAlive = prefs.getBoolean(AnimationService.PREF_KEY_KEEP_ALIVE, true)
         if (!isKeepAlive) {
             prefs.edit { putBoolean(AnimationService.PREF_KEY_ENABLE, false) }
             stopService(
