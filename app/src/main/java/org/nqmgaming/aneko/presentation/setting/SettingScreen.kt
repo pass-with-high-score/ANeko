@@ -15,10 +15,10 @@ import androidx.compose.ui.unit.dp
 import androidx.preference.PreferenceManager
 import org.nqmgaming.aneko.R
 import org.nqmgaming.aneko.core.service.AnimationService
-import org.nqmgaming.aneko.presentation.setting.component.ListPreferenceItem
 import org.nqmgaming.aneko.presentation.setting.component.PreferenceContainer
 import org.nqmgaming.aneko.presentation.setting.component.PreferenceItem
 import org.nqmgaming.aneko.presentation.setting.component.PreferenceSwitchItem
+import org.nqmgaming.aneko.presentation.setting.component.SliderPreferenceItem
 import org.nqmgaming.aneko.presentation.ui.theme.ANekoTheme
 import org.nqmgaming.aneko.util.openUrl
 
@@ -31,7 +31,7 @@ fun SettingsScreen() {
         PreferenceContainer(
             title = R.string.motion_settings_title
         ) {
-            ListPreferenceItem(
+            SliderPreferenceItem(
                 title = stringResource(R.string.motion_transparency_title),
                 summary = stringResource(R.string.motion_transparency_summary),
                 icon = R.drawable.ic_shape_exclude,
@@ -46,7 +46,7 @@ fun SettingsScreen() {
                     alpha = 0.5f
                 ),
             )
-            ListPreferenceItem(
+            SliderPreferenceItem(
                 title = stringResource(R.string.motion_speed_title),
                 summary = stringResource(R.string.motion_speed_summary),
                 icon = R.drawable.ic_speed,
@@ -61,7 +61,7 @@ fun SettingsScreen() {
                     alpha = 0.5f
                 ),
             )
-            ListPreferenceItem(
+            SliderPreferenceItem(
                 title = stringResource(R.string.motion_size_title),
                 summary = stringResource(R.string.motion_size_summary),
                 icon = R.drawable.ic_slide_size,

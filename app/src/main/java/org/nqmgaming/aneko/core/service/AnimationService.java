@@ -423,22 +423,22 @@ public class AnimationService extends Service {
     private void refreshMotionSize() {
         int v = 80;
         try {
-            v = Integer.parseInt(prefs.getString(PREF_KEY_SIZE, "80"));
+            String value = prefs.getString(PREF_KEY_SIZE, "80");
+            v = (int) Float.parseFloat(value);
         } catch (NumberFormatException e) {
             Timber.e(e);
         }
         this.image_width = this.image_height = v;
 
-        WindowManager wm =
-                (WindowManager) getSystemService(WINDOW_SERVICE);
+        WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
         if (image_params != null && image_view != null) {
             image_params.width = v;
             image_params.height = v;
             assert wm != null;
             wm.updateViewLayout(image_view, image_params);
         }
-
     }
+
 
     // Motion Speed
     private void refreshMotionSpeed() {
