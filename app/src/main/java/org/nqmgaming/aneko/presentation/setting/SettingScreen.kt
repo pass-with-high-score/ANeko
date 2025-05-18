@@ -23,7 +23,9 @@ import org.nqmgaming.aneko.presentation.ui.theme.ANekoTheme
 import org.nqmgaming.aneko.util.openUrl
 
 @Composable
-fun SettingsScreen() {
+fun SettingsScreen(
+    onBrowseSkins: () -> Unit = {},
+) {
     val context = LocalContext.current
     val prefs = PreferenceManager.getDefaultSharedPreferences(context)
 
@@ -96,9 +98,7 @@ fun SettingsScreen() {
                 title = stringResource(R.string.browse_skins_title),
                 summary = stringResource(R.string.browse_skins_summary),
                 icon = R.drawable.ic_slide_multiple_search,
-                onClick = {
-                    openUrl(context, context.getString(R.string.skin_search_uri))
-                }
+                onClick = onBrowseSkins
             )
         }
 

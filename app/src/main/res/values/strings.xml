@@ -70,4 +70,6 @@
     <string name="skin_source_option_download_from_store">Option 2: Search skins on Play Store\n\nNote: Most old skins have been removed by Google. You may not find them anymore. Try searching on Google for APKs, but be careful and understand the risks.</string>
     <string name="download_collection_label">Download Collection</string>
     <string name="search_on_play_store_label">Search on Play Store</string>
+    <string name="aneko_notification_channel_name" translatable="false">ANeko Service</string>
+    <string name="notification_chanel_description">Background service for ANeko</string>
 </resources>
