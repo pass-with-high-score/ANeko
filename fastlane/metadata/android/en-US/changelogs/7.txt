@@ -1,0 +1,5 @@
+- Swapped out the clunky select dialog for a sleek new slider
+- Fixed the "only-left-and-right" bug — your neko can now roam free!
+- Movement got a glow-up: smoother, smarter, more lively
+
+May your Neko wander with joy, one paw at a time 🐾
