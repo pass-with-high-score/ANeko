@@ -175,22 +175,31 @@
         </repeat-item>
     </motion>
 
-    <!-- wall up/down does not work correctry if status bar exist -->
-    <!--
-    <motion state="wallUp" nextState="wait">
-      <repeat-item repeatCount="3">
-        <item drawable="@drawable/utogi1" duration="250" />
-        <item drawable="@drawable/utogi2" duration="250" />
-      </repeat-item>
+    <motion
+        nextState="wait"
+        state="wallUp">
+        <repeat-item repeatCount="3">
+            <item
+                drawable="@drawable/utogi1"
+                duration="250" />
+            <item
+                drawable="@drawable/utogi2"
+                duration="250" />
+        </repeat-item>
     </motion>
 
-    <motion state="wallDown" nextState="wait">
-      <repeat-item repeatCount="3">
-        <item drawable="@drawable/dtogi1" duration="250" />
-        <item drawable="@drawable/dtogi2" duration="250" />
-      </repeat-item>
+    <motion
+        nextState="wait"
+        state="wallDown">
+        <repeat-item repeatCount="3">
+            <item
+                drawable="@drawable/dtogi1"
+                duration="250" />
+            <item
+                drawable="@drawable/dtogi2"
+                duration="250" />
+        </repeat-item>
     </motion>
-    -->
 
     <motion
         nextState="wait"
