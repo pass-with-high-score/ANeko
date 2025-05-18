@@ -50,7 +50,6 @@ import org.nqmgaming.aneko.R;
 import org.tamanegi.aneko.ANekoActivity;
 
 import java.io.File;
-import java.util.Objects;
 import java.util.Random;
 
 import timber.log.Timber;
@@ -232,26 +231,35 @@ public class AnimationService extends Service {
                 new Intent(this, AnimationService.class).setAction(ACTION_TOGGLE),
                 PendingIntent.FLAG_IMMUTABLE);
 
-        NotificationChannel channel = new NotificationChannel("ANeko", "ANeko Service",
-                NotificationManager.IMPORTANCE_MIN);
-        ((NotificationManager) Objects.requireNonNull(getSystemService(Context.NOTIFICATION_SERVICE)))
-                .createNotificationChannel(channel);
+        {
+            NotificationChannel channel = new NotificationChannel(
+                    getString(R.string.app_name),
+                    getString(R.string.aneko_notification_channel_name),
+                    NotificationManager.IMPORTANCE_MIN
+            );
+            channel.setDescription(getString(R.string.notification_chanel_description));
+            NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            if (nm != null) {
+                nm.createNotificationChannel(channel);
+            }
+        }
 
-        Notification.Builder builder = new Notification.Builder(this, "ANeko");
+        Notification.Builder builder;
+        builder = new Notification.Builder(this, getString(R.string.app_name));
+
         builder
                 .setContentIntent(intent)
                 .setSmallIcon(R.drawable.icon)
                 .setContentTitle(getString(R.string.app_name))
                 .setContentText(getString(start ? R.string.notification_enabled : R.string.notification_disabled))
-                .setPriority(Notification.PRIORITY_LOW)
                 .setOnlyAlertOnce(true)
                 .setOngoing(true)
                 .setAutoCancel(false);
 
         Notification notify = builder.build();
+
         stopForeground(true);
         if (start) {
-            // Modified to add foreground service type for Android Q (API 29) and above
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 startForeground(1, notify, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK);
             } else {
@@ -259,10 +267,15 @@ public class AnimationService extends Service {
             }
             return;
         }
+
         if (this.prefs.getBoolean(PREF_KEY_ENABLE, true)) {
-            ((NotificationManager) Objects.requireNonNull(getSystemService(NOTIFICATION_SERVICE))).notify(1, notify);
+            NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            if (nm != null) {
+                nm.notify(1, notify);
+            }
         }
     }
+
 
     private boolean loadMotionState() {
         String skin = prefs.getString(PREF_KEY_SKIN_COMPONENT, "");
@@ -306,14 +319,17 @@ public class AnimationService extends Service {
     private MotionParams getMotionParams(String skinPath) throws PackageManager.NameNotFoundException {
         File externalStorageDirectory = Environment.getExternalStorageDirectory();
         File skinsDir = new File(externalStorageDirectory, ANeko_SKINS);
-        skinsDir.mkdirs();
+
+        if (!skinsDir.exists() && !skinsDir.mkdirs()) {
+            Timber.w("Failed to create skins directory: %s", skinsDir.getAbsolutePath());
+        }
 
         String[] ts = skinPath.split("/");
 
         String folder = ts[0];
         String xmlFile = ts[1];
 
-        File dir = new File(skinsDir, "/" + folder);
+        File dir = new File(skinsDir, folder);
 
         PackageManager pm = getPackageManager();
         ComponentName skin_comp = new ComponentName(this, ANekoActivity.class);
@@ -321,6 +337,7 @@ public class AnimationService extends Service {
 
         return new MotionConfigParser(res, dir, xmlFile);
     }
+
 
     private boolean loadMotionState(ComponentName skin_comp) {
         motion_state = new MotionState();
@@ -356,17 +373,25 @@ public class AnimationService extends Service {
         d.getSize(size);
         int dw = size.x;
         int dh = size.y;
+
         int cx, cy;
-        {
-            int pos = random.nextInt(400);
-            int ratio = pos % 100;
-            if (pos / 200 == 0) {
-                cx = (dw + 200) * ratio / 100 - 100;
-                cy = ((pos / 100) % 2 == 0 ? -100 : dh + 100);
-            } else {
-                cx = ((pos / 100) % 2 == 0 ? -100 : dw + 100);
-                cy = (dh + 200) * ratio / 100 - 100;
-            }
+        switch (random.nextInt(4)) {
+            case 0:
+                cx = 0;
+                cy = random.nextInt(dh);
+                break;
+            case 1:
+                cx = dw;
+                cy = random.nextInt(dh);
+                break;
+            case 2:
+                cx = random.nextInt(dw);
+                cy = 0;
+                break;
+            default:
+                cx = random.nextInt(dw);
+                cy = dh;
+                break;
         }
 
         String alpha_str = prefs.getString(PREF_KEY_TRANSPARENCY, "0.0");
@@ -383,6 +408,7 @@ public class AnimationService extends Service {
         motion_state.setTargetPositionDirect(dw >> 1, dh >> 1);
         refreshMotionSize();
     }
+
 
     private void refreshMotionSize() {
         int v = 80;
@@ -509,7 +535,7 @@ public class AnimationService extends Service {
                 refreshMotionSize();
             } else if (PREF_KEY_SPEED.equals(key)) {
                 refreshMotionSpeed();
-            }  else if (PREF_KEY_KEEP_ALIVE.equals(key)) {
+            } else if (PREF_KEY_KEEP_ALIVE.equals(key)) {
                 // Do nothing
                 Timber.d("Keep alive preference changed, but no action taken.");
             } else if (loadMotionState()) {
@@ -526,7 +552,6 @@ public class AnimationService extends Service {
             }
 
             if (ev.getAction() == MotionEvent.ACTION_OUTSIDE) {
-
                 WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
                 assert wm != null;
                 Point pnt = new Point();
@@ -534,10 +559,35 @@ public class AnimationService extends Service {
                 int dw = pnt.x;
                 int dh = pnt.y;
 
-                float x = random.nextInt(dw);
-                float y = random.nextInt(dh);
+                float x, y;
+
+                if (random.nextFloat() < 0.4f) {
+                    switch (random.nextInt(4)) {
+                        case 0:
+                            x = 0;
+                            y = random.nextInt(dh);
+                            break;
+                        case 1:
+                            x = dw;
+                            y = random.nextInt(dh);
+                            break;
+                        case 2:
+                            x = random.nextInt(dw);
+                            y = 0;
+                            break;
+                        default:
+                            x = random.nextInt(dw);
+                            y = dh;
+                            break;
+                    }
+                } else {
+                    x = random.nextInt(dw);
+                    y = random.nextInt(dh);
+                }
+
                 motion_state.setTargetPosition(x, y);
                 requestAnimate();
+
             } else if (ev.getAction() == MotionEvent.ACTION_CANCEL) {
                 motion_state.forceStop();
                 requestAnimate();
@@ -546,6 +596,7 @@ public class AnimationService extends Service {
             return false;
         }
     }
+
 
     private class MotionState {
         private float cur_x = 0;
@@ -779,13 +830,10 @@ public class AnimationService extends Service {
         }
 
         private void setTargetPosition(float x, float y) {
-
             if (!ICS_OR_LATER) {
                 long cur_time = System.currentTimeMillis();
-                double r = (double) (cur_time - last_behaviour_changed) /
-                        BEHAVIOUR_CHANGE_DURATION;
-                if (behaviour == Behaviour.whimsical &&
-                        (r < 0 || random.nextDouble() * r > 1)) {
+                double r = (double) (cur_time - last_behaviour_changed) / BEHAVIOUR_CHANGE_DURATION;
+                if (behaviour == Behaviour.whimsical && (r < 0 || random.nextDouble() * r > 1)) {
                     int next_idx = random.nextInt(BEHAVIOURS.length);
                     if (next_idx != cur_behaviour_idx) {
                         last_behaviour_changed = cur_time;
@@ -796,9 +844,11 @@ public class AnimationService extends Service {
                 cur_behaviour_idx = BEHAVIOURS.length - 1;
             }
 
-            if (BEHAVIOURS[cur_behaviour_idx] == Behaviour.closer) {
+            Behaviour current = BEHAVIOURS[cur_behaviour_idx];
+            if (current == Behaviour.closer) {
                 setTargetPositionDirect(x, y);
-            } else if (BEHAVIOURS[cur_behaviour_idx] == Behaviour.further) {
+
+            } else if (current == Behaviour.further) {
                 float dx = display_width / 2f - x;
                 float dy = display_height / 2f - y;
                 if (dx == 0 && dy == 0) {
@@ -812,23 +862,14 @@ public class AnimationService extends Service {
                 }
 
                 PointF e1, e2;
-                if (dy > dx * display_height / display_width ||
-                        dy < -dx * display_height / display_width) {
+                if (dy > dx * display_height / display_width || dy < -dx * display_height / display_width) {
                     float dxdy = dx / dy;
-                    e1 = new PointF(
-                            (display_width - display_height * dxdy) / 2f,
-                            0);
-                    e2 = new PointF(
-                            (display_width + display_height * dxdy) / 2f,
-                            display_height);
+                    e1 = new PointF((display_width - display_height * dxdy) / 2f, 0);
+                    e2 = new PointF((display_width + display_height * dxdy) / 2f, display_height);
                 } else {
                     float dydx = dy / dx;
-                    e1 = new PointF(
-                            0,
-                            (display_height - display_width * dydx) / 2f);
-                    e2 = new PointF(
-                            display_width,
-                            (display_height + display_width * dydx) / 2f);
+                    e1 = new PointF(0, (display_height - display_width * dydx) / 2f);
+                    e2 = new PointF(display_width, (display_height + display_width * dydx) / 2f);
                 }
 
                 double d1 = Math.hypot(e1.x - x, e1.y - y);
@@ -836,24 +877,34 @@ public class AnimationService extends Service {
                 PointF e = (d1 > d2 ? e1 : e2);
 
                 float r = 0.9f + random.nextFloat() * 0.1f;
-                setTargetPositionDirect(e.x * r + x * (1 - r),
-                        e.y * r + y * (1 - r));
+                setTargetPositionDirect(e.x * r + x * (1 - r), e.y * r + y * (1 - r));
+
             } else {
                 float min_wh2 = Math.min(display_width, display_height) / 2f;
                 float r = random.nextFloat() * min_wh2 + min_wh2;
-                float a = random.nextFloat() * 360;
-                float nx = cur_x + r * (float) Math.cos(a);
-                float ny = cur_y + r * (float) Math.sin(a);
+                float a = random.nextFloat() * 360f;
+                float nx = cur_x + r * (float) Math.cos(Math.toRadians(a));
+                float ny = cur_y + r * (float) Math.sin(Math.toRadians(a));
 
-                nx = (nx < 0 ? -nx :
-                        nx >= display_width ? display_width * 2 - nx - 1 :
-                                nx);
-                ny = (ny < 0 ? -ny :
-                        ny >= display_height ? display_height * 2 - ny - 1 :
-                                ny);
+                if (random.nextFloat() < 0.15f) {
+                    nx = (random.nextBoolean()) ? 0 : display_width;
+                }
+                if (random.nextFloat() < 0.15f) {
+                    ny = (random.nextBoolean()) ? 0 : display_height;
+                }
+
+                if (random.nextFloat() < 0.15f) {
+                    nx = Math.max(0, Math.min(nx, display_width));
+                    ny = Math.max(0, Math.min(ny, display_height));
+                } else {
+                    nx = (nx < 0 ? -nx : (nx >= display_width ? display_width * 2 - nx - 1 : nx));
+                    ny = (ny < 0 ? -ny : (ny >= display_height ? display_height * 2 - ny - 1 : ny));
+                }
+
                 setTargetPositionDirect(nx, ny);
             }
         }
+
 
         private void setTargetPositionDirect(float x, float y) {
             target_x = x;
