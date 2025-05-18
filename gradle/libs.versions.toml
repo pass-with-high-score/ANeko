@@ -36,6 +36,7 @@ ksp = "2.0.21-1.0.28"
 materialIconsExtended = "1.7.8"
 accompanistPermissions = "0.36.0"
 coilCompose = "2.7.0"
+uiTooling = "1.8.1"
 
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
@@ -79,6 +80,7 @@ androidx-work-runtime = { module = "androidx.work:work-runtime", version.ref = "
 # Serialization
 kotlinx-serialization-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core", version.ref = "serialization" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
+ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "uiTooling" }
 
 [bundles]
 serialization = [

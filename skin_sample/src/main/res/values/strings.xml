@@ -3,7 +3,15 @@
     <string name="app_name">Skin Sample</string>
 
     <string name="msg_usage">Choose skin from ANeko settings.</string>
-    <string name="msg_no_package">This is skin for ANeko.\nTo use this, install ANeko and choose skin.</string>
+    <string name="install">Install</string>
+    <string name="msg_no_package">ANeko is not installed. Please install it to continue.</string>
+
 
     <string name="msg_unexpected_err">Something is wrong.</string>
+    <string name="msg_already_installed">ANeko installed</string>
+    <string name="open">Open</string>
+    <string name="control">Start</string>
+    <string name="stop">Stop</string>
+    <string name="unknown_value">Unknow</string>
+    <string name="app_version">Version：%1$s</string>
 </resources>

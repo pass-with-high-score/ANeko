@@ -51,30 +51,23 @@ class ANekoActivity : ComponentActivity() {
         }
     }
 
-
     private fun startAnimationService() {
         prefs.edit { putBoolean(AnimationService.PREF_KEY_VISIBLE, true) }
         startService(
-            Intent(
-                this,
-                AnimationService::class.java
-            ).setAction(AnimationService.ACTION_START)
+            Intent(this, AnimationService::class.java)
+                .setAction(AnimationService.ACTION_START)
         )
     }
 
     override fun onDestroy() {
         super.onDestroy()
-
         val isKeepAlive = prefs.getBoolean(AnimationService.PREF_KEY_KEEP_ALIVE, true)
         if (!isKeepAlive) {
             prefs.edit { putBoolean(AnimationService.PREF_KEY_ENABLE, false) }
             stopService(
-                Intent(
-                    this,
-                    AnimationService::class.java
-                ).setAction(AnimationService.ACTION_STOP)
+                Intent(this, AnimationService::class.java)
+                    .setAction(AnimationService.ACTION_STOP)
             )
         }
     }
-
 }
