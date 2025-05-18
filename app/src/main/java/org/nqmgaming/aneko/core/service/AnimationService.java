@@ -21,7 +21,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.ServiceInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.graphics.PointF;
@@ -178,13 +177,6 @@ public class AnimationService extends Service {
             );
             this.image_params.gravity = Gravity.TOP | Gravity.START;
             wm.addView(this.image_view, this.image_params);
-            image_view.setBackgroundColor(Color.argb(0, 0, 0, 0));
-            image_view.setAlpha(0.8f);
-            image_view.setPadding(8, 8, 8, 8);
-            image_view.setVisibility(View.VISIBLE);
-            image_view.setBackgroundColor(Color.argb(0, 0, 0, 0));
-
-
             requestAnimate();
         }
 

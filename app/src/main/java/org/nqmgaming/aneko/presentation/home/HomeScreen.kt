@@ -13,6 +13,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.DarkMode
@@ -33,6 +34,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -51,6 +53,7 @@ import org.nqmgaming.aneko.presentation.home.component.ExpandableFab
 import org.nqmgaming.aneko.presentation.home.component.HomeContent
 import org.nqmgaming.aneko.presentation.home.component.SmallFab
 import org.nqmgaming.aneko.util.extension.checkNotificationPermission
+import androidx.core.net.toUri
 
 
 @Destination<RootGraph>(start = true)
@@ -115,6 +118,17 @@ fun HomeScreen(
                 },
                 actions = {
                     IconButton(onClick = {
+                        val uri = context.getString(R.string.telegram_group_link).toUri()
+                        val intent = Intent(Intent.ACTION_VIEW, uri)
+                        context.startActivity(intent)
+                    }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_telegram),
+                            contentDescription = null,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+                    IconButton(onClick = {
                         Intent.createChooser(
                             Intent(Intent.ACTION_SEND).apply {
                                 type = "text/plain"
@@ -128,7 +142,8 @@ fun HomeScreen(
                     }) {
                         Icon(
                             Icons.Default.Share,
-                            contentDescription = stringResource(R.string.share_title)
+                            contentDescription = stringResource(R.string.share_title),
+                            modifier = Modifier.size(24.dp)
                         )
                     }
                 }
