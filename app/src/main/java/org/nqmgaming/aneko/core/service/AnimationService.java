@@ -64,10 +64,8 @@ public class AnimationService extends Service {
     public static final String ACTION_START = "org.nqmgaming.aneko.action.START";
     public static final String ACTION_STOP = "org.nqmgaming.aneko.action.STOP";
     public static final String ACTION_TOGGLE = "org.nqmgaming.aneko.action.TOGGLE";
-
     public static final String ACTION_GET_SKIN = "org.tamanegi.aneko.action.GET_SKIN";
     public static final String META_KEY_SKIN = "org.tamanegi.aneko.skin";
-
     public static final String PREF_KEY_ENABLE = "motion.enable";
     public static final String PREF_KEY_BATTERY = "battery.enable";
     public static final String PREF_KEY_VISIBLE = "motion.visible";
@@ -77,21 +75,15 @@ public class AnimationService extends Service {
     public static final String PREF_KEY_BEHAVIOUR = "motion.behaviour";
     public static final String PREF_KEY_SKIN_COMPONENT = "motion.skin";
     public static final String PREF_KEY_KEEP_ALIVE = "motion.keep_alive";
-
     public static final String PREF_KEY_NOTIFICATION_ENABLE = "notification.enable";
-
     private static final int MSG_ANIMATE = 1;
     private static final int MSG_TXT = 1;
-
     private static final long ANIMATION_INTERVAL = 125; // msec
     private static final long TV_INTERVAL = 250; // msec
     private static final long BEHAVIOUR_CHANGE_DURATION = 4000; // msec
-
     public static final String ANeko_SKINS = "/ANeko/skins";
-
     private int image_width = 80;
     private int image_height = 80;
-
     boolean showTimeBattery = true;
 
     private enum Behaviour {
@@ -101,11 +93,9 @@ public class AnimationService extends Service {
     private static final Behaviour[] BEHAVIOURS = {
             Behaviour.closer, Behaviour.further, Behaviour.whimsical};
     private static final boolean ICS_OR_LATER = true;
-
     private boolean is_started;
     private SharedPreferences prefs;
     private PreferenceChangeListener pref_listener;
-
     private Handler handler;
     private Handler tvHandler;
     private MotionState motion_state = null;
@@ -114,10 +104,8 @@ public class AnimationService extends Service {
     private ImageView image_view = null;
     private LayoutParams image_params = null;
     private BroadcastReceiver receiver = null;
-
     TextView textV;
     private final LayoutParams textParams = null;
-
     ImageView balloonV;
     LayoutParams balloonParams = null;
 
@@ -126,9 +114,7 @@ public class AnimationService extends Service {
     public void onCreate() {
         is_started = false;
         handler = new Handler(this::onHandleMessage);
-
         tvHandler = new Handler(this::onTextVHandleMessage);
-
         random = new Random();
         prefs = getSharedPreferences(getPackageName() + "_preferences", MODE_PRIVATE);
     }
@@ -181,7 +167,6 @@ public class AnimationService extends Service {
         motion_state.setDisplaySize(width, height);
     }
 
-    @SuppressLint("WrongConstant")
     private void startAnimation() {
         this.pref_listener = new PreferenceChangeListener();
         this.prefs.registerOnSharedPreferenceChangeListener(this.pref_listener);
@@ -204,8 +189,16 @@ public class AnimationService extends Service {
             assert wm != null;
             wm.addView(this.touch_view, touch_params);
             this.image_view = new ImageView(this);
-            this.image_params = new LayoutParams(this.image_width, this.image_height, 2038, 536, -3);
-            this.image_params.gravity = 51;
+            this.image_params = new WindowManager.LayoutParams(
+                    this.image_width,
+                    this.image_height,
+                    WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                            | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+                            | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
+                    PixelFormat.TRANSLUCENT
+            );
+            this.image_params.gravity = Gravity.TOP | Gravity.START;
             wm.addView(this.image_view, this.image_params);
             requestAnimate();
         }
@@ -827,12 +820,19 @@ public class AnimationService extends Service {
         }
 
         private void changeToMovingState() {
+            int dir = (int) (Math.atan2(vy, vx) * 4 / Math.PI + 8.5) % 8;
+            MotionParams.MoveDirection[] dirs = {
+                    MotionParams.MoveDirection.RIGHT,
+                    MotionParams.MoveDirection.DOWN_RIGHT,
+                    MotionParams.MoveDirection.DOWN,
+                    MotionParams.MoveDirection.DOWN_LEFT,
+                    MotionParams.MoveDirection.LEFT,
+                    MotionParams.MoveDirection.UP_LEFT,
+                    MotionParams.MoveDirection.UP,
+                    MotionParams.MoveDirection.UP_RIGHT
+            };
 
-            MotionParams.MoveDirection d = vx >= 0
-                    ? MotionParams.MoveDirection.RIGHT
-                    : MotionParams.MoveDirection.LEFT;
-
-            String nstate = params.getMoveState(d);
+            String nstate = params.getMoveState(dirs[dir]);
             if (!params.hasState(nstate)) {
                 return;
             }

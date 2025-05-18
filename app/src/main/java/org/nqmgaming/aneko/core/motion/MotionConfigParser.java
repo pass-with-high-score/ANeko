@@ -78,21 +78,32 @@ public class MotionConfigParser extends MotionParams {
 
     public String getMoveState(MoveDirection dir) {
         switch (dir) {
-            case UP_LEFT:
-            case DOWN_LEFT:
+            case UP:
+                return move_state_prefix + "Up";
+            case DOWN:
+                return move_state_prefix + "Down";
             case LEFT:
                 return move_state_prefix + "Left";
-            default:
+            case RIGHT:
                 return move_state_prefix + "Right";
+            default:
+                return null;
         }
     }
 
     public String getWallState(WallDirection dir) {
-        return super.getWallState(dir) +
-                (dir == WallDirection.UP ? "Up" :
-                        dir == WallDirection.DOWN ? "Down" :
-                                dir == WallDirection.LEFT ? "Left" :
-                                        dir == WallDirection.RIGHT ? "Right" : "");
+        switch (dir) {
+            case UP:
+                return wall_state_prefix + "Up";
+            case DOWN:
+                return wall_state_prefix + "Down";
+            case LEFT:
+                return wall_state_prefix + "Left";
+            case RIGHT:
+                return wall_state_prefix + "Right";
+            default:
+                return null;
+        }
     }
 
     public String getNextState(String state) {
