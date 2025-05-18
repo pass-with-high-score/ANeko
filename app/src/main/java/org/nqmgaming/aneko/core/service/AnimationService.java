@@ -15,13 +15,13 @@ import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ServiceInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.graphics.PointF;
@@ -39,12 +39,10 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import org.nqmgaming.aneko.data.BatteryInfo;
 import org.nqmgaming.aneko.core.motion.MotionDrawable;
 import org.nqmgaming.aneko.core.motion.MotionParams;
 import org.nqmgaming.aneko.core.motion.MotionConfigParser;
@@ -52,9 +50,6 @@ import org.nqmgaming.aneko.R;
 import org.tamanegi.aneko.ANekoActivity;
 
 import java.io.File;
-import java.text.MessageFormat;
-import java.util.Calendar;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.Random;
 
@@ -67,7 +62,6 @@ public class AnimationService extends Service {
     public static final String ACTION_GET_SKIN = "org.tamanegi.aneko.action.GET_SKIN";
     public static final String META_KEY_SKIN = "org.tamanegi.aneko.skin";
     public static final String PREF_KEY_ENABLE = "motion.enable";
-    public static final String PREF_KEY_BATTERY = "battery.enable";
     public static final String PREF_KEY_VISIBLE = "motion.visible";
     public static final String PREF_KEY_TRANSPARENCY = "motion.transparency";
     public static final String PREF_KEY_SIZE = "motion.size";
@@ -77,14 +71,11 @@ public class AnimationService extends Service {
     public static final String PREF_KEY_KEEP_ALIVE = "motion.keep_alive";
     public static final String PREF_KEY_NOTIFICATION_ENABLE = "notification.enable";
     private static final int MSG_ANIMATE = 1;
-    private static final int MSG_TXT = 1;
     private static final long ANIMATION_INTERVAL = 125; // msec
-    private static final long TV_INTERVAL = 250; // msec
     private static final long BEHAVIOUR_CHANGE_DURATION = 4000; // msec
     public static final String ANeko_SKINS = "/ANeko/skins";
     private int image_width = 80;
     private int image_height = 80;
-    boolean showTimeBattery = true;
 
     private enum Behaviour {
         closer, further, whimsical
@@ -97,24 +88,18 @@ public class AnimationService extends Service {
     private SharedPreferences prefs;
     private PreferenceChangeListener pref_listener;
     private Handler handler;
-    private Handler tvHandler;
     private MotionState motion_state = null;
     private Random random;
     private View touch_view = null;
     private ImageView image_view = null;
     private LayoutParams image_params = null;
     private BroadcastReceiver receiver = null;
-    TextView textV;
-    private final LayoutParams textParams = null;
-    ImageView balloonV;
-    LayoutParams balloonParams = null;
 
 
     @Override
     public void onCreate() {
         is_started = false;
         handler = new Handler(this::onHandleMessage);
-        tvHandler = new Handler(this::onTextVHandleMessage);
         random = new Random();
         prefs = getSharedPreferences(getPackageName() + "_preferences", MODE_PRIVATE);
     }
@@ -172,12 +157,6 @@ public class AnimationService extends Service {
         this.prefs.registerOnSharedPreferenceChangeListener(this.pref_listener);
         if (checkPrefEnable() && loadMotionState()) {
             refreshMotionSpeed();
-            this.receiver = new Receiver();
-            IntentFilter filter = new IntentFilter();
-            filter.addAction("android.intent.action.BATTERY_CHANGED");
-            filter.addAction("android.intent.action.BATTERY_LOW");
-            filter.addAction("android.intent.action.BATTERY_OKAY");
-            registerReceiver(this.receiver, filter);
             WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
             this.touch_view = new View(this);
             this.touch_view.setOnTouchListener(new TouchListener());
@@ -200,19 +179,16 @@ public class AnimationService extends Service {
             );
             this.image_params.gravity = Gravity.TOP | Gravity.START;
             wm.addView(this.image_view, this.image_params);
+            image_view.setBackgroundColor(Color.argb(0, 0, 0, 0));
+            image_view.setAlpha(0.8f);
+            image_view.setPadding(8, 8, 8, 8);
+            image_view.setVisibility(View.VISIBLE);
+            image_view.setBackgroundColor(Color.argb(0, 0, 0, 0));
+
+
             requestAnimate();
         }
 
-    }
-
-    void setBalloonVisible(boolean v) {
-        if (v) {
-            textV.setVisibility(View.VISIBLE);
-            balloonV.setVisibility(View.VISIBLE);
-        } else {
-            textV.setVisibility(View.INVISIBLE);
-            balloonV.setVisibility(View.INVISIBLE);
-        }
     }
 
     private void stopAnimation() {
@@ -227,10 +203,6 @@ public class AnimationService extends Service {
             assert wm != null;
             wm.removeView(image_view);
         }
-        if (textV != null) {
-            assert wm != null;
-            wm.removeView(textV);
-        }
         if (receiver != null) {
             unregisterReceiver(receiver);
         }
@@ -241,7 +213,6 @@ public class AnimationService extends Service {
         receiver = null;
 
         handler.removeMessages(MSG_ANIMATE);
-        tvHandler.removeMessages(MSG_TXT);
     }
 
     private void toggleAnimation() {
@@ -295,11 +266,11 @@ public class AnimationService extends Service {
 
     private boolean loadMotionState() {
         String skin = prefs.getString(PREF_KEY_SKIN_COMPONENT, "");
-        if (skin.contains(".xml") || skin.isEmpty()) return loadMotion_dir();
-        else return loadMotion_apk();
+        if (skin.contains(".xml") || skin.isEmpty()) return loadMotionDir();
+        else return loadMotionApk();
     }
 
-    private boolean loadMotion_apk() {
+    private boolean loadMotionApk() {
         String skin_pkg = prefs.getString(PREF_KEY_SKIN_COMPONENT, null);
         ComponentName skin_comp = (skin_pkg == null ? null : ComponentName.unflattenFromString(skin_pkg));
         if (skin_comp != null && loadMotionState(skin_comp)) {
@@ -309,7 +280,7 @@ public class AnimationService extends Service {
         return loadMotionState(skin_comp);
     }
 
-    private boolean loadMotion_dir() {
+    private boolean loadMotionDir() {
         boolean loaded = false;
         String skinPath = prefs.getString(PREF_KEY_SKIN_COMPONENT, "");
         try {
@@ -454,9 +425,6 @@ public class AnimationService extends Service {
         if (!handler.hasMessages(MSG_ANIMATE)) {
             handler.sendEmptyMessage(MSG_ANIMATE);
         }
-        if (!tvHandler.hasMessages(MSG_TXT)) {
-            tvHandler.sendEmptyMessage(MSG_TXT);
-        }
     }
 
     private void updateDrawable() {
@@ -483,17 +451,6 @@ public class AnimationService extends Service {
         WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
         assert wm != null;
         wm.updateViewLayout(image_view, image_params);
-
-        if (textV != null && balloonV != null) {
-            int w = image_view.getWidth();
-            int cx = pt.x + w / 2;
-            balloonParams.x = cx - balloonV.getWidth() / 2;
-            balloonParams.y = pt.y - (int) (balloonV.getHeight() * 0.8);
-            textParams.x = cx - textV.getWidth() / 2;
-            textParams.y = balloonParams.y + 3;
-            wm.updateViewLayout(textV, textParams);
-            wm.updateViewLayout(balloonV, balloonParams);
-        }
     }
 
     private void updateToNext() {
@@ -504,21 +461,6 @@ public class AnimationService extends Service {
             updatePosition();
             requestAnimate();
         }
-    }
-
-    private boolean onTextVHandleMessage(Message msg) {
-        tvHandler.removeMessages(msg.what);
-        if (showTimeBattery) {
-            Calendar cal = Calendar.getInstance();
-            String ts = String.format(Locale.KOREAN, "%02d:%02d", cal.get(Calendar.HOUR), cal.get(Calendar.MINUTE));
-            if (batteryInfo != null) {
-                textV.setText(MessageFormat.format("{0}\n{1}%", ts, batteryInfo.level));
-            } else {
-                textV.setText(MessageFormat.format("{0}\nno battery info.", ts));
-            }
-            tvHandler.sendEmptyMessageDelayed(MSG_TXT, TV_INTERVAL);
-        }
-        return true;
     }
 
     private boolean onHandleMessage(Message msg) {
@@ -547,7 +489,6 @@ public class AnimationService extends Service {
     private boolean checkPrefEnable() {
         boolean enable = prefs.getBoolean(PREF_KEY_ENABLE, false);
         boolean visible = prefs.getBoolean(PREF_KEY_VISIBLE, false);
-        showTimeBattery = prefs.getBoolean(PREF_KEY_BATTERY, false);
 
         if (!enable || !visible) {
             startService(new Intent(this, AnimationService.class)
@@ -568,36 +509,10 @@ public class AnimationService extends Service {
                 refreshMotionSize();
             } else if (PREF_KEY_SPEED.equals(key)) {
                 refreshMotionSpeed();
-            } else if (PREF_KEY_BATTERY.equals(key)) {
-                showTimeBattery = prefs.getBoolean(PREF_KEY_BATTERY, false);
-                setBalloonVisible(showTimeBattery);
-            } else if (PREF_KEY_KEEP_ALIVE.equals(key)) {
+            }  else if (PREF_KEY_KEEP_ALIVE.equals(key)) {
                 // Do nothing
                 Timber.d("Keep alive preference changed, but no action taken.");
             } else if (loadMotionState()) {
-                requestAnimate();
-            }
-        }
-    }
-
-    BatteryInfo batteryInfo;
-    boolean batteryOk = true;
-
-    private class Receiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-            if (Intent.ACTION_BATTERY_CHANGED.equals(intent.getAction())) {
-
-                AnimationService.this.batteryInfo = new BatteryInfo(intent);
-
-                requestAnimate();
-            } else if (Intent.ACTION_BATTERY_LOW.equals(intent.getAction())) {
-
-                batteryOk = false;
-                requestAnimate();
-            } else if (Intent.ACTION_BATTERY_OKAY.equals(intent.getAction())) {
-                batteryOk = true;
                 requestAnimate();
             }
         }
