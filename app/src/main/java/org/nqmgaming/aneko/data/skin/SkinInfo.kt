@@ -8,6 +8,4 @@ data class SkinInfo(
     val name: String,
     val author: String,
     val icon: String,
-    val description: String,
-    val createdAt: String,
 )
