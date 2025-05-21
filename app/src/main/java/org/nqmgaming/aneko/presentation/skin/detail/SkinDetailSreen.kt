@@ -1,18 +1,24 @@
 package org.nqmgaming.aneko.presentation.skin.detail
 
 import android.net.Uri
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Pause
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -20,11 +26,9 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -35,14 +39,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.result.ResultBackNavigator
 import kotlinx.coroutines.delay
 import org.nqmgaming.aneko.data.skin.SkinConfig
 import org.nqmgaming.aneko.data.skin.flattenToDrawableFrames
@@ -63,8 +70,8 @@ import java.io.File
 @Composable
 fun SkinDetailScreen(
     modifier: Modifier = Modifier,
-    navigator: DestinationsNavigator,
-    viewModel: SkinDetailViewModel = hiltViewModel()
+    viewModel: SkinDetailViewModel = hiltViewModel(),
+    resultBackNavigator: ResultBackNavigator<Boolean>
 ) {
     val uiState = viewModel.uiState.collectAsState()
     val context = LocalContext.current
@@ -95,7 +102,7 @@ fun SkinDetailScreen(
     SkinDetail(
         modifier,
         onNavigateBack = {
-            navigator.navigateUp()
+           resultBackNavigator.navigateBack(true)
         },
         skinConfig = uiState.value.skinConfig,
         skinPath = uiState.value.skinPath,
@@ -110,9 +117,8 @@ fun SkinDetail(
     skinConfig: SkinConfig? = null,
     skinPath: Uri? = null
 ) {
-    var isShowSkinInfoBottomSheet by remember { mutableStateOf(false) }
+    var playSample by remember { mutableStateOf(false) }
     val context = LocalContext.current
-    val showSkinInfoBottomSheet = rememberModalBottomSheetState()
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -134,15 +140,29 @@ fun SkinDetail(
                 },
                 actions = {
                     IconButton(onClick = {
-                        isShowSkinInfoBottomSheet = !isShowSkinInfoBottomSheet
+                        skinPath?.let { path ->
+                            val fileName = getFileNameFromUri(context, path)
+                            if (fileName != null) {
+                                val destFile = File(context.filesDir, "skins/$fileName")
+                                copyFileToAppDirectory(context, path, destFile)
+                                val destinationDir = File(context.filesDir, "skins/unzipped")
+                                try {
+                                    val extractedDir = unzipFile(destFile, destinationDir)
+                                    extractedDir?.let { skinDir ->
+                                        val configFile = getSkinConfigJsonFile(skinDir)
+                                        configFile?.let { config ->
+                                            val skinConfig = readSkinConfigJson(config)
+                                            Timber.d("Skin Config: $skinConfig")
+                                        }
+                                    }
+                                    deleteFile(destFile)
+                                    onNavigateBack()
+                                } catch (e: Exception) {
+                                    Timber.e("Failed to unzip file: $e")
+                                }
+                            }
+                        }
                     }) {
-                        // see info button
-                        Icon(
-                            imageVector = Icons.Default.Info,
-                            contentDescription = "Info"
-                        )
-                    }
-                    IconButton(onClick = {}) {
                         // save button
                         Icon(
                             imageVector = Icons.Default.Save,
@@ -154,13 +174,71 @@ fun SkinDetail(
         }
     ) { innerPadding ->
         Column(
-            modifier = Modifier.padding(innerPadding).fillMaxSize(),
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
             if (skinConfig != null) {
                 val motions = skinConfig.motionParams.motion
 
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.primary),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        DisplayLocalImage(
+                            drawableName = skinConfig.info.icon,
+                            skinDir = File(skinPath.toString()),
+                            modifier = Modifier
+                                .size(100.dp)
+                                .padding(8.dp)
+                        )
+                    }
+
+                    Column {
+                        Text(
+                            skinConfig.info.name, style = MaterialTheme.typography.titleLarge.copy(
+                                fontWeight = FontWeight.Bold
+                            )
+                        )
+                        Text(skinConfig.info.skinId, style = MaterialTheme.typography.bodyMedium)
+                        Text(
+                            skinConfig.info.author,
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                fontWeight = FontWeight.Bold
+                            )
+                        )
+
+                    }
+
+                    Box(
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.primary)
+
+                    ) {
+                        IconButton(
+                            onClick = {
+                                playSample = !playSample
+                            },
+                        ) {
+                            Icon(
+                                imageVector = if (playSample) Icons.Default.Pause else Icons.Default.PlayArrow,
+                                contentDescription = "Play Sample",
+                                tint = MaterialTheme.colorScheme.onPrimary
+                            )
+                        }
+                    }
+                }
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(3),
 
@@ -171,8 +249,8 @@ fun SkinDetail(
                         if (frames.isNotEmpty()) {
                             var currentFrameIndex by remember { mutableIntStateOf(0) }
 
-                            LaunchedEffect(motion.state) {
-                                while (true) {
+                            LaunchedEffect(playSample) {
+                                while (playSample) {
                                     val duration = frames[currentFrameIndex].durationMillis.toLong()
                                     delay(duration)
                                     currentFrameIndex = (currentFrameIndex + 1) % frames.size
@@ -193,10 +271,10 @@ fun SkinDetail(
                                     pressedElevation = 8.dp,
                                 )
                             ) {
-                                Column(modifier = Modifier.padding(16.dp)) {
+                                Column(modifier = Modifier.padding(8.dp)) {
                                     Text(
                                         text = motion.state,
-                                        style = MaterialTheme.typography.titleSmall,
+                                        style = MaterialTheme.typography.labelSmall,
                                         modifier = Modifier
                                             .padding(bottom = 8.dp)
                                             .align(Alignment.CenterHorizontally)
@@ -213,8 +291,8 @@ fun SkinDetail(
 
                                     Text(
                                         text = "Duration: ${frames[currentFrameIndex].durationMillis} ms",
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f),
                                         modifier = Modifier.align(Alignment.CenterHorizontally)
                                     )
                                 }
@@ -225,64 +303,14 @@ fun SkinDetail(
             } else {
                 Text(
                     text = "No skin config found",
-                    style = MaterialTheme.typography.bodyLarge,
+                    style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier
                         .padding(innerPadding)
                         .fillMaxWidth()
                         .padding(16.dp),
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+                    textAlign = TextAlign.Center,
                 )
-            }
-        }
-
-        if (isShowSkinInfoBottomSheet) {
-            ModalBottomSheet(
-                sheetState = showSkinInfoBottomSheet,
-                onDismissRequest = { isShowSkinInfoBottomSheet = false },
-            ) {
-                Column {
-                    Text(
-                        text = "Skin Info",
-                        style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier.padding(16.dp)
-                    )
-                    Text(
-                        text = "Skin Path: ${skinPath.toString()}",
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.padding(16.dp)
-                    )
-                    Text(
-                        text = "Skin Name: ${skinConfig?.info?.name}",
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.padding(16.dp)
-                    )
-                    Text(
-                        text = "Skin Author: ${skinConfig?.info?.author}",
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.padding(16.dp)
-                    )
-                    Text(
-                        text = "Skin Description: ${skinConfig?.info?.description}",
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.padding(16.dp)
-                    )
-                    Text(
-                        text = "Skin Id: ${skinConfig?.info?.skinId}",
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.padding(16.dp)
-                    )
-                    Text(
-                        text = "Skin Created At: ${skinConfig?.info?.createdAt}",
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.padding(16.dp)
-                    )
-                    Text(
-                        text = "Skin initialState: ${skinConfig?.motionParams?.initialState}",
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.padding(16.dp)
-                    )
-
-                }
             }
         }
     }

@@ -39,6 +39,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
@@ -53,7 +54,6 @@ import org.nqmgaming.aneko.presentation.home.component.ExpandableFab
 import org.nqmgaming.aneko.presentation.home.component.HomeContent
 import org.nqmgaming.aneko.presentation.home.component.SmallFab
 import org.nqmgaming.aneko.util.extension.checkNotificationPermission
-import androidx.core.net.toUri
 
 
 @Destination<RootGraph>(start = true)
