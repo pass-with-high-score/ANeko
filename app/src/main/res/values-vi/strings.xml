@@ -63,6 +63,6 @@
     <string name="skin_source_option_download_from_store">Tùy chọn 2: Tìm skin trên Play Store\n\nLưu ý: Hầu hết các skin cũ đã bị Google gỡ bỏ. Bạn có thể sẽ không tìm thấy nữa. Hãy thử tìm APK trên Google, nhưng nhớ cẩn thận và hiểu rõ các rủi ro.</string>
     <string name="download_collection_label">Tải bộ sưu tập</string>
     <string name="search_on_play_store_label">Tìm trên Play Store</string>
-    <string name="notification_chanel_description">Thông báo nền để điều khiển ANeko</string>
+    <string name="notification_channel_description">Thông báo nền để điều khiển ANeko</string>
 
 </resources>

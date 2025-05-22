@@ -71,7 +71,7 @@
     <string name="download_collection_label">Download Collection</string>
     <string name="search_on_play_store_label">Search on Play Store</string>
     <string name="aneko_notification_channel_name" translatable="false">ANeko Service</string>
-    <string name="notification_chanel_description">Background service for ANeko</string>
+    <string name="notification_channel_description">Background service for ANeko</string>
     <string name="telegram_group_link" translatable="false">https://t.me/aneko_community</string>
     <string name="search_app" translatable="false"><![CDATA[https://play.google.com/store/search?q=aneko%20skin&c=apps]]></string>
 </resources>

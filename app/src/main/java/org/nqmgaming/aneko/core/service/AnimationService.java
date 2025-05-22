@@ -224,7 +224,7 @@ public class AnimationService extends Service {
                     getString(R.string.aneko_notification_channel_name),
                     NotificationManager.IMPORTANCE_MIN
             );
-            channel.setDescription(getString(R.string.notification_chanel_description));
+            channel.setDescription(getString(R.string.notification_channel_description));
             NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             if (nm != null) {
                 nm.createNotificationChannel(channel);

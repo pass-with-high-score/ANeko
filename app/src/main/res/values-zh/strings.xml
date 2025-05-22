@@ -61,6 +61,6 @@
     <string name="skin_source_option_download_from_store">选项 2: 在 Play 商店搜索皮肤\n\n注意: 大多数旧版皮肤已被 Google 删除，您可能找不到它们了。可以尝试在 Google 上搜索 APK，但请小心并理解风险。</string>
     <string name="download_collection_label">下载集合</string>
     <string name="search_on_play_store_label">在 Play 商店搜索</string>
-    <string name="notification_chanel_description">ANeko 的后台服务</string>
+    <string name="notification_channel_description">ANeko 的后台服务</string>
 
 </resources>
