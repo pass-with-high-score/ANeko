@@ -15,6 +15,7 @@ import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
@@ -93,6 +94,21 @@ public class AnimationService extends Service {
     private LayoutParams image_params = null;
     private BroadcastReceiver receiver = null;
 
+    private BroadcastReceiver visibilityReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if ("org.nqmgaming.aneko.HIDE_NEKO".equals(action)) {
+                Timber.d("Received HIDE_NEKO action");
+                image_view.setVisibility(View.GONE);
+            } else if ("org.nqmgaming.aneko.SHOW_NEKO".equals(action)) {
+                Timber.d("Received SHOW_NEKO action");
+                image_view.setVisibility(View.VISIBLE);
+            }
+        }
+    };
+
+
 
     @Override
     public void onCreate() {
@@ -100,6 +116,17 @@ public class AnimationService extends Service {
         handler = new Handler(this::onHandleMessage);
         random = new Random();
         prefs = getSharedPreferences(getPackageName() + "_preferences", MODE_PRIVATE);
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("org.nqmgaming.aneko.HIDE_NEKO");
+        filter.addAction("org.nqmgaming.aneko.SHOW_NEKO");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            Timber.d("Registering visibility receiver with Context.RECEIVER_NOT_EXPORTED");
+            registerReceiver(visibilityReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            registerReceiver(visibilityReceiver, filter);
+        }
+
+
     }
 
     @Override
@@ -945,6 +972,10 @@ public class AnimationService extends Service {
         if (receiver != null) {
             unregisterReceiver(receiver);
             receiver = null;
+        }
+        if(visibilityReceiver != null) {
+            unregisterReceiver(visibilityReceiver);
+            visibilityReceiver = null;
         }
     }
 }

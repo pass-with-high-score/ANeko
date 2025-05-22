@@ -62,5 +62,6 @@
     <string name="download_collection_label">Скачать коллекцию</string>
     <string name="search_on_play_store_label">Искать в Play Маркете</string>
     <string name="notification_chanel_description">Фоновый сервис для ANeko</string>
+    <string name="accessibility_service_description">Hello</string>
 
 </resources>

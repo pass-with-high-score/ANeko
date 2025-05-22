@@ -64,5 +64,6 @@
     <string name="download_collection_label">Tải bộ sưu tập</string>
     <string name="search_on_play_store_label">Tìm trên Play Store</string>
     <string name="notification_chanel_description">Thông báo nền để điều khiển ANeko</string>
+    <string name="accessibility_service_description">Hello</string>
 
 </resources>

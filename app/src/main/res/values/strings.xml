@@ -73,4 +73,5 @@
     <string name="aneko_notification_channel_name" translatable="false">ANeko Service</string>
     <string name="notification_chanel_description">Background service for ANeko</string>
     <string name="telegram_group_link">https://t.me/aneko_community</string>
+    <string name="accessibility_service_description">Hello</string>
 </resources>

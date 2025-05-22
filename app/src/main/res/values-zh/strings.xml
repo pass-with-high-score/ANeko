@@ -62,5 +62,6 @@
     <string name="download_collection_label">下载集合</string>
     <string name="search_on_play_store_label">在 Play 商店搜索</string>
     <string name="notification_chanel_description">ANeko 的后台服务</string>
+    <string name="accessibility_service_description">Hello</string>
 
 </resources>

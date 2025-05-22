@@ -4,6 +4,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.Crossfade
@@ -208,7 +209,10 @@ fun HomeContent(
 
             SettingsScreen(
                 onBrowseSkins = {
-                    showDialog = true
+                    val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    context.startActivity(intent)
+
                 }
             )
             Spacer(modifier = Modifier.height(24.dp))
