@@ -2,39 +2,62 @@ package org.nqmgaming.aneko.core.service
 
 import android.accessibilityservice.AccessibilityService
 import android.content.Intent
+import android.content.SharedPreferences
 import android.view.accessibility.AccessibilityEvent
-import timber.log.Timber
+import androidx.preference.PreferenceManager
+import kotlinx.coroutines.flow.MutableStateFlow
 
 
 class AppMonitorAccessibilityService : AccessibilityService() {
+    companion object {
+        val connected = MutableStateFlow(false)
+    }
+
+    private lateinit var prefs: SharedPreferences
+    private var enabledApps: Set<String> = emptySet()
+
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
-        Timber.d("AppMonitorAccessibilityService: onAccessibilityEvent: $event")
         if (event.eventType != AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) return
 
-        val packageNameCS = event.packageName
-        Timber.d("AppMonitorAccessibilityService: packageNameCS: $packageNameCS")
-        if (packageNameCS == null) return
+        val packageName = event.packageName?.toString() ?: return
 
-        val packageName = packageNameCS.toString()
-        Timber.d("AppMonitorAccessibilityService: packageName: $packageName")
+        val shouldBlockNeko = enabledApps.contains(packageName)
 
-        if (packageName == "com.android.developers.androidify") {
-            Timber.d("AppMonitorAccessibilityService: Androidify app detected")
-            // Gửi broadcast để ẩn Neko
-            val intent = Intent("org.nqmgaming.aneko.HIDE_NEKO")
-            intent.setPackage("org.nqmgaming.aneko")
-            sendBroadcast(intent)
+        val action = if (shouldBlockNeko) {
+            "org.nqmgaming.aneko.HIDE_NEKO"
         } else {
-            // Gửi broadcast để hiện Neko lại
-            Timber.d("AppMonitorAccessibilityService: App detected: $packageName")
-            val intent = Intent("org.nqmgaming.aneko.SHOW_NEKO")
-            intent.setPackage("org.nqmgaming.aneko")
-            sendBroadcast(intent)
-            sendBroadcast(Intent("org.nqmgaming.aneko.SHOW_NEKO"))
+            "org.nqmgaming.aneko.SHOW_NEKO"
         }
+
+        val intent = Intent(action).apply {
+            setPackage("org.nqmgaming.aneko")
+        }
+        sendBroadcast(intent)
     }
 
     override fun onInterrupt() {
-        // không cần làm gì
+    }
+
+    override fun onServiceConnected() {
+        super.onServiceConnected()
+        connected.tryEmit(true)
+
+        prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        enabledApps = prefs.getStringSet("enabled_apps", emptySet()) ?: emptySet()
+
+        // Listen for changes to prefs
+        prefs.registerOnSharedPreferenceChangeListener(prefsListener)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        connected.tryEmit(false)
+        prefs.unregisterOnSharedPreferenceChangeListener(prefsListener)
+    }
+
+    private val prefsListener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+        if (key == "enabled_apps") {
+            enabledApps = prefs.getStringSet("enabled_apps", emptySet()) ?: emptySet()
+        }
     }
 }

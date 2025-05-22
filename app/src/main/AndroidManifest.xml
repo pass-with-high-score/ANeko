@@ -14,12 +14,16 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
     <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
+        tools:ignore="QueryAllPackagesPermission" />
+
 
     <queries>
         <intent>
             <action android:name="org.tamanegi.aneko.action.GET_SKIN" />
         </intent>
     </queries>
+
 
     <application
         android:name=".AnekoApp"

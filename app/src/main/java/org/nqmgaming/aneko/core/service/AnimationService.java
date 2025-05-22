@@ -92,7 +92,6 @@ public class AnimationService extends Service {
     private View touch_view = null;
     private ImageView image_view = null;
     private LayoutParams image_params = null;
-    private BroadcastReceiver receiver = null;
 
     private BroadcastReceiver visibilityReceiver = new BroadcastReceiver() {
         @Override
@@ -107,7 +106,6 @@ public class AnimationService extends Service {
             }
         }
     };
-
 
 
     @Override
@@ -125,8 +123,6 @@ public class AnimationService extends Service {
         } else {
             registerReceiver(visibilityReceiver, filter);
         }
-
-
     }
 
     @Override
@@ -221,14 +217,14 @@ public class AnimationService extends Service {
             assert wm != null;
             wm.removeView(image_view);
         }
-        if (receiver != null) {
-            unregisterReceiver(receiver);
+        if (visibilityReceiver != null) {
+            unregisterReceiver(visibilityReceiver);
         }
 
         motion_state = null;
         touch_view = null;
         image_view = null;
-        receiver = null;
+        visibilityReceiver = null;
 
         handler.removeMessages(MSG_ANIMATE);
     }
@@ -559,6 +555,9 @@ public class AnimationService extends Service {
                 Timber.d("Keep alive preference changed, but no action taken.");
             } else if (loadMotionState()) {
                 requestAnimate();
+            } else {
+                // Do nothing
+                Timber.d("Failed to load motion state after preference change.");
             }
         }
     }
@@ -969,11 +968,7 @@ public class AnimationService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (receiver != null) {
-            unregisterReceiver(receiver);
-            receiver = null;
-        }
-        if(visibilityReceiver != null) {
+        if (visibilityReceiver != null) {
             unregisterReceiver(visibilityReceiver);
             visibilityReceiver = null;
         }

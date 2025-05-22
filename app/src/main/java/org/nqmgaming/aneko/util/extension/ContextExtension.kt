@@ -2,7 +2,9 @@ package org.nqmgaming.aneko.util.extension
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.pm.ResolveInfo
 import android.os.Build
 import androidx.activity.result.ActivityResultLauncher
 import androidx.core.content.ContextCompat
@@ -23,3 +25,17 @@ fun Context.checkNotificationPermission(
     }
     onGranted()
 }
+
+fun Context.getUserLaunchableApps(): List<ResolveInfo> {
+    val intent = Intent(Intent.ACTION_MAIN, null).apply {
+        addCategory(Intent.CATEGORY_LAUNCHER)
+    }
+    val listApp = packageManager.queryIntentActivities(intent, 0)
+    // remove itself
+    listApp.removeIf { resolveInfo ->
+        resolveInfo.activityInfo.packageName == packageName
+    }
+    return listApp
+}
+
+

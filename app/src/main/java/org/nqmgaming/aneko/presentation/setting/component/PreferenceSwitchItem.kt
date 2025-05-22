@@ -1,6 +1,7 @@
 package org.nqmgaming.aneko.presentation.setting.component
 
 import android.content.SharedPreferences
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -10,6 +11,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -20,17 +22,23 @@ fun PreferenceSwitchItem(
     title: String,
     summary: String,
     icon: Int,
-    key: String,
+    key: String? = null,
     defaultValue: Boolean,
-    prefs: SharedPreferences
+    prefs: SharedPreferences? = null,
+    onClick: (() -> Unit)? = null,
+    onSwitchClick: (() -> Unit)? = null,
 ) {
     var isChecked by remember {
-        mutableStateOf(prefs.getBoolean(key, defaultValue))
+        mutableStateOf(prefs?.getBoolean(key, defaultValue))
     }
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .clickable(onClick != null) {
+                onClick?.invoke()
+            }
+            .clip(MaterialTheme.shapes.large)
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -57,10 +65,14 @@ fun PreferenceSwitchItem(
             )
         }
         Switch(
-            checked = isChecked,
+            checked = (if (onSwitchClick != null) defaultValue else isChecked) == true,
             onCheckedChange = {
-                isChecked = it
-                prefs.edit { putBoolean(key, it) }
+                if (onSwitchClick != null) {
+                    onSwitchClick()
+                } else {
+                    isChecked = it
+                    prefs?.edit { putBoolean(key, it) }
+                }
             }
         )
     }

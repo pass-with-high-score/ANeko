@@ -1,5 +1,7 @@
 package org.nqmgaming.aneko.presentation.setting
 
+import android.content.Intent
+import android.provider.Settings
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -7,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -14,7 +17,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.preference.PreferenceManager
 import org.nqmgaming.aneko.R
+import androidx.compose.runtime.getValue
 import org.nqmgaming.aneko.core.service.AnimationService
+import org.nqmgaming.aneko.core.service.AppMonitorAccessibilityService
 import org.nqmgaming.aneko.presentation.setting.component.PreferenceContainer
 import org.nqmgaming.aneko.presentation.setting.component.PreferenceItem
 import org.nqmgaming.aneko.presentation.setting.component.PreferenceSwitchItem
@@ -25,9 +30,12 @@ import org.nqmgaming.aneko.util.openUrl
 @Composable
 fun SettingsScreen(
     onBrowseSkins: () -> Unit = {},
+    onHideSpecificApp: () -> Unit = {}
 ) {
     val context = LocalContext.current
     val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+
+    val isConnected by AppMonitorAccessibilityService.connected.collectAsState()
 
     Column(modifier = Modifier.padding(16.dp)) {
         PreferenceContainer(
@@ -86,6 +94,23 @@ fun SettingsScreen(
                 key = AnimationService.PREF_KEY_KEEP_ALIVE,
                 defaultValue = true,
                 prefs = prefs
+            )
+            HorizontalDivider(
+                color = MaterialTheme.colorScheme.outline.copy(
+                    alpha = 0.5f
+                ),
+            )
+            PreferenceSwitchItem(
+                title = "Hide in specific app",
+                summary = "Hide the animation in specific app",
+                icon = R.drawable.ic_visibility_off,
+                defaultValue = isConnected,
+                onClick = onHideSpecificApp,
+                onSwitchClick = {
+                    val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    context.startActivity(intent)
+                }
             )
         }
 
