@@ -1,6 +1,7 @@
 package org.nqmgaming.aneko.presentation.skin.detail
 
 import android.net.Uri
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -102,7 +103,7 @@ fun SkinDetailScreen(
     SkinDetail(
         modifier,
         onNavigateBack = {
-           resultBackNavigator.navigateBack(true)
+            resultBackNavigator.navigateBack(true)
         },
         skinConfig = uiState.value.skinConfig,
         skinPath = uiState.value.skinPath,
@@ -140,25 +141,24 @@ fun SkinDetail(
                 },
                 actions = {
                     IconButton(onClick = {
-                        skinPath?.let { path ->
-                            val fileName = getFileNameFromUri(context, path)
-                            if (fileName != null) {
-                                val destFile = File(context.filesDir, "skins/$fileName")
-                                copyFileToAppDirectory(context, path, destFile)
-                                val destinationDir = File(context.filesDir, "skins/unzipped")
+                        skinConfig?.let { config ->
+                            val skinDir = File(skinPath.toString())
+                            val jsonFile = getSkinConfigJsonFile(skinDir)
+                            if (jsonFile != null) {
                                 try {
-                                    val extractedDir = unzipFile(destFile, destinationDir)
-                                    extractedDir?.let { skinDir ->
-                                        val configFile = getSkinConfigJsonFile(skinDir)
-                                        configFile?.let { config ->
-                                            val skinConfig = readSkinConfigJson(config)
-                                            Timber.d("Skin Config: $skinConfig")
-                                        }
+                                    skinPath?.let {
+                                        val fileName = getFileNameFromUri(context, it)
+                                        val destFile = File(context.filesDir, "skins/$fileName")
+                                        copyFileToAppDirectory(context, it, destFile)
+                                        unzipFile(destFile, skinDir)
+                                        Toast.makeText(
+                                            context,
+                                            "Skin Config saved successfully",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
                                     }
-                                    deleteFile(destFile)
-                                    onNavigateBack()
                                 } catch (e: Exception) {
-                                    Timber.e("Failed to unzip file: $e")
+                                    Timber.e("Failed to save skin config: $e")
                                 }
                             }
                         }
@@ -184,7 +184,9 @@ fun SkinDetail(
                 val motions = skinConfig.motionParams.motion
 
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(16.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
