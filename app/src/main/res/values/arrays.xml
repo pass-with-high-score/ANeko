@@ -38,23 +38,37 @@
     <!-- Motion Size -->
     <string-array name="pref_motion_size">
         <item>40x40</item>
+        <item>60x60</item>
         <item>80x80</item>
+        <item>100x100</item>
         <item>120x120</item>
+        <item>140x140</item>
         <item>160x160</item>
+        <item>180x180</item>
         <item>200x200</item>
+        <item>220x220</item>
         <item>240x240</item>
+        <item>260x260</item>
         <item>280x280</item>
+        <item>300x300</item>
         <item>320x320</item>
     </string-array>
 
     <string-array name="pref_motion_size_entry_values">
         <item>40</item>
+        <item>60</item>
         <item>80</item>
+        <item>100</item>
         <item>120</item>
+        <item>140</item>
         <item>160</item>
+        <item>180</item>
         <item>200</item>
+        <item>220</item>
         <item>240</item>
+        <item>260</item>
         <item>280</item>
+        <item>300</item>
         <item>320</item>
     </string-array>
 
