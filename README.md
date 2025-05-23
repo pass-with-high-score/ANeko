@@ -99,3 +99,10 @@ See the full [LICENSE](LICENSE) file for details.
 
 Pull requests and issue reports are welcome.  
 Help us improve ANeko Reborn!
+
+
+## Star History
+Thanks
+
+
+[![Star History Chart](https://api.star-history.com/svg?repos=pass-with-high-score/ANeko&type=Date)](https://www.star-history.com/#pass-with-high-score/ANeko&Date)
