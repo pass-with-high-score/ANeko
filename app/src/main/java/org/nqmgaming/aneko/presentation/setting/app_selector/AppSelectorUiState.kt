@@ -7,4 +7,6 @@ data class AppSelectorUiState (
     val enabledPackageNames: Set<String> = emptySet(),
     val isLoading: Boolean = false,
     val error: String? = null,
+    val showSearchBar: Boolean = false,
+    val searchQuery: String = "",
 )

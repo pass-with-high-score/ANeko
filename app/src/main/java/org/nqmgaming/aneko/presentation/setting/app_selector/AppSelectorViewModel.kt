@@ -48,6 +48,13 @@ class AppSelectorViewModel @Inject constructor(application: Application) :
                 prefs.edit { remove("enabled_apps") }
                 _uiState.value = _uiState.value.copy(enabledPackageNames = emptySet())
             }
+
+            is AppSelectorUiAction.OnSearchQueryChange -> {
+                _uiState.value = _uiState.value.copy(searchQuery = event.query)
+            }
+            is AppSelectorUiAction.OnToggleSearchBar -> {
+                _uiState.value = _uiState.value.copy(showSearchBar = event.isEnabled)
+            }
         }
     }
 
