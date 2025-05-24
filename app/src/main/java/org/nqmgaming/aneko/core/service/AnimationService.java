@@ -11,7 +11,6 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -70,8 +69,6 @@ public class AnimationService extends Service {
     public static final String PREF_KEY_KEEP_ALIVE = "motion.keep_alive";
     public static final String PREF_KEY_NOTIFICATION_ENABLE = "notification.enable";
     public static final String PREF_KEY_ENABLED_APPS = "enabled_apps";
-
-    public static final String PREF_KEY_REST_DURATION = "motion.rest_duration";
     private static final int MSG_ANIMATE = 1;
     private static final long ANIMATION_INTERVAL = 125; // msec
     private static final long BEHAVIOUR_CHANGE_DURATION = 4000; // msec
@@ -534,6 +531,12 @@ public class AnimationService extends Service {
                     PREF_KEY_ENABLED_APPS.equals(key)) {
                 // Do nothing
                 Timber.d("Keep alive preference changed, but no action taken.");
+            }else if (PREF_KEY_TRANSPARENCY.equals(key)) {
+                if (motion_state != null) {
+                    String alpha_str = prefs.getString(PREF_KEY_TRANSPARENCY, "0.0");
+                    float opacity = 1 - Float.parseFloat(alpha_str);
+                    motion_state.alpha = (int) (opacity * 0xff);
+                }
             } else if (loadMotionState()) {
                 requestAnimate();
             }

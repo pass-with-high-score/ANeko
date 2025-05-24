@@ -122,7 +122,6 @@ dependencies {
     implementation(libs.bundles.serialization)
 
     implementation(libs.androidx.compose.animation.graphics)
-    implementation(libs.util.codex)
 
     implementation(libs.kotlin.stdlib.jdk8)
     implementation(libs.material)
