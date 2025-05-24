@@ -70,6 +70,10 @@
     <string name="download_collection_label">Descargar colección</string>
     <string name="search_on_play_store_label">Buscar en Play Store</string>
     <string name="notification_chanel_description">Servicio en segundo plano para ANeko</string>
-    <string name="accessibility_service_description">Hello</string>
+    <string name="accessibility_service_description">Este servicio detecta cuándo ANeko se está ejecutando en apps específicas para desactivar la animación.</string>
+    <string name="hide_in_specific_title">Ocultar en apps específicas (Beta)</string>
+    <string name="hide_in_specific_summary">Oculta la animación en apps seleccionadas</string>
+    <string name="search_apps_hint">Buscar aplicaciones</string>
+    <string name="select_apps_title">Seleccionar aplicaciones</string>
 
 </resources>

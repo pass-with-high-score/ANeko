@@ -20,6 +20,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.blankj.utilcode.util.KeyboardUtils
@@ -112,12 +113,12 @@ fun AppSelector(
                         AppBarTextField(
                             value = searchQuery,
                             onValueChange = onSearchQueryChange,
-                            hint = "Search Apps",
+                            hint = stringResource(R.string.search_apps_hint),
                             modifier = Modifier.autoFocus()
                         )
                     } else {
                         Text(
-                            text = "Select Apps",
+                            text = stringResource(R.string.select_apps_title),
                         )
                     }
                 },
@@ -127,7 +128,7 @@ fun AppSelector(
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back"
+                            contentDescription = null
                         )
                     }
                 },
@@ -153,7 +154,7 @@ fun AppSelector(
                     ) {
                         Icon(
                             imageVector = Icons.Filled.Refresh,
-                            contentDescription = "Refresh"
+                            contentDescription = null
                         )
                     }
                 }

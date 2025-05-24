@@ -38,13 +38,4 @@ fun Context.getUserLaunchableApps(): List<ResolveInfo> {
     return listApp
 }
 
-fun Context.isAppInstalled(packageName: String): Boolean {
-    return try {
-        packageManager.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES)
-        true
-    } catch (_: PackageManager.NameNotFoundException) {
-        false
-    }
-}
-
 

@@ -69,6 +69,7 @@ public class AnimationService extends Service {
     public static final String PREF_KEY_SKIN_COMPONENT = "motion.skin";
     public static final String PREF_KEY_KEEP_ALIVE = "motion.keep_alive";
     public static final String PREF_KEY_NOTIFICATION_ENABLE = "notification.enable";
+    public static final String PREF_KEY_ENABLED_APPS = "enabled_apps";
     private static final int MSG_ANIMATE = 1;
     private static final long ANIMATION_INTERVAL = 125; // msec
     private static final long BEHAVIOUR_CHANGE_DURATION = 4000; // msec
@@ -98,10 +99,10 @@ public class AnimationService extends Service {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if ("org.nqmgaming.aneko.HIDE_NEKO".equals(action)) {
-                Timber.d("Received HIDE_NEKO action");
+                Timber.d("Received HIDE_NEKO action%s", action);
                 image_view.setVisibility(View.GONE);
             } else if ("org.nqmgaming.aneko.SHOW_NEKO".equals(action)) {
-                Timber.d("Received SHOW_NEKO action");
+                Timber.d("Received SHOW_NEKO action%s", action);
                 image_view.setVisibility(View.VISIBLE);
             }
         }
@@ -550,14 +551,12 @@ public class AnimationService extends Service {
                 refreshMotionSize();
             } else if (PREF_KEY_SPEED.equals(key)) {
                 refreshMotionSpeed();
-            } else if (PREF_KEY_KEEP_ALIVE.equals(key)) {
+            } else if (PREF_KEY_KEEP_ALIVE.equals(key) ||
+                    PREF_KEY_ENABLED_APPS.equals(key)) {
                 // Do nothing
                 Timber.d("Keep alive preference changed, but no action taken.");
             } else if (loadMotionState()) {
                 requestAnimate();
-            } else {
-                // Do nothing
-                Timber.d("Failed to load motion state after preference change.");
             }
         }
     }

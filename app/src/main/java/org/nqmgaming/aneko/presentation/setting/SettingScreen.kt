@@ -101,8 +101,8 @@ fun SettingsScreen(
                 ),
             )
             PreferenceSwitchItem(
-                title = "Hide in specific app",
-                summary = "Hide the animation in specific app",
+                title = stringResource(R.string.hide_in_specific_title),
+                summary = stringResource(R.string.hide_in_specific_summary),
                 icon = R.drawable.ic_visibility_off,
                 defaultValue = isConnected,
                 onClick = onHideSpecificApp,

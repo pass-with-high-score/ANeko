@@ -11,6 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import org.nqmgaming.aneko.core.service.AnimationService.PREF_KEY_ENABLED_APPS
 import org.nqmgaming.aneko.util.extension.getUserLaunchableApps
 import javax.inject.Inject
 
@@ -38,20 +39,21 @@ class AppSelectorViewModel @Inject constructor(application: Application) :
                 }
 
                 // Save to SharedPreferences
-                prefs.edit { putStringSet("enabled_apps", currentSet) }
+                prefs.edit { putStringSet(PREF_KEY_ENABLED_APPS, currentSet) }
 
                 // Update state
                 _uiState.value = _uiState.value.copy(enabledPackageNames = currentSet)
             }
 
             AppSelectorUiAction.OnReset -> {
-                prefs.edit { remove("enabled_apps") }
+                prefs.edit { remove(PREF_KEY_ENABLED_APPS) }
                 _uiState.value = _uiState.value.copy(enabledPackageNames = emptySet())
             }
 
             is AppSelectorUiAction.OnSearchQueryChange -> {
                 _uiState.value = _uiState.value.copy(searchQuery = event.query)
             }
+
             is AppSelectorUiAction.OnToggleSearchBar -> {
                 _uiState.value = _uiState.value.copy(showSearchBar = event.isEnabled)
             }
@@ -63,7 +65,7 @@ class AppSelectorViewModel @Inject constructor(application: Application) :
         viewModelScope.launch(Dispatchers.IO) {
             val context = getApplication<Application>().applicationContext
             val launchableApps = context.getUserLaunchableApps()
-            val enabledSet = prefs.getStringSet("enabled_apps", emptySet()) ?: emptySet()
+            val enabledSet = prefs.getStringSet(PREF_KEY_ENABLED_APPS, emptySet()) ?: emptySet()
 
             _uiState.value = AppSelectorUiState(
                 launchableApps = launchableApps,

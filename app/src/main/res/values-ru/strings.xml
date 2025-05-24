@@ -62,6 +62,10 @@
     <string name="download_collection_label">Скачать коллекцию</string>
     <string name="search_on_play_store_label">Искать в Play Маркете</string>
     <string name="notification_chanel_description">Фоновый сервис для ANeko</string>
-    <string name="accessibility_service_description">Hello</string>
+    <string name="accessibility_service_description">Эта служба определяет, когда ANeko работает в выбранных приложениях, чтобы отключить анимацию.</string>
+    <string name="hide_in_specific_title">Скрывать в выбранных приложениях (Бета)</string>
+    <string name="hide_in_specific_summary">Скрывать анимацию в выбранных приложениях</string>
+    <string name="search_apps_hint">Поиск приложений</string>
+    <string name="select_apps_title">Выбрать приложения</string>
 
 </resources>

@@ -6,7 +6,8 @@ import android.content.SharedPreferences
 import android.view.accessibility.AccessibilityEvent
 import androidx.preference.PreferenceManager
 import kotlinx.coroutines.flow.MutableStateFlow
-
+import org.nqmgaming.aneko.core.service.AnimationService.PREF_KEY_ENABLED_APPS
+import timber.log.Timber
 
 class AppMonitorAccessibilityService : AccessibilityService() {
     companion object {
@@ -16,24 +17,39 @@ class AppMonitorAccessibilityService : AccessibilityService() {
     private lateinit var prefs: SharedPreferences
     private var enabledApps: Set<String> = emptySet()
 
+    private val ignoredPackages = setOf(
+        "com.android.systemui",
+        "com.miui.securitycenter",
+        "com.google.android.permissioncontroller"
+    )
+
+
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
-        if (event.eventType != AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) return
+        when (event.eventType) {
+            AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED,
+            AccessibilityEvent.TYPE_WINDOWS_CHANGED -> {
+                val packageName = event.packageName?.toString() ?: return
+                Timber.d("onAccessibilityEvent: $packageName")
 
-        val packageName = event.packageName?.toString() ?: return
+                if (ignoredPackages.contains(packageName)) return
 
-        val shouldBlockNeko = enabledApps.contains(packageName)
+                val shouldBlockNeko = enabledApps.contains(packageName)
 
-        val action = if (shouldBlockNeko) {
-            "org.nqmgaming.aneko.HIDE_NEKO"
-        } else {
-            "org.nqmgaming.aneko.SHOW_NEKO"
+                val action = if (shouldBlockNeko) {
+                    "org.nqmgaming.aneko.HIDE_NEKO"
+                } else {
+                    "org.nqmgaming.aneko.SHOW_NEKO"
+                }
+
+                val intent = Intent(action).apply {
+                    setPackage("org.nqmgaming.aneko")
+                    putExtra("packageName", packageName)
+                }
+                sendBroadcast(intent)
+            }
         }
-
-        val intent = Intent(action).apply {
-            setPackage("org.nqmgaming.aneko")
-        }
-        sendBroadcast(intent)
     }
+
 
     override fun onInterrupt() {
     }
@@ -43,7 +59,7 @@ class AppMonitorAccessibilityService : AccessibilityService() {
         connected.tryEmit(true)
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        enabledApps = prefs.getStringSet("enabled_apps", emptySet()) ?: emptySet()
+        enabledApps = prefs.getStringSet(PREF_KEY_ENABLED_APPS, emptySet()) ?: emptySet()
 
         // Listen for changes to prefs
         prefs.registerOnSharedPreferenceChangeListener(prefsListener)
@@ -56,8 +72,8 @@ class AppMonitorAccessibilityService : AccessibilityService() {
     }
 
     private val prefsListener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
-        if (key == "enabled_apps") {
-            enabledApps = prefs.getStringSet("enabled_apps", emptySet()) ?: emptySet()
+        if (key == PREF_KEY_ENABLED_APPS) {
+            enabledApps = prefs.getStringSet(PREF_KEY_ENABLED_APPS, emptySet()) ?: emptySet()
         }
     }
 }
