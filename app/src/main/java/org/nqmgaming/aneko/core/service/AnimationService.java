@@ -14,7 +14,6 @@ import android.app.Service;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
@@ -100,9 +99,6 @@ public class AnimationService extends Service {
         handler = new Handler(this::onHandleMessage);
         random = new Random();
         prefs = getSharedPreferences(getPackageName() + "_preferences", MODE_PRIVATE);
-        IntentFilter filter = new IntentFilter();
-        filter.addAction("org.nqmgaming.aneko.HIDE_NEKO");
-        filter.addAction("org.nqmgaming.aneko.SHOW_NEKO");
     }
 
     @Override
