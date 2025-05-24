@@ -26,7 +26,6 @@
     <string name="motion_speed_summary">Ajusta la velocidad de los efectos de movimiento.</string>
     <string name="motion_keep_alive_title">Permitir ejecución en segundo plano</string>
     <string name="motion_keep_alive_summary">Mantener el skin activo al cerrar la aplicación</string>
-
     <!-- Customization -->
     <string name="customization_title">Personalización</string>
     <string name="browse_skins_title">Explorar Skins</string>
@@ -70,10 +69,4 @@
     <string name="download_collection_label">Descargar colección</string>
     <string name="search_on_play_store_label">Buscar en Play Store</string>
     <string name="notification_chanel_description">Servicio en segundo plano para ANeko</string>
-    <string name="accessibility_service_description">Este servicio detecta cuándo ANeko se está ejecutando en apps específicas para desactivar la animación.</string>
-    <string name="hide_in_specific_title">Ocultar en apps específicas (Beta)</string>
-    <string name="hide_in_specific_summary">Oculta la animación en apps seleccionadas</string>
-    <string name="search_apps_hint">Buscar aplicaciones</string>
-    <string name="select_apps_title">Seleccionar aplicaciones</string>
-
 </resources>

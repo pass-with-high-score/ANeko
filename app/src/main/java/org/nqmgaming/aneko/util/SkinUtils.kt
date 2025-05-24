@@ -23,12 +23,8 @@ import java.util.zip.ZipInputStream
 suspend fun loadSkinList(context: Context): List<SkinInfo> = withContext(Dispatchers.IO) {
     val pm = context.packageManager
     val intent = Intent(AnimationService.ACTION_GET_SKIN)
-    val prefs =
-        context.getSharedPreferences(context.packageName + "_preferences", Context.MODE_PRIVATE)
 
-    var defaultComponent = prefs.getString(AnimationService.PREF_KEY_SKIN_COMPONENT, null)
-
-    val skinList = pm.queryIntentActivities(intent, 0).map { resolveInfo ->
+    var skinList = pm.queryIntentActivities(intent, 0).map { resolveInfo ->
         val packageName = resolveInfo.activityInfo.packageName
         val versionName = try {
             pm.getPackageInfo(packageName, 0).versionName
@@ -42,24 +38,6 @@ suspend fun loadSkinList(context: Context): List<SkinInfo> = withContext(Dispatc
             component = ComponentName(packageName, resolveInfo.activityInfo.name),
             versionName = versionName
         )
-    }
-
-    if (defaultComponent == null) {
-        skinList.firstOrNull {
-            it.component.packageName == context.packageName
-        }?.let {
-            val fallbackComponent = it.component.flattenToString()
-            if (fallbackComponent != context.packageName) {
-                defaultComponent = fallbackComponent
-            }
-        }
-    }
-
-    if (defaultComponent != null) {
-        val (defaultSkin, others) = skinList.partition {
-            it.component.flattenToString() == defaultComponent
-        }
-        return@withContext defaultSkin + others
     }
 
     return@withContext skinList

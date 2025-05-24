@@ -70,6 +70,8 @@ public class AnimationService extends Service {
     public static final String PREF_KEY_KEEP_ALIVE = "motion.keep_alive";
     public static final String PREF_KEY_NOTIFICATION_ENABLE = "notification.enable";
     public static final String PREF_KEY_ENABLED_APPS = "enabled_apps";
+
+    public static final String PREF_KEY_REST_DURATION = "motion.rest_duration";
     private static final int MSG_ANIMATE = 1;
     private static final long ANIMATION_INTERVAL = 125; // msec
     private static final long BEHAVIOUR_CHANGE_DURATION = 4000; // msec
@@ -94,20 +96,6 @@ public class AnimationService extends Service {
     private ImageView image_view = null;
     private LayoutParams image_params = null;
 
-    private BroadcastReceiver visibilityReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if ("org.nqmgaming.aneko.HIDE_NEKO".equals(action)) {
-                Timber.d("Received HIDE_NEKO action%s", action);
-                image_view.setVisibility(View.GONE);
-            } else if ("org.nqmgaming.aneko.SHOW_NEKO".equals(action)) {
-                Timber.d("Received SHOW_NEKO action%s", action);
-                image_view.setVisibility(View.VISIBLE);
-            }
-        }
-    };
-
 
     @Override
     public void onCreate() {
@@ -118,12 +106,6 @@ public class AnimationService extends Service {
         IntentFilter filter = new IntentFilter();
         filter.addAction("org.nqmgaming.aneko.HIDE_NEKO");
         filter.addAction("org.nqmgaming.aneko.SHOW_NEKO");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            Timber.d("Registering visibility receiver with Context.RECEIVER_NOT_EXPORTED");
-            registerReceiver(visibilityReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
-        } else {
-            registerReceiver(visibilityReceiver, filter);
-        }
     }
 
     @Override
@@ -218,14 +200,10 @@ public class AnimationService extends Service {
             assert wm != null;
             wm.removeView(image_view);
         }
-        if (visibilityReceiver != null) {
-            unregisterReceiver(visibilityReceiver);
-        }
 
         motion_state = null;
         touch_view = null;
         image_view = null;
-        visibilityReceiver = null;
 
         handler.removeMessages(MSG_ANIMATE);
     }
@@ -373,8 +351,9 @@ public class AnimationService extends Service {
                             Toast.LENGTH_LONG)
                     .show();
 
-            startService(new Intent(this, AnimationService.class)
-                    .setAction(ACTION_TOGGLE));
+            prefs.edit()
+                    .putString(PREF_KEY_SKIN_COMPONENT, "")
+                    .apply();
             return false;
         }
         afterMotionLoaded();
@@ -967,9 +946,5 @@ public class AnimationService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (visibilityReceiver != null) {
-            unregisterReceiver(visibilityReceiver);
-            visibilityReceiver = null;
-        }
     }
 }

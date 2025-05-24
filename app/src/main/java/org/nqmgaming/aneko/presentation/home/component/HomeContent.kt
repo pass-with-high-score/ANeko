@@ -58,45 +58,13 @@ fun HomeContent(
     isEnabled: Boolean = false,
     onChangeEnable: (Boolean) -> Unit = {},
     onSkinSelected: (ComponentName) -> Unit = {},
-    onHideSpecificApp: () -> Unit = {}
 ) {
     val context = LocalContext.current
     var refreshing by remember { mutableStateOf(true) }
     var skinList by remember { mutableStateOf<List<SkinInfo>>(emptyList()) }
-    val scope = rememberCoroutineScope()
-
     var selectedIndex by remember { mutableIntStateOf(0) }
     val state = rememberPullToRefreshState()
-
-    fun isPackageInstalled(context: Context, packageName: String): Boolean {
-        return try {
-            context.packageManager.getPackageInfo(packageName, 0)
-            true
-        } catch (_: PackageManager.NameNotFoundException) {
-            false
-        }
-    }
-
-    val uninstallLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult()
-    ) { _ ->
-        scope.launch {
-            delay(500)
-            if (!isPackageInstalled(context, skinList[selectedIndex].component.packageName)) {
-                skinList = loadSkinList(context)
-                val defaultSkin = skinList.firstOrNull {
-                    it.component.packageName == context.packageName
-                }
-                if (defaultSkin != null) {
-                    selectedIndex = skinList.indexOf(defaultSkin)
-                    onSkinSelected(defaultSkin.component)
-                }
-            }
-            refreshing = false
-        }
-    }
     var showDialog by remember { mutableStateOf(false) }
-
 
     LaunchedEffect(refreshing) {
         if (refreshing) {
@@ -158,13 +126,14 @@ fun HomeContent(
                                 onSkinSelected = {
                                     selectedIndex = index
                                     onSkinSelected(skin.component)
+                                    refreshing = true
                                 },
                                 onRequestDeleteSkin = {
                                     val intent = Intent(
                                         Intent.ACTION_DELETE,
                                         "package:${skin.component.packageName}".toUri()
                                     )
-                                    uninstallLauncher.launch(intent)
+                                    context.startActivity(intent)
                                     refreshing = true
                                 }
                             )
@@ -211,7 +180,6 @@ fun HomeContent(
                 onBrowseSkins = {
                     showDialog = true
                 },
-                onHideSpecificApp = onHideSpecificApp,
             )
             Spacer(modifier = Modifier.height(24.dp))
             Column(
@@ -251,7 +219,7 @@ fun HomeContent(
             },
             onSearchPlayStore = {
                 showDialog = false
-                openUrl(context, "https://play.google.com/store/search?q=aneko%20skin&c=apps")
+                openUrl(context, context.getString(R.string.search_app))
             }
         )
     }

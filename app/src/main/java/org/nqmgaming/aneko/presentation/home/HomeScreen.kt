@@ -54,7 +54,6 @@ import org.nqmgaming.aneko.presentation.home.component.HomeContent
 import org.nqmgaming.aneko.presentation.home.component.SmallFab
 import org.nqmgaming.aneko.util.extension.checkNotificationPermission
 import androidx.core.net.toUri
-import com.ramcosta.composedestinations.generated.destinations.AppSelectorScreenDestination
 
 
 @Destination<RootGraph>(start = true)
@@ -178,9 +177,6 @@ fun HomeScreen(
                 },
                 onSkinSelected = { component ->
                     viewModel.updateSkin(component)
-                },
-                onHideSpecificApp = {
-                    navigator.navigate(AppSelectorScreenDestination())
                 }
             )
         }

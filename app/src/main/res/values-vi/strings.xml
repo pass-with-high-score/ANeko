@@ -64,10 +64,5 @@
     <string name="download_collection_label">Tải bộ sưu tập</string>
     <string name="search_on_play_store_label">Tìm trên Play Store</string>
     <string name="notification_chanel_description">Thông báo nền để điều khiển ANeko</string>
-    <string name="accessibility_service_description">Dịch vụ này giúp phát hiện khi ANeko chạy trong các ứng dụng cụ thể để tắt hiệu ứng.</string>
-    <string name="hide_in_specific_title">Ẩn trong ứng dụng cụ thể (Beta)</string>
-    <string name="hide_in_specific_summary">Ẩn hiệu ứng hoạt hình trong ứng dụng đã chọn</string>
-    <string name="search_apps_hint">Tìm kiếm ứng dụng</string>
-    <string name="select_apps_title">Chọn ứng dụng</string>
 
 </resources>

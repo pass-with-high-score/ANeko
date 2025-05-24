@@ -1,5 +1,6 @@
 package org.nqmgaming.aneko.presentation.home.component
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -31,11 +32,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
+import androidx.core.graphics.drawable.toBitmap
 import org.nqmgaming.aneko.R
 import org.nqmgaming.aneko.data.SkinInfo
 
@@ -53,6 +56,9 @@ fun SkinCard(
     val context = LocalContext.current
     val defaultPackageName = context.packageName
     val isDefaultSkin = skin.component.packageName == defaultPackageName
+    val iconBitmap = remember(skin.icon) {
+        skin.icon.toBitmap().asImageBitmap()
+    }
     Card(
         modifier = Modifier
             .width(160.dp)
@@ -99,9 +105,9 @@ fun SkinCard(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            AsyncImage(
-                model = skin.icon,
-                contentDescription = skin.label,
+            Image(
+                bitmap = iconBitmap,
+                contentDescription = null,
                 modifier = Modifier
                     .size(96.dp)
                     .clip(CircleShape),
@@ -111,7 +117,8 @@ fun SkinCard(
             Text(
                 text = "${skin.label} ${if (isDefaultSkin) stringResource(R.string.default_label) else ""}",
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface
+                color = MaterialTheme.colorScheme.onSurface,
+                fontWeight = if (isDefaultSkin) FontWeight.Bold else null,
             )
         }
     }

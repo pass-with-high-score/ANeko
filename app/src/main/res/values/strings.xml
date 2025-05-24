@@ -73,9 +73,5 @@
     <string name="aneko_notification_channel_name" translatable="false">ANeko Service</string>
     <string name="notification_chanel_description">Background service for ANeko</string>
     <string name="telegram_group_link" translatable="false">https://t.me/aneko_community</string>
-    <string name="accessibility_service_description">This service is used to detect when ANeko is running on specific apps to turn off the animation.</string>
-    <string name="hide_in_specific_title">Hide in specific app (Beta)</string>
-    <string name="hide_in_specific_summary">Hide the animation in specific app</string>
-    <string name="search_apps_hint">Search Apps</string>
-    <string name="select_apps_title">Select Apps</string>
+    <string name="search_app" translatable="false"><![CDATA[https://play.google.com/store/search?q=aneko%20skin&c=apps]]></string>
 </resources>

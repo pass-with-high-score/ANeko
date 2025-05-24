@@ -45,6 +45,7 @@ fun PowerToggleButton(
 
     if (showPermissionDialog) {
         AlertDialog(
+            containerColor = MaterialTheme.colorScheme.surface,
             onDismissRequest = { showPermissionDialog = false },
             title = { Text(text = stringResource(R.string.overlay_permission_title)) },
             text = {
