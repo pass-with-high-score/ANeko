@@ -315,10 +315,20 @@ public class AnimationService extends Service {
             Timber.w("Failed to create skins directory: %s", skinsDir.getAbsolutePath());
         }
 
-        String[] ts = skinPath.split("/");
+        String folder = "";
+        String xmlFile = skinPath;
 
-        String folder = ts[0];
-        String xmlFile = ts[1];
+        if (skinPath.contains("/")) {
+            String[] ts = skinPath.split("/");
+            if (ts.length >= 2) {
+                folder = ts[0];
+                xmlFile = ts[1];
+            } else {
+                // Handle case where there's only one part
+                folder = ts[0];
+                xmlFile = "skin.xml"; // Default XML file name
+            }
+        }
 
         File dir = new File(skinsDir, folder);
 
