@@ -88,11 +88,6 @@ fun SettingsScreen(
                 defaultValue = true,
                 prefs = prefs
             )
-            HorizontalDivider(
-                color = MaterialTheme.colorScheme.outline.copy(
-                    alpha = 0.5f
-                ),
-            )
         }
 
         Spacer(Modifier.height(16.dp))
