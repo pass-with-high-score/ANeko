@@ -100,9 +100,6 @@ public class AnimationService extends Service {
         handler = new Handler(this::onHandleMessage);
         random = new Random();
         prefs = getSharedPreferences(getPackageName() + "_preferences", MODE_PRIVATE);
-        IntentFilter filter = new IntentFilter();
-        filter.addAction("org.nqmgaming.aneko.HIDE_NEKO");
-        filter.addAction("org.nqmgaming.aneko.SHOW_NEKO");
     }
 
     @Override
