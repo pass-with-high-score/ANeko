@@ -1,0 +1,6 @@
+- Fixed: Neko no longer restarts when adjusting transparency
+- Improved: Smoother and more attractive ANeko selection screen
+- Added: More size options to customize your pet's appearance
+- Fixed: Several stability improvements for a better experience
+
+This update brings a more polished and enjoyable experience to ANeko, with a focus on customization and stability. Enjoy your time with your virtual pet!
