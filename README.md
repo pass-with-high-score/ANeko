@@ -97,9 +97,15 @@ See the full [LICENSE](LICENSE) file for details.
 
 ## Contributing
 
-Pull requests and issue reports are welcome.  
+Pull requests and issue reports are welcome.
 Help us improve ANeko Reborn!
 
+### Help us translate ANeko
+
+Want to see ANeko in your language?
+Join our translation project here: [https://poeditor.com/join/project/zX7Nu44XDh](https://poeditor.com/join/project/zX7Nu44XDh)
+
+---
 
 ## Star History
 Thanks
