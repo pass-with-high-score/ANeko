@@ -61,6 +61,7 @@ import org.nqmgaming.aneko.util.deleteFile
 import org.nqmgaming.aneko.util.getFileNameFromUri
 import org.nqmgaming.aneko.util.getSkinConfigJsonFile
 import org.nqmgaming.aneko.util.readSkinConfigJson
+import org.nqmgaming.aneko.util.saveSkin
 import org.nqmgaming.aneko.util.unzipFile
 import timber.log.Timber
 import java.io.File
@@ -141,32 +142,19 @@ fun SkinDetail(
                 },
                 actions = {
                     IconButton(onClick = {
-                        skinConfig?.let { config ->
-                            val skinDir = File(skinPath.toString())
-                            val jsonFile = getSkinConfigJsonFile(skinDir)
-                            if (jsonFile != null) {
-                                try {
-                                    skinPath?.let {
-                                        val fileName = getFileNameFromUri(context, it)
-                                        val destFile = File(context.filesDir, "skins/$fileName")
-                                        copyFileToAppDirectory(context, it, destFile)
-                                        unzipFile(destFile, skinDir)
-                                        Toast.makeText(
-                                            context,
-                                            "Skin Config saved successfully",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                    }
-                                } catch (e: Exception) {
-                                    Timber.e("Failed to save skin config: $e")
-                                }
-                            }
+                        skinPath?.let { uri ->
+                            val success = saveSkin(context, uri, skinConfig)
+                            Toast.makeText(
+                                context,
+                                if (success) "Skin saved successfully" else "Failed to save skin",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     }) {
                         // save button
                         Icon(
                             imageVector = Icons.Default.Save,
-                            contentDescription = "Info"
+                            contentDescription = "Save"
                         )
                     }
                 }

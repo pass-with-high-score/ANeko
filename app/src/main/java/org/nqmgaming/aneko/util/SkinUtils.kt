@@ -139,3 +139,40 @@ fun readSkinConfigJson(file: File): SkinConfig? {
     }
 }
 
+fun saveSkin(context: Context, uri: Uri, skinConfig: SkinConfig?): Boolean {
+    return try {
+        val skinId = skinConfig?.info?.skinId ?: "default"
+        val skinSaveDir = File(context.filesDir, "skins/$skinId")
+        if (!skinSaveDir.exists()) {
+            skinSaveDir.mkdirs()
+        }
+
+        if (uri.scheme == "content") {
+            val inputStream = context.contentResolver.openInputStream(uri)
+            val outputFile = File(skinSaveDir, "skin.zip")
+            inputStream?.use { input ->
+                FileOutputStream(outputFile).use { output ->
+                    input.copyTo(output)
+                }
+            }
+
+            unzipFile(outputFile, skinSaveDir)
+            outputFile.delete()
+        } else {
+            val sourcePath = uri.path
+            if (sourcePath != null) {
+                val sourceDir = File(sourcePath)
+                if (sourceDir.exists() && sourceDir.isDirectory) {
+                    sourceDir.listFiles()?.forEach { file ->
+                        file.copyTo(File(skinSaveDir, file.name), overwrite = true)
+                    }
+                }
+            }
+        }
+        true
+    } catch (e: Exception) {
+        Timber.e("Failed to save skin: $e")
+        false
+    }
+}
+
