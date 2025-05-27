@@ -1,0 +1,61 @@
+name: Build Locale APK
+
+on:
+  push:
+    tags:
+      - "lang-*"
+
+jobs:
+  build-apk:
+    name: Build and Upload Locale APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Grant Permission to Execute
+        run: chmod +x gradlew
+
+      - name: Decode Keystore
+        env:
+          ENCODED_KEYSTORE: ${{ secrets.ENCODED_KEYSTORE }}
+        run: echo "$ENCODED_KEYSTORE" | base64 -d > app/keystore
+
+      - name: Parse tag for lang and version
+        id: parse_tag
+        run: |
+          RAW_TAG="${GITHUB_REF#refs/tags/}"
+          LANG_CODE=$(echo "$RAW_TAG" | cut -d'-' -f2)
+          VERSION_NAME=$(echo "$RAW_TAG" | cut -d'-' -f3)
+          echo "LANG_CODE=$LANG_CODE" >> $GITHUB_ENV
+          echo "VERSION_NAME=$VERSION_NAME" >> $GITHUB_ENV
+
+      - name: Build Release APK
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: ./gradlew assembleRelease
+
+      - name: Rename APK
+        run: |
+          mv app/build/outputs/apk/release/app-release.apk app-${{ env.LANG_CODE }}-${{ env.VERSION_NAME }}.apk
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-${{ env.LANG_CODE }}-${{ env.VERSION_NAME }}.apk
+          path: app-${{ env.LANG_CODE }}-${{ env.VERSION_NAME }}.apk
+
+      - name: Cleanup keystore
+        run: rm -f app/keystore
