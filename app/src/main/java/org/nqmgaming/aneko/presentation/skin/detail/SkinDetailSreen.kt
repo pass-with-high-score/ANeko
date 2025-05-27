@@ -149,6 +149,15 @@ fun SkinDetail(
                                 if (success) "Skin saved successfully" else "Failed to save skin",
                                 Toast.LENGTH_SHORT
                             ).show()
+                            if (success) {
+                                onNavigateBack()
+                            }
+                        } ?: run {
+                            Toast.makeText(
+                                context,
+                                "No skin path available",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     }) {
                         // save button
