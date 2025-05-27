@@ -46,7 +46,6 @@
     <string name="app_version">Versión: %1$s</string>
     <string name="unknown_value">Desconocido</string>
     <string name="toggle_theme_title">Cambiar Tema</string>
-    <string name="app_store_uri" translatable="false"><![CDATA[https://play.google.com/store/apps/details?id=org.nqmgaming.aneko&hl=en-US]]></string>
     <string name="share_title">Compartir</string>
     <string name="notification_permission_title">Permiso de Notificación</string>
     <string name="notification_permission_description">ANeko necesita permiso de notificación para mostrarte actualizaciones sobre su estado, como cuando ANeko está en ejecución o en reposo. Por favor, otorga este permiso para que la app funcione completamente.</string>
