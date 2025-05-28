@@ -2,7 +2,7 @@
 <resources>
     <!-- Transparency -->
     <string-array name="pref_motion_transparency_entries">
-        <item>0 % (непрозрачный)</item>
+        <item>0 % (opaque)</item>
         <item>20 %</item>
         <item>40 %</item>
         <item>60 %</item>
@@ -11,12 +11,10 @@
 
     <!-- Motion Speed -->
     <string-array name="pref_motion_speed_entries">
-        <item>Очень медленно</item>
-        <item>Медленно</item>
-        <item>Нормально</item>
-        <item>Быстро</item>
-        <item>Очень быстро</item>
+        <item>Très lent</item>
+        <item>Lent</item>
+        <item>Normal</item>
+        <item>Rapide</item>
+        <item>Très rapide</item>
     </string-array>
-
-
 </resources>

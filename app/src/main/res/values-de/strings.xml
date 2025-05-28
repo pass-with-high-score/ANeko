@@ -148,7 +148,7 @@
     <string name="skin_source_option_download_from_collection">"Option 1: Skinsammlung herunterladen (empfohlen)"</string>
 
     <!--  -->
-    <string name="skin_source_option_download_from_store">"Option 2: Suche Skins im Play StoreHinweis: Die meisten alten Skins sind von Google entfernt worden und daher weg. Versuche bei Google nach APKs zu suchen, aber sei vorsichtig und beachte die Risiken."</string>
+    <string name="skin_source_option_download_from_store">"Option 2: Suche Skins im Play Store\n\nHinweis: Die meisten alten Skins sind von Google entfernt worden und daher weg. Versuche bei Google nach APKs zu suchen, aber sei vorsichtig und beachte die Risiken."</string>
 
     <!--  -->
     <string name="download_collection_label">"Sammlung herrunterladen"</string>
