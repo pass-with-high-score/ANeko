@@ -159,4 +159,6 @@
 
     <!--  -->
     <string name="notification_chanel_description">"Service d'arrière-plan pour ANeko"</string>
+    <string name="translate_contribute_title">Envie de voir ANeko dans votre langue?</string>
+    <string name="translate_contribute_summary">Rejoignez notre projet de traduction sur POEditor\nChaque contribution compte. Merci beaucoup d’avance!</string>
 </resources>

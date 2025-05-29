@@ -62,5 +62,7 @@
     <string name="download_collection_label">下载集合</string>
     <string name="search_on_play_store_label">在 Play 商店搜索</string>
     <string name="notification_chanel_description">ANeko 的后台服务</string>
+    <string name="translate_contribute_title">想用你的语言看到 ANeko 吗？</string>
+    <string name="translate_contribute_summary">加入我们的 POEditor 翻译项目\n每一份小小的贡献都非常宝贵，提前感谢你！</string>
 
 </resources>

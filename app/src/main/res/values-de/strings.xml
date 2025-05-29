@@ -71,4 +71,6 @@
     <string name="download_collection_label">"Sammlung herrunterladen"</string>
     <string name="search_on_play_store_label">"Suche im Play Store"</string>
     <string name="notification_chanel_description">"Hintergrunddienst für ANeko"</string>
+    <string name="translate_contribute_title">Möchtest du ANeko in deiner Sprache sehen?</string>
+    <string name="translate_contribute_summary">Mach mit bei unserem Übersetzungsprojekt auf POEditor\nJeder Beitrag zählt. Vielen Dank im Voraus!</string>
 </resources>

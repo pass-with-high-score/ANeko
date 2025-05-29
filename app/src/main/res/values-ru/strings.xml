@@ -62,4 +62,6 @@
     <string name="download_collection_label">Скачать коллекцию</string>
     <string name="search_on_play_store_label">Искать в Play Маркете</string>
     <string name="notification_chanel_description">Фоновый сервис для ANeko</string>
+    <string name="translate_contribute_title">Хочешь увидеть ANeko на своём языке?</string>
+    <string name="translate_contribute_summary">Присоединяйся к нашему проекту перевода на POEditor\nКаждый вклад важен. Заранее огромное спасибо!</string>
 </resources>

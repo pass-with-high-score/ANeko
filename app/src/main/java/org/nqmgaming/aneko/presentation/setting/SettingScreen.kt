@@ -122,6 +122,19 @@ fun SettingsScreen(
             )
 
             PreferenceItem(
+                title = stringResource(R.string.translate_contribute_title),
+                summary = stringResource(R.string.translate_contribute_summary),
+                icon = R.drawable.ic_language,
+                onClick = {
+                    openUrl(context, context.getString(R.string.poeditor_url))
+                }
+            )
+
+            HorizontalDivider(
+                color = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f),
+            )
+
+            PreferenceItem(
                 title = stringResource(R.string.rate_app_title),
                 summary = stringResource(R.string.rate_app_summary),
                 icon = R.drawable.ic_star, // Or any icon you have
