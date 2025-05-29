@@ -11,6 +11,7 @@
   <a href="https://github.com/pass-with-high-score/ANeko/releases">
     <img src="https://img.shields.io/github/downloads/pass-with-high-score/ANeko/total">
   </a>
+<a href="https://app.fossa.com/projects/git%2Bgithub.com%2Fpass-with-high-score%2FANeko?ref=badge_shield" alt="FOSSA Status"><img src="https://app.fossa.com/api/projects/git%2Bgithub.com%2Fpass-with-high-score%2FANeko.svg?type=shield"/></a>
   <br><br>
   <h4>Download</h4>
   <a href="https://play.google.com/store/apps/details?id=org.nqmgaming.aneko">
@@ -86,6 +87,9 @@ license.
 See the full [LICENSE](LICENSE) file for details.
   
 ---  
+
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fpass-with-high-score%2FANeko.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fpass-with-high-score%2FANeko?ref=badge_large)
 
 ## Credits
 
