@@ -11,7 +11,7 @@
       "type": "SINGLE",
       "filters": [],
       "attributes": [],
-      "versionCode": 10,
+      "versionCode": 9,
       "versionName": "1.1.2",
       "outputFile": "app-release.apk"
     }

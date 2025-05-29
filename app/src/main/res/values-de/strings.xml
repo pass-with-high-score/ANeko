@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="notification_enabled">"Aneko läuft."</string>
+    <string name="notification_enabled">"ANeko läuft."</string>
 
     <!--  -->
-    <string name="notification_disabled">"Aneko schläft."</string>
+    <string name="notification_disabled">"ANeko schläft."</string>
 
     <!--  -->
     <string name="download_skins">"Mehr Skins laden"</string>
@@ -112,7 +112,7 @@
     <string name="overlay_permission_title">"Überlagerungsberechtigung benötigt"</string>
 
     <!--  -->
-    <string name="overlay_permission_description">"Aneko wird ohne diese Berechtigung nicht über andere Anwendungen angezeigt werden können. Bitte erlaube es in den Einstellungen."</string>
+    <string name="overlay_permission_description">"ANeko wird ohne diese Berechtigung nicht über andere Anwendungen angezeigt werden können. Bitte erlaube es in den Einstellungen."</string>
 
     <!--  -->
     <string name="notification_permission_denied_msg">"Benachrichtigungsberechtigung verweiger. Einige Dinge funktionieren möglicherweise nicht."</string>

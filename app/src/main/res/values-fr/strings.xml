@@ -2,10 +2,10 @@
 <resources>
 
     <!--  -->
-    <string name="notification_enabled">"Aneko est en marche."</string>
+    <string name="notification_enabled">"ANeko est en marche."</string>
 
     <!--  -->
-    <string name="notification_disabled">"Aneko est en veille."</string>
+    <string name="notification_disabled">"ANeko est en veille."</string>
 
     <!--  -->
     <string name="download_skins">"Télécharger plus de skins"</string>

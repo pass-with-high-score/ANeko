@@ -1,6 +1,6 @@
 <resources>
-    <string name="notification_enabled">Aneko 正在运行。</string>
-    <string name="notification_disabled">Aneko 正在休息。</string>
+    <string name="notification_enabled">ANeko 正在运行。</string>
+    <string name="notification_disabled">ANeko 正在休息。</string>
 
     <string name="download_skins">下载更多 skin</string>
     <string name="power_on">启动</string>
@@ -46,7 +46,7 @@
     <string name="allow_button">允许</string>
     <string name="cancel_button">取消</string>
     <string name="overlay_permission_title">需要悬浮窗权限</string>
-    <string name="overlay_permission_description">如果没有“显示在其他应用上方”的权限，Aneko 将无法正常工作。请前往设置中开启。</string>
+    <string name="overlay_permission_description">如果没有“显示在其他应用上方”的权限，ANeko 将无法正常工作。请前往设置中开启。</string>
     <string name="notification_permission_denied_msg">通知权限被拒，一些功能可能无法使用。</string>
     <string name="loading_skins_label">正在加载 skins…</string>
     <string name="default_label">(默认)</string>

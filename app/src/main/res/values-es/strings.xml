@@ -10,7 +10,6 @@
     <string name="download_skins">Descargar más skins</string>
     <string name="power_on">Encender</string>
     <string name="power_off">Apagar</string>
-    <string name="download_skins_link" translatable="false">https://github.com/pass-with-high-score/Aneko-skin</string>
     <string name="choose_skin">Elige tu skin</string>
     <string name="invalid_selection">Selección no válida</string>
     <string name="cancel">Cancelar</string>

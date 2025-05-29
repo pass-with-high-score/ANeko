@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="notification_enabled">Aneko đang chạy nè~</string>
-    <string name="notification_disabled">Aneko đang ngủ rồi zzz~</string>
+    <string name="notification_enabled">ANeko đang chạy nè~</string>
+    <string name="notification_disabled">ANeko đang ngủ rồi zzz~</string>
 
     <string name="download_skins">Tải thêm skin</string>
     <string name="power_on">Bật nguồn</string>
@@ -48,7 +48,7 @@
     <string name="allow_button">Cho phép</string>
     <string name="cancel_button">Không cho</string>
     <string name="overlay_permission_title">Cần quyền hiển thị trên ứng dụng khác</string>
-    <string name="overlay_permission_description">Aneko sẽ không chạy được nếu không có quyền hiển thị đè lên ứng dụng khác. Vui lòng bật quyền trong phần cài đặt nha.</string>
+    <string name="overlay_permission_description">ANeko sẽ không chạy được nếu không có quyền hiển thị đè lên ứng dụng khác. Vui lòng bật quyền trong phần cài đặt nha.</string>
     <string name="notification_permission_denied_msg">Bạn đã từ chối quyền thông báo. Một số tính năng có thể sẽ không hoạt động.</string>
     <string name="loading_skins_label">Đang tải skins…</string>
     <string name="default_label">(Mặc định)</string>
