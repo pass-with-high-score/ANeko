@@ -63,7 +63,7 @@
     <string name="unknown_skin_version">Desconocido</string>
     <string name="choose_skin_source_title">Elegir fuente de skin</string>
     <string name="skin_source_option_download_from_collection">Opción 1: Descargar colección de skins (recomendado)</string>
-    <string name="skin_source_option_download_from_store">Opción 2: Buscar skins en Play Store\n\nNota: La mayoría de los skins antiguos han sido eliminados por Google. Es posible que no los encuentres más. Intenta buscar APKs en Google, pero ten cuidado y comprende los riesgos.</string>
+    <string name="skin_source_option_download_from_store">Opción 2: Buscar skins en Play Store\n\nNota: La mayoría de los skins antiguos han sido eliminados por Google. Es posible que no los encuentres más. Prueba a buscar un skin de ANeko en Internet, pero ten cuidado y comprende los riesgos.</string>
     <string name="download_collection_label">Descargar colección</string>
     <string name="search_on_play_store_label">Buscar en Play Store</string>
     <string name="notification_chanel_description">Servicio en segundo plano para ANeko</string>

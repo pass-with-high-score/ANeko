@@ -58,7 +58,7 @@
     <string name="unknown_skin_version">Unknown</string>
     <string name="choose_skin_source_title">选择皮肤来源</string>
     <string name="skin_source_option_download_from_collection">选项 1: 下载皮肤集合（推荐）</string>
-    <string name="skin_source_option_download_from_store">选项 2: 在 Play 商店搜索皮肤\n\n注意: 大多数旧版皮肤已被 Google 删除，您可能找不到它们了。可以尝试在 Google 上搜索 APK，但请小心并理解风险。</string>
+    <string name="skin_source_option_download_from_store">选项 2: 在 Play 商店搜索皮肤\n\n注意: 大多数旧版皮肤已被 Google 删除，您可能找不到它们了。试着在网上找找 ANeko 的 skin，但请小心并理解风险。</string>
     <string name="download_collection_label">下载集合</string>
     <string name="search_on_play_store_label">在 Play 商店搜索</string>
     <string name="notification_chanel_description">ANeko 的后台服务</string>

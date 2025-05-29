@@ -149,7 +149,7 @@
     <string name="skin_source_option_download_from_collection">"Option 1 : Télécharger la collection de skins (recommandé)"</string>
 
     <!--  -->
-    <string name="skin_source_option_download_from_store">"Option 2 : Chercher des skins sur le Play Store\n\nÀ noter : La plupart des vieux skins ont été retirés par Google. Vous ne pourrez sans doute pas les trouver. Vous pouvez toujours chercher des APKs sur un internet, mais prudence face aux risques que cela implique."</string>
+    <string name="skin_source_option_download_from_store">"Option 2 : Chercher des skins sur le Play Store\n\nÀ noter : La plupart des vieux skins ont été retirés par Google. Vous ne pourrez sans doute pas les trouver. Tu peux essayer de chercher un skin ANeko sur Internet, mais prudence face aux risques que cela implique."</string>
 
     <!--  -->
     <string name="download_collection_label">"Télécharger la collection"</string>
