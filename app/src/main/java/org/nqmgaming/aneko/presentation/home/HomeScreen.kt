@@ -182,8 +182,8 @@ fun HomeScreen(
                         )
                     }
                 },
-                onSkinSelected = { component ->
-                    viewModel.updateSkin(component)
+                onSkinSelected = { skinInfo ->
+                    viewModel.updateSkin(skinInfo.skinId)
                 }
             )
         }

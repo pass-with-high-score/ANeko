@@ -42,7 +42,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import org.nqmgaming.aneko.core.motion.MotionDrawable;
-import org.nqmgaming.aneko.core.motion.MotionParams;
 import org.nqmgaming.aneko.core.motion.MotionConfigParser;
 import org.nqmgaming.aneko.R;
 import org.tamanegi.aneko.ANekoActivity;

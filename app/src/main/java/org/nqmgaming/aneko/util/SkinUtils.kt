@@ -1,17 +1,10 @@
 package org.nqmgaming.aneko.util
 
-import android.content.ComponentName
 import android.content.Context
-import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.provider.OpenableColumns
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import org.nqmgaming.aneko.R
-import org.nqmgaming.aneko.core.service.AnimationService
-import org.nqmgaming.aneko.data.SkinInfo
 import org.nqmgaming.aneko.data.skin.SkinConfig
 import timber.log.Timber
 import java.io.File
@@ -19,29 +12,6 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
-
-suspend fun loadSkinList(context: Context): List<SkinInfo> = withContext(Dispatchers.IO) {
-    val pm = context.packageManager
-    val intent = Intent(AnimationService.ACTION_GET_SKIN)
-
-    var skinList = pm.queryIntentActivities(intent, 0).map { resolveInfo ->
-        val packageName = resolveInfo.activityInfo.packageName
-        val versionName = try {
-            pm.getPackageInfo(packageName, 0).versionName
-                ?: context.getString(R.string.unknown_skin_version)
-        } catch (_: PackageManager.NameNotFoundException) {
-            context.getString(R.string.unknown_skin_version)
-        }
-        SkinInfo(
-            icon = resolveInfo.loadIcon(pm),
-            label = resolveInfo.loadLabel(pm).toString(),
-            component = ComponentName(packageName, resolveInfo.activityInfo.name),
-            versionName = versionName
-        )
-    }
-
-    return@withContext skinList
-}
 
 fun getFileNameFromUri(context: Context, uri: Uri): String? {
     val cursor = context.contentResolver.query(
@@ -176,3 +146,74 @@ fun saveSkin(context: Context, uri: Uri, skinConfig: SkinConfig?): Boolean {
     }
 }
 
+// Get all skin directories in the app's files directory return SkinConfig
+fun getAllSkinConfigs(context: Context): List<SkinConfig> {
+    val skinDir = File(context.filesDir, "skins")
+    if (!skinDir.exists() || !skinDir.isDirectory) {
+        return emptyList()
+    }
+
+    return skinDir.listFiles()?.mapNotNull { skinFolder ->
+        val configFile = getSkinConfigJsonFile(skinFolder)
+        if (configFile != null) {
+            readSkinConfigJson(configFile)
+        } else {
+            null
+        }
+    } ?: emptyList()
+}
+
+// Delete a skin by its ID
+fun deleteSkin(context: Context, skinId: String): Boolean {
+    val skinDir = File(context.filesDir, "skins/$skinId")
+    return if (skinDir.exists() && skinDir.isDirectory) {
+        skinDir.deleteRecursively()
+    } else {
+        false
+    }
+}
+
+fun shareSkin(context: Context, skinId: String) {
+    val skinDir = File(context.filesDir, "skins/$skinId")
+    if (skinDir.exists() && skinDir.isDirectory) {
+        val zipFile = File(skinDir, "${skinId}.zip")
+        if (!zipFile.exists()) {
+            // Create a zip file from the skin directory
+            zipFile.createNewFile()
+            val zipOutputStream = java.util.zip.ZipOutputStream(FileOutputStream(zipFile))
+            skinDir.listFiles()?.forEach { file ->
+                val zipEntry = java.util.zip.ZipEntry(file.name)
+                zipOutputStream.putNextEntry(zipEntry)
+                FileInputStream(file).use { inputStream ->
+                    inputStream.copyTo(zipOutputStream)
+                }
+                zipOutputStream.closeEntry()
+            }
+            zipOutputStream.close()
+        }
+
+        // Use FileProvider to get content URI instead of file URI
+        val contentUri = androidx.core.content.FileProvider.getUriForFile(
+            context,
+            "${context.packageName}.fileprovider",
+            zipFile
+        )
+
+        val shareIntent = android.content.Intent().apply {
+            action = android.content.Intent.ACTION_SEND
+            putExtra(android.content.Intent.EXTRA_STREAM, contentUri)
+            type = "application/zip"
+            // Grant temporary read permission to the content URI
+            addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+
+        context.startActivity(
+            android.content.Intent.createChooser(
+                shareIntent,
+                context.getString(R.string.share_apk_label, skinId)
+            )
+        )
+    } else {
+        Timber.e("Skin directory does not exist: $skinDir")
+    }
+}

@@ -1,11 +1,6 @@
 package org.nqmgaming.aneko.presentation.home.component
 
-import android.content.ComponentName
 import android.content.Context
-import android.content.Intent
-import android.content.pm.PackageManager
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,7 +27,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,15 +34,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.net.toUri
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.nqmgaming.aneko.R
 import org.nqmgaming.aneko.core.service.AnimationService
-import org.nqmgaming.aneko.data.SkinInfo
+import org.nqmgaming.aneko.data.skin.SkinConfig
+import org.nqmgaming.aneko.data.skin.SkinInfo
 import org.nqmgaming.aneko.presentation.setting.SettingsScreen
 import org.nqmgaming.aneko.presentation.ui.theme.ANekoTheme
-import org.nqmgaming.aneko.util.loadSkinList
+import org.nqmgaming.aneko.util.deleteSkin
+import org.nqmgaming.aneko.util.getAllSkinConfigs
 import org.nqmgaming.aneko.util.openUrl
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -57,18 +50,18 @@ fun HomeContent(
     modifier: Modifier = Modifier,
     isEnabled: Boolean = false,
     onChangeEnable: (Boolean) -> Unit = {},
-    onSkinSelected: (ComponentName) -> Unit = {},
+    onSkinSelected: (SkinInfo) -> Unit = {},
 ) {
     val context = LocalContext.current
     var refreshing by remember { mutableStateOf(true) }
-    var skinList by remember { mutableStateOf<List<SkinInfo>>(emptyList()) }
+    var skinList by remember { mutableStateOf<List<SkinConfig>>(emptyList()) }
     var selectedIndex by remember { mutableIntStateOf(0) }
     val state = rememberPullToRefreshState()
     var showDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(refreshing) {
         if (refreshing) {
-            val skins = loadSkinList(context)
+            val skins = getAllSkinConfigs(context)
             skinList = skins
 
             // Set selected index after skinList is loaded
@@ -78,7 +71,7 @@ fun HomeContent(
             ).getString(AnimationService.PREF_KEY_SKIN_COMPONENT, "")
 
             selectedIndex =
-                skins.indexOfFirst { it.component.flattenToString() == initialSkinComponentString }
+                skins.indexOfFirst { it.info.skinId == initialSkinComponentString }
                     .takeIf { it != -1 } ?: 0
 
             refreshing = false
@@ -125,16 +118,11 @@ fun HomeContent(
                                 isSelected = index == selectedIndex,
                                 onSkinSelected = {
                                     selectedIndex = index
-                                    onSkinSelected(skin.component)
+                                    onSkinSelected(skin.info)
                                     refreshing = true
                                 },
                                 onRequestDeleteSkin = {
-                                    val intent = Intent(
-                                        Intent.ACTION_DELETE,
-                                        "package:${skin.component.packageName}".toUri()
-                                    )
-                                    context.startActivity(intent)
-                                    refreshing = true
+                                    deleteSkin(context, skin.info.skinId)
                                 }
                             )
                         }
