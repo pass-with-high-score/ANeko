@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths>
-    <external-files-path
-        name="shared_apks"
-        path="apks/shared_apks/" />
+    <files-path
+        name="skin_files"
+        path="skins/" />
 </paths>

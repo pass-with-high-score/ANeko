@@ -182,72 +182,72 @@ fun HomeScreen(
                         )
                     }
                 },
-                onSkinSelected = { component ->
-                    viewModel.updateSkin(component)
+                onSkinSelected = { skinInfo ->
+                    viewModel.updateSkin(skinInfo.skinId)
                 }
             )
         }
-//        AnimatedVisibility(
-//            visible = isFabOpen,
-//            enter = fadeIn(animationSpec = tween(durationMillis = 300)),
-//            exit = fadeOut(animationSpec = tween(durationMillis = 300)),
-//            modifier = Modifier
-//                .fillMaxSize()
-//                .zIndex(1f)
-//        ) {
-//            Box(
-//                Modifier
-//                    .fillMaxSize()
-//                    .background(Color.Black.copy(alpha = 0.4f))
-//                    .clickable { viewModel.toggleFabState() }
-//
-//            )
-//        }
-//        ExpandableFab(
-//            modifier = Modifier
-//                .zIndex(2f)
-//                .padding(
-//                    end = 16.dp,
-//                    bottom = 50.dp
-//                ),
-//            isOpen = isFabOpen,
-//            onToggle = { viewModel.toggleFabState() },
-//            children = listOf(
-//                {
-//                    SmallFab(
-//                        icon = Icons.Filled.Draw,
-//                        onClick = {
-//                            navigator.navigate(EditSkinScreenDestination())
-//                            viewModel.toggleFabState()
-//                        },
-//                        text = "Edit",
-//                        isExpanded = isFabOpen
-//                    )
-//                },
-//                {
-//                    SmallFab(
-//                        icon = Icons.Filled.Create,
-//                        onClick = {
-//                            navigator.navigate(CreateSkinScreenDestination())
-//                            viewModel.toggleFabState()
-//                        },
-//                        text = "Create",
-//                        isExpanded = isFabOpen
-//                    )
-//                },
-//                {
-//                    SmallFab(
-//                        icon = Icons.Filled.Download,
-//                        onClick = {
-//                            importSkinLauncher.launch("*/*")
-//                            viewModel.toggleFabState()
-//                        },
-//                        text = "Import",
-//                        isExpanded = isFabOpen
-//                    )
-//                },
-//            )
-//        )
+        AnimatedVisibility(
+            visible = isFabOpen,
+            enter = fadeIn(animationSpec = tween(durationMillis = 300)),
+            exit = fadeOut(animationSpec = tween(durationMillis = 300)),
+            modifier = Modifier
+                .fillMaxSize()
+                .zIndex(1f)
+        ) {
+            Box(
+                Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.4f))
+                    .clickable { viewModel.toggleFabState() }
+
+            )
+        }
+        ExpandableFab(
+            modifier = Modifier
+                .zIndex(2f)
+                .padding(
+                    end = 16.dp,
+                    bottom = 50.dp
+                ),
+            isOpen = isFabOpen,
+            onToggle = { viewModel.toggleFabState() },
+            children = listOf(
+                {
+                    SmallFab(
+                        icon = Icons.Filled.Draw,
+                        onClick = {
+                            navigator.navigate(EditSkinScreenDestination())
+                            viewModel.toggleFabState()
+                        },
+                        text = "Edit",
+                        isExpanded = isFabOpen
+                    )
+                },
+                {
+                    SmallFab(
+                        icon = Icons.Filled.Create,
+                        onClick = {
+                            navigator.navigate(CreateSkinScreenDestination())
+                            viewModel.toggleFabState()
+                        },
+                        text = "Create",
+                        isExpanded = isFabOpen
+                    )
+                },
+                {
+                    SmallFab(
+                        icon = Icons.Filled.Download,
+                        onClick = {
+                            importSkinLauncher.launch("*/*")
+                            viewModel.toggleFabState()
+                        },
+                        text = "Import",
+                        isExpanded = isFabOpen
+                    )
+                },
+            )
+        )
     }
 }
 

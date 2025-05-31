@@ -53,8 +53,9 @@ fun SliderPreferenceItem(
         )
     }
 
-    val selectedIndex = floatEntryValues.indexOfFirst { it >= sliderValue }
-        .coerceIn(0, entries.lastIndex)
+    val selectedIndex = floatEntryValues
+        .indexOfFirst { it >= sliderValue }
+        .let { if (it == -1) entries.lastIndex else it }
 
     Card(
         modifier = Modifier
@@ -93,7 +94,9 @@ fun SliderPreferenceItem(
                 value = sliderValue,
                 onValueChange = { sliderValue = it },
                 onValueChangeFinished = {
-                    val closest = floatEntryValues.minByOrNull { fv -> kotlin.math.abs(fv - sliderValue) } ?: floatEntryValues.first()
+                    val closest =
+                        floatEntryValues.minByOrNull { fv -> kotlin.math.abs(fv - sliderValue) }
+                            ?: floatEntryValues.first()
                     sliderValue = closest
                     prefs.edit { putString(key, closest.toString()) }
                 },

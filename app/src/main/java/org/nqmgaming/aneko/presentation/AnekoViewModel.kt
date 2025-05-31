@@ -68,11 +68,11 @@ class AnekoViewModel @Inject constructor(application: Application) : AndroidView
         prefs.edit { putBoolean(AnimationService.PREF_KEY_ENABLE, enabled) }
     }
 
-    fun updateSkin(componentName: ComponentName) {
+    fun updateSkin(skinId: String) {
         prefs.edit {
             putString(
                 AnimationService.PREF_KEY_SKIN_COMPONENT,
-                componentName.flattenToString()
+                skinId
             )
         }
     }

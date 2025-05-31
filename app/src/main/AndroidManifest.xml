@@ -63,6 +63,7 @@
                 android:name="org.tamanegi.aneko.skin"
                 android:resource="@xml/neko" />
         </activity>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"

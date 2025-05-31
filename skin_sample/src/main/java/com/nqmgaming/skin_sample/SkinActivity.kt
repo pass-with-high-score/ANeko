@@ -66,11 +66,11 @@ class SkinActivity : ComponentActivity() {
 
                         try {
                             val marketIntent = Intent(Intent.ACTION_VIEW, ANEKO_MARKET_URI.toUri())
-                            startActivity(marketIntent)
+                            context.startActivity(marketIntent)
                         } catch (e: ActivityNotFoundException) {
                             e.printStackTrace()
                             Toast.makeText(
-                                this,
+                                context,
                                 R.string.msg_unexpected_err,
                                 Toast.LENGTH_SHORT
                             ).show()
