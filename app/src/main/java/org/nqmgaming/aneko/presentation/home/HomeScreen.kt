@@ -39,7 +39,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
@@ -54,6 +53,9 @@ import org.nqmgaming.aneko.presentation.home.component.ExpandableFab
 import org.nqmgaming.aneko.presentation.home.component.HomeContent
 import org.nqmgaming.aneko.presentation.home.component.SmallFab
 import org.nqmgaming.aneko.util.extension.checkNotificationPermission
+import androidx.core.net.toUri
+import timber.log.Timber
+import java.util.Locale
 
 
 @Destination<RootGraph>(start = true)
@@ -129,12 +131,17 @@ fun HomeScreen(
                         )
                     }
                     IconButton(onClick = {
+                        val baseUri = context.getString(R.string.app_store_uri)
+                        val locale = Locale.getDefault().language
+                        val fullUri = "$baseUri&hl=$locale&gl=US"
+                        Timber.d("Share URI: $fullUri")
+
                         Intent.createChooser(
                             Intent(Intent.ACTION_SEND).apply {
                                 type = "text/plain"
                                 putExtra(
                                     Intent.EXTRA_TEXT,
-                                    context.getString(R.string.app_store_uri)
+                                    fullUri
                                 )
                             },
                             null

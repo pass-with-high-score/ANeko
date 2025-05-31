@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--  -->
+    <string name="notification_enabled">"ANeko est en marche."</string>
+
+    <!--  -->
+    <string name="notification_disabled">"ANeko est en veille."</string>
+
+    <!--  -->
+    <string name="download_skins">"Télécharger plus de skins"</string>
+
+    <!--  -->
+    <string name="power_on">"Allumer"</string>
+
+    <!--  -->
+    <string name="power_off">"Éteindre"</string>
+
+    <!--  -->
+    <string name="choose_skin">"Choisissez votre skin"</string>
+
+    <!--  -->
+    <string name="invalid_selection">"Sélection invalide"</string>
+
+    <!--  -->
+    <string name="cancel">"Annuler"</string>
+
+    <!--  -->
+    <string name="msg_skin_load_failed">"Échec lors du chargement du skin. Merci de vérifier l'application de skin."</string>
+
+    <!-- Motion Settings -->
+    <string name="motion_transparency_title">"Transparence du mouvement"</string>
+
+    <!--  -->
+    <string name="motion_transparency_summary">"Ajuster le niveau de transparence pour les effets de mouvement."</string>
+
+    <!--  -->
+    <string name="motion_size_title">"Taille des mouvements"</string>
+
+    <!--  -->
+    <string name="motion_size_summary">"Applique une taille pour les éléments de mouvement."</string>
+
+    <!--  -->
+    <string name="motion_settings_title">"Paramètres de mouvement"</string>
+
+    <!--  -->
+    <string name="motion_speed_title">"Vitesse de mouvement"</string>
+
+    <!--  -->
+    <string name="motion_speed_summary">"Ajuste la vitesse des effets de mouvement."</string>
+
+    <!--  -->
+    <string name="motion_keep_alive_title">"Autoriser à fonctionner en arrière-plan"</string>
+
+    <!--  -->
+    <string name="motion_keep_alive_summary">"Garde le skin actif quand l'appli est fermée"</string>
+
+    <!-- Customization -->
+    <string name="customization_title">"Personnalisation"</string>
+
+    <!--  -->
+    <string name="browse_skins_title">"Parcourir les skins"</string>
+
+    <!--  -->
+    <string name="browse_skins_summary">"Parcourir et télécharger des skins supplémentaires depuis Google Play."</string>
+
+    <!-- Community & Contributions -->
+    <string name="community_title">"Communauté &amp; Contributions"</string>
+
+    <!--  -->
+    <string name="github_contribute_title">"Contribuez sur GitHub"</string>
+
+    <!--  -->
+    <string name="github_contribute_summary">"Explorez le code source et proposez de nouvelles fonctionnalités sur GitHub !"</string>
+
+    <!-- Rate App -->
+    <string name="rate_app_title">"Notez cette appli"</string>
+
+    <!--  -->
+    <string name="rate_app_summary">"Si vous aimez utiliser ANeko, pensez à nous donner un avis favorable !"</string>
+
+    <!--  -->
+    <string name="select_prompt">"Sélectionner %1$s"</string>
+
+    <!--  -->
+    <string name="make_with_love">"Fait avec ❤️ pour ANeko"</string>
+
+    <!--  -->
+    <string name="app_version">"Version : %1$s"</string>
+
+    <!--  -->
+    <string name="unknown_value">"Inconnu"</string>
+
+    <!--  -->
+    <string name="toggle_theme_title">"Activer le thème"</string>
+
+    <!--  -->
+    <string name="share_title">"Partager"</string>
+
+    <!--  -->
+    <string name="notification_permission_title">"Permission de notification"</string>
+
+    <!--  -->
+    <string name="notification_permission_description">"ANeko a besoin de la permission de notification pour vous montrer les mises à jour de son statut, comme quand ANeko est en marche ou en veille. Veuillez octroyer cette permission pour que l'appli fonctionne pleinement."</string>
+
+    <!--  -->
+    <string name="allow_button">"Autoriser"</string>
+
+    <!--  -->
+    <string name="cancel_button">"Annuler"</string>
+
+    <!--  -->
+    <string name="overlay_permission_title">"Permission de surchouche requise"</string>
+
+    <!--  -->
+    <string name="overlay_permission_description">"ANeko ne fonctionnera pas sans une permission pour apparaître au dessus d'autres applis. Veuillez octroyer cette permission dans les paramètres."</string>
+
+    <!--  -->
+    <string name="notification_permission_denied_msg">"Permission de notification refusée. Certaines fonctionnalités pourraient ne pas fonctionner."</string>
+
+    <!--  -->
+    <string name="loading_skins_label">"Chargement des skins…"</string>
+
+    <!--  -->
+    <string name="default_label">"(Par défaut)"</string>
+
+    <!--  -->
+    <string name="share_apk_label">"Partager %1$s APK"</string>
+
+    <!--  -->
+    <string name="failed_to_share_apk_label">"Échec lors du partage de %1$s APK"</string>
+
+    <!--  -->
+    <string name="package_skin_label">"Paquet : %1$s"</string>
+
+    <!--  -->
+    <string name="version_skin_label">"Version : %1$s"</string>
+
+    <!--  -->
+    <string name="delete_skin_label">"Supprimer le skin"</string>
+
+    <!--  -->
+    <string name="unknown_skin_version">"Inconnu"</string>
+
+    <!--  -->
+    <string name="choose_skin_source_title">"Choisir la source de skins"</string>
+
+    <!--  -->
+    <string name="skin_source_option_download_from_collection">"Option 1 : Télécharger la collection de skins (recommandé)"</string>
+
+    <!--  -->
+    <string name="skin_source_option_download_from_store">"Option 2 : Chercher des skins sur le Play Store\n\nÀ noter : La plupart des vieux skins ont été retirés par Google. Vous ne pourrez sans doute pas les trouver. Tu peux essayer de chercher un skin ANeko sur Internet, mais prudence face aux risques que cela implique."</string>
+
+    <!--  -->
+    <string name="download_collection_label">"Télécharger la collection"</string>
+
+    <!--  -->
+    <string name="search_on_play_store_label">"Chercher sur le Play Store"</string>
+
+    <!--  -->
+    <string name="notification_chanel_description">"Service d'arrière-plan pour ANeko"</string>
+    <string name="translate_contribute_title">Envie de voir ANeko dans votre langue?</string>
+    <string name="translate_contribute_summary">Rejoignez notre projet de traduction sur POEditor\nChaque contribution compte. Merci beaucoup d’avance!</string>
+</resources>

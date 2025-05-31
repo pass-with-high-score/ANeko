@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Fuzzy -->
+    <string name="notification_enabled">"Aneko läuft."</string>
+
+    <!-- Fuzzy -->
+    <string name="notification_disabled">"Aneko schläft."</string>
+    <string name="download_skins">"Mehr Skins laden"</string>
+    <string name="power_on">"Starten"</string>
+    <string name="power_off">"Beenden"</string>
+    <string name="choose_skin">"Wähle dein Skin"</string>
+    <string name="invalid_selection">"Ungültige Auswahl"</string>
+    <string name="cancel">"Abbrechen"</string>
+    <string name="msg_skin_load_failed">"Konnte Skin nicht laden. Bitte kontrolliere Anwendung."</string>
+
+    <!-- Motion Settings -->
+    <string name="motion_transparency_title">"Bewegungstransparenz"</string>
+    <string name="motion_transparency_summary">"Stelle den Transparenzgrad ein."</string>
+    <string name="motion_size_title">"Skingröße"</string>
+    <string name="motion_size_summary">"Stelle die Größe ein."</string>
+    <string name="motion_settings_title">"Bewegungseinstellung"</string>
+    <string name="motion_speed_title">"Bewegungsgeschwindigkeit"</string>
+    <string name="motion_speed_summary">"Stelle die Geschwindigkeit der Bewegung ein."</string>
+    <string name="motion_keep_alive_title">"Erlaube im Hintergrund zu laufen"</string>
+    <string name="motion_keep_alive_summary">"Halte die Anwendung aktiv, wenn die App geschlossen ist"</string>
+
+    <!-- Customization -->
+    <string name="customization_title">"Personalisierung"</string>
+    <string name="browse_skins_title">"Suche Skins"</string>
+    <string name="browse_skins_summary">"Suche und lade weiter Skins von Google Play herrunter."</string>
+
+    <!-- Community & Contributions -->
+    <string name="community_title">"Community &amp; Beiträge"</string>
+    <string name="github_contribute_title">"Beitrag auf Github"</string>
+    <string name="github_contribute_summary">"Erkunde den Quellcode und trage zu neuen Features auf Github bei!"</string>
+
+    <!-- Rate App -->
+    <string name="rate_app_title">"Bewerte die App"</string>
+    <string name="rate_app_summary">"Wenn dir ANeko gefällt, bitte bewerte die App!"</string>
+    <string name="select_prompt">"Auswahl %1$s"</string>
+    <string name="make_with_love">"Gemacht mit ❤️ für ANeko"</string>
+    <string name="app_version">"Version: %1$s"</string>
+    <string name="unknown_value">"Unbekannt"</string>
+    <string name="toggle_theme_title">"Wechsle das Theme"</string>
+    <string name="share_title">"Teilen"</string>
+    <string name="notification_permission_title">"Benachrichtigungsberechtigung"</string>
+    <string name="notification_permission_description">"ANeko braucht die Benachrichtigungsberechtigung, um dir Aktualisierungen über sein Status anzuzeigen, z. B. wenn ANeko läuft oder schläft. Bitte erteilen Sie dies, damit die App vollständig funktioniert."</string>
+    <string name="allow_button">"Erlauben"</string>
+    <string name="cancel_button">"Abbrechen"</string>
+    <string name="overlay_permission_title">"Überlagerungsberechtigung benötigt"</string>
+
+    <!-- Fuzzy -->
+    <string name="overlay_permission_description">"Aneko wird ohne diese Berechtigung nicht über andere Anwendungen angezeigt werden können. Bitte erlaube es in den Einstellungen."</string>
+    <string name="notification_permission_denied_msg">"Benachrichtigungsberechtigung verweiger. Einige Dinge funktionieren möglicherweise nicht."</string>
+
+    <!-- Fuzzy -->
+    <string name="loading_skins_label">"Lade Skins…"</string>
+    <string name="default_label">"(Standard)"</string>
+    <string name="share_apk_label">"Teile %1$s APK"</string>
+    <string name="failed_to_share_apk_label">"Nicht geteilt %1$s APK"</string>
+    <string name="package_skin_label">"Paket: %1$s"</string>
+    <string name="version_skin_label">"Version: %1$s"</string>
+    <string name="delete_skin_label">"Skin gelöscht"</string>
+    <string name="unknown_skin_version">"Unbekannt"</string>
+    <string name="choose_skin_source_title">"Wähle Skin Quelle"</string>
+    <string name="skin_source_option_download_from_collection">"Option 1: Skinsammlung herunterladen (empfohlen)"</string>
+
+    <!-- Fuzzy -->
+    <string name="skin_source_option_download_from_store">"Option 2: Suche Skins im Play Store\n\nHinweis: Die meisten alten Skins sind von Google entfernt worden und daher weg. Versuch mal, im Internet nach einem ANeko Skin zu suchen, aber sei vorsichtig und beachte die Risiken."</string>
+    <string name="download_collection_label">"Sammlung herrunterladen"</string>
+    <string name="search_on_play_store_label">"Suche im Play Store"</string>
+    <string name="notification_chanel_description">"Hintergrunddienst für ANeko"</string>
+    <string name="translate_contribute_title">Möchtest du ANeko in deiner Sprache sehen?</string>
+    <string name="translate_contribute_summary">Mach mit bei unserem Übersetzungsprojekt auf POEditor\nJeder Beitrag zählt. Vielen Dank im Voraus!</string>
+</resources>

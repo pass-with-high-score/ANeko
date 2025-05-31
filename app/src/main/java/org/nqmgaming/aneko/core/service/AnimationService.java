@@ -236,7 +236,7 @@ public class AnimationService extends Service {
 
         builder
                 .setContentIntent(intent)
-                .setSmallIcon(R.drawable.icon)
+                .setSmallIcon(start ? R.drawable.right2 : R.drawable.sleep2)
                 .setContentTitle(getString(R.string.app_name))
                 .setContentText(getString(start ? R.string.notification_enabled : R.string.notification_disabled))
                 .setOnlyAlertOnce(true)
@@ -537,7 +537,7 @@ public class AnimationService extends Service {
                     PREF_KEY_ENABLED_APPS.equals(key)) {
                 // Do nothing
                 Timber.d("Keep alive preference changed, but no action taken.");
-            }else if (PREF_KEY_TRANSPARENCY.equals(key)) {
+            } else if (PREF_KEY_TRANSPARENCY.equals(key)) {
                 if (motion_state != null) {
                     String alpha_str = prefs.getString(PREF_KEY_TRANSPARENCY, "0.0");
                     float opacity = 1 - Float.parseFloat(alpha_str);

@@ -2,8 +2,8 @@
 <resources>
     <string name="app_name" translatable="false">ANeko</string>
 
-    <string name="notification_enabled">Aneko is running.</string>
-    <string name="notification_disabled">Aneko is sleeping.</string>
+    <string name="notification_enabled">ANeko is running.</string>
+    <string name="notification_disabled">ANeko is sleeping.</string>
 
     <string name="skin_search_uri" translatable="false">market://search?q=ANeko%20skin</string>
     <string name="github_uri" translatable="false">https://github.com/pass-with-high-score/ANeko</string>
@@ -48,14 +48,14 @@
     <string name="app_version">Version: %1$s</string>
     <string name="unknown_value">Unknown</string>
     <string name="toggle_theme_title">Toggle Theme</string>
-    <string name="app_store_uri" translatable="false"><![CDATA[https://play.google.com/store/apps/details?id=org.nqmgaming.aneko&hl=en-US]]></string>
+    <string name="app_store_uri" translatable="false"><![CDATA[https://play.google.com/store/apps/details?id=org.nqmgaming.aneko]]></string>
     <string name="share_title">Share</string>
     <string name="notification_permission_title">Notification Permission</string>
     <string name="notification_permission_description">ANeko needs notification permission to show you updates about its status, such as when ANeko is running or sleeping. Please grant this permission for the app to work fully.</string>
     <string name="allow_button">Allow</string>
     <string name="cancel_button">Cancel</string>
     <string name="overlay_permission_title">Overlay Permission Required</string>
-    <string name="overlay_permission_description">Aneko will not work without the permission to draw over other apps. Please allow it in the settings.</string>
+    <string name="overlay_permission_description">ANeko will not work without the permission to draw over other apps. Please allow it in the settings.</string>
     <string name="notification_permission_denied_msg">Notification permission denied. Some features may not work.</string>
     <string name="loading_skins_label">Loading skins…</string>
     <string name="default_label">(Default)</string>
@@ -67,11 +67,14 @@
     <string name="unknown_skin_version">Unknown</string>
     <string name="choose_skin_source_title">Choose Skin Source</string>
     <string name="skin_source_option_download_from_collection">Option 1: Download skin collection (recommended)</string>
-    <string name="skin_source_option_download_from_store">Option 2: Search skins on Play Store\n\nNote: Most old skins have been removed by Google. You may not find them anymore. Try searching on Google for APKs, but be careful and understand the risks.</string>
+    <string name="skin_source_option_download_from_store">Option 2: Search skins on Play Store\n\nNote: Most old skins have been removed by Google. You may not find them anymore. Try searching on the Internet for ANeko skin, but be careful and understand the risks.</string>
     <string name="download_collection_label">Download Collection</string>
     <string name="search_on_play_store_label">Search on Play Store</string>
     <string name="aneko_notification_channel_name" translatable="false">ANeko Service</string>
     <string name="notification_channel_description">Background service for ANeko</string>
     <string name="telegram_group_link" translatable="false">https://t.me/aneko_community</string>
     <string name="search_app" translatable="false"><![CDATA[https://play.google.com/store/search?q=aneko%20skin&c=apps]]></string>
+    <string name="poeditor_url" translatable="false">https://poeditor.com/join/project/zX7Nu44XDh</string>
+    <string name="translate_contribute_title">Want to see ANeko in your language?</string>
+    <string name="translate_contribute_summary">Join our translation project on POEditor\nEvery little bit helps. Thanks a ton in advance!</string>
 </resources>
