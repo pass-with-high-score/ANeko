@@ -78,6 +78,9 @@ ANeko supports two skin types:
 
 ---  
 
+## Roadmap
+You can see it here: [Link](https://github.com/pass-with-high-score/ANeko/discussions/35#discussion-8397935)
+
 ## License
 
 This project is licensed under the **GNU Lesser General Public License v2.1**.  
