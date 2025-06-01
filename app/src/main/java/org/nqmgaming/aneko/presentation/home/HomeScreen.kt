@@ -47,13 +47,13 @@ import com.ramcosta.composedestinations.generated.destinations.EditSkinScreenDes
 import com.ramcosta.composedestinations.generated.destinations.SkinDetailScreenDestination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import org.nqmgaming.aneko.R
-import org.nqmgaming.aneko.core.service.AnimationService
 import org.nqmgaming.aneko.presentation.AnekoViewModel
 import org.nqmgaming.aneko.presentation.home.component.ExpandableFab
 import org.nqmgaming.aneko.presentation.home.component.HomeContent
 import org.nqmgaming.aneko.presentation.home.component.SmallFab
 import org.nqmgaming.aneko.util.extension.checkNotificationPermission
 import androidx.core.net.toUri
+import org.nqmgaming.aneko.core.service.AnimationService
 import timber.log.Timber
 import java.util.Locale
 

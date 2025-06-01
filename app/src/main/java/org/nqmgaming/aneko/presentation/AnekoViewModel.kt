@@ -1,16 +1,15 @@
 package org.nqmgaming.aneko.presentation
 
 import android.app.Application
-import android.content.ComponentName
 import android.content.SharedPreferences
 import androidx.lifecycle.AndroidViewModel
 import androidx.preference.PreferenceManager
 import dagger.hilt.android.lifecycle.HiltViewModel
-import org.nqmgaming.aneko.core.service.AnimationService
 import androidx.core.content.edit
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import org.nqmgaming.aneko.core.service.AnimationService
 import javax.inject.Inject
 
 @HiltViewModel
