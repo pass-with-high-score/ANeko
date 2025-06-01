@@ -1,0 +1,5 @@
+- Added new language support for French and German.
+- Added support for dynamic notification icons (running/sleeping), as in the original app.
+- Corrected typos and missing text in several languages.
+
+Note: This may be the last version that supports importing skins via APK installation. In the next version, this feature will be removed — skins will only be imported by copying skin files into the ANeko folder.
