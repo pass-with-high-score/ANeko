@@ -1,29 +1,39 @@
 package org.nqmgaming.aneko.presentation.home.component
 
+import android.graphics.BitmapFactory
+import androidx.compose.foundation.Image
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
-import coil.compose.AsyncImage
-import timber.log.Timber
 import java.io.File
 
 @Composable
-fun DisplayLocalImage(drawableName: String, skinDir: File, modifier: Modifier = Modifier) {
-    Timber.d("Skin Directory: ${skinDir.absolutePath}")
-    Timber.d("Drawable Name: $drawableName")
+fun DisplayLocalImage(
+    drawableName: String,
+    skinDir: File,
+    modifier: Modifier = Modifier
+) {
     val imageFile = File(skinDir, drawableName)
 
     if (imageFile.exists()) {
-        Timber.d("Image file exists: ${imageFile.absolutePath}")
-        AsyncImage(
-            model = imageFile,
-            contentDescription = null,
-            modifier = modifier,
-            contentScale = ContentScale.Crop
-        )
+        val bitmap = remember(imageFile.path) {
+            BitmapFactory.decodeFile(imageFile.absolutePath)?.asImageBitmap()
+        }
+
+        if (bitmap != null) {
+            Image(
+                bitmap = bitmap,
+                contentDescription = null,
+                modifier = modifier,
+                contentScale = ContentScale.Crop
+            )
+        } else {
+            Text("Failed to load image: $drawableName")
+        }
     } else {
-        Timber.e("Image file not found: ${imageFile.absolutePath}")
         Text("Image not found: $drawableName")
     }
 }

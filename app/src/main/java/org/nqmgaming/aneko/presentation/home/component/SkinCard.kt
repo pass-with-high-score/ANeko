@@ -1,5 +1,6 @@
 package org.nqmgaming.aneko.presentation.home.component
 
+import android.graphics.BitmapFactory
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -38,14 +39,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.core.graphics.drawable.toBitmap
 import org.nqmgaming.aneko.R
-import org.nqmgaming.aneko.data.SkinInfo
+import org.nqmgaming.aneko.data.skin.SkinConfig
+import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SkinCard(
-    skin: SkinInfo,
+    skin: SkinConfig,
     isSelected: Boolean,
     onSkinSelected: () -> Unit,
     onRequestDeleteSkin: () -> Unit,
@@ -55,9 +56,11 @@ fun SkinCard(
     var isBottomSheetVisible by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val defaultPackageName = context.packageName
-    val isDefaultSkin = skin.component.packageName == defaultPackageName
-    val iconBitmap = remember(skin.icon) {
-        skin.icon.toBitmap().asImageBitmap()
+    val isDefaultSkin = skin.info.skinId == defaultPackageName
+    val skinDir = File(context.filesDir, "skins/${skin.info.skinId}")
+    val imageFile = File(skinDir, skin.info.icon)
+    val bitmap = remember(imageFile.path) {
+        BitmapFactory.decodeFile(imageFile.absolutePath)?.asImageBitmap()
     }
     Card(
         modifier = Modifier
@@ -105,17 +108,19 @@ fun SkinCard(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Image(
-                bitmap = iconBitmap,
-                contentDescription = null,
-                modifier = Modifier
-                    .size(96.dp)
-                    .clip(CircleShape),
-                contentScale = ContentScale.Crop
-            )
+            bitmap?.let {
+                Image(
+                    bitmap = it,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(96.dp)
+                        .clip(CircleShape),
+                    contentScale = ContentScale.Crop
+                )
+            }
             Spacer(modifier = Modifier.height(12.dp))
             Text(
-                text = "${skin.label} ${if (isDefaultSkin) stringResource(R.string.default_label) else ""}",
+                text = "${skin.info.name} ${if (isDefaultSkin) stringResource(R.string.default_label) else ""}",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface,
                 fontWeight = if (isDefaultSkin) FontWeight.Bold else null,
@@ -124,7 +129,7 @@ fun SkinCard(
     }
 
     SkinDetailsBottomSheet(
-        skin = skin,
+        skin = skin.info,
         onDismissRequest = {
             isBottomSheetVisible = false
         },
