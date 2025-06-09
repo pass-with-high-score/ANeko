@@ -23,11 +23,6 @@
     <string name="motion_keep_alive_title">Cho phép chạy nền</string>
     <string name="motion_keep_alive_summary">Giữ skin hoạt động khi đóng ứng dụng</string>
 
-    <!-- Customization -->
-    <string name="customization_title">Tuỳ biến</string>
-    <string name="browse_skins_title">Tìm skin</string>
-    <string name="browse_skins_summary">Xem và tải thêm skin từ Google Play.</string>
-
     <!-- Community & Contributions -->
     <string name="community_title">Cộng đồng &amp; Đóng góp</string>
     <string name="github_contribute_title">Đóng góp trên GitHub</string>

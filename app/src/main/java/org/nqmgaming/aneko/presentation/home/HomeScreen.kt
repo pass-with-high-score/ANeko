@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Download
@@ -23,6 +24,7 @@ import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -31,6 +33,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -54,6 +59,8 @@ import org.nqmgaming.aneko.presentation.home.component.HomeContent
 import org.nqmgaming.aneko.presentation.home.component.SmallFab
 import org.nqmgaming.aneko.util.extension.checkNotificationPermission
 import androidx.core.net.toUri
+import org.nqmgaming.aneko.presentation.home.component.SkinSourceDialog
+import org.nqmgaming.aneko.util.openUrl
 import timber.log.Timber
 import java.util.Locale
 
@@ -94,6 +101,9 @@ fun HomeScreen(
             navigator.navigate(SkinDetailScreenDestination(skinPath = it.toString()))
         }
     }
+
+
+    var showDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -157,7 +167,18 @@ fun HomeScreen(
             )
         },
         floatingActionButton = {
-
+            FloatingActionButton(
+                onClick = {
+                    showDialog = true
+                },
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = Color.White,
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = null,
+                )
+            }
         },
     ) { innerPadding ->
         Box(
@@ -187,6 +208,22 @@ fun HomeScreen(
                 }
             )
         }
+
+
+        if (showDialog) {
+            SkinSourceDialog(
+                onDismiss = { showDialog = false },
+                onDownloadCollection = {
+                    showDialog = false
+                    openUrl(context, context.getString(R.string.download_skins_link))
+                },
+                onSearchPlayStore = {
+                    showDialog = false
+                    openUrl(context, context.getString(R.string.search_app))
+                }
+            )
+        }
+
 //        AnimatedVisibility(
 //            visible = isFabOpen,
 //            enter = fadeIn(animationSpec = tween(durationMillis = 300)),

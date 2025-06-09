@@ -25,11 +25,6 @@
     <string name="motion_keep_alive_title">"Erlaube im Hintergrund zu laufen"</string>
     <string name="motion_keep_alive_summary">"Halte die Anwendung aktiv, wenn die App geschlossen ist"</string>
 
-    <!-- Customization -->
-    <string name="customization_title">"Personalisierung"</string>
-    <string name="browse_skins_title">"Suche Skins"</string>
-    <string name="browse_skins_summary">"Suche und lade weiter Skins von Google Play herrunter."</string>
-
     <!-- Community & Contributions -->
     <string name="community_title">"Community &amp; Beiträge"</string>
     <string name="github_contribute_title">"Beitrag auf Github"</string>
@@ -63,7 +58,7 @@
     <string name="version_skin_label">"Version: %1$s"</string>
     <string name="delete_skin_label">"Skin gelöscht"</string>
     <string name="unknown_skin_version">"Unbekannt"</string>
-    <string name="choose_skin_source_title">"Wähle Skin Quelle"</string>
+    <string name="choose_skin_source_title">Skinquelle auswählen</string>
     <string name="skin_source_option_download_from_collection">"Option 1: Skinsammlung herunterladen (empfohlen)"</string>
 
     <!-- Fuzzy -->

@@ -25,10 +25,6 @@
     <string name="motion_speed_summary">Ajusta la velocidad de los efectos de movimiento.</string>
     <string name="motion_keep_alive_title">Permitir ejecución en segundo plano</string>
     <string name="motion_keep_alive_summary">Mantener el skin activo al cerrar la aplicación</string>
-    <!-- Customization -->
-    <string name="customization_title">Personalización</string>
-    <string name="browse_skins_title">Explorar Skins</string>
-    <string name="browse_skins_summary">Explora y descarga más skins desde Google Play.</string>
 
     <!-- Community & Contributions -->
     <string name="community_title">Comunidad &amp; Contribuciones</string>

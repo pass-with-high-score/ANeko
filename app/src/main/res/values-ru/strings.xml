@@ -21,11 +21,6 @@
     <string name="motion_keep_alive_title">Разрешить работу в фоновом режиме</string>
     <string name="motion_keep_alive_summary">Оставлять skin активным при закрытии приложения</string>
 
-    <!-- Customization -->
-    <string name="customization_title">Настройка</string>
-    <string name="browse_skins_title">Просмотр скинов</string>
-    <string name="browse_skins_summary">Просматривайте и загружайте дополнительные скины из Google Play.</string>
-
     <!-- Community & Contributions -->
     <string name="community_title">Сообщество и вклад</string>
     <string name="github_contribute_title">Внести вклад на GitHub</string>

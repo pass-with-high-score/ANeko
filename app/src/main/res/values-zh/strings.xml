@@ -21,11 +21,6 @@
     <string name="motion_keep_alive_title">允许后台运行</string>
     <string name="motion_keep_alive_summary">关闭应用时保持 skin 活动</string>
 
-    <!-- Customization -->
-    <string name="customization_title">个性化</string>
-    <string name="browse_skins_title">查看 skin</string>
-    <string name="browse_skins_summary">从 Google Play 浏览并下载更多 skin。</string>
-
     <!-- Community & Contributions -->
     <string name="community_title">社区与贡献</string>
     <string name="github_contribute_title">在 GitHub 上贡献</string>

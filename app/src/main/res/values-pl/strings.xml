@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Fuzzy -->
+    <string name="notification_enabled">ANeko uruchamia</string>
+    <string name="notification_disabled">ANeko śpi</string>
+    <string name="download_skins">Ściągnij więcej przebrań</string>
+    <string name="power_on">Włącz</string>
+    <string name="power_off">Wyłącz</string>
+    <string name="choose_skin">Wybierz przebranie</string>
+    <string name="invalid_selection">Nieprawidłowy wybór</string>
+    <string name="cancel">Anuluj</string>
+    <string name="msg_skin_load_failed">Nie udało się załadować przebrania. Proszę sprawdź aplikację z przebraniami</string>
+
+    <!-- Motion Settings -->
+    <string name="motion_transparency_title">Przezroczystość</string>
+    <string name="motion_transparency_summary">Po prostu widoczność towarzysza</string>
+    <string name="motion_size_title">Wielkość</string>
+    <string name="motion_size_summary">Rozmiar towarzysza</string>
+    <string name="motion_settings_title">Ustawienia</string>
+    <string name="motion_speed_title">Szybkość</string>
+    <string name="motion_speed_summary">Po prostu szybkość towarzysza</string>
+    <string name="motion_keep_alive_title">Zezwól na działanie w tle</string>
+    <string name="motion_keep_alive_summary">Zostaw przebranie aktywne gdy aplikacja jest zamknięta</string>
+
+    <!-- Community & Contributions -->
+    <string name="community_title">Społeczności i wspierającym</string>
+    <string name="github_contribute_title">Wspierającym na GitHub </string>
+    <string name="github_contribute_summary">Zajrzyj do kodu i pomóż rozwijać projekt na GitHubie!\n</string>
+
+    <!-- Rate App -->
+    <string name="rate_app_title">Oceń aplikację</string>
+    <string name="rate_app_summary">Jeśli spodobała ci się aplikacja,proszę oceń ją </string>
+    <string name="select_prompt">Wybierz</string>
+    <string name="make_with_love">Zdobione z ❤️ do ANeko</string>
+    <string name="app_version">Wersja: %1$s</string>
+    <string name="unknown_value">Nieznany</string>
+    <string name="toggle_theme_title">Zmień motyw</string>
+    <string name="share_title">Udostępnij</string>
+    <string name="notification_permission_title">Zezwolenie na powiadomienia</string>
+    <string name="notification_permission_description">\nAby ANeko mogła informować Cię o swoim stanie (np. gdy działa lub śpi), potrzebuje zezwolenia na powiadomienia. Proszę, udziel tego uprawnienia, aby wszystko działało poprawnie</string>
+    <string name="allow_button">Zezwól</string>
+    <string name="cancel_button">Anuluj </string>
+    <string name="overlay_permission_title">Potrzebne uprawnienie do wyświetlania nad innymi aplikacjami</string>
+    <string name="overlay_permission_description">ANeko nie może fikać nad innymi aplikacjami bez Twojej zgody! Daj jej pozwolenie w ustawieniach, żeby mogła Ci towarzyszyć.</string>
+    <string name="notification_permission_denied_msg">ANeko nie może wysyłać powiadomień. Może się przez to zgubić! Niektóre funkcje mogą nie działać.</string>
+    <string name="loading_skins_label">Ładowanie przebrania</string>
+    <string name="default_label">(Podstawowy)</string>
+    <string name="share_apk_label">Udostępnij APK %1$s</string>
+    <string name="failed_to_share_apk_label">Nie udało się Udostępnić APK %1$s</string>
+    <string name="package_skin_label">Pakiet: %1$s</string>
+    <string name="version_skin_label">Wersja: %1$s</string>
+    <string name="delete_skin_label">Usuń przebranie</string>
+    <string name="unknown_skin_version">Nie wiadomo</string>
+    <string name="choose_skin_source_title">Wybierz Źródło przebrania</string>
+    <string name="skin_source_option_download_from_collection">Opcja 1: ściągnij kolekcję przebrań (zalecane)</string>
+    <string name="skin_source_option_download_from_store">Opcja 2: wyszukaj przebrania na Play store\n\nMiau! Google usunęło większość starych skórek. Możliwe, że już ich nie znajdziesz. Możesz poszukać w Internecie skórek dla ANeko, ale uważaj – robisz to na własną odpowiedzialność!</string>
+    <string name="download_collection_label">Pobierz kolekcję</string>
+    <string name="search_on_play_store_label">Poszukaj na play store</string>
+    <string name="notification_chanel_description">Działanie w tle – ANeko</string>
+    <string name="translate_contribute_title">Chcesz zobaczyć ANeko w swoim języku?</string>
+    <string name="translate_contribute_summary">Pomóż nam tłumaczyć ANeko na POEditorze. Nawet drobna pomoc wiele znaczy – dzięki!</string>
+</resources>

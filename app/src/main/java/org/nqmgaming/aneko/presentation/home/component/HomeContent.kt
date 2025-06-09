@@ -64,7 +64,7 @@ fun HomeContent(
     var skinList by remember { mutableStateOf<List<SkinInfo>>(emptyList()) }
     var selectedIndex by remember { mutableIntStateOf(0) }
     val state = rememberPullToRefreshState()
-    var showDialog by remember { mutableStateOf(false) }
+
 
     LaunchedEffect(refreshing) {
         if (refreshing) {
@@ -138,11 +138,6 @@ fun HomeContent(
                                 }
                             )
                         }
-                        item {
-                            AddSkinCard(onClick = {
-                                showDialog = true
-                            })
-                        }
                     }
                 } else {
                     Box(
@@ -176,11 +171,7 @@ fun HomeContent(
                 )
             }
 
-            SettingsScreen(
-                onBrowseSkins = {
-                    showDialog = true
-                },
-            )
+            SettingsScreen()
             Spacer(modifier = Modifier.height(24.dp))
             Column(
                 modifier = Modifier
@@ -210,19 +201,7 @@ fun HomeContent(
         }
     }
 
-    if (showDialog) {
-        SkinSourceDialog(
-            onDismiss = { showDialog = false },
-            onDownloadCollection = {
-                showDialog = false
-                openUrl(context, context.getString(R.string.download_skins_link))
-            },
-            onSearchPlayStore = {
-                showDialog = false
-                openUrl(context, context.getString(R.string.search_app))
-            }
-        )
-    }
+
 }
 
 

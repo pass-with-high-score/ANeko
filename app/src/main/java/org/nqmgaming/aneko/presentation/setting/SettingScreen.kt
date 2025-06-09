@@ -23,9 +23,7 @@ import org.nqmgaming.aneko.presentation.ui.theme.ANekoTheme
 import org.nqmgaming.aneko.util.openUrl
 
 @Composable
-fun SettingsScreen(
-    onBrowseSkins: () -> Unit = {},
-) {
+fun SettingsScreen() {
     val context = LocalContext.current
     val prefs = PreferenceManager.getDefaultSharedPreferences(context)
 
@@ -87,19 +85,6 @@ fun SettingsScreen(
                 key = AnimationService.PREF_KEY_KEEP_ALIVE,
                 defaultValue = true,
                 prefs = prefs
-            )
-        }
-
-        Spacer(Modifier.height(16.dp))
-
-        PreferenceContainer(
-            title = R.string.customization_title
-        ) {
-            PreferenceItem(
-                title = stringResource(R.string.browse_skins_title),
-                summary = stringResource(R.string.browse_skins_summary),
-                icon = R.drawable.ic_slide_multiple_search,
-                onClick = onBrowseSkins
             )
         }
 
