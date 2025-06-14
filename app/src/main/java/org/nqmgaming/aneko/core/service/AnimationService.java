@@ -248,7 +248,7 @@ public class AnimationService extends Service {
         stopForeground(true);
         if (start) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                startForeground(1, notify, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK);
+                startForeground(1, notify, ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE);
             } else {
                 startForeground(1, notify);
             }
@@ -610,20 +610,14 @@ public class AnimationService extends Service {
         private float target_y = 0;
         private float vx = 0;                   // pixels per sec
         private float vy = 0;                   // pixels per sec
-
         private int display_width = 1;
         private int display_height = 1;
-
         private MotionParams params;
         private int alpha = 0xff;
-
-        //private Behaviour behaviour = Behaviour.closer;
         private Behaviour behaviour = Behaviour.whimsical;
         private int cur_behaviour_idx = 0;
         private long last_behaviour_changed = 0;
-
         private String cur_state = null;
-
         private boolean moving_state = false;
         private boolean state_changed = false;
         private boolean position_moved = false;
@@ -710,19 +704,13 @@ public class AnimationService extends Service {
             float dh2 = drawable.getIntrinsicHeight() / 2f;
 
             MotionParams.WallDirection dir;
-            float nx = cur_x;
-            float ny = cur_y;
             if (cur_x >= 0 && cur_x < dw2) {
-                nx = dw2;
                 dir = MotionParams.WallDirection.LEFT;
             } else if (cur_x <= display_width && cur_x > display_width - dw2) {
-                nx = display_width - dw2;
                 dir = MotionParams.WallDirection.RIGHT;
             } else if (cur_y >= 0 && cur_y < dh2) {
-                ny = dh2;
                 dir = MotionParams.WallDirection.UP;
             } else if (cur_y <= display_height && cur_y > display_height - dh2) {
-                ny = display_height - dh2;
                 dir = MotionParams.WallDirection.DOWN;
             } else {
                 return false;
@@ -733,8 +721,6 @@ public class AnimationService extends Service {
                 return false;
             }
 
-            cur_x = target_x = nx;
-            cur_y = target_y = ny;
             changeState(nstate);
 
             return true;

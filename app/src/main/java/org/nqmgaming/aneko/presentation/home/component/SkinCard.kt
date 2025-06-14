@@ -1,8 +1,10 @@
 package org.nqmgaming.aneko.presentation.home.component
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -105,14 +107,24 @@ fun SkinCard(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Image(
-                bitmap = iconBitmap,
-                contentDescription = null,
+            Box(
                 modifier = Modifier
                     .size(96.dp)
-                    .clip(CircleShape),
-                contentScale = ContentScale.Crop
-            )
+                    .clip(CircleShape)
+                    .background(
+                        Color.White,
+                        shape = CircleShape
+                    )
+            ) {
+                Image(
+                    bitmap = iconBitmap,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(96.dp)
+                        .clip(CircleShape),
+                    contentScale = ContentScale.Crop,
+                )
+            }
             Spacer(modifier = Modifier.height(12.dp))
             Text(
                 text = "${skin.label} ${if (isDefaultSkin) stringResource(R.string.default_label) else ""}",
