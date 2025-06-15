@@ -1,0 +1,7 @@
+- Fixed skin teleportation issue when using large image sizes.
+- Added language selection feature.
+- Added support for Polish language.
+- Updated UI for acquiring new skins.
+- Removed unnecessary functions.
+
+Have a nice day!
