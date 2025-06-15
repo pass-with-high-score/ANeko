@@ -39,6 +39,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import org.nqmgaming.aneko.R
@@ -131,6 +132,8 @@ fun SkinCard(
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface,
                 fontWeight = if (isDefaultSkin) FontWeight.Bold else null,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
             )
         }
     }

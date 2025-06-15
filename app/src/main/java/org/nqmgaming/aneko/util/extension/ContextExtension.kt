@@ -1,13 +1,15 @@
 package org.nqmgaming.aneko.util.extension
 
 import android.Manifest
+import android.app.LocaleManager
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.pm.ResolveInfo
 import android.os.Build
+import android.os.LocaleList
 import androidx.activity.result.ActivityResultLauncher
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
+import androidx.core.os.LocaleListCompat
 
 fun Context.checkNotificationPermission(
     requestPermissionLauncher: ActivityResultLauncher<String>,
@@ -26,16 +28,21 @@ fun Context.checkNotificationPermission(
     onGranted()
 }
 
-fun Context.getUserLaunchableApps(): List<ResolveInfo> {
-    val intent = Intent(Intent.ACTION_MAIN, null).apply {
-        addCategory(Intent.CATEGORY_LAUNCHER)
+fun Context.changeLanguage(languageCode: String) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        this.getSystemService(LocaleManager::class.java).applicationLocales =
+            LocaleList.forLanguageTags(languageCode)
+    } else {
+        AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(languageCode))
     }
-    val listApp = packageManager.queryIntentActivities(intent, 0)
-    // remove itself
-    listApp.removeIf { resolveInfo ->
-        resolveInfo.activityInfo.packageName == packageName
-    }
-    return listApp
 }
 
+fun Context.getLanguageCode(): String {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        this.getSystemService(LocaleManager::class.java).applicationLocales[0]?.toLanguageTag()
+            ?.split("-")?.first() ?: "en"
+    } else {
+        AppCompatDelegate.getApplicationLocales()[0]?.toLanguageTag()?.split("-")?.first() ?: "en"
+    }
+}
 

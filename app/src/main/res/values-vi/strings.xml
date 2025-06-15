@@ -41,7 +41,7 @@
     <string name="notification_permission_title">Quyền thông báo</string>
     <string name="notification_permission_description">ANeko cần quyền gửi thông báo để báo cho bạn biết khi nào đang chạy hoặc nghỉ. Hãy cấp quyền này để ứng dụng hoạt động trọn vẹn nha!</string>
     <string name="allow_button">Cho phép</string>
-    <string name="cancel_button">Không cho</string>
+    <string name="cancel_button">Không cho phép</string>
     <string name="overlay_permission_title">Cần quyền hiển thị trên ứng dụng khác</string>
     <string name="overlay_permission_description">ANeko sẽ không chạy được nếu không có quyền hiển thị đè lên ứng dụng khác. Vui lòng bật quyền trong phần cài đặt nha.</string>
     <string name="notification_permission_denied_msg">Bạn đã từ chối quyền thông báo. Một số tính năng có thể sẽ không hoạt động.</string>
@@ -61,5 +61,7 @@
     <string name="notification_chanel_description">Thông báo nền để điều khiển ANeko</string>
     <string name="translate_contribute_title">Bạn muốn thấy ANeko bằng ngôn ngữ của mình?</string>
     <string name="translate_contribute_summary">Tham gia dự án dịch của tụi mình trên POEditor nhé\nMỗi đóng góp nhỏ đều rất quý. Cảm ơn bạn nhiều lắm!</string>
+    <string name="choose_language_title">Chọn ngôn ngữ</string>
+    <string name="contribute_to_translation">Đóng góp vào việc dịch thuật</string>
 
 </resources>

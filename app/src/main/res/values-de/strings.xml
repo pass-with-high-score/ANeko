@@ -68,4 +68,7 @@
     <string name="notification_chanel_description">"Hintergrunddienst für ANeko"</string>
     <string name="translate_contribute_title">Möchtest du ANeko in deiner Sprache sehen?</string>
     <string name="translate_contribute_summary">Mach mit bei unserem Übersetzungsprojekt auf POEditor\nJeder Beitrag zählt. Vielen Dank im Voraus!</string>
+    <string name="choose_language_title">Sprache wählen</string>
+    <string name="contribute_to_translation">Zur Übersetzung beitragen</string>
+
 </resources>

@@ -72,4 +72,27 @@
         <item>320</item>
     </string-array>
 
+    <!-- Language Options -->
+    <string-array name="language_codes">
+        <item>en</item>
+        <item>de</item>
+        <item>es</item>
+        <item>fr</item>
+        <item>pl</item>
+        <item>ru</item>
+        <item>vi</item>
+        <item>zh</item>
+    </string-array>
+
+    <string-array name="language_names">
+        <item>English</item>
+        <item>Deutsch</item>
+        <item>Español</item>
+        <item>Français</item>
+        <item>Polski</item>
+        <item>Русский</item>
+        <item>Tiếng Việt</item>
+        <item>中文</item>
+    </string-array>
+
 </resources>

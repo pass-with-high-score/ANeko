@@ -1,25 +1,17 @@
 package org.nqmgaming.aneko.presentation.home
 
 import android.content.Intent
-import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.DarkMode
-import androidx.compose.material.icons.filled.Download
-import androidx.compose.material.icons.filled.Draw
+import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -43,23 +35,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
-import com.ramcosta.composedestinations.generated.destinations.CreateSkinScreenDestination
-import com.ramcosta.composedestinations.generated.destinations.EditSkinScreenDestination
-import com.ramcosta.composedestinations.generated.destinations.SkinDetailScreenDestination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import org.nqmgaming.aneko.R
 import org.nqmgaming.aneko.core.service.AnimationService
 import org.nqmgaming.aneko.presentation.AnekoViewModel
-import org.nqmgaming.aneko.presentation.home.component.ExpandableFab
 import org.nqmgaming.aneko.presentation.home.component.HomeContent
-import org.nqmgaming.aneko.presentation.home.component.SmallFab
-import org.nqmgaming.aneko.util.extension.checkNotificationPermission
-import androidx.core.net.toUri
+import org.nqmgaming.aneko.presentation.home.component.SelectLanguageDialog
 import org.nqmgaming.aneko.presentation.home.component.SkinSourceDialog
+import org.nqmgaming.aneko.util.extension.checkNotificationPermission
 import org.nqmgaming.aneko.util.openUrl
 import timber.log.Timber
 import java.util.Locale
@@ -70,10 +56,8 @@ import java.util.Locale
 @Composable
 fun HomeScreen(
     viewModel: AnekoViewModel = hiltViewModel(),
-    navigator: DestinationsNavigator,
 ) {
     val isDarkTheme by viewModel.isDarkTheme.collectAsState()
-    val isFabOpen by viewModel.isFabOpen.collectAsState()
     val isEnabledState by viewModel.isEnabledState.collectAsState()
     val context = LocalContext.current
 
@@ -94,16 +78,9 @@ fun HomeScreen(
         startAnimationService()
     }
 
-    val importSkinLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        uri?.let {
-            navigator.navigate(SkinDetailScreenDestination(skinPath = it.toString()))
-        }
-    }
-
-
     var showDialog by remember { mutableStateOf(false) }
+
+    var showLanguageDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -119,13 +96,23 @@ fun HomeScreen(
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = {
-                        viewModel.toggleTheme()
-                    }) {
-                        Icon(
-                            imageVector = if (isDarkTheme) Icons.Default.LightMode else Icons.Default.DarkMode,
-                            contentDescription = stringResource(R.string.toggle_theme_title)
-                        )
+                    Row {
+                        IconButton(onClick = {
+                            viewModel.toggleTheme()
+                        }) {
+                            Icon(
+                                imageVector = if (isDarkTheme) Icons.Default.LightMode else Icons.Default.DarkMode,
+                                contentDescription = stringResource(R.string.toggle_theme_title)
+                            )
+                        }
+                        IconButton(onClick = {
+                            showLanguageDialog = true
+                        }) {
+                            Icon(
+                                imageVector = Icons.Default.Language,
+                                contentDescription = stringResource(R.string.toggle_theme_title)
+                            )
+                        }
                     }
                 },
                 actions = {
@@ -224,67 +211,13 @@ fun HomeScreen(
             )
         }
 
-//        AnimatedVisibility(
-//            visible = isFabOpen,
-//            enter = fadeIn(animationSpec = tween(durationMillis = 300)),
-//            exit = fadeOut(animationSpec = tween(durationMillis = 300)),
-//            modifier = Modifier
-//                .fillMaxSize()
-//                .zIndex(1f)
-//        ) {
-//            Box(
-//                Modifier
-//                    .fillMaxSize()
-//                    .background(Color.Black.copy(alpha = 0.4f))
-//                    .clickable { viewModel.toggleFabState() }
-//
-//            )
-//        }
-//        ExpandableFab(
-//            modifier = Modifier
-//                .zIndex(2f)
-//                .padding(
-//                    end = 16.dp,
-//                    bottom = 50.dp
-//                ),
-//            isOpen = isFabOpen,
-//            onToggle = { viewModel.toggleFabState() },
-//            children = listOf(
-//                {
-//                    SmallFab(
-//                        icon = Icons.Filled.Draw,
-//                        onClick = {
-//                            navigator.navigate(EditSkinScreenDestination())
-//                            viewModel.toggleFabState()
-//                        },
-//                        text = "Edit",
-//                        isExpanded = isFabOpen
-//                    )
-//                },
-//                {
-//                    SmallFab(
-//                        icon = Icons.Filled.Create,
-//                        onClick = {
-//                            navigator.navigate(CreateSkinScreenDestination())
-//                            viewModel.toggleFabState()
-//                        },
-//                        text = "Create",
-//                        isExpanded = isFabOpen
-//                    )
-//                },
-//                {
-//                    SmallFab(
-//                        icon = Icons.Filled.Download,
-//                        onClick = {
-//                            importSkinLauncher.launch("*/*")
-//                            viewModel.toggleFabState()
-//                        },
-//                        text = "Import",
-//                        isExpanded = isFabOpen
-//                    )
-//                },
-//            )
-//        )
+        if (showLanguageDialog) {
+            SelectLanguageDialog(
+                onDismiss = {
+                    showLanguageDialog = false
+                }
+            )
+        }
     }
 }
 

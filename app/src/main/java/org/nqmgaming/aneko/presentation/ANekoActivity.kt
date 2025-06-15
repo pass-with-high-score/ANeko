@@ -3,8 +3,8 @@ package org.nqmgaming.aneko.presentation
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -19,7 +19,7 @@ import org.nqmgaming.aneko.core.service.AnimationService
 import org.nqmgaming.aneko.presentation.ui.theme.ANekoTheme
 
 @AndroidEntryPoint
-class ANekoActivity : ComponentActivity() {
+class ANekoActivity : AppCompatActivity() {
     private lateinit var prefs: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,13 +61,5 @@ class ANekoActivity : ComponentActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        val isKeepAlive = prefs.getBoolean(AnimationService.PREF_KEY_KEEP_ALIVE, true)
-        if (!isKeepAlive) {
-            prefs.edit { putBoolean(AnimationService.PREF_KEY_ENABLE, false) }
-            stopService(
-                Intent(this, AnimationService::class.java)
-                    .setAction(AnimationService.ACTION_STOP)
-            )
-        }
     }
 }

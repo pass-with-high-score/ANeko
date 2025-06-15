@@ -17,7 +17,6 @@ import org.nqmgaming.aneko.R
 import org.nqmgaming.aneko.core.service.AnimationService
 import org.nqmgaming.aneko.presentation.setting.component.PreferenceContainer
 import org.nqmgaming.aneko.presentation.setting.component.PreferenceItem
-import org.nqmgaming.aneko.presentation.setting.component.PreferenceSwitchItem
 import org.nqmgaming.aneko.presentation.setting.component.SliderPreferenceItem
 import org.nqmgaming.aneko.presentation.ui.theme.ANekoTheme
 import org.nqmgaming.aneko.util.openUrl
@@ -70,20 +69,6 @@ fun SettingsScreen() {
                 entryValues = context.resources.getStringArray(R.array.pref_motion_size_entry_values),
                 key = AnimationService.PREF_KEY_SIZE,
                 defaultValue = "80",
-                prefs = prefs
-            )
-            HorizontalDivider(
-                color = MaterialTheme.colorScheme.outline.copy(
-                    alpha = 0.5f
-                ),
-            )
-
-            PreferenceSwitchItem(
-                title = stringResource(R.string.motion_keep_alive_title),
-                summary = stringResource(R.string.motion_keep_alive_summary),
-                icon = R.drawable.ic_auto_renew,
-                key = AnimationService.PREF_KEY_KEEP_ALIVE,
-                defaultValue = true,
                 prefs = prefs
             )
         }

@@ -72,4 +72,7 @@
     <string name="poeditor_url" translatable="false">https://poeditor.com/join/project/zX7Nu44XDh</string>
     <string name="translate_contribute_title">Want to see ANeko in your language?</string>
     <string name="translate_contribute_summary">Join our translation project on POEditor\nEvery little bit helps. Thanks a ton in advance!</string>
+    <string name="choose_language_title">Choose language</string>
+    <string name="contribute_to_translation">Contribute to translation</string>
+
 </resources>
