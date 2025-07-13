@@ -1,16 +1,21 @@
 package org.nqmgaming.aneko.presentation
 
 import android.app.Application
-import android.content.ComponentName
 import android.content.SharedPreferences
+import androidx.core.content.edit
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.application
+import androidx.lifecycle.viewModelScope
 import androidx.preference.PreferenceManager
 import dagger.hilt.android.lifecycle.HiltViewModel
-import org.nqmgaming.aneko.core.service.AnimationService
-import androidx.core.content.edit
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import org.nqmgaming.aneko.core.service.AnimationService
+import org.nqmgaming.aneko.data.SkinInfo
+import org.nqmgaming.aneko.util.loadSkinList
 import javax.inject.Inject
 
 @HiltViewModel
@@ -18,6 +23,9 @@ class AnekoViewModel @Inject constructor(application: Application) : AndroidView
     companion object {
         const val PREF_KEY_THEME = "theme"
     }
+
+    private val _uiState = MutableStateFlow(ANekoState())
+    val uiState = _uiState.asStateFlow()
 
     private val prefs: SharedPreferences =
         PreferenceManager.getDefaultSharedPreferences(application)
@@ -37,6 +45,7 @@ class AnekoViewModel @Inject constructor(application: Application) : AndroidView
 
     init {
         prefs.registerOnSharedPreferenceChangeListener(preferenceChangeListener)
+        loadSkin()
     }
 
     override fun onCleared() {
@@ -52,27 +61,25 @@ class AnekoViewModel @Inject constructor(application: Application) : AndroidView
         MutableStateFlow(prefs.getString(PREF_KEY_THEME, "light") == "dark")
     val isDarkTheme: StateFlow<Boolean> = _isDarkTheme.asStateFlow()
 
-    private val _isFabOpen = MutableStateFlow(false)
-    val isFabOpen: StateFlow<Boolean> = _isFabOpen.asStateFlow()
-
     fun toggleTheme() {
         val newTheme = if (_isDarkTheme.value) "light" else "dark"
         prefs.edit { putString(PREF_KEY_THEME, newTheme) }
-    }
-
-    fun toggleFabState() {
-        _isFabOpen.value = !_isFabOpen.value
     }
 
     fun updateAnimationEnabled(enabled: Boolean) {
         prefs.edit { putBoolean(AnimationService.PREF_KEY_ENABLE, enabled) }
     }
 
-    fun updateSkin(componentName: ComponentName) {
+    fun updateSkin(skinInfo: SkinInfo, index: Int) {
+        _uiState.update {
+            it.copy(
+                selectedIndex = index
+            )
+        }
         prefs.edit {
             putString(
                 AnimationService.PREF_KEY_SKIN_COMPONENT,
-                componentName.flattenToString()
+                skinInfo.component.flattenToString()
             )
         }
     }
@@ -101,6 +108,27 @@ class AnekoViewModel @Inject constructor(application: Application) : AndroidView
                 AnimationService.PREF_KEY_NOTIFICATION_ENABLE,
                 granted
             )
+        }
+    }
+
+    fun loadSkin() {
+        viewModelScope.launch {
+            val skinList = loadSkinList(application)
+
+            val initialSkinComponentString = prefs.getString(
+                AnimationService.PREF_KEY_SKIN_COMPONENT, ""
+            )
+
+            val selectedIndex =
+                skinList.indexOfFirst { it.component.flattenToString() == initialSkinComponentString }
+                    .takeIf { it != -1 } ?: 0
+
+            _uiState.update {
+                it.copy(
+                    skinList = skinList,
+                    selectedIndex = selectedIndex
+                )
+            }
         }
     }
 }

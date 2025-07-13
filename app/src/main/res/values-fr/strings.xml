@@ -60,5 +60,7 @@
     <string name="translate_contribute_summary">Rejoignez notre projet de traduction sur POEditor\nChaque contribution compte. Merci beaucoup d’avance!</string>
     <string name="choose_language_title">Choisir la langue</string>
     <string name="contribute_to_translation">Contribuer à la traduction</string>
+    <string name="txt_explore">Explore</string>
+    <string name="txt_loading">Loading</string>
 
 </resources>

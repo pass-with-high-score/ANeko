@@ -10,9 +10,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.core.content.edit
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.generated.NavGraphs
+import com.ramcosta.composedestinations.generated.destinations.ExploreSkinScreenDestination
+import com.ramcosta.composedestinations.generated.destinations.HomeScreenDestination
 import com.ramcosta.composedestinations.rememberNavHostEngine
 import dagger.hilt.android.AndroidEntryPoint
 import org.nqmgaming.aneko.core.service.AnimationService
@@ -38,15 +41,28 @@ class ANekoActivity : AppCompatActivity() {
                 navHostContentAlignment = Alignment.TopCenter,
             )
 
+            val newBackStackEntry by navController.currentBackStackEntryAsState()
+            val route = newBackStackEntry?.destination?.route
+
             ANekoTheme(
                 darkTheme = isDarkTheme,
                 dynamicColor = false
             ) {
-                DestinationsNavHost(
-                    navGraph = NavGraphs.root,
+                StandardScaffold(
                     navController = navController,
-                    engine = navHostEngine,
+                    showBottomBar = route in listOf(
+                        HomeScreenDestination.route,
+                        ExploreSkinScreenDestination.route,
+                    ),
+                    content = {
+                        DestinationsNavHost(
+                            navGraph = NavGraphs.root,
+                            navController = navController,
+                            engine = navHostEngine,
+                        )
+                    }
                 )
+
             }
         }
     }

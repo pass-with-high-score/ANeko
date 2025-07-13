@@ -123,6 +123,8 @@ dependencies {
 
     implementation(libs.androidx.compose.animation.graphics)
 
+    implementation(libs.bundles.ktor)
+
     implementation(libs.kotlin.stdlib.jdk8)
     implementation(libs.material)
     implementation(libs.timber)

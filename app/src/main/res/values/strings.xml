@@ -74,5 +74,7 @@
     <string name="translate_contribute_summary">Join our translation project on POEditor\nEvery little bit helps. Thanks a ton in advance!</string>
     <string name="choose_language_title">Choose language</string>
     <string name="contribute_to_translation">Contribute to translation</string>
+    <string name="txt_explore">Explore</string>
+    <string name="txt_loading">Loading</string>
 
 </resources>

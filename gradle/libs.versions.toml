@@ -1,6 +1,11 @@
 [versions]
 # default versions
 compileSdk = "35"
+ktorClientCore = "3.1.3"
+ktorClientAndroid = "3.1.3"
+ktorClientContentNegotiation = "3.1.3"
+ktorSerializationKotlinxJson = "3.1.3"
+ktorClientLogging = "3.1.3"
 minSdk = "28"
 targetSdk = "35"
 versionCode = "11"
@@ -83,10 +88,24 @@ kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "uiTooling" }
 androidx-compose-animation-graphics = { group = "androidx.compose.animation", name = "animation-graphics" }
 
+# Ktor
+ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktorClientLogging" }
+ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktorSerializationKotlinxJson" }
+ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktorClientContentNegotiation" }
+ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "ktorClientAndroid" }
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktorClientCore" }
+
 [bundles]
 serialization = [
     "kotlinx-serialization-core",
     "kotlinx-serialization-json",
+]
+ktor = [
+    "ktor-client-core",
+    "ktor-client-android",
+    "ktor-client-content-negotiation",
+    "ktor-serialization-kotlinx-json",
+    "ktor-client-logging",
 ]
 
 [plugins]

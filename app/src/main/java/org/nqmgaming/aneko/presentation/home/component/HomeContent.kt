@@ -1,11 +1,6 @@
 package org.nqmgaming.aneko.presentation.home.component
 
-import android.content.ComponentName
-import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -27,12 +22,9 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,15 +33,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.nqmgaming.aneko.R
-import org.nqmgaming.aneko.core.service.AnimationService
 import org.nqmgaming.aneko.data.SkinInfo
 import org.nqmgaming.aneko.presentation.setting.SettingsScreen
 import org.nqmgaming.aneko.presentation.ui.theme.ANekoTheme
-import org.nqmgaming.aneko.util.loadSkinList
-import org.nqmgaming.aneko.util.openUrl
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -57,38 +44,20 @@ fun HomeContent(
     modifier: Modifier = Modifier,
     isEnabled: Boolean = false,
     onChangeEnable: (Boolean) -> Unit = {},
-    onSkinSelected: (ComponentName) -> Unit = {},
+    onRefresh: () -> Unit = {},
+    skinList: List<SkinInfo> = emptyList(),
+    selectedIndex: Int = 0,
+    onSelectSkin: (SkinInfo, Int) -> Unit = { _, _ -> }
 ) {
     val context = LocalContext.current
-    var refreshing by remember { mutableStateOf(true) }
-    var skinList by remember { mutableStateOf<List<SkinInfo>>(emptyList()) }
-    var selectedIndex by remember { mutableIntStateOf(0) }
+    var refreshing by remember { mutableStateOf(false) }
     val state = rememberPullToRefreshState()
-
-
-    LaunchedEffect(refreshing) {
-        if (refreshing) {
-            val skins = loadSkinList(context)
-            skinList = skins
-
-            // Set selected index after skinList is loaded
-            val initialSkinComponentString = context.getSharedPreferences(
-                context.packageName + "_preferences",
-                Context.MODE_PRIVATE
-            ).getString(AnimationService.PREF_KEY_SKIN_COMPONENT, "")
-
-            selectedIndex =
-                skins.indexOfFirst { it.component.flattenToString() == initialSkinComponentString }
-                    .takeIf { it != -1 } ?: 0
-
-            refreshing = false
-        }
-    }
 
     PullToRefreshBox(
         isRefreshing = refreshing,
         onRefresh = {
             refreshing = true
+            onRefresh()
         },
         state = state,
         indicator = {
@@ -124,8 +93,7 @@ fun HomeContent(
                                 skin = skin,
                                 isSelected = index == selectedIndex,
                                 onSkinSelected = {
-                                    selectedIndex = index
-                                    onSkinSelected(skin.component)
+                                    onSelectSkin(skin, index)
                                     refreshing = true
                                 },
                                 onRequestDeleteSkin = {
@@ -200,7 +168,6 @@ fun HomeContent(
             }
         }
     }
-
 
 }
 

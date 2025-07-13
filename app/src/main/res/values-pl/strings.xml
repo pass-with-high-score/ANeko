@@ -62,5 +62,7 @@
     <string name="translate_contribute_summary">Pomóż nam tłumaczyć ANeko na POEditorze. Nawet drobna pomoc wiele znaczy – dzięki!</string>
     <string name="choose_language_title">Wybierz język</string>
     <string name="contribute_to_translation">Przyczyń się do tłumaczenia</string>
+    <string name="txt_explore">Explore</string>
+    <string name="txt_loading">Loading</string>
 
 </resources>
