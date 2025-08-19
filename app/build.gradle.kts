@@ -124,6 +124,7 @@ dependencies {
     implementation(libs.androidx.compose.animation.graphics)
 
     implementation(libs.bundles.ktor)
+    implementation("org.slf4j:slf4j-android:1.7.36")
 
     implementation(libs.kotlin.stdlib.jdk8)
     implementation(libs.material)

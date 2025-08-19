@@ -8,6 +8,7 @@ import io.ktor.client.engine.android.Android
 import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.header
 import io.ktor.http.ContentType
@@ -16,8 +17,10 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.serialization.json.Json
+import org.nqmgaming.aneko.BuildConfig
 import org.nqmgaming.aneko.core.data.ApiService
 import org.nqmgaming.aneko.core.data.ApiServiceImpl
+import timber.log.Timber
 import javax.inject.Singleton
 
 @dagger.Module
@@ -28,8 +31,17 @@ object ApiModule {
     @Provides
     fun provideHttpClient(): HttpClient {
         return HttpClient(Android) {
-            install(Logging) {
-                level = LogLevel.ALL
+            if (BuildConfig.DEBUG) {
+                install(Logging) {
+                    level = LogLevel.HEADERS
+                    level = LogLevel.INFO
+                    level = LogLevel.BODY
+                    logger = object : Logger {
+                        override fun log(message: String) {
+                            Timber.tag("ANEKO HTTP").d(message)
+                        }
+                    }
+                }
             }
             install(DefaultRequest) {
                 header(HttpHeaders.ContentType, ContentType.Application.Json)

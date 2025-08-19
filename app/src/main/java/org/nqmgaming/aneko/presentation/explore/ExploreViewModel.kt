@@ -26,7 +26,7 @@ class ExploreViewModel @Inject constructor(
         viewModelScope.launch {
             apiService.getSkinCollection().collect { result ->
                 when (result) {
-                    is ApiResult.Error<*> -> {
+                    is ApiResult.Error -> {
                         _uiState.update {
                             it.copy(
                                 isLoading = false,
@@ -36,16 +36,16 @@ class ExploreViewModel @Inject constructor(
                         }
                     }
 
-                    is ApiResult.Loading<*> -> {
+                    is ApiResult.Loading -> {
                         _uiState.update {
                             it.copy(
                                 isLoading = !isRefresh,
-                                isRefreshing = true,
+                                isRefreshing = isRefresh,
                             )
                         }
                     }
 
-                    is ApiResult.Success<*> -> {
+                    is ApiResult.Success -> {
                         _uiState.update {
                             it.copy(
                                 skinCollections = result.data,
