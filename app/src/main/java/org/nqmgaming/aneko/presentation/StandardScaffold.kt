@@ -2,6 +2,7 @@ package org.nqmgaming.aneko.presentation
 
 import android.content.Intent
 import android.net.Uri
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -80,6 +81,11 @@ fun StandardScaffold(
                     val pkg = viewModel.importSkinZipToAppStorage(context, uri)
                     withContext(Dispatchers.Main) {
                         if (pkg != null) {
+                            Toast.makeText(
+                                context,
+                                "Imported skin from ZIP: $pkg",
+                                Toast.LENGTH_SHORT
+                            ).show()
                             Timber.d("Package name from skin XML: $pkg")
                         } else {
                             Timber.e("Failed to read package name from skin XML in ZIP")

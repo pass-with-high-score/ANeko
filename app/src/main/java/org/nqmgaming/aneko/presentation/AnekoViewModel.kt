@@ -5,17 +5,20 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.net.Uri
 import android.util.Xml
+import android.widget.Toast
 import androidx.core.content.edit
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.application
 import androidx.lifecycle.viewModelScope
 import androidx.preference.PreferenceManager
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.nqmgaming.aneko.core.service.AnimationService
 import org.nqmgaming.aneko.data.SkinInfo
 import org.nqmgaming.aneko.util.loadSkinList
@@ -23,6 +26,7 @@ import org.xmlpull.v1.XmlPullParser
 import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
 import java.io.File
+import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.util.zip.ZipInputStream
 import javax.inject.Inject
@@ -145,67 +149,40 @@ class AnekoViewModel @Inject constructor(application: Application) : AndroidView
         overwrite: Boolean = true
     ): String? {
         val resolver = context.contentResolver
+        val tempDir = File(context.cacheDir, "skin_temp").apply { mkdirs() }
+        var pkg: String? = null
+        var skinXmlFile: File? = null
 
-        val pkg: String = run {
-            resolver.openInputStream(zipUri)?.use { raw ->
-                ZipInputStream(BufferedInputStream(raw)).use { zis ->
-                    var entry = zis.nextEntry
-                    while (entry != null) {
-                        if (!entry.isDirectory && entry.name.endsWith(
-                                "skin.xml",
-                                ignoreCase = true
-                            )
-                        ) {
-                            val parser: XmlPullParser =
-                                Xml.newPullParser().apply { setInput(zis, null) }
-                            var event = parser.eventType
-                            while (event != XmlPullParser.END_DOCUMENT) {
-                                if (event == XmlPullParser.START_TAG &&
-                                    parser.name.equals("motion-params", ignoreCase = true)
-                                ) {
-                                    val v = parser.getAttributeValue(null, "package")
-                                        ?: parser.getAttributeValue("", "package")
-                                    if (!v.isNullOrBlank()) return@run v
-                                }
-                                event = parser.next()
-                            }
-                        }
-                        zis.closeEntry()
-                        entry = zis.nextEntry
-                    }
-                }
-            }
-            return null
-        }
-
-        val skinsRoot = File(context.filesDir, "skins").apply { mkdirs() }
-        val destDir = File(skinsRoot, pkg).apply { mkdirs() }
-        val destCanonical = destDir.canonicalFile
-
+        // 1. Extract all files to tempDir
         resolver.openInputStream(zipUri)?.use { raw ->
             ZipInputStream(BufferedInputStream(raw)).use { zis ->
-                val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
                 var entry = zis.nextEntry
+                val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
                 while (entry != null) {
-                    // Only use the file name, ignore any path in the zip entry
-                    val outFile = File(destDir, File(entry.name).name)
-                    val outCanonical = outFile.canonicalFile
-                    if (!outCanonical.path.startsWith(destCanonical.path)) {
-                        zis.closeEntry()
-                        entry = zis.nextEntry
-                        continue
-                    }
-
                     if (!entry.isDirectory) {
-                        if (overwrite || !outCanonical.exists()) {
-                            BufferedOutputStream(FileOutputStream(outCanonical)).use { bos ->
-                                var r: Int
-                                while (zis.read(buffer).also { r = it } != -1) bos.write(
-                                    buffer,
-                                    0,
-                                    r
-                                )
-                                bos.flush()
+                        val outFile = File(tempDir, File(entry.name).name)
+                        BufferedOutputStream(FileOutputStream(outFile)).use { bos ->
+                            var r: Int
+                            while (zis.read(buffer).also { r = it } != -1) bos.write(buffer, 0, r)
+                            bos.flush()
+                        }
+                        if (entry.name.endsWith("skin.xml", ignoreCase = true)) {
+                            skinXmlFile = outFile
+                            // Get package name from skin.xml
+                            FileInputStream(outFile).use { input ->
+                                val parser = Xml.newPullParser()
+                                parser.setInput(input, null)
+                                var event = parser.eventType
+                                while (event != XmlPullParser.END_DOCUMENT) {
+                                    if (event == XmlPullParser.START_TAG &&
+                                        parser.name.equals("motion-params", ignoreCase = true)
+                                    ) {
+                                        pkg = parser.getAttributeValue(null, "package")
+                                            ?: parser.getAttributeValue("", "package")
+                                        break
+                                    }
+                                    event = parser.next()
+                                }
                             }
                         }
                     }
@@ -214,6 +191,93 @@ class AnekoViewModel @Inject constructor(application: Application) : AndroidView
                 }
             }
         }
+
+        if (pkg.isNullOrBlank() || skinXmlFile == null) {
+            tempDir.deleteRecursively()
+            return null
+        }
+
+        // 2. Validate images
+        val validationResult = validateSkinImages(skinXmlFile, tempDir)
+        if (validationResult.any { it.startsWith("Missing images") }) {
+            tempDir.deleteRecursively()
+            viewModelScope.launch {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(
+                        context,
+                        "Skin validation failed: ${validationResult.joinToString(", ")}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+            return null
+        }
+
+        // 3. Move files to final destination
+        val skinsRoot = File(context.filesDir, "skins").apply { mkdirs() }
+        val destDir = File(skinsRoot, pkg).apply { mkdirs() }
+        tempDir.listFiles()?.forEach { file ->
+            val destFile = File(destDir, file.name)
+            if (overwrite || !destFile.exists()) {
+                file.copyTo(destFile, overwrite = true)
+            }
+        }
+        tempDir.deleteRecursively()
         return pkg
+    }
+
+    fun validateSkinImages(skinXmlFile: File, skinDir: File): List<String> {
+        // Helper to collect drawables recursively
+        fun collectDrawables(parser: XmlPullParser): Set<String> {
+            val drawables = mutableSetOf<String>()
+            var event = parser.eventType
+            while (event != XmlPullParser.END_DOCUMENT) {
+                if (event == XmlPullParser.START_TAG) {
+                    when (parser.name) {
+                        "item" -> {
+                            parser.getAttributeValue(null, "drawable")?.trim()
+                                ?.let { drawables.add(it) }
+                        }
+
+                        "repeat-item" -> {
+                            val depth = parser.depth
+                            while (parser.next() != XmlPullParser.END_DOCUMENT &&
+                                !(parser.eventType == XmlPullParser.END_TAG && parser.depth == depth && parser.name == "repeat-item")
+                            ) {
+                                if (parser.eventType == XmlPullParser.START_TAG && parser.name == "item") {
+                                    parser.getAttributeValue(null, "drawable")?.trim()
+                                        ?.let { drawables.add(it) }
+                                }
+                            }
+                        }
+                    }
+                }
+                event = parser.next()
+            }
+            return drawables
+        }
+
+        // 1. Parse skin.xml for all drawable names
+        val drawables = FileInputStream(skinXmlFile).use { input ->
+            val parser = Xml.newPullParser()
+            parser.setInput(input, null)
+            collectDrawables(parser)
+        }
+
+        // 2. List image files in skinDir
+        val imageFiles = skinDir.listFiles { file ->
+            file.isFile && (file.extension in listOf("png", "jpg", "jpeg", "webp"))
+        }?.map { it.nameWithoutExtension }?.toSet() ?: emptySet()
+
+        // 3. Find missing and extra images
+        val missingImages = drawables.filter { it !in imageFiles }
+        val extraImages = imageFiles.filter { it !in drawables }
+
+        // 4. Return result
+        return buildList {
+            if (missingImages.isNotEmpty()) add("Missing images: $missingImages")
+            if (extraImages.isNotEmpty()) add("Extra images: $extraImages")
+            if (isEmpty()) add("All images match drawables.")
+        }
     }
 }
