@@ -126,6 +126,10 @@ dependencies {
     implementation(libs.bundles.ktor)
     implementation("org.slf4j:slf4j-android:1.7.36")
 
+    implementation("androidx.room:room-runtime:2.7.2")
+    ksp("androidx.room:room-compiler:2.7.2")
+    implementation("androidx.room:room-ktx:2.7.2")
+
     implementation(libs.kotlin.stdlib.jdk8)
     implementation(libs.material)
     implementation(libs.timber)

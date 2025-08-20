@@ -179,6 +179,7 @@ fun HomeScreen(
                 onSelectSkin = { skin, index ->
                     viewModel.updateSkin(skin, index)
                 },
+                skins = uiState.value.skins,
                 selectedIndex = uiState.value.selectedIndex,
                 skinList = uiState.value.skinList,
                 onRefresh = {

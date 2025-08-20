@@ -34,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import org.nqmgaming.aneko.R
+import org.nqmgaming.aneko.core.data.entity.SkinEntity
 import org.nqmgaming.aneko.data.SkinInfo
 import org.nqmgaming.aneko.presentation.setting.SettingsScreen
 import org.nqmgaming.aneko.presentation.ui.theme.ANekoTheme
@@ -47,6 +48,7 @@ fun HomeContent(
     onRefresh: () -> Unit = {},
     skinList: List<SkinInfo> = emptyList(),
     selectedIndex: Int = 0,
+    skins: List<SkinEntity> = emptyList(),
     onSelectSkin: (SkinInfo, Int) -> Unit = { _, _ -> }
 ) {
     val context = LocalContext.current
@@ -105,6 +107,17 @@ fun HomeContent(
                                     refreshing = true
                                 }
                             )
+                        }
+                    }
+                    LazyRow {
+                        itemsIndexed(skins) { index, skin ->
+                            Text(
+                                text = skin.name
+                            )
+                            Text(
+                                text = skin.packageName
+                            )
+
                         }
                     }
                 } else {

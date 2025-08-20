@@ -19,6 +19,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.nqmgaming.aneko.core.data.entity.SkinEntity
+import org.nqmgaming.aneko.core.data.repository.SkinRepository
 import org.nqmgaming.aneko.core.service.AnimationService
 import org.nqmgaming.aneko.data.SkinInfo
 import org.nqmgaming.aneko.util.loadSkinList
@@ -32,13 +34,26 @@ import java.util.zip.ZipInputStream
 import javax.inject.Inject
 
 @HiltViewModel
-class AnekoViewModel @Inject constructor(application: Application) : AndroidViewModel(application) {
+class AnekoViewModel @Inject constructor(
+    application: Application,
+    private val repo: SkinRepository,
+) : AndroidViewModel(application) {
     companion object {
         const val PREF_KEY_THEME = "theme"
     }
 
     private val _uiState = MutableStateFlow(ANekoState())
     val uiState = _uiState.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            repo.observeSkins()
+                .collect { skins ->
+                    _uiState.update { it.copy(skins = skins) }
+                }
+        }
+    }
+
 
     private val prefs: SharedPreferences =
         PreferenceManager.getDefaultSharedPreferences(application)
@@ -152,6 +167,8 @@ class AnekoViewModel @Inject constructor(application: Application) : AndroidView
         val tempDir = File(context.cacheDir, "skin_temp").apply { mkdirs() }
         var pkg: String? = null
         var skinXmlFile: File? = null
+        var previewFileName: String? = null
+        var authorName: String? = null
 
         // 1. Extract all files to tempDir
         resolver.openInputStream(zipUri)?.use { raw ->
@@ -179,6 +196,9 @@ class AnekoViewModel @Inject constructor(application: Application) : AndroidView
                                     ) {
                                         pkg = parser.getAttributeValue(null, "package")
                                             ?: parser.getAttributeValue("", "package")
+                                        authorName = parser.getAttributeValue(null, "author")
+                                        previewFileName =
+                                            parser.getAttributeValue(null, "preview") + ".png"
                                         break
                                     }
                                     event = parser.next()
@@ -223,6 +243,20 @@ class AnekoViewModel @Inject constructor(application: Application) : AndroidView
             }
         }
         tempDir.deleteRecursively()
+
+
+        val skin = SkinEntity(
+            packageName = pkg,
+            name = skinXmlFile.nameWithoutExtension,
+            author = authorName ?: "Unknown",
+            previewPath = previewFileName ?: "default_preview.png",
+            isActive = false,
+            isFavorite = false,
+        )
+        // 4. Save skin info to database
+        viewModelScope.launch {
+            repo.upsertSkin(skin)
+        }
         return pkg
     }
 
@@ -279,5 +313,12 @@ class AnekoViewModel @Inject constructor(application: Application) : AndroidView
             if (extraImages.isNotEmpty()) add("Extra images: $extraImages")
             if (isEmpty()) add("All images match drawables.")
         }
+    }
+
+    //TODO: Save skin information to database or shared preferences
+    // info: package(id), skin name, preview image, author
+
+    fun setActive(pkg: String) = viewModelScope.launch {
+        repo.switchActive(pkg)
     }
 }

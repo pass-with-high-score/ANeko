@@ -1,7 +1,10 @@
 package org.nqmgaming.aneko.core.di
 
+import android.content.Context
+import androidx.room.Room
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
@@ -18,8 +21,10 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.serialization.json.Json
 import org.nqmgaming.aneko.BuildConfig
+import org.nqmgaming.aneko.core.data.AnekoDatabase
 import org.nqmgaming.aneko.core.data.ApiService
 import org.nqmgaming.aneko.core.data.ApiServiceImpl
+import org.nqmgaming.aneko.core.data.dao.SkinDao
 import timber.log.Timber
 import javax.inject.Singleton
 
@@ -48,7 +53,7 @@ object ApiModule {
                 header(HttpHeaders.Accept, ContentType.Application.Json)
             }
             install(ContentNegotiation) {
-                json(Json{
+                json(Json {
                     ignoreUnknownKeys = true
                     isLenient = true
                     prettyPrint = true
@@ -56,6 +61,20 @@ object ApiModule {
             }
         }
     }
+
+    private const val DB_NAME = "aneko.db"
+
+    @Provides
+    @Singleton
+    fun provideDatabase(
+        @ApplicationContext context: Context
+    ): AnekoDatabase =
+        Room.databaseBuilder(context, AnekoDatabase::class.java, DB_NAME)
+            .fallbackToDestructiveMigration(false)
+            .build()
+
+    @Provides
+    fun provideSkinDao(db: AnekoDatabase): SkinDao = db.skinDao()
 
     @Singleton
     @Provides
