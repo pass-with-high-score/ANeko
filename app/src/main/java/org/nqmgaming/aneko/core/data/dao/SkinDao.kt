@@ -10,7 +10,7 @@ import org.nqmgaming.aneko.core.data.entity.SkinEntity
 
 @Dao
 interface SkinDao {
-    @Query("SELECT * FROM skin ORDER BY isActive DESC, isFavorite DESC, name")
+    @Query("SELECT * FROM skin ORDER BY name")
     fun observeSkins(): Flow<List<SkinEntity>>
 
     @Query("SELECT * FROM skin WHERE packageName = :pkg LIMIT 1")

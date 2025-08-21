@@ -8,7 +8,6 @@ import android.util.Xml
 import android.widget.Toast
 import androidx.core.content.edit
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.application
 import androidx.lifecycle.viewModelScope
 import androidx.preference.PreferenceManager
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,8 +21,6 @@ import kotlinx.coroutines.withContext
 import org.nqmgaming.aneko.core.data.entity.SkinEntity
 import org.nqmgaming.aneko.core.data.repository.SkinRepository
 import org.nqmgaming.aneko.core.service.AnimationService
-import org.nqmgaming.aneko.data.SkinInfo
-import org.nqmgaming.aneko.util.loadSkinList
 import org.xmlpull.v1.XmlPullParser
 import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
@@ -44,15 +41,6 @@ class AnekoViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(ANekoState())
     val uiState = _uiState.asStateFlow()
-
-    init {
-        viewModelScope.launch {
-            repo.observeSkins()
-                .collect { skins ->
-                    _uiState.update { it.copy(skins = skins) }
-                }
-        }
-    }
 
 
     private val prefs: SharedPreferences =
@@ -75,7 +63,12 @@ class AnekoViewModel @Inject constructor(
 
     init {
         prefs.registerOnSharedPreferenceChangeListener(preferenceChangeListener)
-        loadSkin()
+        viewModelScope.launch {
+            repo.observeSkins()
+                .collect { skins ->
+                    _uiState.update { it.copy(skins = skins) }
+                }
+        }
     }
 
     override fun onCleared() {
@@ -96,17 +89,23 @@ class AnekoViewModel @Inject constructor(
         prefs.edit { putBoolean(AnimationService.PREF_KEY_ENABLE, enabled) }
     }
 
-    fun updateSkin(skinInfo: SkinInfo, index: Int) {
-        _uiState.update {
-            it.copy(
-                selectedIndex = index
-            )
+    fun onSelectSkin(skinInfo: SkinEntity) {
+        viewModelScope.launch {
+            repo.switchActive(skinInfo.packageName)
         }
-        prefs.edit {
-            putString(
-                AnimationService.PREF_KEY_SKIN_COMPONENT,
-                skinInfo.component.flattenToString()
-            )
+    }
+
+    fun onDeselectSkin(skin: SkinEntity, context: Context) {
+        viewModelScope.launch {
+            // remove skin in storage first
+            val skinsRoot = File(context.filesDir, "skins").apply { mkdirs() }
+            val destDir = File(skinsRoot, skin.packageName)
+
+            // remove files in storage
+            if (destDir.exists()) {
+                destDir.deleteRecursively()
+            }
+            repo.removeSkin(skin)
         }
     }
 
@@ -134,27 +133,6 @@ class AnekoViewModel @Inject constructor(
                 AnimationService.PREF_KEY_NOTIFICATION_ENABLE,
                 granted
             )
-        }
-    }
-
-    fun loadSkin() {
-        viewModelScope.launch {
-            val skinList = loadSkinList(application)
-
-            val initialSkinComponentString = prefs.getString(
-                AnimationService.PREF_KEY_SKIN_COMPONENT, ""
-            )
-
-            val selectedIndex =
-                skinList.indexOfFirst { it.component.flattenToString() == initialSkinComponentString }
-                    .takeIf { it != -1 } ?: 0
-
-            _uiState.update {
-                it.copy(
-                    skinList = skinList,
-                    selectedIndex = selectedIndex
-                )
-            }
         }
     }
 
@@ -315,12 +293,5 @@ class AnekoViewModel @Inject constructor(
             if (extraImages.isNotEmpty()) add("Extra images: $extraImages")
             if (isEmpty()) add("All images match drawables.")
         }
-    }
-
-    //TODO: Save skin information to database or shared preferences
-    // info: package(id), skin name, preview image, author
-
-    fun setActive(pkg: String) = viewModelScope.launch {
-        repo.switchActive(pkg)
     }
 }

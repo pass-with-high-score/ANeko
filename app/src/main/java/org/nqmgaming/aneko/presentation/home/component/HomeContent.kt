@@ -17,14 +17,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
-import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -33,7 +26,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.nqmgaming.aneko.R
 import org.nqmgaming.aneko.core.data.entity.SkinEntity
-import org.nqmgaming.aneko.data.SkinInfo
 import org.nqmgaming.aneko.presentation.setting.SettingsScreen
 import org.nqmgaming.aneko.presentation.ui.theme.ANekoTheme
 
@@ -43,33 +35,13 @@ fun HomeContent(
     modifier: Modifier = Modifier,
     isEnabled: Boolean = false,
     onChangeEnable: (Boolean) -> Unit = {},
-    onRefresh: () -> Unit = {},
-    skinList: List<SkinInfo> = emptyList(),
-    selectedIndex: Int = 0,
     skins: List<SkinEntity> = emptyList(),
-    onSelectSkin: (SkinInfo, Int) -> Unit = { _, _ -> }
+    onSelectSkin: (SkinEntity) -> Unit = { _ -> },
+    onRequestDeleteSkin: (SkinEntity) -> Unit = { _ -> }
 ) {
     val context = LocalContext.current
-    var refreshing by remember { mutableStateOf(false) }
-    val state = rememberPullToRefreshState()
 
-    PullToRefreshBox(
-        isRefreshing = refreshing,
-        onRefresh = {
-            refreshing = true
-            onRefresh()
-        },
-        state = state,
-        indicator = {
-            Indicator(
-                modifier = Modifier.align(Alignment.TopCenter),
-                isRefreshing = refreshing,
-                containerColor = MaterialTheme.colorScheme.onPrimary,
-                color = MaterialTheme.colorScheme.primary,
-                state = state
-            )
-        },
-    ) {
+    Box {
         Column(
             modifier = modifier
                 .fillMaxSize()
@@ -77,7 +49,7 @@ fun HomeContent(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Crossfade(
-                targetState = skinList.isNotEmpty()
+                targetState = skins.isNotEmpty()
             ) { isReady ->
                 if (isReady) {
                     LazyRow(
@@ -91,19 +63,13 @@ fun HomeContent(
                         itemsIndexed(skins) { index, skin ->
                             SkinCard(
                                 skin = skin,
-                                isSelected = index == selectedIndex,
+                                isSelected = skin.isActive,
                                 onSkinSelected = {
-//                                    onSelectSkin(skin, index)
-                                    refreshing = true
+                                    onSelectSkin(skin)
                                 },
                                 onRequestDeleteSkin = {
-//                                    val intent = Intent(
-//                                        Intent.ACTION_DELETE,
-//                                        "package:${skin.component.packageName}".toUri()
-//                                    )
-//                                    context.startActivity(intent)
-//                                    refreshing = true
-                                }
+                                    onRequestDeleteSkin(skin)
+                                },
                             )
                         }
                     }

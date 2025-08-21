@@ -176,15 +176,13 @@ fun HomeScreen(
                         )
                     }
                 },
-                onSelectSkin = { skin, index ->
-                    viewModel.updateSkin(skin, index)
+                onSelectSkin = { skin ->
+                    viewModel.onSelectSkin(skin)
                 },
                 skins = uiState.value.skins,
-                selectedIndex = uiState.value.selectedIndex,
-                skinList = uiState.value.skinList,
-                onRefresh = {
-                    viewModel.loadSkin()
-                },
+                onRequestDeleteSkin = {
+                    viewModel.onDeselectSkin(it, context)
+                }
             )
         }
 
