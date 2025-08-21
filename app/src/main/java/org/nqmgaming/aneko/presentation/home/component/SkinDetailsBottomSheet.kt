@@ -1,7 +1,5 @@
 package org.nqmgaming.aneko.presentation.home.component
 
-import android.content.Intent
-import android.provider.Settings
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -19,47 +17,51 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
-import org.nqmgaming.aneko.data.SkinInfo
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.core.content.FileProvider
-import androidx.core.net.toUri
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import org.nqmgaming.aneko.R
-import java.io.File
+import org.nqmgaming.aneko.core.data.entity.SkinEntity
+import org.nqmgaming.aneko.core.data.entity.previewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SkinDetailsBottomSheet(
-    skin: SkinInfo,
+    skin: SkinEntity,
     isBottomSheetVisible: Boolean,
     bottomSheetState: SheetState,
     onDismissRequest: () -> Unit,
     onRequestDeleteSkin: () -> Unit
 ) {
     val context = LocalContext.current
+    val model = remember(skin.packageName, skin.previewPath) {
+        ImageRequest.Builder(context)
+            .data(skin.previewModel(context))
+            .crossfade(true)
+            .build()
+    }
     if (isBottomSheetVisible) {
         ModalBottomSheet(
             sheetState = bottomSheetState,
@@ -89,95 +91,13 @@ fun SkinDetailsBottomSheet(
                         .navigationBarsPadding(),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    // Skin Icon and Details
-                    Row(
-                        horizontalArrangement = Arrangement.End,
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        IconButton(
-                            onClick = {
-                                val intent =
-                                    Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                                        data = "package:${skin.component.packageName}".toUri()
-                                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                    }
-                                context.startActivity(intent)
-                            }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Info,
-                                contentDescription = null,
-                                modifier = Modifier.size(32.dp),
-                                tint = MaterialTheme.colorScheme.onSurface
-                            )
-                        }
-
-                        IconButton(
-                            onClick = {
-                                try {
-                                    // Get APK file path from PackageManager
-                                    val pm = context.packageManager
-                                    val appInfo =
-                                        pm.getApplicationInfo(skin.component.packageName, 0)
-                                    val apkFile = File(appInfo.sourceDir)
-
-                                    // Copy APK to a shareable location
-                                    val shareDir =
-                                        File(context.getExternalFilesDir("apks"), "shared_apks")
-                                    shareDir.mkdirs()
-                                    val sharedApkFile = File(shareDir, "${skin.label}.apk")
-                                    apkFile.copyTo(sharedApkFile, overwrite = true)
-
-                                    // Create shareable Uri using FileProvider
-                                    val uri = FileProvider.getUriForFile(
-                                        context,
-                                        "${context.packageName}.fileprovider",
-                                        sharedApkFile
-                                    )
-
-                                    // Create share intent
-                                    val shareIntent = Intent(Intent.ACTION_SEND).apply {
-                                        type = "application/vnd.android.package-archive"
-                                        putExtra(Intent.EXTRA_STREAM, uri)
-                                        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                    }
-
-                                    // Start share activity
-                                    context.startActivity(
-                                        Intent.createChooser(
-                                            shareIntent,
-                                            context.getString(R.string.share_apk_label, skin.label)
-                                        )
-                                    )
-                                } catch (_: Exception) {
-                                    Toast.makeText(
-                                        context,
-                                        context.getString(
-                                            R.string.failed_to_share_apk_label,
-                                            skin.label
-                                        ),
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }
-                            }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Share,
-                                contentDescription = null,
-                                modifier = Modifier.size(32.dp),
-                                tint = MaterialTheme.colorScheme.onSurface
-                            )
-                        }
-                    }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         AsyncImage(
-                            model = skin.icon,
-                            contentDescription = skin.label,
+                            model = model,
+                            contentDescription = skin.name,
                             modifier = Modifier
                                 .size(80.dp)
                                 .clip(CircleShape)
@@ -190,7 +110,7 @@ fun SkinDetailsBottomSheet(
                             verticalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
                             Text(
-                                text = skin.label,
+                                text = skin.name,
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.SemiBold,
                                 color = MaterialTheme.colorScheme.onSurface
@@ -198,13 +118,13 @@ fun SkinDetailsBottomSheet(
                             Text(
                                 text = stringResource(
                                     R.string.package_skin_label,
-                                    skin.component.packageName
+                                    skin.packageName
                                 ),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                             Text(
-                                text = stringResource(R.string.version_skin_label, skin.versionName),
+                                text = stringResource(R.string.version_skin_label, skin.author),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -218,35 +138,83 @@ fun SkinDetailsBottomSheet(
                     )
 
                     // Delete Button
-                    Button(
-                        onClick = {
-                            onDismissRequest()
-                            onRequestDeleteSkin()
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(48.dp),
-                        shape = RoundedCornerShape(12.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.error,
-                            contentColor = MaterialTheme.colorScheme.onError
-                        )
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth()
                     ) {
-                        Row(
-                            horizontalArrangement = Arrangement.Center,
-                            verticalAlignment = Alignment.CenterVertically
+                        Button(
+                            onClick = {
+                                onDismissRequest()
+                                onRequestDeleteSkin()
+                            },
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(48.dp),
+                            shape = RoundedCornerShape(12.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.error,
+                                contentColor = MaterialTheme.colorScheme.onError
+                            )
                         ) {
-                            Icon(
-                                imageVector = Icons.Default.Delete,
-                                contentDescription = null,
-                                modifier = Modifier.size(20.dp)
+                            Row(
+                                horizontalArrangement = Arrangement.Center,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Delete,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(
+                                    text = stringResource(R.string.delete_skin_label),
+                                    style = MaterialTheme.typography.labelLarge,
+                                    fontWeight = FontWeight.Medium
+                                )
+                            }
+                        }
+                        Button(
+                            onClick = {
+                                try {
+                                    // Get skin folder, zip and share it
+                                } catch (_: Exception) {
+                                    Toast.makeText(
+                                        context,
+                                        context.getString(
+                                            R.string.failed_to_share_apk_label,
+                                            skin.name
+                                        ),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            },
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(48.dp),
+                            shape = RoundedCornerShape(12.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.primary,
+                                contentColor = MaterialTheme.colorScheme.onPrimary
                             )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(
-                                text = stringResource(R.string.delete_skin_label),
-                                style = MaterialTheme.typography.labelLarge,
-                                fontWeight = FontWeight.Medium
-                            )
+                        ) {
+                            Row(
+                                horizontalArrangement = Arrangement.Center,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Share,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(32.dp),
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(
+                                    text = stringResource(R.string.share_skin_label),
+                                    style = MaterialTheme.typography.labelLarge,
+                                    fontWeight = FontWeight.Medium
+                                )
+                            }
+
                         }
                     }
                 }

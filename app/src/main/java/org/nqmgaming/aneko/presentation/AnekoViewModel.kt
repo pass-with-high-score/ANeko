@@ -169,6 +169,7 @@ class AnekoViewModel @Inject constructor(
         var skinXmlFile: File? = null
         var previewFileName: String? = null
         var authorName: String? = null
+        var skinName: String? = null
 
         // 1. Extract all files to tempDir
         resolver.openInputStream(zipUri)?.use { raw ->
@@ -199,6 +200,7 @@ class AnekoViewModel @Inject constructor(
                                         authorName = parser.getAttributeValue(null, "author")
                                         previewFileName =
                                             parser.getAttributeValue(null, "preview") + ".png"
+                                        skinName = parser.getAttributeValue(null, "name")
                                         break
                                     }
                                     event = parser.next()
@@ -247,7 +249,7 @@ class AnekoViewModel @Inject constructor(
 
         val skin = SkinEntity(
             packageName = pkg,
-            name = skinXmlFile.nameWithoutExtension,
+            name = skinName ?: "Unknown Skin",
             author = authorName ?: "Unknown",
             previewPath = previewFileName ?: "default_preview.png",
             isActive = false,

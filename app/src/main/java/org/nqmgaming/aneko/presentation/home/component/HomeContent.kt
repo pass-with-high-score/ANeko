@@ -1,6 +1,5 @@
 package org.nqmgaming.aneko.presentation.home.component
 
-import android.content.Intent
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,7 +31,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.net.toUri
 import org.nqmgaming.aneko.R
 import org.nqmgaming.aneko.core.data.entity.SkinEntity
 import org.nqmgaming.aneko.data.SkinInfo
@@ -90,36 +88,26 @@ fun HomeContent(
                         horizontalArrangement = Arrangement.spacedBy(16.dp),
                         contentPadding = PaddingValues(horizontal = 24.dp)
                     ) {
-                        itemsIndexed(skinList) { index, skin ->
+                        itemsIndexed(skins) { index, skin ->
                             SkinCard(
                                 skin = skin,
                                 isSelected = index == selectedIndex,
                                 onSkinSelected = {
-                                    onSelectSkin(skin, index)
+//                                    onSelectSkin(skin, index)
                                     refreshing = true
                                 },
                                 onRequestDeleteSkin = {
-                                    val intent = Intent(
-                                        Intent.ACTION_DELETE,
-                                        "package:${skin.component.packageName}".toUri()
-                                    )
-                                    context.startActivity(intent)
-                                    refreshing = true
+//                                    val intent = Intent(
+//                                        Intent.ACTION_DELETE,
+//                                        "package:${skin.component.packageName}".toUri()
+//                                    )
+//                                    context.startActivity(intent)
+//                                    refreshing = true
                                 }
                             )
                         }
                     }
-                    LazyRow {
-                        itemsIndexed(skins) { index, skin ->
-                            Text(
-                                text = skin.name
-                            )
-                            Text(
-                                text = skin.packageName
-                            )
 
-                        }
-                    }
                 } else {
                     Box(
                         modifier = Modifier

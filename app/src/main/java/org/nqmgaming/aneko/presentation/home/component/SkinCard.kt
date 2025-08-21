@@ -1,6 +1,5 @@
 package org.nqmgaming.aneko.presentation.home.component
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -34,33 +33,37 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.core.graphics.drawable.toBitmap
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import org.nqmgaming.aneko.R
-import org.nqmgaming.aneko.data.SkinInfo
+import org.nqmgaming.aneko.core.data.entity.SkinEntity
+import org.nqmgaming.aneko.core.data.entity.previewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SkinCard(
-    skin: SkinInfo,
+    skin: SkinEntity,
     isSelected: Boolean,
     onSkinSelected: () -> Unit,
     onRequestDeleteSkin: () -> Unit,
 ) {
+    val context = LocalContext.current
     val borderColor = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent
     val bottomSheetState = rememberModalBottomSheetState()
     var isBottomSheetVisible by remember { mutableStateOf(false) }
-    val context = LocalContext.current
-    val defaultPackageName = context.packageName
-    val isDefaultSkin = skin.component.packageName == defaultPackageName
-    val iconBitmap = remember(skin.icon) {
-        skin.icon.toBitmap().asImageBitmap()
+    context.packageName
+    val isDefaultSkin = skin.isBuiltin
+    val model = remember(skin.packageName, skin.previewPath) {
+        ImageRequest.Builder(context)
+            .data(skin.previewModel(context))
+            .crossfade(true)
+            .build()
     }
     Card(
         modifier = Modifier
@@ -103,32 +106,35 @@ fun SkinCard(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(bottom = 16.dp, top = 4.dp)
+                .padding(bottom = 24.dp)
                 .padding(horizontal = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
             Box(
                 modifier = Modifier
-                    .size(96.dp)
+                    .size(100.dp)
                     .clip(CircleShape)
                     .background(
                         Color.White,
-                        shape = CircleShape
-                    )
+                    ),
+                contentAlignment = Alignment.Center,
             ) {
-                Image(
-                    bitmap = iconBitmap,
-                    contentDescription = null,
+                AsyncImage(
+                    model = model,
+                    contentDescription = "${skin.name} preview",
                     modifier = Modifier
-                        .size(96.dp)
-                        .clip(CircleShape),
-                    contentScale = ContentScale.Crop,
+                        .padding(4.dp)
+                        .size(80.dp)
+                        .background(
+                            Color.White,
+                        ),
+                    contentScale = ContentScale.Fit
                 )
             }
             Spacer(modifier = Modifier.height(12.dp))
             Text(
-                text = "${skin.label} ${if (isDefaultSkin) stringResource(R.string.default_label) else ""}",
+                text = "${skin.name} ${if (isDefaultSkin) stringResource(R.string.default_label) else ""}",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface,
                 fontWeight = if (isDefaultSkin) FontWeight.Bold else null,
