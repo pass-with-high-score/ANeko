@@ -1,347 +1,250 @@
-package org.nqmgaming.aneko.core.motion;
+package org.nqmgaming.aneko.core.motion
 
-import java.io.IOException;
-import java.util.HashMap;
+import android.util.AttributeSet
+import android.util.Xml
+import org.xmlpull.v1.XmlPullParser
+import org.xmlpull.v1.XmlPullParserException
+import java.io.File
+import java.io.FileInputStream
+import java.io.IOException
 
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
+open class MotionParams {
 
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
-import android.util.AttributeSet;
-import android.util.Xml;
+    enum class MoveDirection { UP, DOWN, LEFT, RIGHT, UP_LEFT, UP_RIGHT, DOWN_LEFT, DOWN_RIGHT }
+    enum class WallDirection { UP, DOWN, LEFT, RIGHT }
 
-import androidx.core.content.res.ResourcesCompat;
+    open var acceleration = 0f
+    open var maxVelocity = 0f
+    open var decelerationDistance = 0f
+    open var proximityDistance = 0f
 
-public class MotionParams {
-    public enum MoveDirection {
-        UP, DOWN, LEFT, RIGHT, UP_LEFT, UP_RIGHT, DOWN_LEFT, DOWN_RIGHT
+    open var initialState: String = "stop"
+    open var awakeState: String = "awake"
+    open var moveStatePrefix: String = "move"
+    open var wallStatePrefix: String = "wall"
+
+    // Chỉ đọc FILE: thư mục chứa ảnh + skin.xml
+    internal var skinDir: File? = null
+        private set
+
+    data class Motion(
+        var name: String = "",
+        var nextState: String? = null,
+        var checkMove: Boolean = false,
+        var checkWall: Boolean = false,
+        var items: MotionDrawable = MotionDrawable()
+    )
+
+    open val motions = HashMap<String, Motion>()
+
+    fun hasState(state: String) = motions.containsKey(state)
+    fun getNextState(state: String) = motions[state]?.nextState
+    fun needCheckMove(state: String) = motions[state]?.checkMove == true
+    fun needCheckWall(state: String) = motions[state]?.checkWall == true
+    fun getDrawable(state: String) = motions[state]?.items
+
+    fun getMoveState(dir: MoveDirection) = when (dir) {
+        MoveDirection.UP -> "${moveStatePrefix}Up"
+        MoveDirection.DOWN -> "${moveStatePrefix}Down"
+        MoveDirection.LEFT -> "${moveStatePrefix}Left"
+        MoveDirection.RIGHT -> "${moveStatePrefix}Right"
+        MoveDirection.UP_LEFT -> "${moveStatePrefix}UpLeft"
+        MoveDirection.UP_RIGHT -> "${moveStatePrefix}UpRight"
+        MoveDirection.DOWN_LEFT -> "${moveStatePrefix}DownLeft"
+        MoveDirection.DOWN_RIGHT -> "${moveStatePrefix}DownRight"
     }
 
-    public enum WallDirection {
-        UP, DOWN, LEFT, RIGHT
+    fun getWallState(dir: WallDirection) = when (dir) {
+        WallDirection.UP -> "${wallStatePrefix}Up"
+        WallDirection.DOWN -> "${wallStatePrefix}Down"
+        WallDirection.LEFT -> "${wallStatePrefix}Left"
+        WallDirection.RIGHT -> "${wallStatePrefix}Right"
     }
 
-    static final String TAG_MOTION_PARAMS = "motion-params";
-    static final String TAG_MOTION = "motion";
-    static final String TAG_ITEM = "item";
-    static final String TAG_REPEAT_ITEM = "repeat-item";
+    // ---------- Parsing từ FILE (không Resources) ----------
+    companion object {
+        private const val TAG_MOTION_PARAMS = "motion-params"
+        private const val TAG_MOTION = "motion"
+        private const val TAG_ITEM = "item"
+        private const val TAG_REPEAT_ITEM = "repeat-item"
 
-    static final String ATTR_ACCELERATION = "acceleration";
-    static final String ATTR_MAX_VELOCITY = "maxVelocity";
-    static final String ATTR_DECELERATION = "decelerationDistance";
-    static final String ATTR_PROXIMITY = "proximityDistance";
+        private const val ATTR_ACCELERATION = "acceleration"
+        private const val ATTR_MAX_VELOCITY = "maxVelocity"
+        private const val ATTR_DECELERATION = "decelerationDistance"
+        private const val ATTR_DEACCELERATION =
+            "deaccelerationDistance" // hỗ trợ alias trong xml cũ
+        private const val ATTR_PROXIMITY = "proximityDistance"
 
-    static final String ATTR_INITIAL_STATE = "initialState";
-    static final String ATTR_AWAKE_STATE = "awakeState";
-    static final String ATTR_MOVE_STATE_PREFIX = "moveStatePrefix";
-    static final String ATTR_WALL_STATE_PREFIX = "wallStatePrefix";
+        private const val ATTR_INITIAL_STATE = "initialState"
+        private const val ATTR_AWAKE_STATE = "awakeState"
+        private const val ATTR_MOVE_STATE_PREFIX = "moveStatePrefix"
+        private const val ATTR_WALL_STATE_PREFIX = "wallStatePrefix"
 
-    static final String ATTR_STATE = "state";
-    static final String ATTR_DURATION = "duration";
-    static final String ATTR_NEXT_STATE = "nextState";
-    static final String ATTR_CHECK_WALL = "checkWall";
-    static final String ATTR_CHECK_MOVE = "checkMove";
+        private const val ATTR_STATE = "state"
+        private const val ATTR_DURATION = "duration"
+        private const val ATTR_NEXT_STATE = "nextState"
+        private const val ATTR_CHECK_WALL = "checkWall"
+        private const val ATTR_CHECK_MOVE = "checkMove"
 
-    static final String ATTR_ITEM_DRAWABLE = "drawable";
-    static final String ATTR_ITEM_DURATION = "duration";
-    static final String ATTR_ITEM_REPEAT_COUNT = "repeatCount";
+        private const val ATTR_ITEM_DRAWABLE = "drawable"
+        private const val ATTR_ITEM_DURATION = "duration"
+        private const val ATTR_ITEM_REPEAT_COUNT = "repeatCount"
 
-    static final int DEF_ACCELERATION = 160; // dp per sec^2
-    static final int DEF_MAX_VELOCITY = 100; // dp per sec
-    static final int DEF_DECELERATE_DISTANCE = 100; // dp
-    static final int DEF_PROXIMITY_DISTANCE = 10; // dp
+        private const val DEF_ACCELERATION = 160
+        private const val DEF_MAX_VELOCITY = 100
+        private const val DEF_DECELERATE_DISTANCE = 100
+        private const val DEF_PROXIMITY_DISTANCE = 10
 
-    static final String DEF_INITIAL_STATE = "stop";
-    static final String DEF_AWAKE_STATE = "awake";
-    static final String DEF_MOVE_STATE_PREFIX = "move";
-    static final String DEF_WALL_STATE_PREFIX = "wall";
-
-    public float acceleration;
-    public float max_velocity;
-    public float deceleration_distance;
-    public float proximity_distance;
-
-    public String initial_state;
-    public String awake_state;
-    public String move_state_prefix;
-    public String wall_state_prefix;
-
-    public HashMap<String, Motion> motions = new HashMap<>();
-
-    public static class Motion {
-        public String name;
-        public String next_state = null;
-
-        public boolean check_move = false;
-        public boolean check_wall = false;
-
-        public MotionDrawable items = null;
-    }
-
-    public MotionParams() {
-    }
-
-    public MotionParams(Resources res, int resId) {
-        XmlPullParser xml = res.getXml(resId);
-        AttributeSet attrs = Xml.asAttributeSet(xml);
-        try {
-            parseXml(res, xml, attrs);
-        } catch (Exception e) {
-            throw new IllegalArgumentException(
-                    "Load failed: " + res.getResourceName(resId), e);
+        @Throws(Exception::class)
+        fun parseFromFile(
+            skinXml: File,
+            skinDir: File,
+            displayMetrics: android.util.DisplayMetrics
+        ): MotionParams {
+            if (!skinXml.exists()) {
+                throw IllegalArgumentException("skin.xml not found: $skinXml")
+            }
+            FileInputStream(skinXml).use { fis ->
+                val parser = Xml.newPullParser()
+                parser.setInput(fis, null)
+                val attrs = Xml.asAttributeSet(parser)
+                val params = MotionParams()
+                params.skinDir = skinDir
+                params.parseXml(displayMetrics, parser, attrs)
+                return params
+            }
         }
     }
 
-    public float getAcceleration() {
-        return acceleration;
-    }
-
-    public float getMaxVelocity() {
-        return max_velocity;
-    }
-
-    public float getDecelerationDistance() {
-        return deceleration_distance;
-    }
-
-    public float getProximityDistance() {
-        return proximity_distance;
-    }
-
-    public boolean hasState(String state) {
-        return motions.containsKey(state);
-    }
-
-    public String getInitialState() {
-        return initial_state;
-    }
-
-    public String getAwakeState() {
-        return awake_state;
-    }
-
-    public String getMoveState(MoveDirection dir) {
-        switch (dir) {
-            case UP:
-                return move_state_prefix + "Up";
-            case DOWN:
-                return move_state_prefix + "Down";
-            case LEFT:
-                return move_state_prefix + "Left";
-            case RIGHT:
-                return move_state_prefix + "Right";
-            case UP_LEFT:
-                return move_state_prefix + "UpLeft";
-            case UP_RIGHT:
-                return move_state_prefix + "UpRight";
-            case DOWN_LEFT:
-                return move_state_prefix + "DownLeft";
-            case DOWN_RIGHT:
-                return move_state_prefix + "DownRight";
-            default:
-                return move_state_prefix;
-        }
-    }
-
-    public String getWallState(WallDirection dir) {
-        switch (dir) {
-            case UP:
-                return wall_state_prefix + "Up";
-            case DOWN:
-                return wall_state_prefix + "Down";
-            case LEFT:
-                return wall_state_prefix + "Left";
-            case RIGHT:
-                return wall_state_prefix + "Right";
-            default:
-                return wall_state_prefix;
-        }
-    }
-
-    public String getNextState(String state) {
-        Motion motion = motions.get(state);
-        return (motion != null ? motion.next_state : null);
-    }
-
-    public boolean needCheckMove(String state) {
-        Motion motion = motions.get(state);
-        return (motion != null && motion.check_move);
-    }
-
-    public boolean needCheckWall(String state) {
-        Motion motion = motions.get(state);
-        return (motion != null && motion.check_wall);
-    }
-
-    public MotionDrawable getDrawable(String state) {
-        Motion motion = motions.get(state);
-        return (motion != null ? motion.items : null);
-    }
-
-    public void parseXml(Resources res, XmlPullParser xml, AttributeSet attrs)
-            throws XmlPullParserException, IOException {
-        int depth = xml.getDepth();
+    @Throws(XmlPullParserException::class, IOException::class)
+    private fun parseXml(dm: android.util.DisplayMetrics, xml: XmlPullParser, attrs: AttributeSet) {
+        val startDepth = xml.depth
         while (true) {
-            int type = xml.next();
+            val type = xml.next()
             if (type == XmlPullParser.END_DOCUMENT ||
-                    (type == XmlPullParser.END_TAG && depth >= xml.getDepth())) {
-                break;
-            }
-            if (type != XmlPullParser.START_TAG) {
-                continue;
-            }
+                (type == XmlPullParser.END_TAG && startDepth >= xml.depth)
+            ) break
+            if (type != XmlPullParser.START_TAG) continue
 
-            String name = xml.getName();
-            if (TAG_MOTION_PARAMS.equals(name)) {
-                parseMotionParams(res, xml, attrs);
-            } else {
-                throw new IllegalArgumentException("unknown tag: " + name);
+            when (xml.name) {
+                TAG_MOTION_PARAMS -> parseMotionParams(dm, xml, attrs)
+                else -> throw IllegalArgumentException("unknown tag: ${xml.name}")
             }
         }
     }
 
-    public void parseMotionParams(Resources res,
-                                  XmlPullParser xml, AttributeSet attrs)
-            throws XmlPullParserException, IOException {
-        float density = res.getDisplayMetrics().density;
-        acceleration = density * attrs.getAttributeIntValue(
-                null, ATTR_ACCELERATION, DEF_ACCELERATION);
-        deceleration_distance = density * attrs.getAttributeIntValue(
-                null, ATTR_DECELERATION, DEF_DECELERATE_DISTANCE);
-        max_velocity = density * attrs.getAttributeIntValue(
-                null, ATTR_MAX_VELOCITY, DEF_MAX_VELOCITY);
-        proximity_distance = density * attrs.getAttributeIntValue(
-                null, ATTR_PROXIMITY, DEF_PROXIMITY_DISTANCE);
+    @Throws(XmlPullParserException::class, IOException::class)
+    private fun parseMotionParams(
+        dm: android.util.DisplayMetrics,
+        xml: XmlPullParser,
+        attrs: AttributeSet
+    ) {
+        val density = dm.density
 
-        initial_state = attrs.getAttributeValue(null, ATTR_INITIAL_STATE);
-        initial_state = (initial_state != null ? initial_state :
-                DEF_INITIAL_STATE);
+        fun attrInt(name: String, def: Int) = attrs.getAttributeIntValue(null, name, def)
+        fun attrIntEither(primary: String, fallback: String, def: Int): Int {
+            val v = attrs.getAttributeIntValue(null, primary, Int.MIN_VALUE)
+            return if (v == Int.MIN_VALUE) attrs.getAttributeIntValue(null, fallback, def) else v
+        }
 
-        awake_state = attrs.getAttributeValue(null, ATTR_AWAKE_STATE);
-        awake_state = (awake_state != null ? awake_state : DEF_AWAKE_STATE);
+        fun attrStr(name: String, def: String) = attrs.getAttributeValue(null, name) ?: def
+        fun attrBool(name: String, def: Boolean) = attrs.getAttributeBooleanValue(null, name, def)
 
-        move_state_prefix =
-                attrs.getAttributeValue(null, ATTR_MOVE_STATE_PREFIX);
-        move_state_prefix = (move_state_prefix != null ? move_state_prefix :
-                DEF_MOVE_STATE_PREFIX);
+        acceleration = density * attrInt(ATTR_ACCELERATION, DEF_ACCELERATION)
+        decelerationDistance =
+            density * attrIntEither(ATTR_DECELERATION, ATTR_DEACCELERATION, DEF_DECELERATE_DISTANCE)
+        maxVelocity = density * attrInt(ATTR_MAX_VELOCITY, DEF_MAX_VELOCITY)
+        proximityDistance = density * attrInt(ATTR_PROXIMITY, DEF_PROXIMITY_DISTANCE)
 
-        wall_state_prefix =
-                attrs.getAttributeValue(null, ATTR_WALL_STATE_PREFIX);
-        wall_state_prefix = (wall_state_prefix != null ? wall_state_prefix :
-                DEF_WALL_STATE_PREFIX);
+        initialState = attrStr(ATTR_INITIAL_STATE, "stop")
+        awakeState = attrStr(ATTR_AWAKE_STATE, "awake")
+        moveStatePrefix = attrStr(ATTR_MOVE_STATE_PREFIX, "move")
+        wallStatePrefix = attrStr(ATTR_WALL_STATE_PREFIX, "wall")
 
-        int depth = xml.getDepth();
+        val startDepth = xml.depth
         while (true) {
-            int type = xml.next();
+            val type = xml.next()
             if (type == XmlPullParser.END_DOCUMENT ||
-                    (type == XmlPullParser.END_TAG && depth >= xml.getDepth())) {
-                break;
-            }
-            if (type != XmlPullParser.START_TAG) {
-                continue;
-            }
+                (type == XmlPullParser.END_TAG && startDepth >= xml.depth)
+            ) break
+            if (type != XmlPullParser.START_TAG) continue
 
-            String name = xml.getName();
-            if (TAG_MOTION.equals(name)) {
-                parseMotion(res, xml, attrs);
-            } else {
-                throw new IllegalArgumentException("unknown tag: " + name);
+            when (xml.name) {
+                TAG_MOTION -> parseMotion(xml, attrs, ::attrBool, ::attrStr)
+                else -> throw IllegalArgumentException("unknown tag: ${xml.name}")
             }
         }
     }
 
-    public void parseMotion(Resources res,
-                            XmlPullParser xml, AttributeSet attrs)
-            throws XmlPullParserException, IOException {
-        Motion motion = new Motion();
+    @Throws(XmlPullParserException::class, IOException::class)
+    private fun parseMotion(
+        xml: XmlPullParser,
+        attrs: AttributeSet,
+        boolAttr: (String, Boolean) -> Boolean,
+        strAttr: (String, String) -> String
+    ) {
+        val motion = Motion()
 
-        motion.name = attrs.getAttributeValue(null, ATTR_STATE);
-        if (motion.name == null) {
-            throw new IllegalArgumentException(
-                    "state is not specified: " + attrs.getPositionDescription());
-        }
+        motion.name = attrs.getAttributeValue(null, ATTR_STATE)
+            ?: throw IllegalArgumentException("state is not specified: ${attrs.positionDescription}")
 
-        int duration = attrs.getAttributeIntValue(null, ATTR_DURATION, -1);
-        motion.next_state = attrs.getAttributeValue(
-                null, ATTR_NEXT_STATE);
-        motion.check_move = attrs.getAttributeBooleanValue(
-                null, ATTR_CHECK_MOVE, false);
-        motion.check_wall = attrs.getAttributeBooleanValue(
-                null, ATTR_CHECK_WALL, false);
+        val duration = attrs.getAttributeIntValue(null, ATTR_DURATION, -1)
+        motion.nextState = attrs.getAttributeValue(null, ATTR_NEXT_STATE)
+        motion.checkMove = boolAttr(ATTR_CHECK_MOVE, false)
+        motion.checkWall = boolAttr(ATTR_CHECK_WALL, false)
 
-        motion.items = new MotionDrawable();
+        motion.items = MotionDrawable()
 
-        int depth = xml.getDepth();
+        val startDepth = xml.depth
         while (true) {
-            int type = xml.next();
+            val type = xml.next()
             if (type == XmlPullParser.END_DOCUMENT ||
-                    (type == XmlPullParser.END_TAG && depth >= xml.getDepth())) {
-                break;
-            }
-            if (type != XmlPullParser.START_TAG) {
-                continue;
-            }
+                (type == XmlPullParser.END_TAG && startDepth >= xml.depth)
+            ) break
+            if (type != XmlPullParser.START_TAG) continue
 
-            String name = xml.getName();
-            if (TAG_ITEM.equals(name)) {
-                parseItem(res, motion.items, xml, attrs);
-            } else if (TAG_REPEAT_ITEM.equals(name)) {
-                parseRepeatItem(res, motion.items, xml, attrs);
-            } else {
-                throw new IllegalArgumentException("unknown tag: " + name);
+            when (xml.name) {
+                TAG_ITEM -> parseItem(motion.items, attrs)
+                TAG_REPEAT_ITEM -> parseRepeatItem(motion.items, xml, attrs)
+                else -> throw IllegalArgumentException("unknown tag: ${xml.name}")
             }
         }
 
-        motion.items.setTotalDuration(duration);
-        motion.items.setRepeatCount(1);
-
-        motions.put(motion.name, motion);
+        motion.items.setTotalDuration(duration)
+        motion.items.setRepeatCount(1)
+        motions[motion.name] = motion
     }
 
-    public void parseItem(Resources res, MotionDrawable items,
-                          XmlPullParser xml, AttributeSet attrs) {
-        int drawable = attrs.getAttributeResourceValue(
-                null, ATTR_ITEM_DRAWABLE, 0);
-        int duration = attrs.getAttributeIntValue(
-                null, ATTR_ITEM_DURATION, -1);
-
-        Drawable d = ResourcesCompat.getDrawable(res, drawable, null);
-        items.addFrame(d, duration);
+    private fun parseItem(items: MotionDrawable, attrs: AttributeSet) {
+        val name = (attrs.getAttributeValue(null, ATTR_ITEM_DRAWABLE) ?: "").trim()
+        val duration = attrs.getAttributeIntValue(null, ATTR_ITEM_DURATION, -1)
+        val dir = skinDir ?: throw IllegalStateException("skinDir is null")
+        items.addFrameFromFile(dir, name, duration)
     }
 
-    public void parseRepeatItem(Resources res, MotionDrawable items,
-                                XmlPullParser xml, AttributeSet attrs)
-            throws XmlPullParserException, IOException {
-        int duration = attrs.getAttributeIntValue(
-                null, ATTR_ITEM_DURATION, -1);
-        int repeat = attrs.getAttributeIntValue(
-                null, ATTR_ITEM_REPEAT_COUNT, -1);
-        MotionDrawable dr = new MotionDrawable();
+    @Throws(XmlPullParserException::class, IOException::class)
+    private fun parseRepeatItem(items: MotionDrawable, xml: XmlPullParser, attrs: AttributeSet) {
+        val duration = attrs.getAttributeIntValue(null, ATTR_ITEM_DURATION, -1)
+        val repeat = attrs.getAttributeIntValue(null, ATTR_ITEM_REPEAT_COUNT, -1)
+        val dr = MotionDrawable()
 
-        int depth = xml.getDepth();
+        val startDepth = xml.depth
         while (true) {
-            int type = xml.next();
+            val type = xml.next()
             if (type == XmlPullParser.END_DOCUMENT ||
-                    (type == XmlPullParser.END_TAG && depth >= xml.getDepth())) {
-                break;
-            }
-            if (type != XmlPullParser.START_TAG) {
-                continue;
-            }
+                (type == XmlPullParser.END_TAG && startDepth >= xml.depth)
+            ) break
+            if (type != XmlPullParser.START_TAG) continue
 
-            String name = xml.getName();
-            if (TAG_ITEM.equals(name)) {
-                parseItem(res, dr, xml, attrs);
-            } else if (TAG_REPEAT_ITEM.equals(name)) {
-                parseRepeatItem(res, dr, xml, attrs);
-            } else {
-                throw new IllegalArgumentException("unknown tag: " + name);
+            when (xml.name) {
+                TAG_ITEM -> parseItem(dr, attrs)
+                TAG_REPEAT_ITEM -> parseRepeatItem(dr, xml, attrs)
+                else -> throw IllegalArgumentException("unknown tag: ${xml.name}")
             }
         }
 
-        dr.setTotalDuration(duration);
-        dr.setRepeatCount(repeat);
-        items.addFrame(dr, -1);
+        dr.setTotalDuration(duration)
+        dr.setRepeatCount(repeat)
+        items.addFrame(dr, -1)
     }
 }

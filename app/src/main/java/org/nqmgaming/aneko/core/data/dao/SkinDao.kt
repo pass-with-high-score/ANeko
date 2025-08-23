@@ -27,4 +27,8 @@ interface SkinDao {
 
     @Delete
     suspend fun deleteSkin(skin: SkinEntity)
+
+    @Query("SELECT * FROM skin WHERE isActive = 1 LIMIT 1")
+    fun getActiveSkin(): SkinEntity?
+
 }

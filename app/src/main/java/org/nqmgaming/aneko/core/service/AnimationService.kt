@@ -1,939 +1,745 @@
-package org.nqmgaming.aneko.core.service;
+package org.nqmgaming.aneko.core.service
 
-import static android.view.WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-import static android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
-import static android.view.WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;
-import static android.view.WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+import android.annotation.SuppressLint
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.app.Service
+import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
+import android.content.pm.PackageManager
+import android.content.pm.ServiceInfo
+import android.content.res.Configuration
+import android.graphics.PixelFormat
+import android.graphics.Point
+import android.graphics.PointF
+import android.os.Build
+import android.os.Handler
+import android.os.IBinder
+import android.os.Looper
+import android.os.Message
+import android.provider.Settings
+import android.view.Display
+import android.view.Gravity
+import android.view.MotionEvent
+import android.view.View
+import android.view.WindowManager
+import android.widget.ImageView
+import androidx.annotation.NonNull
+import androidx.core.net.toUri
+import org.nqmgaming.aneko.R
+import org.nqmgaming.aneko.core.motion.MotionConfigParser
+import org.nqmgaming.aneko.core.motion.MotionDrawable
+import org.nqmgaming.aneko.core.motion.MotionParams
+import timber.log.Timber
+import java.io.File
+import kotlin.math.PI
+import kotlin.math.atan2
+import kotlin.math.cos
+import kotlin.math.hypot
+import kotlin.math.min
+import kotlin.math.roundToInt
+import kotlin.math.sin
 
-import android.annotation.SuppressLint;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.Service;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.ServiceInfo;
-import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.graphics.PixelFormat;
-import android.graphics.Point;
-import android.graphics.PointF;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Message;
-import android.provider.Settings;
-import android.view.Display;
-import android.view.Gravity;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.WindowManager;
-import android.view.WindowManager.LayoutParams;
-import android.widget.ImageView;
-import android.widget.Toast;
+private enum class Behaviour {
+    closer, further, whimsical
+}
 
-import androidx.annotation.NonNull;
+class AnimationService : Service() {
 
-import org.nqmgaming.aneko.core.motion.MotionDrawable;
-import org.nqmgaming.aneko.core.motion.MotionParams;
-import org.nqmgaming.aneko.core.motion.MotionConfigParser;
-import org.nqmgaming.aneko.R;
-import org.tamanegi.aneko.ANekoActivity;
+    companion object {
+        const val ACTION_START = "org.nqmgaming.aneko.action.START"
+        const val ACTION_STOP = "org.nqmgaming.aneko.action.STOP"
+        const val ACTION_TOGGLE = "org.nqmgaming.aneko.action.TOGGLE"
+        const val ACTION_GET_SKIN = "org.tamanegi.aneko.action.GET_SKIN"
 
-import java.io.File;
-import java.util.Random;
+        const val META_KEY_SKIN = "org.tamanegi.aneko.skin"
+        const val PREF_KEY_ENABLE = "motion.enable"
+        const val PREF_KEY_VISIBLE = "motion.visible"
+        const val PREF_KEY_TRANSPARENCY = "motion.transparency"
+        const val PREF_KEY_SIZE = "motion.size"
+        const val PREF_KEY_SPEED = "motion.speed"
+        const val PREF_KEY_BEHAVIOUR = "motion.behaviour"
+        const val PREF_KEY_SKIN_COMPONENT = "motion.skin"
+        const val PREF_KEY_NOTIFICATION_ENABLE = "notification.enable"
 
-import timber.log.Timber;
+        private const val MSG_ANIMATE = 1
+        private const val ANIMATION_INTERVAL = 125L // msec
+        private const val BEHAVIOUR_CHANGE_DURATION = 4000L // msec
 
-public class AnimationService extends Service {
-    public static final String ACTION_START = "org.nqmgaming.aneko.action.START";
-    public static final String ACTION_STOP = "org.nqmgaming.aneko.action.STOP";
-    public static final String ACTION_TOGGLE = "org.nqmgaming.aneko.action.TOGGLE";
-    public static final String ACTION_GET_SKIN = "org.tamanegi.aneko.action.GET_SKIN";
-    public static final String META_KEY_SKIN = "org.tamanegi.aneko.skin";
-    public static final String PREF_KEY_ENABLE = "motion.enable";
-    public static final String PREF_KEY_VISIBLE = "motion.visible";
-    public static final String PREF_KEY_TRANSPARENCY = "motion.transparency";
-    public static final String PREF_KEY_SIZE = "motion.size";
-    public static final String PREF_KEY_SPEED = "motion.speed";
-    public static final String PREF_KEY_BEHAVIOUR = "motion.behaviour";
-    public static final String PREF_KEY_SKIN_COMPONENT = "motion.skin";
-    public static final String PREF_KEY_NOTIFICATION_ENABLE = "notification.enable";
-    private static final int MSG_ANIMATE = 1;
-    private static final long ANIMATION_INTERVAL = 125; // msec
-    private static final long BEHAVIOUR_CHANGE_DURATION = 4000; // msec
-    public static final String ANeko_SKINS = "/ANeko/skins";
-    private int image_width = 80;
-    private int image_height = 80;
-
-    private enum Behaviour {
-        closer, further, whimsical
+        // Thư mục skins trong internal storage
+        private const val SKINS_DIR_NAME = "skins"
     }
 
-    private static final Behaviour[] BEHAVIOURS = {
-            Behaviour.closer, Behaviour.further, Behaviour.whimsical};
-    private static final boolean ICS_OR_LATER = true;
-    private boolean is_started;
-    private SharedPreferences prefs;
-    private PreferenceChangeListener pref_listener;
-    private Handler handler;
-    private MotionState motion_state = null;
-    private Random random;
-    private View touch_view = null;
-    private ImageView image_view = null;
-    private LayoutParams image_params = null;
+    private enum class Behaviour { closer, further, whimsical }
 
+    private var imageWidth = 80
+    private var imageHeight = 80
 
-    @Override
-    public void onCreate() {
-        is_started = false;
-        handler = new Handler(this::onHandleMessage);
-        random = new Random();
-        prefs = getSharedPreferences(getPackageName() + "_preferences", MODE_PRIVATE);
+    private var isStarted = false
+    private lateinit var prefs: SharedPreferences
+    private var prefListener: PreferenceChangeListener? = null
+    private val handler = Handler(Looper.getMainLooper(), ::onHandleMessage)
+    private var motionState: MotionState? = null
+    private val random = java.util.Random()
+
+    private var touchView: View? = null
+    private var imageView: ImageView? = null
+    private var imageParams: WindowManager.LayoutParams? = null
+
+    override fun onCreate() {
+        super.onCreate()
+        isStarted = false
+        prefs = getSharedPreferences(packageName + "_preferences", MODE_PRIVATE)
     }
 
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
+    override fun onBind(intent: Intent?): IBinder? = null
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (!Settings.canDrawOverlays(this)) {
-            Intent overlayIntent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                    Uri.parse("package:" + getPackageName()));
-            overlayIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(overlayIntent);
-            return START_NOT_STICKY;
+            val overlayIntent = Intent(
+                Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                "package:$packageName".toUri()
+            ).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(overlayIntent)
+            return START_NOT_STICKY
         }
-        if (!is_started &&
-                (intent == null || ACTION_START.equals(intent.getAction()))) {
-            if (is_started) {
-                stopAnimation();
+
+        when {
+            !isStarted && (intent == null || ACTION_START == intent.action) -> {
+                if (isStarted) stopAnimation()
+                startAnimation()
+                setForegroundNotification(true)
+                isStarted = true
             }
-            startAnimation();
-            setForegroundNotification(true);
-            is_started = true;
-        } else if (ACTION_TOGGLE.equals(intent.getAction())) {
-            toggleAnimation();
-        } else if (is_started &&
-                ACTION_STOP.equals(intent.getAction())) {
-            stopAnimation();
-            stopSelfResult(startId);
-            setForegroundNotification(false);
-            is_started = false;
+
+            ACTION_TOGGLE == intent?.action -> toggleAnimation()
+            isStarted && ACTION_STOP == intent?.action -> {
+                stopAnimation()
+                stopSelfResult(startId)
+                setForegroundNotification(false)
+                isStarted = false
+            }
+        }
+        return START_REDELIVER_INTENT
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        val wm = getSystemService(WINDOW_SERVICE) as WindowManager
+        val display: Display = wm.defaultDisplay
+        val size = Point().also { display.getSize(it) }
+        motionState?.setDisplaySize(size.x, size.y)
+    }
+
+    private fun startAnimation() {
+        prefListener = PreferenceChangeListener().also {
+            prefs.registerOnSharedPreferenceChangeListener(it)
         }
 
-        return START_REDELIVER_INTENT;
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration conf) {
-        if (!is_started || motion_state == null) return;
-        WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
-        assert wm != null;
-        Display display = wm.getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int width = size.x;
-        int height = size.y;
-        motion_state.setDisplaySize(width, height);
-    }
-
-    private void startAnimation() {
-        this.pref_listener = new PreferenceChangeListener();
-        this.prefs.registerOnSharedPreferenceChangeListener(this.pref_listener);
         if (checkPrefEnable() && loadMotionState()) {
-            refreshMotionSpeed();
-            WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
-            this.touch_view = new View(this);
-            this.touch_view.setOnTouchListener(new TouchListener());
-            LayoutParams touch_params = new LayoutParams(1, 1, TYPE_APPLICATION_OVERLAY,
-                    FLAG_NOT_FOCUSABLE | FLAG_WATCH_OUTSIDE_TOUCH | FLAG_NOT_TOUCHABLE,
-                    PixelFormat.TRANSLUCENT);
+            refreshMotionSpeed()
 
-            touch_params.gravity = Gravity.CENTER;
-            assert wm != null;
-            wm.addView(this.touch_view, touch_params);
-            this.image_view = new ImageView(this);
-            this.image_params = new WindowManager.LayoutParams(
-                    this.image_width,
-                    this.image_height,
-                    WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
-                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-                            | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
-                            | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
-                    PixelFormat.TRANSLUCENT
-            );
-            this.image_params.gravity = Gravity.TOP | Gravity.START;
-            wm.addView(this.image_view, this.image_params);
-            requestAnimate();
-        }
+            val wm = getSystemService(WINDOW_SERVICE) as WindowManager
 
-    }
-
-    private void stopAnimation() {
-        prefs.unregisterOnSharedPreferenceChangeListener(pref_listener);
-        WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
-
-        if (touch_view != null) {
-            assert wm != null;
-            wm.removeView(touch_view);
-        }
-        if (image_view != null) {
-            assert wm != null;
-            wm.removeView(image_view);
-        }
-
-        motion_state = null;
-        touch_view = null;
-        image_view = null;
-
-        handler.removeMessages(MSG_ANIMATE);
-    }
-
-    private void toggleAnimation() {
-        boolean visible = prefs.getBoolean(PREF_KEY_VISIBLE, true);
-
-        SharedPreferences.Editor edit = prefs.edit();
-        edit.putBoolean(PREF_KEY_VISIBLE, !visible);
-        edit.apply();
-
-        startService(new Intent(this, AnimationService.class)
-                .setAction(ACTION_START));
-    }
-
-    private void setForegroundNotification(boolean start) {
-        PendingIntent intent = PendingIntent.getService(
-                this, 0,
-                new Intent(this, AnimationService.class).setAction(ACTION_TOGGLE),
-                PendingIntent.FLAG_IMMUTABLE);
-
-        {
-            NotificationChannel channel = new NotificationChannel(
-                    getString(R.string.app_name),
-                    getString(R.string.aneko_notification_channel_name),
-                    NotificationManager.IMPORTANCE_MIN
-            );
-            channel.setDescription(getString(R.string.notification_chanel_description));
-            NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            if (nm != null) {
-                nm.createNotificationChannel(channel);
+            touchView = View(this).apply {
+                setOnTouchListener(TouchListener())
             }
+            val touchParams = WindowManager.LayoutParams(
+                1, 1,
+                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+                        WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH or
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                PixelFormat.TRANSLUCENT
+            ).apply { gravity = Gravity.CENTER }
+            wm.addView(touchView, touchParams)
+
+            imageView = ImageView(this)
+            imageParams = WindowManager.LayoutParams(
+                imageWidth,
+                imageHeight,
+                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or
+                        WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
+                PixelFormat.TRANSLUCENT
+            ).apply { gravity = Gravity.TOP or Gravity.START }
+            wm.addView(imageView, imageParams)
+
+            requestAnimate()
         }
+    }
 
-        Notification.Builder builder;
-        builder = new Notification.Builder(this, getString(R.string.app_name));
+    private fun stopAnimation() {
+        prefListener?.let { prefs.unregisterOnSharedPreferenceChangeListener(it) }
+        val wm = getSystemService(WINDOW_SERVICE) as WindowManager
 
-        builder
-                .setContentIntent(intent)
-                .setSmallIcon(start ? R.drawable.right2 : R.drawable.sleep2)
-                .setContentTitle(getString(R.string.app_name))
-                .setContentText(getString(start ? R.string.notification_enabled : R.string.notification_disabled))
-                .setOnlyAlertOnce(true)
-                .setOngoing(true)
-                .setAutoCancel(false);
+        touchView?.let { wm.removeView(it) }
+        imageView?.let { wm.removeView(it) }
 
-        Notification notify = builder.build();
+        motionState = null
+        touchView = null
+        imageView = null
 
-        stopForeground(true);
+        handler.removeMessages(MSG_ANIMATE)
+    }
+
+    private fun toggleAnimation() {
+        val visible = prefs.getBoolean(PREF_KEY_VISIBLE, true)
+        prefs.edit().putBoolean(PREF_KEY_VISIBLE, !visible).apply()
+        startService(Intent(this, AnimationService::class.java).setAction(ACTION_START))
+    }
+
+    private fun setForegroundNotification(start: Boolean) {
+        val intent = PendingIntent.getService(
+            this, 0,
+            Intent(this, AnimationService::class.java).setAction(ACTION_TOGGLE),
+            PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val channel = NotificationChannel(
+            getString(R.string.app_name),
+            getString(R.string.aneko_notification_channel_name),
+            NotificationManager.IMPORTANCE_MIN
+        ).apply {
+            description = getString(R.string.notification_chanel_description)
+        }
+        (getSystemService(NOTIFICATION_SERVICE) as? NotificationManager)
+            ?.createNotificationChannel(channel)
+
+        val builder = Notification.Builder(this, getString(R.string.app_name))
+            .setContentIntent(intent)
+            .setSmallIcon(if (start) R.drawable.right2 else R.drawable.sleep2)
+            .setContentTitle(getString(R.string.app_name))
+            .setContentText(getString(if (start) R.string.notification_enabled else R.string.notification_disabled))
+            .setOnlyAlertOnce(true)
+            .setOngoing(true)
+            .setAutoCancel(false)
+
+        val notify = builder.build()
+        stopForeground(true)
         if (start) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                startForeground(1, notify, ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE);
+                startForeground(1, notify, ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE)
             } else {
-                startForeground(1, notify);
+                startForeground(1, notify)
             }
-            return;
+            return
         }
 
-        if (this.prefs.getBoolean(PREF_KEY_ENABLE, true)) {
-            NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-            if (nm != null) {
-                nm.notify(1, notify);
-            }
+        if (prefs.getBoolean(PREF_KEY_ENABLE, true)) {
+            (getSystemService(NOTIFICATION_SERVICE) as? NotificationManager)?.notify(1, notify)
         }
     }
 
+    // ================== Load Motion ==================
 
-    private boolean loadMotionState() {
-        String skin = prefs.getString(PREF_KEY_SKIN_COMPONENT, "");
-        if (skin.contains(".xml") || skin.isEmpty()) return loadMotionDir();
-        else return loadMotionApk();
+    private fun loadMotionState(): Boolean {
+        prefs.getString(PREF_KEY_SKIN_COMPONENT, "") ?: ""
+        return loadMotionDir()
     }
 
-    private boolean loadMotionApk() {
-        String skin_pkg = prefs.getString(PREF_KEY_SKIN_COMPONENT, null);
-        ComponentName skin_comp = (skin_pkg == null ? null : ComponentName.unflattenFromString(skin_pkg));
-        if (skin_comp != null && loadMotionState(skin_comp)) {
-            return true;
+    /**
+     * Đọc từ INTERNAL: files/skins/<folder>/skin.xml (+ ảnh)
+     * Giá trị prefs "motion.skin" có thể là "<folder>/skin.xml" hoặc "<folder>"
+     */
+    private fun loadMotionDir(): Boolean {
+        val skinPath = "com.nqmgaming.caza"
+        val loaded = try {
+            val params = getMotionParamsInternal(skinPath)
+            motionState = MotionState().apply { setParams(params) }
+            true
+        } catch (e: Exception) {
+            Timber.e(e)
+            false
         }
-        skin_comp = new ComponentName(this, ANekoActivity.class);
-        return loadMotionState(skin_comp);
-    }
 
-    private boolean loadMotionDir() {
-        boolean loaded = false;
-        String skinPath = prefs.getString(PREF_KEY_SKIN_COMPONENT, "");
-        try {
-            MotionParams params2 = getMotionParams(skinPath);
-            motion_state = new MotionState();
-            motion_state.setParams(params2);
-
-            loaded = true;
-        } catch (Exception e) {
-            Timber.e(e);
-        }
         if (loaded) {
-            afterMotionLoaded();
-            return true;
+            afterMotionLoaded()
+            return true
         }
-
-        ComponentName skin_comp;
-        skin_comp = new ComponentName(this, ANekoActivity.class);
-        return loadMotionState(skin_comp);
+        return false
     }
 
+    /**
+     * Build path trong internal storage rồi parse bằng MotionConfigParser.parseFromFile(...)
+     */
     @NonNull
-    private MotionParams getMotionParams(String skinPath) throws PackageManager.NameNotFoundException {
-        File externalStorageDirectory = Environment.getExternalStorageDirectory();
-        File skinsDir = new File(externalStorageDirectory, ANeko_SKINS);
+    @Throws(PackageManager.NameNotFoundException::class)
+    private fun getMotionParamsInternal(skinPath: String): MotionParams {
+        // Root: {filesDir}/skins
+        val skinsRoot = File(filesDir, SKINS_DIR_NAME).apply { if (!exists()) mkdirs() }
 
-        if (!skinsDir.exists() && !skinsDir.mkdirs()) {
-            Timber.w("Failed to create skins directory: %s", skinsDir.getAbsolutePath());
-        }
+        var folder = ""
+        var xmlFile = "skin.xml"
 
-        String folder = "";
-        String xmlFile = skinPath;
-
-        if (skinPath.contains("/")) {
-            String[] ts = skinPath.split("/");
-            if (ts.length >= 2) {
-                folder = ts[0];
-                xmlFile = ts[1];
+        if (skinPath.isNotBlank()) {
+            val parts = skinPath.split('/')
+            if (parts.size >= 2) {
+                folder = parts.dropLast(1).joinToString(File.separator)
+                xmlFile = parts.last()
             } else {
-                // Handle case where there's only one part
-                folder = ts[0];
-                xmlFile = "skin.xml"; // Default XML file name
+                if (skinPath.lowercase().endsWith(".xml")) {
+                    xmlFile = parts[0]
+                    folder = ""
+                } else {
+                    folder = parts[0]
+                    xmlFile = "skin.xml"
+                }
             }
         }
 
-        File dir = new File(skinsDir, folder);
-
-        PackageManager pm = getPackageManager();
-        ComponentName skin_comp = new ComponentName(this, ANekoActivity.class);
-        Resources res = pm.getResourcesForActivity(skin_comp);
-
-        return new MotionConfigParser(res, dir, xmlFile);
-    }
-
-
-    private boolean loadMotionState(ComponentName skin_comp) {
-        motion_state = new MotionState();
-        try {
-            PackageManager pm = getPackageManager();
-            ActivityInfo ai = pm.getActivityInfo(
-                    skin_comp, PackageManager.GET_META_DATA);
-            Resources res = pm.getResourcesForActivity(skin_comp);
-
-            int rid = ai.metaData.getInt(META_KEY_SKIN, 0);
-
-            MotionParams params = new MotionParams(res, rid);
-            motion_state.setParams(params);
-        } catch (Exception e) {
-            Timber.e(e);
-            Toast.makeText(this, R.string.msg_skin_load_failed,
-                            Toast.LENGTH_LONG)
-                    .show();
-
-            prefs.edit()
-                    .putString(PREF_KEY_SKIN_COMPONENT, "")
-                    .apply();
-            return false;
-        }
-        afterMotionLoaded();
-        return true;
-    }
-
-    private void afterMotionLoaded() {
-        WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
-        assert wm != null;
-        Display d = wm.getDefaultDisplay();
-        Point size = new Point();
-        d.getSize(size);
-        int dw = size.x;
-        int dh = size.y;
-
-        int cx, cy;
-        switch (random.nextInt(4)) {
-            case 0:
-                cx = 0;
-                cy = random.nextInt(dh);
-                break;
-            case 1:
-                cx = dw;
-                cy = random.nextInt(dh);
-                break;
-            case 2:
-                cx = random.nextInt(dw);
-                cy = 0;
-                break;
-            default:
-                cx = random.nextInt(dw);
-                cy = dh;
-                break;
+        val dir = if (folder.isBlank()) skinsRoot else File(skinsRoot, folder)
+        val skinXml = File(dir, xmlFile).let { f ->
+            if (!f.exists()) {
+                // fallback: lấy *.xml đầu tiên
+                dir.listFiles { _, name -> name.lowercase().endsWith(".xml") }?.firstOrNull()
+                    ?: throw IllegalArgumentException("skin.xml not found in ${dir.absolutePath}")
+            } else f
         }
 
-        String alpha_str = prefs.getString(PREF_KEY_TRANSPARENCY, "0.0");
-        float opacity = 1 - Float.parseFloat(alpha_str);
-        motion_state.alpha = (int) (opacity * 0xff);
-
-        motion_state.setBehaviour(
-                Behaviour.valueOf(
-                        prefs.getString(PREF_KEY_BEHAVIOUR,
-                                motion_state.behaviour.toString())));
-
-        motion_state.setDisplaySize(dw, dh);
-        motion_state.setCurrentPosition(cx, cy);
-        motion_state.setTargetPositionDirect(dw >> 1, dh >> 1);
-        refreshMotionSize();
+        // Không còn dùng Resources cho frame; Resources chỉ dùng cho metric trong parser.
+        return MotionConfigParser.parseFromFile(this, skinXml, dir)
     }
 
+    private fun afterMotionLoaded() {
+        val wm = getSystemService(WINDOW_SERVICE) as WindowManager
+        val d: Display = wm.defaultDisplay
+        val size = Point().also { d.getSize(it) }
+        val dw = size.x
+        val dh = size.y
 
-    private void refreshMotionSize() {
-        int v = 80;
-        try {
-            String value = prefs.getString(PREF_KEY_SIZE, "80");
-            v = (int) Float.parseFloat(value);
-        } catch (NumberFormatException e) {
-            Timber.e(e);
+        val (cx, cy) = when (random.nextInt(4)) {
+            0 -> 0 to random.nextInt(dh)
+            1 -> dw to random.nextInt(dh)
+            2 -> random.nextInt(dw) to 0
+            else -> random.nextInt(dw) to dh
         }
-        this.image_width = this.image_height = v;
 
-        WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
-        if (image_params != null && image_view != null) {
-            image_params.width = v;
-            image_params.height = v;
-            assert wm != null;
-            wm.updateViewLayout(image_view, image_params);
+        val alphaStr = prefs.getString(PREF_KEY_TRANSPARENCY, "0.0") ?: "0.0"
+        val opacity = 1f - alphaStr.toFloatOrNull().let { it ?: 0f }
+        motionState!!.alpha = (opacity * 0xff).roundToInt()
+
+        motionState!!.setBehaviour(
+            Behaviour.valueOf(
+                prefs.getString(PREF_KEY_BEHAVIOUR, motionState!!.behaviour.toString())!!
+            )
+        )
+
+        motionState!!.setDisplaySize(dw, dh)
+        motionState!!.setCurrentPosition(cx.toFloat(), cy.toFloat())
+        motionState!!.setTargetPositionDirect((dw shr 1).toFloat(), (dh shr 1).toFloat())
+        refreshMotionSize()
+    }
+
+    // ================== UI refresh ==================
+
+    private fun refreshMotionSize() {
+        val v = prefs.getString(PREF_KEY_SIZE, "80")?.toFloatOrNull()?.toInt() ?: 80
+        imageWidth = v
+        imageHeight = v
+
+        val wm = getSystemService(WINDOW_SERVICE) as WindowManager
+        if (imageParams != null && imageView != null) {
+            imageParams!!.width = v
+            imageParams!!.height = v
+            wm.updateViewLayout(imageView, imageParams)
         }
     }
 
-
-    // Motion Speed
-    private void refreshMotionSpeed() {
-        if (motion_state == null) {
-            return;
-        }
-        String speedStr = prefs.getString(PREF_KEY_SPEED, "1.0");
-        float speedFactor = 1.0f;
-        try {
-            speedFactor = Float.parseFloat(speedStr);
-        } catch (NumberFormatException e) {
-            Timber.e(e, "Invalid speed factor in preferences: %s. Using default 1.0f.", speedStr);
-        }
-
-        motion_state.setSpeedFactor(speedFactor);
+    private fun refreshMotionSpeed() {
+        val ms = motionState ?: return
+        val speedFactor = prefs.getString(PREF_KEY_SPEED, "1.0")?.toFloatOrNull() ?: 1.0f
+        ms.setSpeedFactor(if (speedFactor > 0f) speedFactor else 1.0f)
     }
 
-
-    private void requestAnimate() {
+    private fun requestAnimate() {
         if (!handler.hasMessages(MSG_ANIMATE)) {
-            handler.sendEmptyMessage(MSG_ANIMATE);
+            handler.sendEmptyMessage(MSG_ANIMATE)
         }
     }
 
-    private void updateDrawable() {
-        if (motion_state == null || image_view == null) {
-            return;
-        }
+    private fun updateDrawable() {
+        val ms = motionState ?: return
+        val iv = imageView ?: return
+        val drawable = ms.currentDrawable()
 
-        MotionDrawable drawable = motion_state.getCurrentDrawable();
-        if (drawable == null) {
-            return;
-        }
-
-        drawable.setAlpha(motion_state.alpha);
-        image_view.setImageDrawable(drawable);
-        drawable.stop();
-        drawable.start();
+        drawable.alpha = ms.alpha
+        iv.setImageDrawable(drawable)
+        drawable.stop()
+        drawable.start()
     }
 
-    private void updatePosition() {
-        Point pt = motion_state.getPosition();
-        image_params.x = pt.x;
-        image_params.y = pt.y;
-
-        WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
-        assert wm != null;
-        wm.updateViewLayout(image_view, image_params);
+    private fun updatePosition() {
+        val pos = motionState?.position() ?: return
+        imageParams?.x = pos.x
+        imageParams?.y = pos.y
+        (getSystemService(WINDOW_SERVICE) as WindowManager).updateViewLayout(imageView, imageParams)
     }
 
-    private void updateToNext() {
-        if (motion_state.checkWall() ||
-                motion_state.updateMovingState() ||
-                motion_state.changeToNextState()) {
-            updateDrawable();
-            updatePosition();
-            requestAnimate();
+    private fun updateToNext() {
+        val ms = motionState ?: return
+        if (ms.checkWall() || ms.updateMovingState() || ms.changeToNextState()) {
+            updateDrawable()
+            updatePosition()
+            requestAnimate()
         }
     }
 
-    private boolean onHandleMessage(Message msg) {
+    private fun onHandleMessage(msg: Message): Boolean {
         if (msg.what == MSG_ANIMATE) {
-            handler.removeMessages(MSG_ANIMATE);
-
-            motion_state.updateState();
-            if (motion_state.isStateChanged() ||
-                    motion_state.isPositionMoved()) {
-                if (motion_state.isStateChanged()) {
-                    updateDrawable();
+            handler.removeMessages(MSG_ANIMATE)
+            motionState?.updateState()
+            motionState?.let { ms ->
+                if (ms.isStateChanged() || ms.isPositionMoved()) {
+                    if (ms.isStateChanged()) updateDrawable()
+                    updatePosition()
+                    handler.sendEmptyMessageDelayed(MSG_ANIMATE, ANIMATION_INTERVAL)
                 }
-
-                updatePosition();
-
-                handler.sendEmptyMessageDelayed(
-                        MSG_ANIMATE, ANIMATION_INTERVAL);
             }
-        } else {
-            return false;
+            return true
         }
-
-        return true;
+        return false
     }
 
-    private boolean checkPrefEnable() {
-        boolean enable = prefs.getBoolean(PREF_KEY_ENABLE, false);
-        boolean visible = prefs.getBoolean(PREF_KEY_VISIBLE, false);
-
+    private fun checkPrefEnable(): Boolean {
+        val enable = prefs.getBoolean(PREF_KEY_ENABLE, false)
+        val visible = prefs.getBoolean(PREF_KEY_VISIBLE, false)
         if (!enable || !visible) {
-            startService(new Intent(this, AnimationService.class)
-                    .setAction(ACTION_STOP));
-            return false;
-        } else {
-            return true;
+            startService(Intent(this, AnimationService::class.java).setAction(ACTION_STOP))
+            return false
         }
+        return true
     }
 
-    private class PreferenceChangeListener
-            implements SharedPreferences.OnSharedPreferenceChangeListener {
-        @Override
-        public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-            if (PREF_KEY_ENABLE.equals(key) || PREF_KEY_VISIBLE.equals(key)) {
-                checkPrefEnable();
-            } else if (PREF_KEY_SIZE.equals(key)) {
-                refreshMotionSize();
-            } else if (PREF_KEY_SPEED.equals(key)) {
-                refreshMotionSpeed();
-            } else if (PREF_KEY_TRANSPARENCY.equals(key)) {
-                if (motion_state != null) {
-                    String alpha_str = prefs.getString(PREF_KEY_TRANSPARENCY, "0.0");
-                    float opacity = 1 - Float.parseFloat(alpha_str);
-                    motion_state.alpha = (int) (opacity * 0xff);
+    // ================== Listeners ==================
+
+    private inner class PreferenceChangeListener :
+        SharedPreferences.OnSharedPreferenceChangeListener {
+        override fun onSharedPreferenceChanged(prefs: SharedPreferences, key: String?) {
+            when (key) {
+                PREF_KEY_ENABLE, PREF_KEY_VISIBLE -> checkPrefEnable()
+                PREF_KEY_SIZE -> refreshMotionSize()
+                PREF_KEY_SPEED -> refreshMotionSpeed()
+                PREF_KEY_TRANSPARENCY -> {
+                    motionState?.let {
+                        val s = prefs.getString(PREF_KEY_TRANSPARENCY, "0.0") ?: "0.0"
+                        val opacity = 1f - (s.toFloatOrNull() ?: 0f)
+                        it.alpha = (opacity * 0xff).roundToInt()
+                    }
                 }
-            } else if (loadMotionState()) {
-                requestAnimate();
+
+                else -> if (loadMotionState()) requestAnimate()
             }
         }
     }
 
-    private class TouchListener implements View.OnTouchListener {
+    private inner class TouchListener : View.OnTouchListener {
         @SuppressLint("ClickableViewAccessibility")
-        public boolean onTouch(View v, MotionEvent ev) {
-            if (motion_state == null) {
-                return false;
-            }
+        override fun onTouch(v: View?, ev: MotionEvent): Boolean {
+            val ms = motionState ?: return false
 
-            if (ev.getAction() == MotionEvent.ACTION_OUTSIDE) {
-                WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
-                assert wm != null;
-                Point pnt = new Point();
-                wm.getDefaultDisplay().getSize(pnt);
-                int dw = pnt.x;
-                int dh = pnt.y;
+            if (ev.action == MotionEvent.ACTION_OUTSIDE) {
+                val wm = getSystemService(WINDOW_SERVICE) as WindowManager
+                val pnt = Point().also { wm.defaultDisplay.getSize(it) }
+                val dw = pnt.x
+                val dh = pnt.y
 
-                float x, y;
-
-                if (random.nextFloat() < 0.4f) {
-                    switch (random.nextInt(4)) {
-                        case 0:
-                            x = 0;
-                            y = random.nextInt(dh);
-                            break;
-                        case 1:
-                            x = dw;
-                            y = random.nextInt(dh);
-                            break;
-                        case 2:
-                            x = random.nextInt(dw);
-                            y = 0;
-                            break;
-                        default:
-                            x = random.nextInt(dw);
-                            y = dh;
-                            break;
+                val (x, y) = if (random.nextFloat() < 0.4f) {
+                    when (random.nextInt(4)) {
+                        0 -> 0f to random.nextInt(dh).toFloat()
+                        1 -> dw.toFloat() to random.nextInt(dh).toFloat()
+                        2 -> random.nextInt(dw).toFloat() to 0f
+                        else -> random.nextInt(dw).toFloat() to dh.toFloat()
                     }
                 } else {
-                    x = random.nextInt(dw);
-                    y = random.nextInt(dh);
+                    random.nextInt(dw).toFloat() to random.nextInt(dh).toFloat()
                 }
 
-                motion_state.setTargetPosition(x, y);
-                requestAnimate();
-
-            } else if (ev.getAction() == MotionEvent.ACTION_CANCEL) {
-                motion_state.forceStop();
-                requestAnimate();
+                ms.setTargetPosition(x, y)
+                requestAnimate()
+            } else if (ev.action == MotionEvent.ACTION_CANCEL) {
+                ms.forceStop()
+                requestAnimate()
             }
-
-            return false;
+            return false
         }
     }
 
-
-    private class MotionState {
-        private float cur_x = 0;
-        private float cur_y = 0;
-        private float target_x = 0;
-        private float target_y = 0;
-        private float vx = 0;                   // pixels per sec
-        private float vy = 0;                   // pixels per sec
-        private int display_width = 1;
-        private int display_height = 1;
-        private MotionParams params;
-        private int alpha = 0xff;
-        private Behaviour behaviour = Behaviour.whimsical;
-        private int cur_behaviour_idx = 0;
-        private long last_behaviour_changed = 0;
-        private String cur_state = null;
-        private boolean moving_state = false;
-        private boolean state_changed = false;
-        private boolean position_moved = false;
-        private float speedFactor = 1.0f;
-
-        private final MotionEndListener on_motion_end = new MotionEndListener();
-
-        public void setSpeedFactor(float factor) {
-            if (factor <= 0) {
-                Timber.w("Attempted to set non-positive speed factor: %f. Using 1.0f.", factor);
-                this.speedFactor = 1.0f;
-            } else {
-                this.speedFactor = factor;
+    private inner class MotionEndListener : MotionDrawable.OnMotionEndListener {
+        override fun onMotionEnd(drawable: MotionDrawable) {
+            if (isStarted && motionState?.currentDrawable() === drawable) {
+                updateToNext()
             }
         }
+    }
 
-        private void updateState() {
-            state_changed = false;
-            position_moved = false;
+    // ================== MotionState ==================
 
-            float dx = target_x - cur_x;
-            float dy = target_y - cur_y;
-            float len = (float) Math.sqrt(dx * dx + dy * dy);
-            if (len <= params.getProximityDistance()) {
-                if (moving_state) {
-                    vx = 0;
-                    vy = 0;
-                    changeState(params.getInitialState());
+    private inner class MotionState {
+        private var curX = 0f
+        private var curY = 0f
+        private var targetX = 0f
+        private var targetY = 0f
+        private var vx = 0f // px/s
+        private var vy = 0f // px/s
+
+        private var displayWidth = 1
+        private var displayHeight = 1
+
+        private lateinit var params: MotionParams
+        var alpha: Int = 0xff
+
+        var behaviour: Behaviour = Behaviour.whimsical
+            private set
+        private var curBehaviourIdx = 0
+        private var lastBehaviourChanged = 0L
+
+        private var curState: String? = null
+        private var movingState = false
+        private var stateChanged = false
+        private var positionMoved = false
+        private var speedFactor = 1.0f
+
+        private val onMotionEnd = MotionEndListener()
+
+        fun setSpeedFactor(factor: Float) {
+            speedFactor = if (factor <= 0f) {
+                Timber.w("Attempt to set non-positive speed: %f, fallback 1.0", factor)
+                1.0f
+            } else factor
+        }
+
+        fun updateState() {
+            stateChanged = false
+            positionMoved = false
+
+            val dx = targetX - curX
+            val dy = targetY - curY
+            val len = hypot(dx, dy)
+
+            if (len <= params.proximityDistance) {
+                if (movingState) {
+                    vx = 0f; vy = 0f
+                    changeState(params.initialState)
                 }
-                return;
+                return
             }
 
-            if (!moving_state) {
-                String nstate = params.getAwakeState();
-                if (params.hasState(nstate)) {
-                    changeState(nstate);
-                }
-                return;
+            if (!movingState) {
+                val nstate = params.awakeState
+                if (params.hasState(nstate)) changeState(nstate)
+                return
             }
 
-            float interval = ANIMATION_INTERVAL / 1000f; // Time step in seconds
+            val interval = ANIMATION_INTERVAL / 1000f
+            val baseAcc = params.acceleration
+            val baseMaxV = params.maxVelocity
+            val decelDist = params.decelerationDistance
 
-            float baseAcceleration = params.getAcceleration();
-            float baseMaxVelocity = params.getMaxVelocity();
-            float decelerate_distance = params.getDecelerationDistance();
-
-            float effectiveAcceleration = baseAcceleration * this.speedFactor;
-            float effectiveMaxVelocity = baseMaxVelocity * this.speedFactor;
+            val acc = baseAcc * speedFactor
+            val maxV = baseMaxV * speedFactor
 
             if (len > 0) {
-                vx += (effectiveAcceleration * interval * dx / len);
-                vy += (effectiveAcceleration * interval * dy / len);
+                vx += (acc * interval * dx / len)
+                vy += (acc * interval * dy / len)
             }
 
-            float currentSpeedMag = (float) Math.sqrt(vx * vx + vy * vy);
+            val curSpeed = hypot(vx, vy)
+            val dynMax = maxV * min((len + 1.0f) / (decelDist + 1.0f), 1.0f)
 
-            float dynamicMaxSpeed = effectiveMaxVelocity * Math.min((len + 1.0f) / (decelerate_distance + 1.0f), 1.0f);
-
-            if (currentSpeedMag > dynamicMaxSpeed) {
-                if (dynamicMaxSpeed <= 0 && currentSpeedMag > 0) {
-                    vx = 0;
-                    vy = 0;
-                } else if (currentSpeedMag > 0) {
-                    float ratio = dynamicMaxSpeed / currentSpeedMag;
-                    vx *= ratio;
-                    vy *= ratio;
+            if (curSpeed > dynMax) {
+                if (dynMax <= 0 && curSpeed > 0) {
+                    vx = 0f; vy = 0f
+                } else if (curSpeed > 0) {
+                    val ratio = dynMax / curSpeed
+                    vx *= ratio; vy *= ratio
                 }
             }
 
-            cur_x += vx * interval;
-            cur_y += vy * interval;
-            position_moved = true;
+            curX += vx * interval
+            curY += vy * interval
+            positionMoved = true
 
-            changeToMovingState();
+            changeToMovingState()
         }
 
-        private boolean checkWall() {
-            if (!params.needCheckWall(cur_state)) {
-                return false;
+        fun checkWall(): Boolean {
+            if (!params.needCheckWall(curState!!)) return false
+
+            val drawable = currentDrawable()
+            val dw2 = drawable.intrinsicWidth / 2f
+            val dh2 = drawable.intrinsicHeight / 2f
+
+            val dir = when {
+                curX >= 0 && curX < dw2 -> MotionParams.WallDirection.LEFT
+                curX <= displayWidth && curX > displayWidth - dw2 -> MotionParams.WallDirection.RIGHT
+                curY >= 0 && curY < dh2 -> MotionParams.WallDirection.UP
+                curY <= displayHeight && curY > displayHeight - dh2 -> MotionParams.WallDirection.DOWN
+                else -> return false
             }
 
-            MotionDrawable drawable = getCurrentDrawable();
-            float dw2 = drawable.getIntrinsicWidth() / 2f;
-            float dh2 = drawable.getIntrinsicHeight() / 2f;
-
-            MotionParams.WallDirection dir;
-            if (cur_x >= 0 && cur_x < dw2) {
-                dir = MotionParams.WallDirection.LEFT;
-            } else if (cur_x <= display_width && cur_x > display_width - dw2) {
-                dir = MotionParams.WallDirection.RIGHT;
-            } else if (cur_y >= 0 && cur_y < dh2) {
-                dir = MotionParams.WallDirection.UP;
-            } else if (cur_y <= display_height && cur_y > display_height - dh2) {
-                dir = MotionParams.WallDirection.DOWN;
-            } else {
-                return false;
-            }
-
-            String nstate = params.getWallState(dir);
-            if (!params.hasState(nstate)) {
-                return false;
-            }
-
-            changeState(nstate);
-
-            return true;
+            val nstate = params.getWallState(dir)
+            if (!params.hasState(nstate)) return false
+            changeState(nstate)
+            return true
         }
 
-        private boolean updateMovingState() {
-            if (!params.needCheckMove(cur_state)) {
-                return false;
-            }
-
-            float dx = target_x - cur_x;
-            float dy = target_y - cur_y;
-            float len = (float) Math.sqrt(dx * dx + dy * dy);
-            if (len <= params.getProximityDistance()) {
-                return false;
-            }
-
-            changeToMovingState();
-            return true;
+        fun updateMovingState(): Boolean {
+            if (!params.needCheckMove(curState!!)) return false
+            val len = hypot(targetX - curX, targetY - curY)
+            if (len <= params.proximityDistance) return false
+            changeToMovingState()
+            return true
         }
 
-        private void setParams(MotionParams _params) {
-            String nstate = _params.getInitialState();
-            if (!_params.hasState(nstate)) {
-                throw new IllegalArgumentException(
-                        "Initial State does not exist");
-            }
-
-            params = _params;
-
-            changeState(nstate);
-            moving_state = false;
+        fun setParams(p: MotionParams) {
+            val nstate = p.initialState
+            require(p.hasState(nstate)) { "Initial State does not exist" }
+            params = p
+            changeState(nstate)
+            movingState = false
         }
 
-        private void changeState(String state) {
-            if (state.equals(cur_state)) {
-                return;
-            }
-
-            cur_state = state;
-            state_changed = true;
-            moving_state = false;
-            getCurrentDrawable().setOnMotionEndListener(on_motion_end);
+        private fun changeState(state: String) {
+            if (state == curState) return
+            curState = state
+            stateChanged = true
+            movingState = false
+            currentDrawable().setOnMotionEndListener(onMotionEnd)
         }
 
-        private boolean changeToNextState() {
-            String next_state = params.getNextState(motion_state.cur_state);
-            if (next_state == null) {
-                return false;
-            }
-
-            changeState(next_state);
-            return true;
+        fun changeToNextState(): Boolean {
+            val next = params.getNextState(curState ?: return false) ?: return false
+            changeState(next)
+            return true
         }
 
-        private void changeToMovingState() {
-            int dir = (int) (Math.atan2(vy, vx) * 4 / Math.PI + 8.5) % 8;
-            MotionParams.MoveDirection[] dirs = {
-                    MotionParams.MoveDirection.RIGHT,
-                    MotionParams.MoveDirection.DOWN_RIGHT,
-                    MotionParams.MoveDirection.DOWN,
-                    MotionParams.MoveDirection.DOWN_LEFT,
-                    MotionParams.MoveDirection.LEFT,
-                    MotionParams.MoveDirection.UP_LEFT,
-                    MotionParams.MoveDirection.UP,
-                    MotionParams.MoveDirection.UP_RIGHT
-            };
-
-            String nstate = params.getMoveState(dirs[dir]);
-            if (!params.hasState(nstate)) {
-                return;
-            }
-
-            changeState(nstate);
-            moving_state = true;
+        private fun changeToMovingState() {
+            val dirIdx = ((atan2(vy, vx) * 4 / Math.PI) + 8.5).toInt() % 8
+            val dirs = arrayOf(
+                MotionParams.MoveDirection.RIGHT,
+                MotionParams.MoveDirection.DOWN_RIGHT,
+                MotionParams.MoveDirection.DOWN,
+                MotionParams.MoveDirection.DOWN_LEFT,
+                MotionParams.MoveDirection.LEFT,
+                MotionParams.MoveDirection.UP_LEFT,
+                MotionParams.MoveDirection.UP,
+                MotionParams.MoveDirection.UP_RIGHT
+            )
+            val nstate = params.getMoveState(dirs[dirIdx])
+            if (!params.hasState(nstate)) return
+            changeState(nstate)
+            movingState = true
         }
 
-        private void setDisplaySize(int w, int h) {
-            display_width = w;
-            display_height = h;
+        fun setDisplaySize(w: Int, h: Int) {
+            displayWidth = w; displayHeight = h
         }
 
-        private void setBehaviour(Behaviour b) {
-            behaviour = b;
-            last_behaviour_changed = 0;
-
-            for (int i = 0; i < BEHAVIOURS.length; i++) {
-                if (BEHAVIOURS[i] == behaviour) {
-                    cur_behaviour_idx = i;
-                    break;
-                }
-            }
+        fun setBehaviour(b: Behaviour) {
+            behaviour = b
+            lastBehaviourChanged = 0
+            curBehaviourIdx = Behaviour.valueOf(b.toString()).ordinal
         }
 
-        private void setCurrentPosition(float x, float y) {
-            cur_x = x;
-            cur_y = y;
+        fun setCurrentPosition(x: Float, y: Float) {
+            curX = x; curY = y
         }
 
-        private void setTargetPosition(float x, float y) {
-            if (!ICS_OR_LATER) {
-                long cur_time = System.currentTimeMillis();
-                double r = (double) (cur_time - last_behaviour_changed) / BEHAVIOUR_CHANGE_DURATION;
-                if (behaviour == Behaviour.whimsical && (r < 0 || random.nextDouble() * r > 1)) {
-                    int next_idx = random.nextInt(BEHAVIOURS.length);
-                    if (next_idx != cur_behaviour_idx) {
-                        last_behaviour_changed = cur_time;
+        fun setTargetPosition(x: Float, y: Float) {
+            // Giữ nguyên hành vi cũ (ICS_OR_LATER = true -> whimsical)
+            curBehaviourIdx = Behaviour.entries.size - 1
+            when (Behaviour.entries[curBehaviourIdx]) {
+                Behaviour.closer -> setTargetPositionDirect(x, y)
+                Behaviour.further -> {
+                    var dx = displayWidth / 2f - x
+                    var dy = displayHeight / 2f - y
+                    if (dx == 0f && dy == 0f) {
+                        val ang = random.nextFloat() * (PI.toFloat()) * 2
+                        dx = cos(ang); dy = sin(ang)
                     }
-                    cur_behaviour_idx = next_idx;
-                }
-            } else {
-                cur_behaviour_idx = BEHAVIOURS.length - 1;
-            }
-
-            Behaviour current = BEHAVIOURS[cur_behaviour_idx];
-            if (current == Behaviour.closer) {
-                setTargetPositionDirect(x, y);
-
-            } else if (current == Behaviour.further) {
-                float dx = display_width / 2f - x;
-                float dy = display_height / 2f - y;
-                if (dx == 0 && dy == 0) {
-                    float ang = random.nextFloat() * (float) Math.PI * 2;
-                    dx = (float) Math.cos(ang);
-                    dy = (float) Math.sin(ang);
-                }
-                if (dx < 0) {
-                    dx = -dx;
-                    dy = -dy;
-                }
-
-                PointF e1, e2;
-                if (dy > dx * display_height / display_width || dy < -dx * display_height / display_width) {
-                    float dxdy = dx / dy;
-                    e1 = new PointF((display_width - display_height * dxdy) / 2f, 0);
-                    e2 = new PointF((display_width + display_height * dxdy) / 2f, display_height);
-                } else {
-                    float dydx = dy / dx;
-                    e1 = new PointF(0, (display_height - display_width * dydx) / 2f);
-                    e2 = new PointF(display_width, (display_height + display_width * dydx) / 2f);
+                    if (dx < 0) {
+                        dx = -dx; dy = -dy
+                    }
+                    val e: PointF = run {
+                        val e1: PointF
+                        val e2: PointF
+                        if (dy > dx * displayHeight / displayWidth || dy < -dx * displayHeight / displayWidth) {
+                            val dxdy = dx / dy
+                            e1 = PointF((displayWidth - displayHeight * dxdy) / 2f, 0f)
+                            e2 = PointF(
+                                (displayWidth + displayHeight * dxdy) / 2f,
+                                displayHeight.toFloat()
+                            )
+                        } else {
+                            val dydx = dy / dx
+                            e1 = PointF(0f, (displayHeight - displayWidth * dydx) / 2f)
+                            e2 = PointF(
+                                displayWidth.toFloat(),
+                                (displayHeight + displayWidth * dydx) / 2f
+                            )
+                        }
+                        val d1 = hypot(e1.x - x, e1.y - y).toDouble()
+                        val d2 = hypot(e2.x - x, e2.y - y).toDouble()
+                        if (d1 > d2) e1 else e2
+                    }
+                    val r = 0.9f + random.nextFloat() * 0.1f
+                    setTargetPositionDirect(e.x * r + x * (1 - r), e.y * r + y * (1 - r))
                 }
 
-                double d1 = Math.hypot(e1.x - x, e1.y - y);
-                double d2 = Math.hypot(e2.x - x, e2.y - y);
-                PointF e = (d1 > d2 ? e1 : e2);
+                Behaviour.whimsical -> {
+                    val minWH2 = min(displayWidth, displayHeight) / 2f
+                    val r = random.nextFloat() * minWH2 + minWH2
+                    val a = random.nextFloat() * 360f
+                    var nx = curX + r * cos(Math.toRadians(a.toDouble())).toFloat()
+                    var ny = curY + r * sin(Math.toRadians(a.toDouble())).toFloat()
 
-                float r = 0.9f + random.nextFloat() * 0.1f;
-                setTargetPositionDirect(e.x * r + x * (1 - r), e.y * r + y * (1 - r));
+                    if (random.nextFloat() < 0.15f) nx =
+                        if (random.nextBoolean()) 0f else displayWidth.toFloat()
+                    if (random.nextFloat() < 0.15f) ny =
+                        if (random.nextBoolean()) 0f else displayHeight.toFloat()
 
-            } else {
-                float min_wh2 = Math.min(display_width, display_height) / 2f;
-                float r = random.nextFloat() * min_wh2 + min_wh2;
-                float a = random.nextFloat() * 360f;
-                float nx = cur_x + r * (float) Math.cos(Math.toRadians(a));
-                float ny = cur_y + r * (float) Math.sin(Math.toRadians(a));
-
-                if (random.nextFloat() < 0.15f) {
-                    nx = (random.nextBoolean()) ? 0 : display_width;
+                    if (random.nextFloat() < 0.15f) {
+                        nx = nx.coerceIn(0f, displayWidth.toFloat())
+                        ny = ny.coerceIn(0f, displayHeight.toFloat())
+                    } else {
+                        nx =
+                            if (nx < 0) -nx else if (nx >= displayWidth) displayWidth * 2 - nx - 1 else nx
+                        ny =
+                            if (ny < 0) -ny else if (ny >= displayHeight) displayHeight * 2 - ny - 1 else ny
+                    }
+                    setTargetPositionDirect(nx, ny)
                 }
-                if (random.nextFloat() < 0.15f) {
-                    ny = (random.nextBoolean()) ? 0 : display_height;
-                }
-
-                if (random.nextFloat() < 0.15f) {
-                    nx = Math.max(0, Math.min(nx, display_width));
-                    ny = Math.max(0, Math.min(ny, display_height));
-                } else {
-                    nx = (nx < 0 ? -nx : (nx >= display_width ? display_width * 2 - nx - 1 : nx));
-                    ny = (ny < 0 ? -ny : (ny >= display_height ? display_height * 2 - ny - 1 : ny));
-                }
-
-                setTargetPositionDirect(nx, ny);
             }
         }
 
-
-        private void setTargetPositionDirect(float x, float y) {
-            target_x = x;
-            target_y = y;
+        fun setTargetPositionDirect(x: Float, y: Float) {
+            targetX = x; targetY = y
         }
 
-        private void forceStop() {
-            setTargetPosition(cur_x, cur_y);
-            vx = 0;
-            vy = 0;
+        fun forceStop() {
+            setTargetPosition(curX, curY)
+            vx = 0f; vy = 0f
         }
 
-        private boolean isStateChanged() {
-            return state_changed;
+        fun isStateChanged(): Boolean = stateChanged
+        fun isPositionMoved(): Boolean = positionMoved
+
+        fun currentDrawable(): MotionDrawable {
+            return params.getDrawable(curState!!)!!
         }
 
-        private boolean isPositionMoved() {
-            return position_moved;
-        }
-
-        private MotionDrawable getCurrentDrawable() {
-            return params.getDrawable(cur_state);
-        }
-
-        private Point getPosition() {
-            MotionDrawable drawable = getCurrentDrawable();
-            return new Point((int) (cur_x - drawable.getIntrinsicWidth() / 2f),
-                    (int) (cur_y - drawable.getIntrinsicHeight() / 2f));
+        fun position(): Point {
+            val d = currentDrawable()
+            return Point(
+                (curX - d.intrinsicWidth / 2f).toInt(),
+                (curY - d.intrinsicHeight / 2f).toInt()
+            )
         }
     }
 
-    private class MotionEndListener
-            implements MotionDrawable.OnMotionEndListener {
-        @Override
-        public void onMotionEnd(MotionDrawable drawable) {
-            if (is_started && motion_state != null &&
-                    drawable == motion_state.getCurrentDrawable()) {
-                updateToNext();
-            }
-        }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
 }

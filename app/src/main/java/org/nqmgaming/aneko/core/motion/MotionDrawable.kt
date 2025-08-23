@@ -1,376 +1,304 @@
-package org.nqmgaming.aneko.core.motion;
+package org.nqmgaming.aneko.core.motion
 
-import android.content.res.Resources;
-import android.graphics.Canvas;
-import android.graphics.ColorFilter;
-import android.graphics.PixelFormat;
-import android.graphics.Rect;
-import android.graphics.drawable.Animatable;
-import android.graphics.drawable.AnimationDrawable;
-import android.graphics.drawable.Drawable;
-import android.os.SystemClock;
+import android.content.res.Resources
+import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.graphics.ColorFilter
+import android.graphics.PixelFormat
+import android.graphics.Rect
+import android.graphics.drawable.Animatable
+import android.graphics.drawable.AnimationDrawable
+import android.graphics.drawable.Drawable
+import android.os.SystemClock
+import androidx.core.graphics.drawable.toDrawable
+import java.io.File
 
-import androidx.annotation.NonNull;
+class MotionDrawable() : Drawable(), Animatable {
 
-import java.util.ArrayList;
-
-public class MotionDrawable extends Drawable implements Animatable {
-    public interface OnMotionEndListener {
-        void onMotionEnd(MotionDrawable drawable);
+    interface OnMotionEndListener {
+        fun onMotionEnd(drawable: MotionDrawable)
     }
 
-    private final MotionConstantState state;
+    // ----- State -----
+    private val constantState = MotionConstantState()
 
-    private int cur_frame = -1;
-    private int cur_repeat = 0;
-    private int cur_duration = -1;
-    private OnMotionEndListener on_end = null;
+    private var curFrame = -1
+    private var curRepeat = 0
+    private var curDuration = -1
+    private var onEnd: OnMotionEndListener? = null
 
-    private int alpha = 0xff;
-    private ColorFilter color_filter;
+    private var alphaValue: Int = 0xFF
+    private var colorFilterValue: ColorFilter? = null
 
-    private final Runnable frame_updater = this::updateFrame;
-    private final Drawable.Callback child_callback = new ChildCallback();
-    private final OnMotionEndListener child_end = new ChildOnMotionEnd();
+    private val frameUpdater = Runnable { updateFrame() }
+    private val childCallback = ChildCallback()
+    private val childEnd = ChildOnMotionEnd()
 
-    MotionDrawable() {
-        state = new MotionConstantState();
-    }
-
-    private MotionDrawable(AnimationDrawable anim) {
-        this();
-
-        state.repeat_count = (anim.isOneShot() ? 1 : -1);
-
-        int nf = anim.getNumberOfFrames();
-        for (int i = 0; i < nf; i++) {
-            addFrame(anim.getFrame(i), anim.getDuration(i));
+    // Secondary constructor để gói AnimationDrawable thành MotionDrawable lồng nhau
+    constructor(anim: AnimationDrawable) : this() {
+        constantState.repeatCount = if (anim.isOneShot) 1 else -1
+        val nf = anim.numberOfFrames
+        for (i in 0 until nf) {
+            addFrame(anim.getFrame(i), anim.getDuration(i))
         }
     }
 
-    void setTotalDuration(int duration) {
-        state.total_duration = duration;
+    // ----- API gọi từ parser / logic chuyển động -----
+    fun setTotalDuration(duration: Int) {
+        constantState.totalDuration = duration
     }
 
-    void setRepeatCount(int count) {
-        state.repeat_count = count;
+    fun setRepeatCount(count: Int) {
+        constantState.repeatCount = count
     }
 
-    void addFrame(Drawable drawable, int duration) {
-        if (drawable instanceof AnimationDrawable) {
-            MotionDrawable md = new MotionDrawable((AnimationDrawable) drawable);
-            md.setTotalDuration(duration);
-            drawable = md;
+    fun addFrame(drawable: Drawable, duration: Int) {
+        var d = drawable
+        if (d is AnimationDrawable) {
+            val md = MotionDrawable(d)
+            md.setTotalDuration(duration)
+            d = md
         }
-
-        if (drawable instanceof MotionDrawable) {
-            MotionDrawable md = (MotionDrawable) drawable;
-            md.setOnMotionEndListener(child_end);
+        if (d is MotionDrawable) {
+            d.setOnMotionEndListener(childEnd)
         }
-        drawable.setCallback(child_callback);
-        state.addFrame(drawable, duration);
+        d.callback = childCallback
+        constantState.addFrame(d, duration)
     }
 
-    private Drawable getCurrentFrame() {
-        return state.getFrame(cur_frame);
+    private fun currentFrame(): Drawable? = constantState.getFrame(curFrame)
+
+    fun setOnMotionEndListener(listener: OnMotionEndListener?) {
+        onEnd = listener
     }
 
-    public void setOnMotionEndListener(OnMotionEndListener listener) {
-        on_end = listener;
+    private fun invokeOnMotionEndListener() {
+        onEnd?.onMotionEnd(this)
     }
 
-    private void invokeOnMotionEndListener() {
-        if (on_end != null) {
-            on_end.onMotionEnd(this);
-        }
+    // ----- Drawable overrides -----
+    override fun getIntrinsicWidth(): Int = currentFrame()?.intrinsicWidth ?: -1
+
+    override fun getIntrinsicHeight(): Int = currentFrame()?.intrinsicHeight ?: -1
+
+    override fun getConstantState(): ConstantState = constantState
+
+    override fun draw(canvas: Canvas) {
+        currentFrame()?.draw(canvas)
     }
 
-    @Override
-    public int getIntrinsicWidth() {
-        return getCurrentFrame().getIntrinsicWidth();
+    @Deprecated("Deprecated in Java but still required by Drawable contract")
+    override fun getOpacity(): Int {
+        val c = currentFrame()
+        return if (c == null || !c.isVisible) PixelFormat.TRANSPARENT else constantState.opacity
     }
 
-    @Override
-    public int getIntrinsicHeight() {
-        return getCurrentFrame().getIntrinsicHeight();
-    }
-
-    @Override
-    public Drawable.ConstantState getConstantState() {
-        return state;
-    }
-
-    @Override
-    public void draw(@NonNull Canvas canvas) {
-        Drawable current = getCurrentFrame();
-        if (current != null) {
-            current.draw(canvas);
+    override fun setAlpha(alpha: Int) {
+        if (alphaValue != alpha) {
+            alphaValue = alpha
+            currentFrame()?.alpha = alphaValue
         }
     }
 
-    @Override
-    public int getOpacity() {
-        Drawable current = getCurrentFrame();
-        return ((current == null || !current.isVisible()) ?
-                PixelFormat.TRANSPARENT : state.getOpacity());
-    }
-
-    @Override
-    public void setAlpha(int _alpha) {
-        if (alpha != _alpha) {
-            alpha = _alpha;
-            Drawable current = getCurrentFrame();
-            if (current != null) {
-                current.setAlpha(alpha);
-            }
+    @Suppress("DEPRECATION")
+    override fun setColorFilter(colorFilter: ColorFilter?) {
+        if (colorFilterValue !== colorFilter) {
+            colorFilterValue = colorFilter
+            currentFrame()?.colorFilter = colorFilterValue
         }
     }
 
-    @Override
-    public void setColorFilter(ColorFilter cf) {
-        if (color_filter != cf) {
-            color_filter = cf;
-            Drawable current = getCurrentFrame();
-            if (current != null) {
-                current.setColorFilter(color_filter);
-            }
-        }
+    override fun onBoundsChange(bounds: Rect) {
+        currentFrame()?.bounds = bounds
     }
 
-    @Override
-    protected void onBoundsChange(@NonNull Rect bounds) {
-        Drawable current = getCurrentFrame();
-        if (current != null) {
-            current.setBounds(bounds);
-        }
+    override fun onLevelChange(level: Int): Boolean {
+        return currentFrame()?.setLevel(level) ?: false
     }
 
-    @Override
-    protected boolean onLevelChange(int level) {
-        Drawable current = getCurrentFrame();
-        if (current != null) {
-            return current.setLevel(level);
-        }
-        return false;
+    override fun onStateChange(stateSet: IntArray): Boolean {
+        return currentFrame()?.setState(stateSet) ?: false
     }
 
-    @Override
-    protected boolean onStateChange(@NonNull int[] state) {
-        Drawable current = getCurrentFrame();
-        if (current != null) {
-            return current.setState(state);
-        }
-        return false;
+    override fun isStateful(): Boolean {
+        // chuyển tiếp theo frame hiện tại
+        return currentFrame()?.isStateful == true
     }
 
-    public boolean setVisible(boolean visible, boolean restart) {
-        boolean changed = super.setVisible(visible, restart);
-        Drawable current = getCurrentFrame();
-        if (current != null) {
-            current.setVisible(visible, restart);
-        }
-
+    override fun setVisible(visible: Boolean, restart: Boolean): Boolean {
+        val changed = super.setVisible(visible, restart)
+        currentFrame()?.setVisible(visible, restart)
         if (visible) {
             if (changed || restart) {
-                stop();
-                start();
+                stop()
+                start()
             }
         } else {
-            stop();
+            stop()
         }
-
-        return changed;
+        return changed
     }
 
-    @Override
-    public boolean isRunning() {
-        return (cur_duration >= 0);
-    }
+    // ----- Animatable -----
+    override fun isRunning(): Boolean = curDuration >= 0
 
-    @Override
-    public void start() {
-        if (!isRunning()) {
-            cur_frame = -1;
-            cur_repeat = 0;
-            cur_duration = 0;
-            updateFrame();
+    override fun start() {
+        if (!isRunning) {
+            curFrame = -1
+            curRepeat = 0
+            curDuration = 0
+            updateFrame()
         }
     }
 
-    @Override
-    public void stop() {
-        if (isRunning()) {
-            unscheduleSelf(frame_updater);
-            cur_duration = -1;
+    override fun stop() {
+        if (isRunning) {
+            unscheduleSelf(frameUpdater)
+            curDuration = -1
         }
     }
 
-    private void updateFrame() {
-        int nf = state.getFrameCount();
-        int next = cur_frame + 1;
-        int next_repeat = cur_repeat;
+    // ----- Chuyển frame -----
+    private fun updateFrame() {
+        val nf = constantState.frameCount
+        var next = curFrame + 1
+        var nextRepeat = curRepeat
         if (next >= nf) {
-            next = 0;
-            next_repeat = cur_repeat + 1;
-
-            if (state.repeat_count >= 0 && next_repeat >= state.repeat_count) {
-                cur_duration = -1;
-                invokeOnMotionEndListener();
-                return;
+            next = 0
+            nextRepeat = curRepeat + 1
+            if (constantState.repeatCount >= 0 && nextRepeat >= constantState.repeatCount) {
+                curDuration = -1
+                invokeOnMotionEndListener()
+                return
             }
         }
 
-        if (state.total_duration >= 0 && cur_duration >= state.total_duration) {
-            cur_duration = -1;
-            invokeOnMotionEndListener();
-            return;
+        if (constantState.totalDuration >= 0 && curDuration >= constantState.totalDuration) {
+            curDuration = -1
+            invokeOnMotionEndListener()
+            return
         }
 
-        {
-            Drawable current = getCurrentFrame();
-            if (current != null) {
-                current.setVisible(false, false);
-            }
-        }
+        currentFrame()?.setVisible(false, false)
 
-        cur_frame = next;
-        cur_repeat = next_repeat;
+        curFrame = next
+        curRepeat = nextRepeat
 
-        Drawable next_drawable = state.getFrame(next);
-        assert next_drawable != null;
-        next_drawable.setVisible(isVisible(), true);
-        next_drawable.setAlpha(alpha);
-        next_drawable.setColorFilter(color_filter);
-        next_drawable.setState(getState());
-        next_drawable.setLevel(getLevel());
-        next_drawable.setBounds(getBounds());
+        val nextDrawable = constantState.getFrame(next)!!
+        nextDrawable.setVisible(isVisible, true)
+        nextDrawable.alpha = alphaValue
+        @Suppress("DEPRECATION")
+        nextDrawable.colorFilter = colorFilterValue
+        nextDrawable.state = state
+        nextDrawable.level = level
+        nextDrawable.bounds = bounds
 
-        int duration = state.getFrameDuration(next);
-        int next_duration =
-                (duration < 0 && state.total_duration < 0 ? -1 :
-                        duration < 0 ? state.total_duration - cur_duration :
-                                state.total_duration < 0 ? cur_duration + duration :
-                                        Math.min(cur_duration + duration,
-                                                state.total_duration));
-        if (next_duration >= 0) {
-            duration = next_duration - cur_duration;
-            scheduleSelf(frame_updater, SystemClock.uptimeMillis() + duration);
-        }
-
-        cur_duration = (next_duration >= 0 ? next_duration : cur_duration);
-        invalidateSelf();
-    }
-
-    private static class MotionConstantState extends ConstantState {
-        private final ArrayList<ItemInfo> drawables;
-        private int changing_configurations = 0;
-        private int opacity;
-        private int total_duration = 0;
-        private int repeat_count = 1;
-
-        private MotionConstantState() {
-            drawables = new ArrayList<>();
-        }
-
-        private void addFrame(Drawable drawable, int duration) {
-            drawables.add(new ItemInfo(drawable, duration));
-            if (duration >= 0 && total_duration >= 0) {
-                total_duration += duration;
+        var duration = constantState.getFrameDuration(next)
+        val nextDuration =
+            if (duration < 0 && constantState.totalDuration < 0) {
+                -1
+            } else if (duration < 0) {
+                constantState.totalDuration - curDuration
+            } else if (constantState.totalDuration < 0) {
+                curDuration + duration
             } else {
-                total_duration = -1;
+                minOf(curDuration + duration, constantState.totalDuration)
             }
 
-            changing_configurations |= drawable.getChangingConfigurations();
-            opacity = (drawables.size() > 1 ?
-                    Drawable.resolveOpacity(opacity, drawable.getOpacity()) :
-                    drawable.getOpacity());
+        if (nextDuration >= 0) {
+            duration = nextDuration - curDuration
+            scheduleSelf(frameUpdater, SystemClock.uptimeMillis() + duration)
         }
+        curDuration = if (nextDuration >= 0) nextDuration else curDuration
+        invalidateSelf()
+    }
 
-        private Drawable getFrame(int idx) {
-            idx = (Math.max(idx, 0));
-            if (drawables.size() <= idx) {
-                return null;
+    // ----- ConstantState -----
+    private class ItemInfo(val drawable: Drawable, val duration: Int)
+
+    private class MotionConstantState : ConstantState() {
+        private val drawables = ArrayList<ItemInfo>()
+        var changingConfigurationsMask: Int = 0
+            private set
+        var opacity: Int = PixelFormat.TRANSPARENT
+            private set
+
+        var totalDuration: Int = 0
+        var repeatCount: Int = 1
+
+        fun addFrame(drawable: Drawable, duration: Int) {
+            drawables.add(ItemInfo(drawable, duration))
+            totalDuration = if (duration >= 0 && totalDuration >= 0) {
+                totalDuration + duration
+            } else {
+                -1
             }
-
-            return drawables.get(idx).drawable;
-        }
-
-        private int getFrameDuration(int idx) {
-            idx = (Math.max(idx, 0));
-            if (drawables.size() <= idx) {
-                return 0;
+            changingConfigurationsMask =
+                changingConfigurationsMask or drawable.changingConfigurations
+            opacity = if (drawables.size > 1) {
+                resolveOpacity(opacity, drawable.opacity)
+            } else {
+                drawable.opacity
             }
-
-            return drawables.get(idx).duration;
         }
 
-        private int getFrameCount() {
-            return drawables.size();
+        fun getFrame(idx: Int): Drawable? {
+            val i = idx.coerceAtLeast(0)
+            return if (i >= drawables.size) null else drawables[i].drawable
         }
 
-        @Override
-        public int getChangingConfigurations() {
-            return changing_configurations;
+        fun getFrameDuration(idx: Int): Int {
+            val i = idx.coerceAtLeast(0)
+            return if (i >= drawables.size) 0 else drawables[i].duration
         }
 
-        @NonNull
-        @Override
-        public Drawable newDrawable() {
-            throw new UnsupportedOperationException(
-                    "newDrawable is not supported");
+        val frameCount: Int get() = drawables.size
+
+        override fun getChangingConfigurations(): Int = changingConfigurationsMask
+
+        override fun newDrawable(): Drawable {
+            throw UnsupportedOperationException("newDrawable is not supported")
         }
 
-        @NonNull
-        @Override
-        public Drawable newDrawable(Resources res) {
-            throw new UnsupportedOperationException(
-                    "newDrawable is not supported");
+        override fun newDrawable(res: Resources?): Drawable {
+            throw UnsupportedOperationException("newDrawable(Resources) is not supported")
         }
 
-        private int getOpacity() {
-            return (drawables.size() > 1 ? opacity : PixelFormat.TRANSPARENT);
+        override fun newDrawable(res: Resources?, theme: Resources.Theme?): Drawable {
+            throw UnsupportedOperationException("newDrawable(Resources,Theme) is not supported")
         }
     }
 
-    private static class ItemInfo {
-        private final Drawable drawable;
-        private final int duration;
+    // ----- Callbacks cho drawable con -----
+    private inner class ChildCallback : Callback {
+        override fun invalidateDrawable(who: Drawable) {
+            if (who === currentFrame()) invalidateSelf()
+        }
 
-        private ItemInfo(Drawable drawable, int duration) {
-            this.drawable = drawable;
-            this.duration = duration;
+        override fun scheduleDrawable(who: Drawable, what: Runnable, whenMillis: Long) {
+            if (who === currentFrame()) scheduleSelf(what, whenMillis)
+        }
+
+        override fun unscheduleDrawable(who: Drawable, what: Runnable) {
+            if (who === currentFrame()) unscheduleSelf(what)
         }
     }
 
-    private class ChildCallback implements Drawable.Callback {
-        @Override
-        public void invalidateDrawable(@NonNull Drawable who) {
-            if (who == getCurrentFrame()) {
-                invalidateSelf();
-            }
-        }
-
-        @Override
-        public void scheduleDrawable(@NonNull Drawable who, @NonNull Runnable what, long when) {
-            if (who == getCurrentFrame()) {
-                scheduleSelf(what, when);
-            }
-        }
-
-        @Override
-        public void unscheduleDrawable(@NonNull Drawable who, @NonNull Runnable what) {
-            if (who == getCurrentFrame()) {
-                unscheduleSelf(what);
-            }
+    private inner class ChildOnMotionEnd : OnMotionEndListener {
+        override fun onMotionEnd(drawable: MotionDrawable) {
+            if (drawable === currentFrame()) updateFrame()
         }
     }
 
-    private class ChildOnMotionEnd implements OnMotionEndListener {
-        @Override
-        public void onMotionEnd(MotionDrawable drawable) {
-            if (drawable == getCurrentFrame()) {
-                updateFrame();
-            }
-        }
+    fun addFrameFromFile(skinDir: File, nameNoExt: String, durationMs: Int) {
+        val base = nameNoExt.trim()
+        val candidate = listOf("png", "webp", "jpg", "jpeg")
+            .asSequence()
+            .map { File(skinDir, "$base.$it") }
+            .firstOrNull { it.exists() } ?: return
+
+        val bmp = BitmapFactory.decodeFile(candidate.absolutePath) ?: return
+        val dr = bmp.toDrawable(Resources.getSystem())
+        addFrame(dr, durationMs.coerceAtLeast(0))
     }
 }
