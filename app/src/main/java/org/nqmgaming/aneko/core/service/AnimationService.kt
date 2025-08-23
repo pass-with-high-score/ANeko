@@ -49,8 +49,6 @@ class AnimationService : Service() {
         const val ACTION_START = "org.nqmgaming.aneko.action.START"
         const val ACTION_STOP = "org.nqmgaming.aneko.action.STOP"
         const val ACTION_TOGGLE = "org.nqmgaming.aneko.action.TOGGLE"
-        const val ACTION_GET_SKIN = "org.tamanegi.aneko.action.GET_SKIN"
-
         const val PREF_KEY_ENABLE = "motion.enable"
         const val PREF_KEY_VISIBLE = "motion.visible"
         const val PREF_KEY_TRANSPARENCY = "motion.transparency"
@@ -61,14 +59,11 @@ class AnimationService : Service() {
         const val PREF_KEY_NOTIFICATION_ENABLE = "notification.enable"
 
         private const val MSG_ANIMATE = 1
-        private const val ANIMATION_INTERVAL = 125L // msec
-        private const val BEHAVIOUR_CHANGE_DURATION = 4000L // msec
-
-        // Thư mục skins trong internal storage
+        private const val ANIMATION_INTERVAL = 125L
         private const val SKINS_DIR_NAME = "skins"
     }
 
-    private enum class Behaviour { closer, further, whimsical }
+    private enum class Behaviour { Closer, Further, Whimsical }
 
     private var imageWidth = 80
     private var imageHeight = 80
@@ -290,13 +285,11 @@ class AnimationService : Service() {
         val dir = if (folder.isBlank()) skinsRoot else File(skinsRoot, folder)
         val skinXml = File(dir, xmlFile).let { f ->
             if (!f.exists()) {
-                // fallback: lấy *.xml đầu tiên
                 dir.listFiles { _, name -> name.lowercase().endsWith(".xml") }?.firstOrNull()
                     ?: throw IllegalArgumentException("skin.xml not found in ${dir.absolutePath}")
             } else f
         }
 
-        // Không còn dùng Resources cho frame; Resources chỉ dùng cho metric trong parser.
         return MotionConfigParser.parseFromFile(this, skinXml, dir)
     }
 
@@ -315,7 +308,7 @@ class AnimationService : Service() {
         }
 
         val alphaStr = prefs.getString(PREF_KEY_TRANSPARENCY, "0.0") ?: "0.0"
-        val opacity = 1f - alphaStr.toFloatOrNull().let { it ?: 0f }
+        val opacity = 1f - (alphaStr.toFloatOrNull() ?: 0f)
         motionState!!.alpha = (opacity * 0xff).roundToInt()
 
         motionState!!.setBehaviour(
@@ -488,7 +481,7 @@ class AnimationService : Service() {
         private lateinit var params: MotionParams
         var alpha: Int = 0xff
 
-        var behaviour: Behaviour = Behaviour.whimsical
+        var behaviour: Behaviour = Behaviour.Whimsical
             private set
         private var curBehaviourIdx = 0
         private var lastBehaviourChanged = 0L
@@ -649,8 +642,8 @@ class AnimationService : Service() {
             // Giữ nguyên hành vi cũ (ICS_OR_LATER = true -> whimsical)
             curBehaviourIdx = Behaviour.entries.size - 1
             when (Behaviour.entries[curBehaviourIdx]) {
-                Behaviour.closer -> setTargetPositionDirect(x, y)
-                Behaviour.further -> {
+                Behaviour.Closer -> setTargetPositionDirect(x, y)
+                Behaviour.Further -> {
                     var dx = displayWidth / 2f - x
                     var dy = displayHeight / 2f - y
                     if (dx == 0f && dy == 0f) {
@@ -686,7 +679,7 @@ class AnimationService : Service() {
                     setTargetPositionDirect(e.x * r + x * (1 - r), e.y * r + y * (1 - r))
                 }
 
-                Behaviour.whimsical -> {
+                Behaviour.Whimsical -> {
                     val minWH2 = min(displayWidth, displayHeight) / 2f
                     val r = random.nextFloat() * minWH2 + minWH2
                     val a = random.nextFloat() * 360f

@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.util.Properties
 
 plugins {
@@ -65,16 +66,15 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = libs.versions.jvmTarget.get()
+    kotlin {
+        compilerOptions {
+            jvmTarget = JvmTarget.JVM_11
+        }
     }
+
     buildFeatures {
         buildConfig = true
         compose = true
-    }
-
-    androidResources {
-        generateLocaleConfig = true
     }
 
     dependenciesInfo {
@@ -86,61 +86,69 @@ android {
 
 dependencies {
 
+    // AndroidX Core
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.preference.ktx)
-    // Compose
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.work.runtime)
+
+    // Compose BOM
     implementation(platform(libs.androidx.compose.bom))
-    // Core UI
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+
+    // Compose UI
     implementation(libs.ui)
     implementation(libs.material3)
+    implementation(libs.material)
     implementation(libs.ui.tooling.preview)
-
-    // Runtime
-    implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.lifecycle.runtime.compose)
-
-    implementation(libs.accompanist.permissions)
-    implementation(libs.coil.compose)
     implementation(libs.androidx.material.icons.extended)
+    implementation(libs.androidx.compose.animation.graphics)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.androidx.ui.graphics)
 
-    // Compose Destination
-    implementation(libs.compose.destination.animation.core)
+    // Compose Destinations
     implementation(libs.compose.destination.core)
+    implementation(libs.compose.destination.animation.core)
     ksp(libs.compose.destination.ksp)
+
+    // Accompanist
+    implementation(libs.accompanist.permissions)
+
+    // Coil
+    implementation(libs.coil.compose)
 
     // Hilt
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)
-    ksp(libs.hilt.compiler)
     implementation(libs.hilt.work)
+    ksp(libs.hilt.compiler)
 
-    // WorkManager
-    implementation(libs.androidx.work.runtime)
+    // Ktor
+    implementation(libs.bundles.ktor)
 
     // Serialization
     implementation(libs.bundles.serialization)
 
-    implementation(libs.androidx.compose.animation.graphics)
+    // Room
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
 
-    implementation(libs.bundles.ktor)
-    implementation("org.slf4j:slf4j-android:1.7.36")
-
-    implementation("androidx.room:room-runtime:2.7.2")
-    ksp("androidx.room:room-compiler:2.7.2")
-    implementation("androidx.room:room-ktx:2.7.2")
-
+    // Kotlin
     implementation(libs.kotlin.stdlib.jdk8)
-    implementation(libs.material)
-    implementation(libs.timber)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.ui.graphics)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
 
+    // Logging & Debugging
+    implementation(libs.slf4j.android)
+    implementation(libs.timber)
+
+    // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
 }

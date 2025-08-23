@@ -18,7 +18,4 @@ class SkinRepository @Inject constructor(
     }
 
     suspend fun removeSkin(skin: SkinEntity) = skinDao.deleteSkin(skin)
-
-    suspend fun getActiveSkin(): SkinEntity? = skinDao.getActiveSkin()
-
 }

@@ -61,7 +61,7 @@ open class MotionParams {
         WallDirection.RIGHT -> "${wallStatePrefix}Right"
     }
 
-    // ---------- Parsing từ FILE (không Resources) ----------
+    // ---------- Parsing from FILE (no Resources) ----------
     companion object {
         private const val TAG_MOTION_PARAMS = "motion-params"
         private const val TAG_MOTION = "motion"
@@ -72,7 +72,7 @@ open class MotionParams {
         private const val ATTR_MAX_VELOCITY = "maxVelocity"
         private const val ATTR_DECELERATION = "decelerationDistance"
         private const val ATTR_DEACCELERATION =
-            "deaccelerationDistance" // hỗ trợ alias trong xml cũ
+            "deaccelerationDistance"
         private const val ATTR_PROXIMITY = "proximityDistance"
 
         private const val ATTR_INITIAL_STATE = "initialState"
@@ -170,7 +170,7 @@ open class MotionParams {
             if (type != XmlPullParser.START_TAG) continue
 
             when (xml.name) {
-                TAG_MOTION -> parseMotion(xml, attrs, ::attrBool, ::attrStr)
+                TAG_MOTION -> parseMotion(xml, attrs, ::attrBool)
                 else -> throw IllegalArgumentException("unknown tag: ${xml.name}")
             }
         }
@@ -181,7 +181,6 @@ open class MotionParams {
         xml: XmlPullParser,
         attrs: AttributeSet,
         boolAttr: (String, Boolean) -> Boolean,
-        strAttr: (String, String) -> String
     ) {
         val motion = Motion()
 

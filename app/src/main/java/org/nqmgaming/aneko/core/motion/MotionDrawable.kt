@@ -34,7 +34,6 @@ class MotionDrawable() : Drawable(), Animatable {
     private val childCallback = ChildCallback()
     private val childEnd = ChildOnMotionEnd()
 
-    // Secondary constructor để gói AnimationDrawable thành MotionDrawable lồng nhau
     constructor(anim: AnimationDrawable) : this() {
         constantState.repeatCount = if (anim.isOneShot) 1 else -1
         val nf = anim.numberOfFrames
@@ -43,7 +42,7 @@ class MotionDrawable() : Drawable(), Animatable {
         }
     }
 
-    // ----- API gọi từ parser / logic chuyển động -----
+    // ----- API call from parser / logic move -----
     fun setTotalDuration(duration: Int) {
         constantState.totalDuration = duration
     }
@@ -121,7 +120,6 @@ class MotionDrawable() : Drawable(), Animatable {
     }
 
     override fun isStateful(): Boolean {
-        // chuyển tiếp theo frame hiện tại
         return currentFrame()?.isStateful == true
     }
 
@@ -158,7 +156,7 @@ class MotionDrawable() : Drawable(), Animatable {
         }
     }
 
-    // ----- Chuyển frame -----
+    // ----- Change frame -----
     private fun updateFrame() {
         val nf = constantState.frameCount
         var next = curFrame + 1
@@ -236,9 +234,9 @@ class MotionDrawable() : Drawable(), Animatable {
             changingConfigurationsMask =
                 changingConfigurationsMask or drawable.changingConfigurations
             opacity = if (drawables.size > 1) {
-                resolveOpacity(opacity, drawable.opacity)
+                resolveOpacity(opacity, drawables.last().drawable.opacity)
             } else {
-                drawable.opacity
+                drawables.last().drawable.opacity
             }
         }
 
@@ -269,7 +267,7 @@ class MotionDrawable() : Drawable(), Animatable {
         }
     }
 
-    // ----- Callbacks cho drawable con -----
+    // ----- Callbacks for child drawable -----
     private inner class ChildCallback : Callback {
         override fun invalidateDrawable(who: Drawable) {
             if (who === currentFrame()) invalidateSelf()

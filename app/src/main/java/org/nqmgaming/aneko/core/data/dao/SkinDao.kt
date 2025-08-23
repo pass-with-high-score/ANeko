@@ -13,8 +13,6 @@ interface SkinDao {
     @Query("SELECT * FROM skin ORDER BY name")
     fun observeSkins(): Flow<List<SkinEntity>>
 
-    @Query("SELECT * FROM skin WHERE packageName = :pkg LIMIT 1")
-    suspend fun getSkin(pkg: String): SkinEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertSkin(skin: SkinEntity)
@@ -22,13 +20,7 @@ interface SkinDao {
     @Query("UPDATE skin SET isActive = (packageName = :pkg)")
     suspend fun switchActive(pkg: String)
 
-    @Query("UPDATE skin SET isFavorite = NOT isFavorite WHERE packageName = :pkg")
-    suspend fun toggleFavorite(pkg: String)
-
     @Delete
     suspend fun deleteSkin(skin: SkinEntity)
-
-    @Query("SELECT * FROM skin WHERE isActive = 1 LIMIT 1")
-    suspend fun getActiveSkin(): SkinEntity?
 
 }
