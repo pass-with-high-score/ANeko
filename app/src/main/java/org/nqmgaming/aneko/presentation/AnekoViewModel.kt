@@ -93,6 +93,9 @@ class AnekoViewModel @Inject constructor(
         viewModelScope.launch {
             repo.switchActive(skinInfo.packageName)
         }
+        prefs.edit {
+            putString(AnimationService.PREF_KEY_SKIN_COMPONENT, skinInfo.packageName)
+        }
     }
 
     fun onDeselectSkin(skin: SkinEntity, context: Context) {

@@ -6,7 +6,6 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
-import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
@@ -28,6 +27,7 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.ImageView
 import androidx.annotation.NonNull
+import androidx.core.content.edit
 import androidx.core.net.toUri
 import org.nqmgaming.aneko.R
 import org.nqmgaming.aneko.core.motion.MotionConfigParser
@@ -43,10 +43,6 @@ import kotlin.math.min
 import kotlin.math.roundToInt
 import kotlin.math.sin
 
-private enum class Behaviour {
-    closer, further, whimsical
-}
-
 class AnimationService : Service() {
 
     companion object {
@@ -55,7 +51,6 @@ class AnimationService : Service() {
         const val ACTION_TOGGLE = "org.nqmgaming.aneko.action.TOGGLE"
         const val ACTION_GET_SKIN = "org.tamanegi.aneko.action.GET_SKIN"
 
-        const val META_KEY_SKIN = "org.tamanegi.aneko.skin"
         const val PREF_KEY_ENABLE = "motion.enable"
         const val PREF_KEY_VISIBLE = "motion.visible"
         const val PREF_KEY_TRANSPARENCY = "motion.transparency"
@@ -189,7 +184,7 @@ class AnimationService : Service() {
 
     private fun toggleAnimation() {
         val visible = prefs.getBoolean(PREF_KEY_VISIBLE, true)
-        prefs.edit().putBoolean(PREF_KEY_VISIBLE, !visible).apply()
+        prefs.edit { putBoolean(PREF_KEY_VISIBLE, !visible) }
         startService(Intent(this, AnimationService::class.java).setAction(ACTION_START))
     }
 
@@ -238,18 +233,18 @@ class AnimationService : Service() {
     // ================== Load Motion ==================
 
     private fun loadMotionState(): Boolean {
-        prefs.getString(PREF_KEY_SKIN_COMPONENT, "") ?: ""
-        return loadMotionDir()
+        val packageName = prefs.getString(PREF_KEY_SKIN_COMPONENT, "") ?: ""
+        return loadMotionDir(packageName = packageName)
     }
 
     /**
      * Đọc từ INTERNAL: files/skins/<folder>/skin.xml (+ ảnh)
      * Giá trị prefs "motion.skin" có thể là "<folder>/skin.xml" hoặc "<folder>"
      */
-    private fun loadMotionDir(): Boolean {
-        val skinPath = "com.nqmgaming.caza"
+    private fun loadMotionDir(packageName: String): Boolean {
+        if (packageName.isBlank()) return false
         val loaded = try {
-            val params = getMotionParamsInternal(skinPath)
+            val params = getMotionParamsInternal(packageName)
             motionState = MotionState().apply { setParams(params) }
             true
         } catch (e: Exception) {
