@@ -12,8 +12,6 @@ import org.nqmgaming.aneko.core.data.entity.SkinEntity
 interface SkinDao {
     @Query("SELECT * FROM skin ORDER BY name")
     fun observeSkins(): Flow<List<SkinEntity>>
-
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertSkin(skin: SkinEntity)
 

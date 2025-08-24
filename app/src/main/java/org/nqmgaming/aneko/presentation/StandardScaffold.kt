@@ -66,9 +66,9 @@ fun StandardScaffold(
     val scope = rememberCoroutineScope()
 
     val filePickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.OpenDocument(),
-        onResult = { uri: Uri? ->
-            if (uri != null) {
+        contract = ActivityResultContracts.OpenMultipleDocuments(),
+        onResult = { uris: List<Uri>? ->
+            uris?.forEach { uri ->
                 try {
                     context.contentResolver.takePersistableUriPermission(
                         uri, Intent.FLAG_GRANT_READ_URI_PERMISSION
@@ -78,7 +78,7 @@ fun StandardScaffold(
                 }
 
                 scope.launch(Dispatchers.IO) {
-                    val pkg = viewModel.importSkinZipToAppStorage(context, uri)
+                    val pkg = viewModel.importSkinFromUri(context, uri)
                     withContext(Dispatchers.Main) {
                         if (pkg != null) {
                             Toast.makeText(
@@ -93,7 +93,6 @@ fun StandardScaffold(
                     }
                 }
             }
-
         }
     )
     Scaffold(

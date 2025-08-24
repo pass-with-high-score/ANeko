@@ -35,8 +35,8 @@ fun SettingsScreen() {
                 title = stringResource(R.string.motion_transparency_title),
                 summary = stringResource(R.string.motion_transparency_summary),
                 icon = R.drawable.ic_shape_exclude,
-                entries = context.resources.getStringArray(R.array.pref_motion_transparency_entries),
-                entryValues = context.resources.getStringArray(R.array.pref_motion_transparency_entry_values),
+                entries = context.run { resources.getStringArray(R.array.pref_motion_transparency_entries) },
+                entryValues = context.run { resources.getStringArray(R.array.pref_motion_transparency_entry_values) },
                 key = AnimationService.PREF_KEY_TRANSPARENCY,
                 defaultValue = "0.0",
                 prefs = prefs
@@ -50,8 +50,8 @@ fun SettingsScreen() {
                 title = stringResource(R.string.motion_speed_title),
                 summary = stringResource(R.string.motion_speed_summary),
                 icon = R.drawable.ic_speed,
-                entries = context.resources.getStringArray(R.array.pref_motion_speed_entries),
-                entryValues = context.resources.getStringArray(R.array.pref_motion_speed_entry_values),
+                entries = context.run { resources.getStringArray(R.array.pref_motion_speed_entries) },
+                entryValues = context.run { resources.getStringArray(R.array.pref_motion_speed_entry_values) },
                 key = AnimationService.PREF_KEY_SPEED,
                 defaultValue = "1.0",
                 prefs = prefs
@@ -65,8 +65,8 @@ fun SettingsScreen() {
                 title = stringResource(R.string.motion_size_title),
                 summary = stringResource(R.string.motion_size_summary),
                 icon = R.drawable.ic_slide_size,
-                entries = context.resources.getStringArray(R.array.pref_motion_size),
-                entryValues = context.resources.getStringArray(R.array.pref_motion_size_entry_values),
+                entries = context.run { resources.getStringArray(R.array.pref_motion_size) },
+                entryValues = context.run { resources.getStringArray(R.array.pref_motion_size_entry_values) },
                 key = AnimationService.PREF_KEY_SIZE,
                 defaultValue = "80",
                 prefs = prefs

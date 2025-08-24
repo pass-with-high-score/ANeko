@@ -6,7 +6,7 @@ import androidx.compose.ui.graphics.Color
 val Coral = Color(0xFFFF6F61)
 val Orange = Color(0xFFFFB74D)
 val LightBlue = Color(0xFF64B5F6)
-val Whitesmoke = Color(0xFFF5F5F5)
+val WhiteSmoke = Color(0xFFF5F5F5)
 val White = Color(0xFFFFFFFF)
 val DarkGray = Color(0xFF212121)
 

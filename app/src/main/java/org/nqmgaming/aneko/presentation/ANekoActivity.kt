@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -35,6 +36,27 @@ class ANekoActivity : AppCompatActivity() {
 
         setContent {
             val viewModel: AnekoViewModel = hiltViewModel()
+            val buildInSkin =
+                viewModel.uiState.collectAsState().value.skins.firstOrNull { it.isBuiltin }
+            val isListEmpty = viewModel.uiState.collectAsState().value.skins.isEmpty()
+            val isEnabled = prefs.getBoolean(AnimationService.PREF_KEY_ENABLE, false)
+            val skinActive =
+                viewModel.uiState.collectAsState().value.skins.firstOrNull { it.isActive }
+            LaunchedEffect(key1 = buildInSkin == null, key2 = isListEmpty) {
+                if (buildInSkin == null && !isListEmpty) {
+                    viewModel.importSkinFromAssets(
+                        this@ANekoActivity,
+                        assetName = "aneko.zip",
+                        overwrite = true,
+                    )
+                }
+            }
+            // if enable but no skin active default use built in
+            LaunchedEffect(key1 = isEnabled, key2 = skinActive, key3 = buildInSkin) {
+                if (isEnabled && skinActive == null && buildInSkin != null) {
+                    viewModel.onSelectSkin(buildInSkin)
+                }
+            }
             val isDarkTheme by viewModel.isDarkTheme.collectAsState()
             val navController = rememberNavController()
             val navHostEngine = rememberNavHostEngine(
@@ -73,9 +95,5 @@ class ANekoActivity : AppCompatActivity() {
             Intent(this, AnimationService::class.java)
                 .setAction(AnimationService.ACTION_START)
         )
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
     }
 }
