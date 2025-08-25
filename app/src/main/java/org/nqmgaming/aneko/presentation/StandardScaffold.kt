@@ -96,6 +96,7 @@ fun StandardScaffold(
         }
     )
     Scaffold(
+        containerColor = Color.Transparent,
         bottomBar = {
             AnimatedVisibility(
                 visible = showBottomBar,
@@ -182,6 +183,8 @@ fun StandardScaffold(
         },
         floatingActionButton = {
             FloatingActionButton(
+                containerColor = colorScheme.primary,
+                contentColor = colorScheme.onPrimary,
                 onClick = {
                     // open file picker or download manager
                     filePickerLauncher.launch(

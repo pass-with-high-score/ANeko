@@ -1,15 +1,12 @@
 package org.nqmgaming.aneko.presentation.home.component
 
-import androidx.compose.foundation.selection.selectable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
@@ -18,8 +15,12 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import org.nqmgaming.aneko.R
 import org.nqmgaming.aneko.data.Language
 import org.nqmgaming.aneko.util.extension.changeLanguage
@@ -30,8 +31,8 @@ fun SelectLanguageDialog(
     onDismiss: () -> Unit,
 ) {
     val context = LocalContext.current
-    val codes = context.resources.getStringArray(R.array.language_codes)
-    val names = context.resources.getStringArray(R.array.language_names)
+    val codes = LocalResources.current.getStringArray(R.array.language_codes)
+    val names = LocalResources.current.getStringArray(R.array.language_names)
     val languages = codes.zip(names) { code, name -> Language(code, name) }
 
     val currentLanguage = remember {

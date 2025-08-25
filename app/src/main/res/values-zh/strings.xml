@@ -61,8 +61,9 @@
     <string name="translate_contribute_summary">加入我们的 POEditor 翻译项目\n每一份小小的贡献都非常宝贵，提前感谢你！</string>
     <string name="choose_language_title">选择语言</string>
     <string name="contribute_to_translation">参与翻译</string>
-    <string name="txt_explore">Explore</string>
-    <string name="txt_loading">Loading</string>
-    <string name="share_skin_label">Share</string>
+    <string name="txt_explore">探索</string>
+    <string name="txt_loading">加载中</string>
+    <string name="share_skin_label">分享</string>
+    <string name="label_author">作者: %1$s</string>
 
 </resources>

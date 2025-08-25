@@ -45,6 +45,9 @@ import coil.request.ImageRequest
 import org.nqmgaming.aneko.R
 import org.nqmgaming.aneko.core.data.entity.SkinEntity
 import org.nqmgaming.aneko.core.data.entity.previewModel
+import org.nqmgaming.aneko.core.util.zipDirectory
+import timber.log.Timber
+import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -124,7 +127,7 @@ fun SkinDetailsBottomSheet(
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                             Text(
-                                text = stringResource(R.string.version_skin_label, skin.author),
+                                text = stringResource(R.string.label_author, skin.author),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -177,8 +180,46 @@ fun SkinDetailsBottomSheet(
                         Button(
                             onClick = {
                                 try {
-                                    // Get skin folder, zip and share it
-                                } catch (_: Exception) {
+                                    val skinDir =
+                                        File(context.filesDir, "skins/${skin.packageName}")
+
+                                    val zipFile = File(
+                                        context.cacheDir,
+                                        "${skin.name}.zip"
+                                    )
+                                    if (zipFile.exists()) {
+                                        zipFile.delete()
+                                    }
+                                    zipFile.outputStream().use { outputStream ->
+                                        zipDirectory(
+                                            skinDir,
+                                            outputStream
+                                        )
+                                    }
+                                    val zipUri = androidx.core.content.FileProvider.getUriForFile(
+                                        context,
+                                        "${context.packageName}.provider",
+                                        zipFile
+                                    )
+
+                                    val shareIntent =
+                                        android.content.Intent(android.content.Intent.ACTION_SEND)
+                                            .apply {
+                                                type = "application/zip"
+                                                putExtra(
+                                                    android.content.Intent.EXTRA_STREAM,
+                                                    zipUri
+                                                )
+                                                addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                            }
+                                    context.startActivity(
+                                        android.content.Intent.createChooser(
+                                            shareIntent,
+                                            context.getString(R.string.share_skin_label)
+                                        )
+                                    )
+                                } catch (e: Exception) {
+                                    Timber.e(e, "Error sharing skin: ${skin.name}")
                                     Toast.makeText(
                                         context,
                                         context.getString(

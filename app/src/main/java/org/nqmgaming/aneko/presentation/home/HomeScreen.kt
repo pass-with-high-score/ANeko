@@ -158,7 +158,7 @@ fun HomeScreen(
             HomeContent(
                 modifier = Modifier
                     .padding(innerPadding)
-                    .padding(bottom = 96.dp),
+                    .padding(bottom = 82.dp),
                 isEnabled = isEnabledState,
                 onChangeEnable = { enabled ->
                     viewModel.updateAnimationEnabled(enabled)

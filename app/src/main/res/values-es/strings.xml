@@ -67,8 +67,9 @@
     <string name="translate_contribute_summary">Únete a nuestro proyecto de traducción en POEditor\n¡Cada pequeño aporte cuenta. Muchas gracias de antemano!</string>
     <string name="choose_language_title">Elegir idioma</string>
     <string name="contribute_to_translation">Contribuir a la traducción</string>
-    <string name="txt_explore">Explore</string>
-    <string name="txt_loading">Loading</string>
-    <string name="share_skin_label">Share</string>
+    <string name="txt_explore">Explorar</string>
+    <string name="txt_loading">Cargando</string>
+    <string name="share_skin_label">Compartir</string>
+    <string name="label_author">Autor: %1$s</string>
 
 </resources>

@@ -57,7 +57,6 @@ fun SkinCard(
     val borderColor = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent
     val bottomSheetState = rememberModalBottomSheetState()
     var isBottomSheetVisible by remember { mutableStateOf(false) }
-    context.packageName
     val isDefaultSkin = skin.isBuiltin
     val model = remember(skin.packageName, skin.previewPath) {
         ImageRequest.Builder(context)
@@ -65,6 +64,7 @@ fun SkinCard(
             .crossfade(true)
             .build()
     }
+
     Card(
         modifier = Modifier
             .width(160.dp)
@@ -122,7 +122,7 @@ fun SkinCard(
             ) {
                 AsyncImage(
                     model = model,
-                    contentDescription = "${skin.name} preview",
+                    contentDescription = null,
                     modifier = Modifier
                         .padding(4.dp)
                         .size(80.dp)

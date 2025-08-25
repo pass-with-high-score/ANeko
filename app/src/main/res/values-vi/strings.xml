@@ -63,8 +63,9 @@
     <string name="translate_contribute_summary">Tham gia dự án dịch của tụi mình trên POEditor nhé\nMỗi đóng góp nhỏ đều rất quý. Cảm ơn bạn nhiều lắm!</string>
     <string name="choose_language_title">Chọn ngôn ngữ</string>
     <string name="contribute_to_translation">Đóng góp vào việc dịch thuật</string>
-    <string name="txt_explore">Explore</string>
-    <string name="txt_loading">Loading</string>
-    <string name="share_skin_label">Share</string>
+    <string name="txt_explore">Khám phá</string>
+    <string name="txt_loading">Đang tải</string>
+    <string name="share_skin_label">Chia sẻ</string>
+    <string name="label_author">Tác giả: %1$s</string>
 
 </resources>
