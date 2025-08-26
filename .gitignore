@@ -173,7 +173,6 @@ fabric.properties
 *.war
 *.nar
 *.ear
-*.zip
 *.tar.gz
 *.rar
 
