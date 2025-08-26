@@ -362,10 +362,18 @@ class AnimationService : Service() {
     }
 
     private fun updatePosition() {
-        val pos = motionState?.position() ?: return
-        imageParams?.x = pos.x
-        imageParams?.y = pos.y
-        (getSystemService(WINDOW_SERVICE) as WindowManager).updateViewLayout(imageView, imageParams)
+        try {
+            val pos = motionState?.position() ?: return
+            imageParams?.x = pos.x
+            imageParams?.y = pos.y
+            (getSystemService(WINDOW_SERVICE) as WindowManager).updateViewLayout(
+                imageView,
+                imageParams
+            )
+        } catch (e: Exception) {
+            // Log or handle the error as needed
+            Timber.e(e, "Failed to update position")
+        }
     }
 
     private fun updateToNext() {

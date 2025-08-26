@@ -42,8 +42,8 @@ class ANekoActivity : AppCompatActivity() {
             val isEnabled = prefs.getBoolean(AnimationService.PREF_KEY_ENABLE, false)
             val skinActive =
                 viewModel.uiState.collectAsState().value.skins.firstOrNull { it.isActive }
-            LaunchedEffect(key1 = isListEmpty) {
-                if (!isListEmpty) {
+            LaunchedEffect(key1 = buildInSkin == null, key2 = isListEmpty) {
+                if (buildInSkin == null && isListEmpty) {
                     viewModel.importSkinFromAssets(
                         this@ANekoActivity,
                         assetName = "aneko.zip",

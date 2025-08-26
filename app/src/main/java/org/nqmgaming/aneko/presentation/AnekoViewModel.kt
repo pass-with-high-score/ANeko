@@ -18,8 +18,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.nqmgaming.aneko.core.data.ApiService
 import org.nqmgaming.aneko.core.data.entity.SkinEntity
 import org.nqmgaming.aneko.core.data.repository.SkinRepository
+import org.nqmgaming.aneko.core.networking.ApiResult
 import org.nqmgaming.aneko.core.service.AnimationService
 import org.xmlpull.v1.XmlPullParser
 import java.io.BufferedInputStream
@@ -35,6 +37,7 @@ import javax.inject.Inject
 class AnekoViewModel @Inject constructor(
     application: Application,
     private val repo: SkinRepository,
+    private val apiService: ApiService
 ) : AndroidViewModel(application) {
     companion object {
         const val PREF_KEY_THEME = "theme"
@@ -70,6 +73,7 @@ class AnekoViewModel @Inject constructor(
                     _uiState.update { it.copy(skins = skins) }
                 }
         }
+        getSkinCollection()
     }
 
     override fun onCleared() {
@@ -181,7 +185,7 @@ class AnekoViewModel @Inject constructor(
         val tempDir = File(context.cacheDir, "skin_temp_assets_$assetName").apply { mkdirs() }
 
         return context.assets.open(assetName).use { input ->
-            importSkinFromStream(context, input, tempDir, overwrite, isBuiltIn = true)
+            importSkinFromStream(context, input, tempDir, overwrite)
         }
     }
 
@@ -190,7 +194,6 @@ class AnekoViewModel @Inject constructor(
         inputStream: InputStream,
         tempDir: File,
         overwrite: Boolean,
-        isBuiltIn: Boolean = false
     ): String? = withContext(Dispatchers.IO) {
         try {
             val extractedFiles = unzipToTempDir(inputStream, tempDir)
@@ -202,7 +205,7 @@ class AnekoViewModel @Inject constructor(
                 return@withContext null
             }
 
-            val skin = parseSkinMetadata(skinXmlFile, isBuiltIn)
+            val skin = parseSkinMetadata(skinXmlFile, context)
             if (skin == null) {
                 tempDir.deleteRecursively()
                 return@withContext null
@@ -241,7 +244,7 @@ class AnekoViewModel @Inject constructor(
         }
     }
 
-    fun parseSkinMetadata(xmlFile: File, isBuiltIn: Boolean): SkinEntity? {
+    fun parseSkinMetadata(xmlFile: File, context: Context): SkinEntity? {
         var pkg: String
         var author: String
         var name: String
@@ -281,7 +284,7 @@ class AnekoViewModel @Inject constructor(
                         previewPath = preview,
                         isActive = false,
                         isFavorite = false,
-                        isBuiltin = isBuiltIn,
+                        isBuiltin = context.packageName == pkg,
                     )
                 }
                 event = parser.next()
@@ -383,6 +386,44 @@ class AnekoViewModel @Inject constructor(
             if (missingImages.isNotEmpty()) add("Missing images: $missingImages")
             if (extraImages.isNotEmpty()) add("Extra images: $extraImages")
             if (isEmpty()) add("All images match drawables.")
+        }
+    }
+
+    fun getSkinCollection(isRefresh: Boolean = false) {
+        viewModelScope.launch {
+            apiService.getSkinCollection().collect { result ->
+                when (result) {
+                    is ApiResult.Error -> {
+                        _uiState.update {
+                            it.copy(
+                                isLoading = false,
+                                skinCollections = emptyList(),
+                                isRefreshing = false
+                            )
+                        }
+                    }
+
+                    is ApiResult.Loading -> {
+                        _uiState.update {
+                            it.copy(
+                                isLoading = !isRefresh,
+                                isRefreshing = isRefresh,
+                            )
+                        }
+                    }
+
+                    is ApiResult.Success -> {
+                        _uiState.update {
+                            it.copy(
+                                skinCollections = result.data,
+                                isLoading = false,
+                                isRefreshing = false
+                            )
+                        }
+
+                    }
+                }
+            }
         }
     }
 }

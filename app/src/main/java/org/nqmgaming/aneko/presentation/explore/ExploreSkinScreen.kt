@@ -1,10 +1,14 @@
 package org.nqmgaming.aneko.presentation.explore
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Environment
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -36,6 +40,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -50,25 +55,26 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import org.nqmgaming.aneko.R
 import org.nqmgaming.aneko.core.data.entity.SkinEntity
 import org.nqmgaming.aneko.data.SkinCollection
 import org.nqmgaming.aneko.presentation.AnekoViewModel
 import org.nqmgaming.aneko.presentation.components.LoadingOverlay
 import org.nqmgaming.aneko.presentation.ui.theme.ANekoTheme
+import timber.log.Timber
 import java.io.File
 import java.io.FileOutputStream
 
 @Destination<RootGraph>
 @Composable
 fun ExploreSkinScreen(
-    viewModel: ExploreViewModel = hiltViewModel(),
-    anekoViewModel: AnekoViewModel = hiltViewModel()
+    viewModel: AnekoViewModel = hiltViewModel()
 ) {
     val uiState = viewModel.uiState.collectAsState()
-    val skinsLocal = anekoViewModel.uiState.collectAsState()
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     var isImporting by rememberSaveable { mutableStateOf(false) }
+
     ExploreSkin(
         skinCollection = uiState.value.skinCollections,
         isLoading = uiState.value.isLoading,
@@ -76,16 +82,19 @@ fun ExploreSkinScreen(
         onRefresh = {
             viewModel.getSkinCollection(isRefresh = true)
         },
-        skinsLocal = skinsLocal.value.skins,
+        skinsLocal = uiState.value.skins,
         onImportSkin = { uri ->
             if (isImporting) {
-                Toast.makeText(context, "Importing skin, please wait...", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    context,
+                    context.getString(R.string.importing_skin_please_wait), Toast.LENGTH_SHORT
+                ).show()
                 return@ExploreSkin
             }
             try {
                 scope.launch {
                     isImporting = true
-                    val packageName = anekoViewModel.importSkinFromUri(
+                    val packageName = viewModel.importSkinFromUri(
                         context = context,
                         zipUri = uri,
                         overwrite = true,
@@ -93,13 +102,13 @@ fun ExploreSkinScreen(
                     if (packageName != null) {
                         Toast.makeText(
                             context,
-                            "Imported skin from ZIP: $packageName",
+                            context.getString(R.string.imported_skin_from_zip, packageName),
                             Toast.LENGTH_SHORT
                         ).show()
                     } else {
                         Toast.makeText(
                             context,
-                            "Failed to import skin from ZIP",
+                            context.getString(R.string.failed_to_import_skin_from_zip),
                             Toast.LENGTH_SHORT
                         ).show()
                     }
@@ -107,7 +116,10 @@ fun ExploreSkinScreen(
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                Toast.makeText(context, "Failed to import skin: ${e.message}", Toast.LENGTH_SHORT)
+                Toast.makeText(
+                    context,
+                    context.getString(R.string.failed_to_import_skin, e.message), Toast.LENGTH_SHORT
+                )
                     .show()
                 isImporting = false
             }
@@ -153,12 +165,29 @@ fun ExploreSkin(
         return skinsLocal.any { it.packageName == packageName }
     }
 
+    val filePickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.OpenMultipleDocuments(),
+        onResult = { uris: List<Uri>? ->
+            uris?.forEach { uri ->
+                try {
+                    context.contentResolver.takePersistableUriPermission(
+                        uri, Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    )
+                } catch (e: SecurityException) {
+                    Timber.e(e, "Failed to persist URI permission")
+                }
+
+                onImportSkin(uri)
+            }
+        }
+    )
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = "Skin Collection",
+                        text = stringResource(R.string.skin_collection),
                         style = MaterialTheme.typography.headlineSmall.copy(
                             fontWeight = FontWeight.Black
                         ),
@@ -188,6 +217,37 @@ fun ExploreSkin(
                 LazyColumn(
                     modifier = modifier,
                 ) {
+                    if (it.isEmpty() && !isLoading) {
+                        item {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(16.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center,
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.hi_there_is_no_skin_collection_for_now),
+                                    modifier = Modifier
+                                        .padding(16.dp),
+                                    style = MaterialTheme.typography.bodyLarge
+                                )
+                                Button(onClick = {
+                                    filePickerLauncher.launch(
+                                        arrayOf(
+                                            "application/zip",
+                                            "application/x-zip-compressed"
+                                        )
+                                    )
+                                }) {
+                                    Text(
+                                        text = stringResource(R.string.try_to_import_from_zip),
+                                        style = MaterialTheme.typography.bodyLarge
+                                    )
+                                }
+                            }
+                        }
+                    }
                     items(it.size) { index ->
                         val collection = it[index]
                         Column {
@@ -223,7 +283,8 @@ fun ExploreSkin(
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                     Text(
-                                        text = collection.author ?: "Unknown author",
+                                        text = collection.author
+                                            ?: stringResource(R.string.unknown_author),
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis,
                                         style = MaterialTheme.typography.labelMedium,
@@ -252,11 +313,11 @@ fun ExploreSkin(
                                     ) {
                                         Icon(
                                             imageVector = Icons.Default.Download,
-                                            contentDescription = "Download",
+                                            contentDescription = stringResource(R.string.download),
                                         )
                                         if (isInstalled(collection.packageName)) {
                                             Text(
-                                                text = "Overwrite",
+                                                text = stringResource(R.string.overwrite),
                                                 style = MaterialTheme.typography.labelMedium,
                                                 maxLines = 1,
                                                 overflow = TextOverflow.Ellipsis,
@@ -264,7 +325,7 @@ fun ExploreSkin(
 
                                         } else {
                                             Text(
-                                                text = "Download",
+                                                text = stringResource(R.string.download),
                                                 style = MaterialTheme.typography.labelMedium,
                                                 maxLines = 1,
                                                 overflow = TextOverflow.Ellipsis,

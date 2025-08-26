@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.ramcosta.composedestinations.utils.isRouteOnBackStackAsState
 import com.ramcosta.composedestinations.utils.rememberDestinationsNavigator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -95,6 +96,7 @@ fun StandardScaffold(
             }
         }
     )
+
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
     Scaffold(
@@ -114,6 +116,9 @@ fun StandardScaffold(
                         contentColor = colorScheme.onBackground,
                         content = {
                             items.forEach { item ->
+                                val isCurrentDestOnBackStack by navController.isRouteOnBackStackAsState(
+                                    item.direction
+                                )
                                 val color by animateColorAsState(
                                     targetValue = if (currentDestination?.route?.contains(item.route) == true) {
                                         colorScheme.primary
@@ -169,6 +174,11 @@ fun StandardScaffold(
                                     alwaysShowLabel = true,
                                     selected = currentDestination?.route?.contains(item.route) == true,
                                     onClick = {
+                                        if (isCurrentDestOnBackStack) {
+                                            navigator.popBackStack(item.direction, false)
+                                            return@NavigationBarItem
+                                        }
+
                                         navigator.navigate(item.direction) {
                                             launchSingleTop = true
                                             restoreState = true

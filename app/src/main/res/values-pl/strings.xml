@@ -66,5 +66,15 @@
     <string name="txt_loading">Ładowanie</string>
     <string name="share_skin_label">Udostępnij</string>
     <string name="label_author">Autor: %1$s</string>
+    <string name="importing_skin_please_wait">Importing skin, please wait…</string>
+    <string name="imported_skin_from_zip">Imported skin from ZIP: %1$s</string>
+    <string name="failed_to_import_skin_from_zip">Failed to import skin from ZIP</string>
+    <string name="failed_to_import_skin">Failed to import skin: %1$s</string>
+    <string name="skin_collection">Skin Collection</string>
+    <string name="unknown_author">Unknown author</string>
+    <string name="download">Download</string>
+    <string name="overwrite">Overwrite</string>
+    <string name="hi_there_is_no_skin_collection_for_now">Hi! There is no skin collection for now.</string>
+    <string name="try_to_import_from_zip">Try to import from zip</string>
 
 </resources>
