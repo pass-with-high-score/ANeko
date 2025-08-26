@@ -2,7 +2,6 @@
 <resources>
     <string name="notification_enabled">ANeko est en marche.</string>
     <string name="notification_disabled">ANeko est en veille.</string>
-    <string name="download_skins">Télécharger plus de skins</string>
     <string name="power_on">Allumer</string>
     <string name="power_off">Éteindre</string>
     <string name="choose_skin">Choisissez votre skin</string>
@@ -50,11 +49,6 @@
     <string name="version_skin_label">Version : %1$s</string>
     <string name="delete_skin_label">Supprimer le skin</string>
     <string name="unknown_skin_version">Inconnu</string>
-    <string name="choose_skin_source_title">Choisir la source de skins</string>
-    <string name="skin_source_option_download_from_collection">Option 1 : Télécharger la collection de skins (recommandé)</string>
-    <string name="skin_source_option_download_from_store">Option 2 : Chercher des skins sur le Play Store\n\nÀ noter : La plupart des vieux skins ont été retirés par Google. Vous ne pourrez sans doute pas les trouver. Tu peux essayer de chercher un skin ANeko sur Internet, mais prudence face aux risques que cela implique.</string>
-    <string name="download_collection_label">Télécharger la collection</string>
-    <string name="search_on_play_store_label">Chercher sur le Play Store</string>
     <string name="notification_chanel_description">Service d\'arrière-plan pour ANeko</string>
     <string name="translate_contribute_title">Envie de voir ANeko dans votre langue?</string>
     <string name="translate_contribute_summary">Rejoignez notre projet de traduction sur POEditor\nChaque contribution compte. Merci beaucoup d’avance!</string>

@@ -4,7 +4,6 @@
     <string name="notification_enabled">ANeko đang chạy nè~</string>
     <string name="notification_disabled">ANeko đang ngủ rồi zzz~</string>
 
-    <string name="download_skins">Tải thêm skin</string>
     <string name="power_on">Bật nguồn</string>
     <string name="power_off">Tắt nguồn</string>
     <string name="choose_skin">Chọn skin bạn thích</string>
@@ -53,11 +52,6 @@
     <string name="version_skin_label">Phiên bản Skin: %1$s</string>
     <string name="delete_skin_label">Xóa Skin</string>
     <string name="unknown_skin_version">Unknown</string>
-    <string name="choose_skin_source_title">Chọn nguồn skin</string>
-    <string name="skin_source_option_download_from_collection">Tùy chọn 1: Tải bộ sưu tập skin (khuyến nghị)</string>
-    <string name="skin_source_option_download_from_store">Tùy chọn 2: Tìm skin trên Play Store\n\nLưu ý: Hầu hết các skin cũ đã bị Google gỡ bỏ. Bạn có thể sẽ không tìm thấy nữa. Hãy thử tìm skin ANeko trên Internet, nhưng nhớ cẩn thận và hiểu rõ các rủi ro.</string>
-    <string name="download_collection_label">Tải bộ sưu tập</string>
-    <string name="search_on_play_store_label">Tìm trên Play Store</string>
     <string name="notification_chanel_description">Thông báo nền để điều khiển ANeko</string>
     <string name="translate_contribute_title">Bạn muốn thấy ANeko bằng ngôn ngữ của mình?</string>
     <string name="translate_contribute_summary">Tham gia dự án dịch của tụi mình trên POEditor nhé\nMỗi đóng góp nhỏ đều rất quý. Cảm ơn bạn nhiều lắm!</string>

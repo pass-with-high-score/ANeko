@@ -5,9 +5,7 @@
     <string name="notification_enabled">ANeko is running.</string>
     <string name="notification_disabled">ANeko is sleeping.</string>
 
-    <string name="skin_search_uri" translatable="false">market://search?q=ANeko%20skin</string>
     <string name="github_uri" translatable="false">https://github.com/pass-with-high-score/ANeko</string>
-    <string name="download_skins">Download more skins</string>
     <string name="power_on">Power on</string>
     <string name="power_off">Power off</string>
     <string name="download_skins_link" translatable="false">https://github.com/pass-with-high-score/Aneko-skin</string>
@@ -60,11 +58,6 @@
     <string name="version_skin_label">Version: %1$s</string>
     <string name="delete_skin_label">Delete Skin</string>
     <string name="unknown_skin_version">Unknown</string>
-    <string name="choose_skin_source_title">Choose skin source</string>
-    <string name="skin_source_option_download_from_collection">Option 1: Download skin collection (recommended)</string>
-    <string name="skin_source_option_download_from_store">Option 2: Search skins on Play Store\n\nNote: Most old skins have been removed by Google. You may not find them anymore. Try searching on the Internet for ANeko skin, but be careful and understand the risks.</string>
-    <string name="download_collection_label">Download collection</string>
-    <string name="search_on_play_store_label">Search on Play Store</string>
     <string name="aneko_notification_channel_name" translatable="false">ANeko Service</string>
     <string name="notification_chanel_description">Background service for ANeko</string>
     <string name="telegram_group_link" translatable="false">https://t.me/aneko_community</string>

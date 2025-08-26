@@ -39,22 +39,18 @@ class ANekoActivity : AppCompatActivity() {
             val buildInSkin =
                 viewModel.uiState.collectAsState().value.skins.firstOrNull { it.isBuiltin }
             val isListEmpty = viewModel.uiState.collectAsState().value.skins.isEmpty()
-            val isEnabled = prefs.getBoolean(AnimationService.PREF_KEY_ENABLE, false)
-            val skinActive =
-                viewModel.uiState.collectAsState().value.skins.firstOrNull { it.isActive }
+
             LaunchedEffect(key1 = buildInSkin == null, key2 = isListEmpty) {
                 if (buildInSkin == null && isListEmpty) {
-                    viewModel.importSkinFromAssets(
+                    val packageName = viewModel.importSkinFromAssets(
                         this@ANekoActivity,
                         assetName = "aneko.zip",
                         overwrite = true,
                     )
-                }
-            }
-            // if enable but no skin active default use built in
-            LaunchedEffect(key1 = isEnabled, key2 = skinActive, key3 = buildInSkin) {
-                if (isEnabled && skinActive == null && buildInSkin != null) {
-                    viewModel.onSelectSkin(buildInSkin)
+
+                    packageName?.let {
+                        viewModel.onSelectSkin(it)
+                    }
                 }
             }
             val isDarkTheme by viewModel.isDarkTheme.collectAsState()

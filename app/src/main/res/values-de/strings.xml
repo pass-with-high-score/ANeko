@@ -6,7 +6,6 @@
 
     <!-- Fuzzy -->
     <string name="notification_disabled">"Aneko schläft."</string>
-    <string name="download_skins">"Mehr Skins laden"</string>
     <string name="power_on">"Starten"</string>
     <string name="power_off">"Beenden"</string>
     <string name="choose_skin">"Wähle dein Skin"</string>
@@ -58,13 +57,8 @@
     <string name="version_skin_label">"Version: %1$s"</string>
     <string name="delete_skin_label">"Skin gelöscht"</string>
     <string name="unknown_skin_version">"Unbekannt"</string>
-    <string name="choose_skin_source_title">Skinquelle auswählen</string>
-    <string name="skin_source_option_download_from_collection">"Option 1: Skinsammlung herunterladen (empfohlen)"</string>
 
     <!-- Fuzzy -->
-    <string name="skin_source_option_download_from_store">"Option 2: Suche Skins im Play Store\n\nHinweis: Die meisten alten Skins sind von Google entfernt worden und daher weg. Versuch mal, im Internet nach einem ANeko Skin zu suchen, aber sei vorsichtig und beachte die Risiken."</string>
-    <string name="download_collection_label">"Sammlung herrunterladen"</string>
-    <string name="search_on_play_store_label">"Suche im Play Store"</string>
     <string name="notification_chanel_description">"Hintergrunddienst für ANeko"</string>
     <string name="translate_contribute_title">Möchtest du ANeko in deiner Sprache sehen?</string>
     <string name="translate_contribute_summary">Mach mit bei unserem Übersetzungsprojekt auf POEditor\nJeder Beitrag zählt. Vielen Dank im Voraus!</string>

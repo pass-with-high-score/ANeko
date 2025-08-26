@@ -41,9 +41,7 @@ import org.nqmgaming.aneko.core.service.AnimationService
 import org.nqmgaming.aneko.presentation.AnekoViewModel
 import org.nqmgaming.aneko.presentation.home.component.HomeContent
 import org.nqmgaming.aneko.presentation.home.component.SelectLanguageDialog
-import org.nqmgaming.aneko.presentation.home.component.SkinSourceDialog
 import org.nqmgaming.aneko.util.extension.checkNotificationPermission
-import org.nqmgaming.aneko.util.openUrl
 import timber.log.Timber
 import java.util.Locale
 
@@ -75,8 +73,6 @@ fun HomeScreen(
         viewModel.updateNotificationPermission(isGranted)
         startAnimationService()
     }
-
-    var showDialog by remember { mutableStateOf(false) }
 
     var showLanguageDialog by remember { mutableStateOf(false) }
 
@@ -176,27 +172,12 @@ fun HomeScreen(
                         )
                     }
                 },
-                onSelectSkin = { skin ->
-                    viewModel.onSelectSkin(skin)
+                onSelectSkin = { packageName ->
+                    viewModel.onSelectSkin(packageName)
                 },
                 skins = uiState.value.skins,
                 onRequestDeleteSkin = {
                     viewModel.onDeselectSkin(it, context)
-                }
-            )
-        }
-
-
-        if (showDialog) {
-            SkinSourceDialog(
-                onDismiss = { showDialog = false },
-                onDownloadCollection = {
-                    showDialog = false
-                    openUrl(context, context.getString(R.string.download_skins_link))
-                },
-                onSearchPlayStore = {
-                    showDialog = false
-                    openUrl(context, context.getString(R.string.search_app))
                 }
             )
         }

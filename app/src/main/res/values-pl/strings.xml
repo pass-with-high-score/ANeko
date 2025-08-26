@@ -4,7 +4,6 @@
     <!-- Fuzzy -->
     <string name="notification_enabled">ANeko uruchamia</string>
     <string name="notification_disabled">ANeko śpi</string>
-    <string name="download_skins">Ściągnij więcej przebrań</string>
     <string name="power_on">Włącz</string>
     <string name="power_off">Wyłącz</string>
     <string name="choose_skin">Wybierz przebranie</string>
@@ -52,11 +51,6 @@
     <string name="version_skin_label">Wersja: %1$s</string>
     <string name="delete_skin_label">Usuń przebranie</string>
     <string name="unknown_skin_version">Nie wiadomo</string>
-    <string name="choose_skin_source_title">Wybierz Źródło przebrania</string>
-    <string name="skin_source_option_download_from_collection">Opcja 1: ściągnij kolekcję przebrań (zalecane)</string>
-    <string name="skin_source_option_download_from_store">Opcja 2: wyszukaj przebrania na Play store\n\nMiau! Google usunęło większość starych skórek. Możliwe, że już ich nie znajdziesz. Możesz poszukać w Internecie skórek dla ANeko, ale uważaj – robisz to na własną odpowiedzialność!</string>
-    <string name="download_collection_label">Pobierz kolekcję</string>
-    <string name="search_on_play_store_label">Poszukaj na play store</string>
     <string name="notification_chanel_description">Działanie w tle – ANeko</string>
     <string name="translate_contribute_title">Chcesz zobaczyć ANeko w swoim języku?</string>
     <string name="translate_contribute_summary">Pomóż nam tłumaczyć ANeko na POEditorze. Nawet drobna pomoc wiele znaczy – dzięki!</string>

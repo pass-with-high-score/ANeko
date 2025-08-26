@@ -85,6 +85,16 @@ class AnekoViewModel @Inject constructor(
         MutableStateFlow(prefs.getString(PREF_KEY_THEME, "light") == "dark")
     val isDarkTheme: StateFlow<Boolean> = _isDarkTheme.asStateFlow()
 
+    private val _isFirstLaunch = MutableStateFlow(prefs.getBoolean("is_first_launch", true))
+    val isFirstLaunch: StateFlow<Boolean> = _isFirstLaunch.asStateFlow()
+
+    fun setFirstLaunchDone() {
+        prefs.edit {
+            putBoolean("is_first_launch", false)
+        }
+        _isFirstLaunch.value = false
+    }
+
     fun toggleTheme() {
         val newTheme = if (_isDarkTheme.value) "light" else "dark"
         prefs.edit { putString(PREF_KEY_THEME, newTheme) }
@@ -103,12 +113,12 @@ class AnekoViewModel @Inject constructor(
         prefs.edit { putBoolean(AnimationService.PREF_KEY_ENABLE, enabled) }
     }
 
-    fun onSelectSkin(skinInfo: SkinEntity) {
+    fun onSelectSkin(packageName: String) {
         viewModelScope.launch {
-            repo.switchActive(skinInfo.packageName)
+            repo.switchActive(packageName)
         }
         prefs.edit {
-            putString(AnimationService.PREF_KEY_SKIN_COMPONENT, skinInfo.packageName)
+            putString(AnimationService.PREF_KEY_SKIN_COMPONENT, packageName)
         }
     }
 

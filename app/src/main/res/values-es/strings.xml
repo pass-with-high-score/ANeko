@@ -5,9 +5,7 @@
     <string name="notification_enabled">ANeko está en ejecución.</string>
     <string name="notification_disabled">ANeko está en reposo.</string>
 
-    <string name="skin_search_uri" translatable="false">market://search?q=ANeko%20skin</string>
     <string name="github_uri" translatable="false">https://github.com/pass-with-high-score/ANeko</string>
-    <string name="download_skins">Descargar más skins</string>
     <string name="power_on">Encender</string>
     <string name="power_off">Apagar</string>
     <string name="choose_skin">Elige tu skin</string>
@@ -57,11 +55,6 @@
     <string name="version_skin_label">Versión: %1$s</string>
     <string name="delete_skin_label">Eliminar Skin</string>
     <string name="unknown_skin_version">Desconocido</string>
-    <string name="choose_skin_source_title">Elegir fuente de skin</string>
-    <string name="skin_source_option_download_from_collection">Opción 1: Descargar colección de skins (recomendado)</string>
-    <string name="skin_source_option_download_from_store">Opción 2: Buscar skins en Play Store\n\nNota: La mayoría de los skins antiguos han sido eliminados por Google. Es posible que no los encuentres más. Prueba a buscar un skin de ANeko en Internet, pero ten cuidado y comprende los riesgos.</string>
-    <string name="download_collection_label">Descargar colección</string>
-    <string name="search_on_play_store_label">Buscar en Play Store</string>
     <string name="notification_chanel_description">Servicio en segundo plano para ANeko</string>
     <string name="translate_contribute_title">¿Quieres ver ANeko en tu idioma?</string>
     <string name="translate_contribute_summary">Únete a nuestro proyecto de traducción en POEditor\n¡Cada pequeño aporte cuenta. Muchas gracias de antemano!</string>

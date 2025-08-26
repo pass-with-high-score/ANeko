@@ -1,0 +1,4 @@
+- Remove import skin by installing the apk file
+- Added new import skin feature using .zip files
+- Fixed a bug where the app would crash on startup for some users
+- Improved performance

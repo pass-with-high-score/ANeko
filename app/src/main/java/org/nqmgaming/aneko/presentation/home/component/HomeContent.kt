@@ -36,7 +36,7 @@ fun HomeContent(
     isEnabled: Boolean = false,
     onChangeEnable: (Boolean) -> Unit = {},
     skins: List<SkinEntity> = emptyList(),
-    onSelectSkin: (SkinEntity) -> Unit = { _ -> },
+    onSelectSkin: (String) -> Unit = { _ -> },
     onRequestDeleteSkin: (SkinEntity) -> Unit = { _ -> }
 ) {
     val context = LocalContext.current
@@ -65,7 +65,7 @@ fun HomeContent(
                                 skin = skin,
                                 isSelected = skin.isActive,
                                 onSkinSelected = {
-                                    onSelectSkin(skin)
+                                    onSelectSkin(skin.packageName)
                                 },
                                 onRequestDeleteSkin = {
                                     onRequestDeleteSkin(skin)

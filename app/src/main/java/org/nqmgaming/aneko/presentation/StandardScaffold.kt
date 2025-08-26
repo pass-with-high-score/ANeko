@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Download
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -27,9 +28,14 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
@@ -65,6 +71,8 @@ fun StandardScaffold(
     val navigator = navController.rememberDestinationsNavigator()
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+    val isFirstLaunch = viewModel.isFirstLaunch.collectAsState().value
+    var isShowingDialog by rememberSaveable { mutableStateOf(isFirstLaunch) }
 
     val filePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenMultipleDocuments(),
@@ -214,5 +222,50 @@ fun StandardScaffold(
         }
     ) { innerPadding ->
         content(innerPadding)
+    }
+
+    if (isFirstLaunch && isShowingDialog) {
+        // show welcome dialog
+        AlertDialog(
+            containerColor = colorScheme.surface,
+            onDismissRequest = {
+                isShowingDialog = false
+                viewModel.setFirstLaunchDone()
+            },
+            title = {
+                Text("Impotant Notice", style = typography.headlineSmall)
+            },
+            text = {
+                Column {
+                    Text("Thank you for installing ANeko! From version 1.3.0 you are no longer needed to import skins by installing APKs. You can now import skin by selecting ZIP files directly from the app.")
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    // go to explore
+                    isShowingDialog = false
+                    viewModel.setFirstLaunchDone()
+                    navigator.navigate(BottomNavItem.Explore.direction) {
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }) {
+                    Text("Explore Now")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = {
+                    isShowingDialog = false
+                    viewModel.setFirstLaunchDone()
+                    Toast.makeText(
+                        context,
+                        "You can access Explore from the bottom navigation bar later.",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }) {
+                    Text("Maybe Later")
+                }
+            }
+        )
     }
 }
