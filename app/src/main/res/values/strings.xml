@@ -75,7 +75,7 @@
     <string name="imported_skin_from_zip">Imported skin from ZIP: %1$s</string>
     <string name="failed_to_import_skin_from_zip">Failed to import skin from ZIP</string>
     <string name="failed_to_import_skin">Failed to import skin: %1$s</string>
-    <string name="skin_collection">Skin Collection</string>
+    <string name="skin_collection">Skin collection</string>
     <string name="unknown_author">Unknown author</string>
     <string name="download">Download</string>
     <string name="overwrite">Overwrite</string>
