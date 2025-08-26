@@ -95,6 +95,8 @@ fun StandardScaffold(
             }
         }
     )
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
     Scaffold(
         containerColor = Color.Transparent,
         bottomBar = {
@@ -111,8 +113,6 @@ fun StandardScaffold(
                         containerColor = colorScheme.background,
                         contentColor = colorScheme.onBackground,
                         content = {
-                            val navBackStackEntry by navController.currentBackStackEntryAsState()
-                            val currentDestination = navBackStackEntry?.destination
                             items.forEach { item ->
                                 val color by animateColorAsState(
                                     targetValue = if (currentDestination?.route?.contains(item.route) == true) {
@@ -182,23 +182,24 @@ fun StandardScaffold(
             }
         },
         floatingActionButton = {
-            FloatingActionButton(
-                containerColor = colorScheme.primary,
-                contentColor = colorScheme.onPrimary,
-                onClick = {
-                    // open file picker or download manager
-                    filePickerLauncher.launch(
-                        arrayOf(
-                            "application/zip",
-                            "application/x-zip-compressed"
+            if (currentDestination?.route?.contains(BottomNavItem.Home.route) == true) {
+                FloatingActionButton(
+                    containerColor = colorScheme.primary,
+                    contentColor = colorScheme.onPrimary,
+                    onClick = {
+                        filePickerLauncher.launch(
+                            arrayOf(
+                                "application/zip",
+                                "application/x-zip-compressed"
+                            )
                         )
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Download,
+                        contentDescription = null
                     )
                 }
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Download,
-                    contentDescription = null
-                )
             }
         }
     ) { innerPadding ->
