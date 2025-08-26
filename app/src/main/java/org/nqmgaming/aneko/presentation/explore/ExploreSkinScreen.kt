@@ -1,10 +1,9 @@
 package org.nqmgaming.aneko.presentation.explore
 
-import android.app.DownloadManager
-import android.content.ActivityNotFoundException
 import android.content.Context
-import android.content.Intent
+import android.net.Uri
 import android.os.Environment
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,7 +15,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Download
-import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -30,6 +28,11 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -37,23 +40,35 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import org.nqmgaming.aneko.core.data.entity.SkinEntity
 import org.nqmgaming.aneko.data.SkinCollection
+import org.nqmgaming.aneko.presentation.AnekoViewModel
 import org.nqmgaming.aneko.presentation.components.LoadingOverlay
 import org.nqmgaming.aneko.presentation.ui.theme.ANekoTheme
+import java.io.File
+import java.io.FileOutputStream
 
 @Destination<RootGraph>
 @Composable
 fun ExploreSkinScreen(
     viewModel: ExploreViewModel = hiltViewModel(),
+    anekoViewModel: AnekoViewModel = hiltViewModel()
 ) {
     val uiState = viewModel.uiState.collectAsState()
+    val skinsLocal = anekoViewModel.uiState.collectAsState()
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    var isImporting by rememberSaveable { mutableStateOf(false) }
     ExploreSkin(
         skinCollection = uiState.value.skinCollections,
         isLoading = uiState.value.isLoading,
@@ -61,6 +76,42 @@ fun ExploreSkinScreen(
         onRefresh = {
             viewModel.getSkinCollection(isRefresh = true)
         },
+        skinsLocal = skinsLocal.value.skins,
+        onImportSkin = { uri ->
+            if (isImporting) {
+                Toast.makeText(context, "Importing skin, please wait...", Toast.LENGTH_SHORT).show()
+                return@ExploreSkin
+            }
+            try {
+                scope.launch {
+                    isImporting = true
+                    val packageName = anekoViewModel.importSkinFromUri(
+                        context = context,
+                        zipUri = uri,
+                        overwrite = true,
+                    )
+                    if (packageName != null) {
+                        Toast.makeText(
+                            context,
+                            "Imported skin from ZIP: $packageName",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "Failed to import skin from ZIP",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    isImporting = false
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Toast.makeText(context, "Failed to import skin: ${e.message}", Toast.LENGTH_SHORT)
+                    .show()
+                isImporting = false
+            }
+        }
     )
 }
 
@@ -71,47 +122,35 @@ fun ExploreSkin(
     skinCollection: List<SkinCollection>? = null,
     isLoading: Boolean = false,
     isRefreshing: Boolean = false,
-    onRefresh: () -> Unit = { }
+    onRefresh: () -> Unit = { },
+    skinsLocal: List<SkinEntity> = emptyList(),
+    onImportSkin: (Uri) -> Unit = { _ -> },
 ) {
     val context = LocalContext.current
     val state = rememberPullToRefreshState()
+    val scope = rememberCoroutineScope()
 
-    fun downloadSkin(context: Context, url: String, fileName: String) {
-        try {
-            val request = DownloadManager.Request(url.toUri()).apply {
-                setTitle(fileName)
-                setDescription("Tệp APK đang được tải về")
-                setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-                setDestinationInExternalPublicDir(
-                    Environment.DIRECTORY_DOWNLOADS,
-                    "AlienSkin.v1.2.3.apk"
-                )
-                setAllowedOverMetered(true)
-                setAllowedOverRoaming(true)
-                setMimeType("application/vnd.android.package-archive")
-            }
-            val dm = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-            dm.enqueue(request)
-        } catch (_: Exception) {
-            // Nếu lỗi, mở bằng Chrome
-            val intent = Intent(Intent.ACTION_VIEW, url.toUri())
-            intent.setPackage("com.android.chrome")
-            try {
-                context.startActivity(intent)
-            } catch (_: ActivityNotFoundException) {
-                // fallback nếu không có Chrome
-                context.startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
+    fun downloadSkinWithApi(context: Context, url: String, fileName: String) {
+        scope.launch(Dispatchers.IO) {
+            val client = OkHttpClient()
+            val request = Request.Builder().url(url).build()
+            client.newCall(request).execute().use { response ->
+                if (response.isSuccessful) {
+                    val file = File(
+                        context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS),
+                        "$fileName.zip"
+                    )
+                    FileOutputStream(file).use { output ->
+                        response.body?.byteStream()?.copyTo(output)
+                    }
+                    onImportSkin(Uri.fromFile(file))
+                }
             }
         }
     }
 
-    fun isInstalled(context: Context, packageName: String): Boolean {
-        return try {
-            context.packageManager.getPackageInfo(packageName, 0)
-            true
-        } catch (_: Exception) {
-            false
-        }
+    fun isInstalled(packageName: String): Boolean {
+        return skinsLocal.any { it.packageName == packageName }
     }
 
     Scaffold(
@@ -184,7 +223,7 @@ fun ExploreSkin(
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                     Text(
-                                        text = collection.version,
+                                        text = collection.author ?: "Unknown author",
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis,
                                         style = MaterialTheme.typography.labelMedium,
@@ -194,43 +233,36 @@ fun ExploreSkin(
                                 Spacer(modifier = Modifier.weight(1f))
                                 Button(
                                     onClick = {
-                                        // intent open skin download page
-                                        downloadSkin(
+                                        downloadSkinWithApi(
                                             context = context,
                                             url = collection.url,
-                                            fileName = collection.name
+                                            fileName = collection.name,
                                         )
+
                                     },
                                     border = BorderStroke(
                                         width = 1.dp,
                                         color = MaterialTheme.colorScheme.outline
                                     )
                                 ) {
-                                    if (isInstalled(context, collection.packageName)) {
-                                        Column(
-                                            horizontalAlignment = Alignment.CenterHorizontally,
-                                            modifier = Modifier.padding(8.dp)
-                                        ) {
-                                            Icon(
-                                                imageVector = Icons.Default.PlayArrow,
-                                                contentDescription = "Play",
-                                            )
+
+                                    Column(
+                                        horizontalAlignment = Alignment.CenterHorizontally,
+                                        modifier = Modifier.padding(8.dp)
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.Download,
+                                            contentDescription = "Download",
+                                        )
+                                        if (isInstalled(collection.packageName)) {
                                             Text(
-                                                text = "Play",
+                                                text = "Overwrite",
                                                 style = MaterialTheme.typography.labelMedium,
                                                 maxLines = 1,
                                                 overflow = TextOverflow.Ellipsis,
                                             )
-                                        }
-                                    } else {
-                                        Column(
-                                            horizontalAlignment = Alignment.CenterHorizontally,
-                                            modifier = Modifier.padding(8.dp)
-                                        ) {
-                                            Icon(
-                                                imageVector = Icons.Default.Download,
-                                                contentDescription = "Download",
-                                            )
+
+                                        } else {
                                             Text(
                                                 text = "Download",
                                                 style = MaterialTheme.typography.labelMedium,
@@ -238,7 +270,9 @@ fun ExploreSkin(
                                                 overflow = TextOverflow.Ellipsis,
                                             )
                                         }
+
                                     }
+
                                 }
                             }
                             HorizontalDivider(

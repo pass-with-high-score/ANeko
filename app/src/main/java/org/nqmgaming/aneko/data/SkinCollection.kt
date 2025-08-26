@@ -9,6 +9,7 @@ data class SkinCollection(
     @SerialName("package")
     val packageName: String,
     val version: String,
+    val author: String? = null,
     val image: String,
     val url: String,
 )
