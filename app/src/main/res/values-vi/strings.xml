@@ -67,15 +67,15 @@
     <string name="txt_loading">Đang tải</string>
     <string name="share_skin_label">Chia sẻ</string>
     <string name="label_author">Tác giả: %1$s</string>
-    <string name="importing_skin_please_wait">Importing skin, please wait...</string>
-    <string name="imported_skin_from_zip">Imported skin from ZIP: %1$s</string>
-    <string name="failed_to_import_skin_from_zip">Failed to import skin from ZIP</string>
-    <string name="failed_to_import_skin">Failed to import skin: %1$s</string>
-    <string name="skin_collection">Skin Collection</string>
-    <string name="unknown_author">Unknown author</string>
-    <string name="download">Download</string>
-    <string name="overwrite">Overwrite</string>
-    <string name="hi_there_is_no_skin_collection_for_now">Hi! There is no skin collection for now.</string>
-    <string name="try_to_import_from_zip">Try to import from zip</string>
+    <string name="importing_skin_please_wait">Đang nhập skin, vui lòng chờ…</string>
+    <string name="imported_skin_from_zip">Đã nhập skin từ ZIP: %1$s</string>
+    <string name="failed_to_import_skin_from_zip">Không thể nhập skin từ ZIP</string>
+    <string name="failed_to_import_skin">Không thể nhập skin: %1$s</string>
+    <string name="skin_collection">Bộ sưu tập skin</string>
+    <string name="unknown_author">Tác giả không xác định</string>
+    <string name="download">Tải xuống</string>
+    <string name="overwrite">Ghi đè</string>
+    <string name="hi_there_is_no_skin_collection_for_now">Xin chào! Hiện tại chưa có bộ sưu tập skin nào.</string>
+    <string name="try_to_import_from_zip">Thử nhập từ ZIP</string>
 
 </resources>

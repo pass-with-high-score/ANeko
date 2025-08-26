@@ -74,15 +74,15 @@
     <string name="txt_loading">Wird geladen</string>
     <string name="share_skin_label">Teilen</string>
     <string name="label_author">Autor: %1$s</string>
-    <string name="importing_skin_please_wait">Importing skin, please wait…</string>
-    <string name="imported_skin_from_zip">Imported skin from ZIP: %1$s</string>
-    <string name="failed_to_import_skin_from_zip">Failed to import skin from ZIP</string>
-    <string name="failed_to_import_skin">Failed to import skin: %1$s</string>
-    <string name="skin_collection">Skin Collection</string>
-    <string name="unknown_author">Unknown author</string>
-    <string name="download">Download</string>
-    <string name="overwrite">Overwrite</string>
-    <string name="hi_there_is_no_skin_collection_for_now">Hi! There is no skin collection for now.</string>
-    <string name="try_to_import_from_zip">Try to import from zip</string>
+    <string name="importing_skin_please_wait">Skin wird importiert, bitte warten…</string>
+    <string name="imported_skin_from_zip">Skin aus ZIP importiert: %1$s</string>
+    <string name="failed_to_import_skin_from_zip">Fehler beim Importieren des Skins aus ZIP</string>
+    <string name="failed_to_import_skin">Fehler beim Importieren des Skins: %1$s</string>
+    <string name="skin_collection">Skin-Sammlung</string>
+    <string name="unknown_author">Unbekannter Autor</string>
+    <string name="download">Herunterladen</string>
+    <string name="overwrite">Überschreiben</string>
+    <string name="hi_there_is_no_skin_collection_for_now">Hallo! Es gibt derzeit keine Skin-Sammlung.</string>
+    <string name="try_to_import_from_zip">Versuchen, aus ZIP zu importieren</string>
 
 </resources>
