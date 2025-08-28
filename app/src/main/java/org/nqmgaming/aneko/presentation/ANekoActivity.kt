@@ -42,15 +42,11 @@ class ANekoActivity : AppCompatActivity() {
 
             LaunchedEffect(key1 = buildInSkin == null, key2 = isListEmpty) {
                 if (buildInSkin == null && isListEmpty) {
-                    val packageName = viewModel.importSkinFromAssets(
+                    viewModel.importSkinFromAssets(
                         this@ANekoActivity,
                         assetName = "aneko.zip",
                         overwrite = true,
                     )
-
-                    packageName?.let {
-                        viewModel.onSelectSkin(it)
-                    }
                 }
             }
             val isDarkTheme by viewModel.isDarkTheme.collectAsState()
