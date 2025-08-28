@@ -5,8 +5,8 @@ minSdk = "28"
 targetSdk = "36"
 
 # App versioning
-versionCode = "12"
-versionName = "1.3.0"
+versionCode = "13"
+versionName = "1.3.1"
 
 # Java/Kotlin
 kotlin = "2.2.10"
@@ -23,12 +23,12 @@ coreKtx = "1.17.0"
 espressoCore = "3.7.0"
 junit = "4.13.2"
 androidxJunit = "1.3.0"
-lifecycleRuntimeKtx = "2.9.2"
+lifecycleRuntimeKtx = "2.9.3"
 preferenceKtx = "1.2.1"
 workRuntime = "2.10.3"
 
 # Compose
-composeBom = "2025.08.00"
+composeBom = "2025.08.01"
 composeAnimations = "1.11.9"
 material = "1.12.0"
 materialIconsExtended = "1.7.8"
@@ -63,7 +63,6 @@ room = "2.7.2"
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
 
 # AndroidX Core
-androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraintlayout" }
 androidx-preference-ktx = { module = "androidx.preference:preference-ktx", version.ref = "preferenceKtx" }

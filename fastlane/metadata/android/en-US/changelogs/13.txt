@@ -1,0 +1,3 @@
+- Fix skin change to default every reopen of the app
+- Add information dialog in explore screen
+- Enhance performance of the app
