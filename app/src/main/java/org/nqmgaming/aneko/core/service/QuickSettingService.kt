@@ -1,65 +1,78 @@
-package org.nqmgaming.aneko.core.service;
+package org.nqmgaming.aneko.core.service
 
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.provider.Settings;
-import android.service.quicksettings.Tile;
-import android.service.quicksettings.TileService;
+import android.content.Intent
+import android.content.SharedPreferences
+import android.provider.Settings
+import android.service.quicksettings.Tile
+import android.service.quicksettings.TileService
+import androidx.core.content.edit
 
-public class QuickSettingService extends TileService {
-    private Tile tile;
-    private SharedPreferences prefs;
+class QuickSettingService : TileService() {
 
-    SharedPreferences.OnSharedPreferenceChangeListener prefsListener = (sharedPreferences, key) -> {
-        assert key != null;
-        if (key.equals(AnimationService.PREF_KEY_ENABLE)) {
-            if (isServiceAvailable()) {
-                if (prefs.getBoolean(AnimationService.PREF_KEY_ENABLE, false)) {
-                    tile.setState(Tile.STATE_ACTIVE);
-                    Intent intent = new Intent(this, AnimationService.class).setAction(AnimationService.ACTION_START);
-                    startForegroundService(intent);
-                } else tile.setState(Tile.STATE_INACTIVE);
-            } else tile.setState(Tile.STATE_UNAVAILABLE);
-            tile.updateTile();
+    private var tile: Tile? = null
+    private lateinit var prefs: SharedPreferences
+
+    private val prefsListener =
+        SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
+            if (key == AnimationService.PREF_KEY_ENABLE) {
+                tile?.let {
+                    when {
+                        !isServiceAvailable() -> it.state = Tile.STATE_UNAVAILABLE
+                        prefs.getBoolean(AnimationService.PREF_KEY_ENABLE, false) -> {
+                            it.state = Tile.STATE_ACTIVE
+                            val intent = Intent(this, AnimationService::class.java).apply {
+                                action = AnimationService.ACTION_START
+                            }
+                            startForegroundService(intent)
+                        }
+
+                        else -> it.state = Tile.STATE_INACTIVE
+                    }
+                    it.updateTile()
+                }
+            }
         }
-    };
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        prefs = getSharedPreferences(getPackageName() + "_preferences", MODE_PRIVATE);
+    override fun onCreate() {
+        super.onCreate()
+        prefs = getSharedPreferences("${packageName}_preferences", MODE_PRIVATE)
     }
 
-    @Override
-    public void onStartListening() {
-        super.onStartListening();
-        tile = getQsTile();
+    override fun onStartListening() {
+        super.onStartListening()
+        tile = qsTile
 
-        if (isServiceAvailable())
-            tile.setState(prefs.getBoolean(AnimationService.PREF_KEY_ENABLE, false) ? Tile.STATE_ACTIVE : Tile.STATE_INACTIVE);
-        else tile.setState(Tile.STATE_UNAVAILABLE);
+        tile?.let {
+            it.state = when {
+                !isServiceAvailable() -> Tile.STATE_UNAVAILABLE
+                prefs.getBoolean(AnimationService.PREF_KEY_ENABLE, false) -> Tile.STATE_ACTIVE
+                else -> Tile.STATE_INACTIVE
+            }
+            it.updateTile()
+        }
 
-        tile.updateTile();
-        prefs.registerOnSharedPreferenceChangeListener(prefsListener);
+        prefs.registerOnSharedPreferenceChangeListener(prefsListener)
     }
 
-    @Override
-    public void onTileAdded() {
-        super.onTileAdded();
-        tile = getQsTile();
-        if (!isServiceAvailable()) tile.setState(Tile.STATE_UNAVAILABLE);
-    }
-
-    @Override
-    public void onClick() {
-        super.onClick();
-        int tileState = tile.getState();
-        if (tileState != Tile.STATE_UNAVAILABLE) {
-            prefs.edit().putBoolean(AnimationService.PREF_KEY_ENABLE, tileState == Tile.STATE_INACTIVE).apply();
+    override fun onTileAdded() {
+        super.onTileAdded()
+        tile = qsTile
+        if (!isServiceAvailable()) {
+            tile?.state = Tile.STATE_UNAVAILABLE
         }
     }
 
-    private boolean isServiceAvailable() {
-        return Settings.canDrawOverlays(this);
+    override fun onClick() {
+        super.onClick()
+        tile?.let {
+            if (it.state != Tile.STATE_UNAVAILABLE) {
+                val enable = it.state == Tile.STATE_INACTIVE
+                prefs.edit { putBoolean(AnimationService.PREF_KEY_ENABLE, enable) }
+            }
+        }
+    }
+
+    private fun isServiceAvailable(): Boolean {
+        return Settings.canDrawOverlays(this)
     }
 }
