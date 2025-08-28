@@ -69,5 +69,11 @@
     <string name="overwrite">Перезаписать</string>
     <string name="hi_there_is_no_skin_collection_for_now">Привет! Коллекция скинов пока отсутствует.</string>
     <string name="try_to_import_from_zip">Попробуйте импортировать из ZIP</string>
+    <string name="do_you_have_questions">У вас есть вопросы?</string>
+    <string name="open_the_skin_collection_configuration_file">Открыть файл конфигурации коллекции скинов</string>
+    <string name="what_is_this">Что это?</string>
+    <string name="what_is_this_answer">Это коллекция скинов, созданных сообществом, чтобы вы могли их попробовать. Вы можете загрузить и импортировать их одним щелчком. Также можно импортировать скины из zip-файлов.</string>
+    <string name="the_formats_and_structure_of_the_skins">Форматы и структура скинов?</string>
+    <string name="the_formats_and_structure_of_the_skins_answer">Скины находятся в формате zip и следуют той же структуре, что и стандартный скин. Каждый скин должен содержать файл «skin.xml» в корневой директории, который определяет метаданные и конфигурацию. Приложение обрабатывает это безопасно.</string>
 
 </resources>

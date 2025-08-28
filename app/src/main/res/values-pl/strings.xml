@@ -70,5 +70,11 @@
     <string name="overwrite">Nadpisz</string>
     <string name="hi_there_is_no_skin_collection_for_now">Cześć! Obecnie nie ma kolekcji skinów.</string>
     <string name="try_to_import_from_zip">Spróbuj zaimportować z pliku ZIP</string>
+    <string name="do_you_have_questions">Masz pytania?</string>
+    <string name="open_the_skin_collection_configuration_file">Otwórz plik konfiguracyjny kolekcji skórek</string>
+    <string name="what_is_this">Co to jest?</string>
+    <string name="what_is_this_answer">To jest kolekcja skórek stworzonych przez społeczność, które możesz wypróbować. Możesz je pobrać i zaimportować jednym kliknięciem. Możesz także importować skórki z plików zip.</string>
+    <string name="the_formats_and_structure_of_the_skins">Formaty i struktura skórek?</string>
+    <string name="the_formats_and_structure_of_the_skins_answer">Skórki są w formacie zip i mają taką samą strukturę jak skórka domyślna. Każda skórka musi mieć plik „skin.xml” w katalogu głównym, który definiuje metadane i konfigurację skórki. Jest to bezpiecznie obsługiwane przez aplikację.</string>
 
 </resources>

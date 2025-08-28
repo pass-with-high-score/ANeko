@@ -71,5 +71,11 @@
     <string name="overwrite">Ghi đè</string>
     <string name="hi_there_is_no_skin_collection_for_now">Xin chào! Hiện tại chưa có bộ sưu tập skin nào.</string>
     <string name="try_to_import_from_zip">Thử nhập từ ZIP</string>
+    <string name="do_you_have_questions">Bạn có câu hỏi không?</string>
+    <string name="open_the_skin_collection_configuration_file">Mở tệp cấu hình bộ sưu tập skin</string>
+    <string name="what_is_this">Đây là gì?</string>
+    <string name="what_is_this_answer">Đây là bộ sưu tập skin do cộng đồng tạo ra để bạn dùng thử. Bạn có thể tải về và nhập chỉ với một cú nhấp chuột. Bạn cũng có thể nhập skin từ tệp zip.</string>
+    <string name="the_formats_and_structure_of_the_skins">Định dạng và cấu trúc của skin?</string>
+    <string name="the_formats_and_structure_of_the_skins_answer">Các skin ở dạng tệp zip và tuân theo cùng cấu trúc với skin mặc định. Mỗi skin phải có một tệp "skin.xml" trong thư mục gốc để định nghĩa siêu dữ liệu và cấu hình của skin. Ứng dụng sẽ xử lý an toàn việc này.</string>
 
 </resources>

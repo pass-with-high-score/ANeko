@@ -78,5 +78,11 @@
     <string name="overwrite">Überschreiben</string>
     <string name="hi_there_is_no_skin_collection_for_now">Hallo! Es gibt derzeit keine Skin-Sammlung.</string>
     <string name="try_to_import_from_zip">Versuchen, aus ZIP zu importieren</string>
+    <string name="do_you_have_questions">Haben Sie Fragen?</string>
+    <string name="open_the_skin_collection_configuration_file">Öffnen Sie die Skin-Sammlungskonfigurationsdatei</string>
+    <string name="what_is_this">Was ist das?</string>
+    <string name="what_is_this_answer">Dies ist eine Sammlung von Skins, die von der Community erstellt wurden, damit Sie sie ausprobieren können. Sie können sie mit einem Klick herunterladen und importieren. Sie können auch Skins aus Zip-Dateien importieren.</string>
+    <string name="the_formats_and_structure_of_the_skins">Die Formate und die Struktur der Skins?</string>
+    <string name="the_formats_and_structure_of_the_skins_answer">Die Skins liegen im Zip-Format vor und folgen derselben Struktur wie der Standardskin. Jeder Skin muss im Hauptverzeichnis eine „skin.xml“-Datei enthalten, die die Metadaten und die Konfiguration definiert. Dies wird von der App sicher verarbeitet.</string>
 
 </resources>

@@ -19,14 +19,18 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
@@ -34,6 +38,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -61,6 +66,7 @@ import org.nqmgaming.aneko.data.SkinCollection
 import org.nqmgaming.aneko.presentation.AnekoViewModel
 import org.nqmgaming.aneko.presentation.components.LoadingOverlay
 import org.nqmgaming.aneko.presentation.ui.theme.ANekoTheme
+import org.nqmgaming.aneko.util.openUrl
 import timber.log.Timber
 import java.io.File
 import java.io.FileOutputStream
@@ -182,6 +188,8 @@ fun ExploreSkin(
         }
     )
 
+    var isShowInfoDialog by remember { mutableStateOf(false) }
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -192,6 +200,16 @@ fun ExploreSkin(
                             fontWeight = FontWeight.Black
                         ),
                     )
+                },
+                actions = {
+                    IconButton(
+                        onClick = { isShowInfoDialog = true }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Info,
+                            contentDescription = null
+                        )
+                    }
                 }
             )
         }
@@ -354,6 +372,66 @@ fun ExploreSkin(
 
     LoadingOverlay(isLoading && !isRefreshing)
 
+
+    if (isShowInfoDialog) {
+        AlertDialog(
+            containerColor = MaterialTheme.colorScheme.surface,
+            onDismissRequest = {
+                isShowInfoDialog = false
+            },
+            title = {
+                Column {
+                    Text(
+                        text = stringResource(R.string.do_you_have_questions),
+                        style = MaterialTheme.typography.headlineSmall
+                    )
+                    TextButton(
+                        onClick = {
+                            openUrl(context, context.getString(R.string.skin_collection_link))
+                        }
+                    ) {
+                        Text(stringResource(R.string.open_the_skin_collection_configuration_file))
+                    }
+                }
+
+            },
+            text = {
+                Column {
+                    Text(
+                        stringResource(R.string.what_is_this),
+                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+                    )
+                    Text(
+                        stringResource(R.string.what_is_this_answer),
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Text(
+                        stringResource(R.string.the_formats_and_structure_of_the_skins),
+                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+                    )
+                    Text(
+                        stringResource(R.string.the_formats_and_structure_of_the_skins_answer),
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        isShowInfoDialog = false
+                    }
+                ) {
+                    Text("Ok")
+                }
+            },
+        )
+    }
 }
 
 @Preview

@@ -69,5 +69,10 @@
     <string name="overwrite">覆盖</string>
     <string name="hi_there_is_no_skin_collection_for_now">嗨！目前没有皮肤收藏。</string>
     <string name="try_to_import_from_zip">尝试从 ZIP 导入</string>
-
+    <string name="do_you_have_questions">你有问题吗？</string>
+    <string name="open_the_skin_collection_configuration_file">打开皮肤集合配置文件</string>
+    <string name="what_is_this">这是什么？</string>
+    <string name="what_is_this_answer">这是一个由社区制作的皮肤集合，供你尝试。你可以一键下载并导入它们。你也可以从 zip 文件中导入皮肤。</string>
+    <string name="the_formats_and_structure_of_the_skins">皮肤的格式和结构？</string>
+    <string name="the_formats_and_structure_of_the_skins_answer">皮肤采用 zip 格式，并遵循与默认皮肤相同的结构。每个皮肤必须在根目录下包含一个“skin.xml”文件，用于定义皮肤的元数据和配置。应用会安全地处理这些内容。</string>
 </resources>
