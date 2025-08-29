@@ -5,15 +5,15 @@ minSdk = "28"
 targetSdk = "36"
 
 # App versioning
-versionCode = "13"
-versionName = "1.3.1"
+versionCode = "14"
+versionName = "1.3.2"
 
 # Java/Kotlin
 kotlin = "2.2.10"
 kotlinStdlibJdk8 = "2.1.21"
 
 # AGP
-agp = "8.12.1"
+agp = "8.11.1"
 
 # AndroidX
 activityCompose = "1.10.1"
