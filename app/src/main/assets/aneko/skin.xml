@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<motion-params package="org.nqmgaming.aneko" name="ANeko" preview="icon.png" author="nqmgaming"
+    acceleration="160" awakeState="awake" deaccelerationDistance="60" initialState="stop"
+    maxVelocity="100" moveStatePrefix="move" proximityDistance="10" wallStatePrefix="wall">
+    <motion checkWall="true" nextState="wait" state="stop">
+        <item drawable="mati1" duration="5000" />
+        <repeat-item repeatCount="4">
+            <item drawable="kaki1" duration="250" />
+            <item drawable="kaki2" duration="250" />
+        </repeat-item>
+        <item drawable="mati1" duration="1000" />
+    </motion>
+
+    <motion state="wait">
+        <item drawable="mati1" duration="4000" />
+        <repeat-item repeatCount="4">
+            <item drawable="kaki1" duration="250" />
+            <item drawable="kaki2" duration="250" />
+        </repeat-item>
+        <item drawable="mati1" duration="5000" />
+
+        <item drawable="mati2" duration="1500" />
+        <repeat-item>
+            <repeat-item repeatCount="50">
+                <item drawable="sleep1" duration="1000" />
+                <item drawable="sleep2" duration="1000" />
+            </repeat-item>
+
+            <item drawable="akubi1" duration="500" />
+            <item drawable="akubi_l" duration="500" />
+            <item drawable="akubi_r" duration="500" />
+            <item drawable="akubi1" duration="500" />
+            <item drawable="akubi2" duration="1000" />
+            <item drawable="akubi1" duration="500" />
+        </repeat-item>
+    </motion>
+
+    <motion checkMove="true" nextState="stop" state="awake">
+        <item drawable="awake" duration="750" />
+    </motion>
+
+    <motion state="moveUp">
+        <repeat-item>
+            <item drawable="up1" duration="250" />
+            <item drawable="up2" duration="250" />
+        </repeat-item>
+    </motion>
+
+    <motion state="moveDown">
+        <repeat-item>
+            <item drawable="down1" duration="250" />
+            <item drawable="down2" duration="250" />
+        </repeat-item>
+    </motion>
+
+    <motion state="moveLeft">
+        <repeat-item>
+            <item drawable="left1" duration="250" />
+            <item drawable="left2" duration="250" />
+        </repeat-item>
+    </motion>
+
+    <motion state="moveRight">
+        <repeat-item>
+            <item drawable="right1" duration="250" />
+            <item drawable="right2" duration="250" />
+        </repeat-item>
+    </motion>
+
+    <motion state="moveUpLeft">
+        <repeat-item>
+            <item drawable="upleft1" duration="250" />
+            <item drawable="upleft2" duration="250" />
+        </repeat-item>
+    </motion>
+
+    <motion state="moveUpRight">
+        <repeat-item>
+            <item drawable="upright1" duration="250" />
+            <item drawable="upright2" duration="250" />
+        </repeat-item>
+    </motion>
+
+    <motion state="moveDownRight">
+        <repeat-item>
+            <item drawable="dwright1" duration="250" />
+            <item drawable="dwright2" duration="250" />
+        </repeat-item>
+    </motion>
+
+    <motion state="moveDownLeft">
+        <repeat-item>
+            <item drawable="dwleft1" duration="250" />
+            <item drawable="dwleft2" duration="250" />
+        </repeat-item>
+    </motion>
+
+    <motion nextState="wait" state="wallUp">
+        <repeat-item repeatCount="3">
+            <item drawable="utogi1" duration="250" />
+            <item drawable="utogi2" duration="250" />
+        </repeat-item>
+    </motion>
+
+    <motion nextState="wait" state="wallDown">
+        <repeat-item repeatCount="3">
+            <item drawable="dtogi1" duration="250" />
+            <item drawable="dtogi2" duration="250" />
+        </repeat-item>
+    </motion>
+
+    <motion nextState="wait" state="wallLeft">
+        <repeat-item repeatCount="3">
+            <item drawable="ltogi1" duration="250" />
+            <item drawable="ltogi2" duration="250" />
+        </repeat-item>
+    </motion>
+
+    <motion nextState="wait" state="wallRight">
+        <repeat-item repeatCount="3">
+            <item drawable="rtogi1" duration="250" />
+            <item drawable="rtogi2" duration="250" />
+        </repeat-item>
+    </motion>
+</motion-params>

@@ -24,6 +24,7 @@ import org.nqmgaming.aneko.core.data.repository.SkinRepository
 import org.nqmgaming.aneko.core.networking.ApiResult
 import org.nqmgaming.aneko.core.service.AnimationService
 import org.xmlpull.v1.XmlPullParser
+import timber.log.Timber
 import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
 import java.io.File
@@ -189,26 +190,59 @@ class AnekoViewModel @Inject constructor(
 
     suspend fun importSkinFromAssets(
         context: Context,
-        assetName: String,
+        folderName: String,
         overwrite: Boolean = true
     ): String? {
-        val tempDir = File(context.cacheDir, "skin_temp_assets_$assetName").apply { mkdirs() }
+        val tempDir = File(context.cacheDir, "skin_temp_assets_$folderName").apply { mkdirs() }
 
-        return context.assets.open(assetName).use { input ->
-            importSkinFromStream(context, input, tempDir, overwrite)
+        return try {
+            val assetManager = context.assets
+            val assetFiles = assetManager.list(folderName) ?: arrayOf()
+            for (fileName in assetFiles) {
+                if (fileName.equals(
+                        "__MACOSX",
+                        ignoreCase = true
+                    ) || fileName.endsWith(".DS_Store")
+                ) {
+                    continue
+                }
+                val assetPath = "$folderName/$fileName"
+                // Check if the asset exists before opening
+                if (assetManager.list(folderName)?.contains(fileName) == true) {
+                    val outFile = File(tempDir, fileName)
+                    assetManager.open(assetPath).use { input ->
+                        BufferedOutputStream(FileOutputStream(outFile)).use { bos ->
+                            input.copyTo(bos)
+                        }
+                    }
+                } else {
+                    // Log missing asset for debugging
+                    Timber.e("Asset not found: $assetPath")
+                }
+            }
+            importSkinFromStream(context, null, tempDir, overwrite)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            tempDir.deleteRecursively()
+            null
         }
     }
 
     suspend fun importSkinFromStream(
         context: Context,
-        inputStream: InputStream,
+        inputStream: InputStream?,
         tempDir: File,
         overwrite: Boolean,
     ): String? = withContext(Dispatchers.IO) {
         try {
-            val extractedFiles = unzipToTempDir(inputStream, tempDir)
-            val skinXmlFile =
+            val files = tempDir.listFiles()
+            val skinXmlFile = if (files != null && files.isNotEmpty()) {
+                files.firstOrNull { it.name.equals("skin.xml", ignoreCase = true) }
+            } else {
+                if (inputStream == null) return@withContext null
+                val extractedFiles = unzipToTempDir(inputStream, tempDir)
                 extractedFiles.firstOrNull { it.name.equals("skin.xml", ignoreCase = true) }
+            }
 
             if (skinXmlFile == null) {
                 tempDir.deleteRecursively()
@@ -216,11 +250,7 @@ class AnekoViewModel @Inject constructor(
             }
 
             val skin = parseSkinMetadata(skinXmlFile, context)
-            if (skin == null) {
-                tempDir.deleteRecursively()
-                return@withContext null
-            }
-            if (skin.packageName.isBlank()) {
+            if (skin == null || skin.packageName.isBlank()) {
                 tempDir.deleteRecursively()
                 return@withContext null
             }
@@ -243,7 +273,6 @@ class AnekoViewModel @Inject constructor(
 
             tempDir.deleteRecursively()
 
-
             repo.upsertSkin(skin)
             return@withContext skin.packageName
 
@@ -253,6 +282,7 @@ class AnekoViewModel @Inject constructor(
             return@withContext null
         }
     }
+
 
     fun parseSkinMetadata(xmlFile: File, context: Context): SkinEntity? {
         var pkg: String

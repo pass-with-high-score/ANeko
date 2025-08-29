@@ -44,8 +44,7 @@ class ANekoActivity : AppCompatActivity() {
                 if (buildInSkin == null && isListEmpty) {
                     viewModel.importSkinFromAssets(
                         this@ANekoActivity,
-                        assetName = "aneko.zip",
-                        overwrite = true,
+                        folderName = "aneko",
                     )
                 }
             }
