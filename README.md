@@ -41,6 +41,11 @@
 
 ---  
 
+## Community
+
+Join our community on Telegram:  
+[![Telegram](https://img.shields.io/badge/Telegram-Join%20Group-blue?logo=telegram)](https://t.me/aneko_community)
+
 ## Build Instructions
 
 ### Requirements
@@ -65,13 +70,13 @@
 
 ANeko supports two skin types:
 
-### App-based Skins
+### App-based Skins (version <= 1.2.3)
 
 * Create a new module with your assets and logic
 * Refer to  
   the [skin documentation](http://www.tamanegi.org/prog/android-apps/aneko-skin.html#create-skin)
 
-### File-based Skins
+### File-based Skins (version >= 1.3.0) Recommended
 
 * Manually place skin files in the correct directory
 * More detailed instructions will be provided soon
