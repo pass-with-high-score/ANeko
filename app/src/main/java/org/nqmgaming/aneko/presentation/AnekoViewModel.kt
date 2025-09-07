@@ -47,7 +47,6 @@ class AnekoViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(ANekoState())
     val uiState = _uiState.asStateFlow()
 
-
     private val prefs: SharedPreferences =
         PreferenceManager.getDefaultSharedPreferences(application)
     private val _isEnabledState =

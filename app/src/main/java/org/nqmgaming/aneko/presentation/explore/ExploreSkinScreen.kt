@@ -1,9 +1,7 @@
 package org.nqmgaming.aneko.presentation.explore
 
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Environment
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -50,26 +48,25 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import okhttp3.OkHttpClient
-import okhttp3.Request
 import org.nqmgaming.aneko.R
 import org.nqmgaming.aneko.core.data.entity.SkinEntity
+import org.nqmgaming.aneko.core.download.DownloadStatus
+import org.nqmgaming.aneko.core.download.DownloadTask
+import org.nqmgaming.aneko.core.download.SkinDownloadQueue
 import org.nqmgaming.aneko.data.SkinCollection
 import org.nqmgaming.aneko.presentation.AnekoViewModel
 import org.nqmgaming.aneko.presentation.components.LoadingOverlay
 import org.nqmgaming.aneko.presentation.ui.theme.ANekoTheme
 import org.nqmgaming.aneko.util.openUrl
 import timber.log.Timber
-import java.io.File
-import java.io.FileOutputStream
 
 @Destination<RootGraph>
 @Composable
@@ -81,53 +78,77 @@ fun ExploreSkinScreen(
     val scope = rememberCoroutineScope()
     var isImporting by rememberSaveable { mutableStateOf(false) }
 
+    SkinDownloadQueue.onImported = { _, uri ->
+        scope.launch {
+            try {
+                isImporting = true
+                val pkg = viewModel.importSkinFromUri(
+                    context = context,
+                    zipUri = uri.toUri(),
+                    overwrite = true
+                )
+                Toast.makeText(
+                    context,
+                    if (pkg != null)
+                        context.getString(R.string.imported_skin_from_zip, pkg)
+                    else
+                        context.getString(R.string.failed_to_import_skin_from_zip),
+                    Toast.LENGTH_SHORT
+                ).show()
+            } catch (e: Exception) {
+                Timber.e(e)
+                Toast.makeText(
+                    context,
+                    context.getString(R.string.failed_to_import_skin, e.message ?: ""),
+                    Toast.LENGTH_SHORT
+                ).show()
+            } finally {
+                isImporting = false
+            }
+        }
+    }
+
     ExploreSkin(
         skinCollection = uiState.value.skinCollections,
         isLoading = uiState.value.isLoading,
         isRefreshing = uiState.value.isRefreshing,
-        onRefresh = {
-            viewModel.getSkinCollection(isRefresh = true)
-        },
+        onRefresh = { viewModel.getSkinCollection(isRefresh = true) },
         skinsLocal = uiState.value.skins,
         onImportSkin = { uri ->
             if (isImporting) {
                 Toast.makeText(
                     context,
-                    context.getString(R.string.importing_skin_please_wait), Toast.LENGTH_SHORT
+                    context.getString(R.string.importing_skin_please_wait),
+                    Toast.LENGTH_SHORT
                 ).show()
                 return@ExploreSkin
             }
-            try {
-                scope.launch {
+            scope.launch {
+                try {
                     isImporting = true
-                    val packageName = viewModel.importSkinFromUri(
+                    val pkg = viewModel.importSkinFromUri(
                         context = context,
                         zipUri = uri,
-                        overwrite = true,
+                        overwrite = true
                     )
-                    if (packageName != null) {
-                        Toast.makeText(
-                            context,
-                            context.getString(R.string.imported_skin_from_zip, packageName),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    } else {
-                        Toast.makeText(
-                            context,
+                    Toast.makeText(
+                        context,
+                        if (pkg != null)
+                            context.getString(R.string.imported_skin_from_zip, pkg)
+                        else
                             context.getString(R.string.failed_to_import_skin_from_zip),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } catch (e: Exception) {
+                    Timber.e(e)
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.failed_to_import_skin, e.message ?: ""),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } finally {
                     isImporting = false
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                Toast.makeText(
-                    context,
-                    context.getString(R.string.failed_to_import_skin, e.message), Toast.LENGTH_SHORT
-                )
-                    .show()
-                isImporting = false
             }
         }
     )
@@ -146,26 +167,8 @@ fun ExploreSkin(
 ) {
     val context = LocalContext.current
     val state = rememberPullToRefreshState()
-    val scope = rememberCoroutineScope()
 
-    fun downloadSkinWithApi(context: Context, url: String, fileName: String) {
-        scope.launch(Dispatchers.IO) {
-            val client = OkHttpClient()
-            val request = Request.Builder().url(url).build()
-            client.newCall(request).execute().use { response ->
-                if (response.isSuccessful) {
-                    val file = File(
-                        context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS),
-                        "$fileName.zip"
-                    )
-                    FileOutputStream(file).use { output ->
-                        response.body?.byteStream()?.copyTo(output)
-                    }
-                    onImportSkin(Uri.fromFile(file))
-                }
-            }
-        }
-    }
+    val statusMap by SkinDownloadQueue.status.collectAsState()
 
     fun isInstalled(packageName: String): Boolean {
         return skinsLocal.any { it.packageName == packageName }
@@ -182,7 +185,6 @@ fun ExploreSkin(
                 } catch (e: SecurityException) {
                     Timber.e(e, "Failed to persist URI permission")
                 }
-
                 onImportSkin(uri)
             }
         }
@@ -202,9 +204,7 @@ fun ExploreSkin(
                     )
                 },
                 actions = {
-                    IconButton(
-                        onClick = { isShowInfoDialog = true }
-                    ) {
+                    IconButton(onClick = { isShowInfoDialog = true }) {
                         Icon(
                             imageVector = Icons.Default.Info,
                             contentDescription = null
@@ -232,9 +232,7 @@ fun ExploreSkin(
                 .fillMaxSize()
         ) {
             skinCollection?.let {
-                LazyColumn(
-                    modifier = modifier,
-                ) {
+                LazyColumn(modifier = modifier) {
                     if (it.isEmpty() && !isLoading) {
                         item {
                             Column(
@@ -246,16 +244,12 @@ fun ExploreSkin(
                             ) {
                                 Text(
                                     text = stringResource(R.string.hi_there_is_no_skin_collection_for_now),
-                                    modifier = Modifier
-                                        .padding(16.dp),
+                                    modifier = Modifier.padding(16.dp),
                                     style = MaterialTheme.typography.bodyLarge
                                 )
                                 Button(onClick = {
                                     filePickerLauncher.launch(
-                                        arrayOf(
-                                            "application/zip",
-                                            "application/x-zip-compressed"
-                                        )
+                                        arrayOf("application/zip", "application/x-zip-compressed")
                                     )
                                 }) {
                                     Text(
@@ -266,8 +260,12 @@ fun ExploreSkin(
                             }
                         }
                     }
+
                     items(it.size) { index ->
                         val collection = it[index]
+                        val st = statusMap[collection.packageName] ?: DownloadStatus.Idle
+                        val queuePos = SkinDownloadQueue.queuePositionOf(collection.packageName)
+
                         Column {
                             Row(
                                 modifier = Modifier.padding(16.dp),
@@ -280,13 +278,10 @@ fun ExploreSkin(
                                         .memoryCachePolicy(CachePolicy.ENABLED)
                                         .build(),
                                     contentDescription = null,
-                                    modifier = Modifier
-                                        .size(60.dp)
+                                    modifier = Modifier.size(60.dp)
                                 )
                                 Spacer(modifier = Modifier.size(16.dp))
-                                Column(
-                                    modifier = Modifier.weight(4f)
-                                ) {
+                                Column(modifier = Modifier.weight(4f)) {
                                     Text(
                                         text = collection.name,
                                         style = MaterialTheme.typography.titleLarge,
@@ -310,21 +305,34 @@ fun ExploreSkin(
                                     )
                                 }
                                 Spacer(modifier = Modifier.weight(1f))
+
                                 Button(
                                     onClick = {
-                                        downloadSkinWithApi(
-                                            context = context,
-                                            url = collection.url,
-                                            fileName = collection.name,
-                                        )
+                                        when (st) {
+                                            is DownloadStatus.Idle,
+                                            is DownloadStatus.Failed,
+                                            DownloadStatus.Done -> {
+                                                SkinDownloadQueue.enqueue(
+                                                    context = context,
+                                                    task = DownloadTask(
+                                                        id = collection.packageName,
+                                                        url = collection.url,
+                                                        fileName = "${collection.packageName}.zip"
+                                                    )
+                                                )
+                                            }
 
+                                            is DownloadStatus.Queued -> {
+                                                SkinDownloadQueue.cancel(collection.packageName)
+                                            }
+
+                                            is DownloadStatus.Downloading,
+                                            DownloadStatus.Importing -> {
+                                            }
+                                        }
                                     },
-                                    border = BorderStroke(
-                                        width = 1.dp,
-                                        color = MaterialTheme.colorScheme.outline
-                                    )
+                                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
                                 ) {
-
                                     Column(
                                         horizontalAlignment = Alignment.CenterHorizontally,
                                         modifier = Modifier.padding(8.dp)
@@ -333,25 +341,24 @@ fun ExploreSkin(
                                             imageVector = Icons.Default.Download,
                                             contentDescription = stringResource(R.string.download),
                                         )
-                                        if (isInstalled(collection.packageName)) {
-                                            Text(
-                                                text = stringResource(R.string.overwrite),
-                                                style = MaterialTheme.typography.labelMedium,
-                                                maxLines = 1,
-                                                overflow = TextOverflow.Ellipsis,
-                                            )
+                                        val label = when (st) {
+                                            is DownloadStatus.Idle -> if (isInstalled(collection.packageName))
+                                                stringResource(R.string.overwrite)
+                                            else stringResource(R.string.download)
 
-                                        } else {
-                                            Text(
-                                                text = stringResource(R.string.download),
-                                                style = MaterialTheme.typography.labelMedium,
-                                                maxLines = 1,
-                                                overflow = TextOverflow.Ellipsis,
-                                            )
+                                            is DownloadStatus.Queued -> "Queued #$queuePos"
+                                            is DownloadStatus.Downloading -> "Downloading ${st.progressPct}%"
+                                            is DownloadStatus.Importing -> "Importing…"
+                                            is DownloadStatus.Done -> "Installed"
+                                            is DownloadStatus.Failed -> "Retry"
                                         }
-
+                                        Text(
+                                            text = label,
+                                            style = MaterialTheme.typography.labelMedium,
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis,
+                                        )
                                     }
-
                                 }
                             }
                             HorizontalDivider(
@@ -360,25 +367,18 @@ fun ExploreSkin(
                             )
                         }
                     }
-                    item {
-                        Spacer(modifier = Modifier.height(90.dp))
-                    }
+                    item { Spacer(modifier = Modifier.height(90.dp)) }
                 }
-            } ?: run {
             }
         }
-
     }
 
     LoadingOverlay(isLoading && !isRefreshing)
 
-
     if (isShowInfoDialog) {
         AlertDialog(
             containerColor = MaterialTheme.colorScheme.surface,
-            onDismissRequest = {
-                isShowInfoDialog = false
-            },
+            onDismissRequest = { isShowInfoDialog = false },
             title = {
                 Column {
                     Text(
@@ -387,13 +387,15 @@ fun ExploreSkin(
                     )
                     TextButton(
                         onClick = {
-                            openUrl(context, context.getString(R.string.skin_collection_link))
+                            openUrl(
+                                context,
+                                context.getString(R.string.skin_collection_link)
+                            )
                         }
                     ) {
                         Text(stringResource(R.string.open_the_skin_collection_configuration_file))
                     }
                 }
-
             },
             text = {
                 Column {
@@ -405,9 +407,7 @@ fun ExploreSkin(
                         stringResource(R.string.what_is_this_answer),
                         style = MaterialTheme.typography.bodyLarge
                     )
-
                     Spacer(modifier = Modifier.height(16.dp))
-
                     Text(
                         stringResource(R.string.the_formats_and_structure_of_the_skins),
                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
@@ -416,19 +416,11 @@ fun ExploreSkin(
                         stringResource(R.string.the_formats_and_structure_of_the_skins_answer),
                         style = MaterialTheme.typography.bodyLarge
                     )
-
                     Spacer(modifier = Modifier.height(16.dp))
-
                 }
             },
             confirmButton = {
-                TextButton(
-                    onClick = {
-                        isShowInfoDialog = false
-                    }
-                ) {
-                    Text("Ok")
-                }
+                TextButton(onClick = { isShowInfoDialog = false }) { Text("Ok") }
             },
         )
     }
@@ -437,7 +429,5 @@ fun ExploreSkin(
 @Preview
 @Composable
 private fun ExploreSkinPreview() {
-    ANekoTheme {
-        ExploreSkin()
-    }
+    ANekoTheme { ExploreSkin() }
 }
