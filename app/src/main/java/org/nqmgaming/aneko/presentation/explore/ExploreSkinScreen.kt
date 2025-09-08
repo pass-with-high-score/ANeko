@@ -150,7 +150,7 @@ fun ExploreSkinScreen(
                     isImporting = false
                 }
             }
-        }
+        },
     )
 }
 
@@ -343,14 +343,22 @@ fun ExploreSkin(
                                         )
                                         val label = when (st) {
                                             is DownloadStatus.Idle -> if (isInstalled(collection.packageName))
-                                                stringResource(R.string.overwrite)
+                                                stringResource(R.string.installed)
                                             else stringResource(R.string.download)
 
-                                            is DownloadStatus.Queued -> "Queued #$queuePos"
-                                            is DownloadStatus.Downloading -> "Downloading ${st.progressPct}%"
-                                            is DownloadStatus.Importing -> "Importing…"
-                                            is DownloadStatus.Done -> "Installed"
-                                            is DownloadStatus.Failed -> "Retry"
+                                            is DownloadStatus.Queued -> stringResource(
+                                                R.string.queued,
+                                                queuePos ?: -1
+                                            )
+
+                                            is DownloadStatus.Downloading -> stringResource(
+                                                R.string.downloading,
+                                                st.progressPct
+                                            )
+
+                                            is DownloadStatus.Importing -> stringResource(R.string.importing)
+                                            is DownloadStatus.Done -> stringResource(R.string.installed)
+                                            is DownloadStatus.Failed -> stringResource(R.string.retry)
                                         }
                                         Text(
                                             text = label,
