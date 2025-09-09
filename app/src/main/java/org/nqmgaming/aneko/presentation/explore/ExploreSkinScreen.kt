@@ -346,15 +346,9 @@ fun ExploreSkin(
                                                 stringResource(R.string.installed)
                                             else stringResource(R.string.download)
 
-                                            is DownloadStatus.Queued -> stringResource(
-                                                R.string.queued,
-                                                queuePos ?: -1
-                                            )
+                                            is DownloadStatus.Queued -> "${stringResource(R.string.queued)} #$queuePos"
 
-                                            is DownloadStatus.Downloading -> stringResource(
-                                                R.string.downloading,
-                                                st.progressPct
-                                            )
+                                            is DownloadStatus.Downloading -> "${stringResource(R.string.downloading)}  ${st.progressPct}%"
 
                                             is DownloadStatus.Importing -> stringResource(R.string.importing)
                                             is DownloadStatus.Done -> stringResource(R.string.installed)

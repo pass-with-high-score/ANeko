@@ -76,8 +76,8 @@
     <string name="what_is_this_answer">Đây là bộ sưu tập skin do cộng đồng tạo ra để bạn dùng thử. Bạn có thể tải về và nhập chỉ với một cú nhấp chuột. Bạn cũng có thể nhập skin từ tệp zip.</string>
     <string name="the_formats_and_structure_of_the_skins">Định dạng và cấu trúc của skin?</string>
     <string name="the_formats_and_structure_of_the_skins_answer">Các skin ở dạng tệp zip và tuân theo cùng cấu trúc với skin mặc định. Mỗi skin phải có một tệp "skin.xml" trong thư mục gốc để định nghĩa siêu dữ liệu và cấu hình của skin. Ứng dụng sẽ xử lý an toàn việc này.</string>
-    <string name="queued">Đang chờ #%1$d</string>
-    <string name="downloading">Đang tải %1$d%%</string>
+    <string name="queued">Đang chờ</string>
+    <string name="downloading">Đang tải</string>
     <string name="importing">Đang nhập…</string>
     <string name="installed">Đã cài đặt</string>
     <string name="retry">Thử lại</string>

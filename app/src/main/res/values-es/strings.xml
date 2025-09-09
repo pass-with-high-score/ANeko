@@ -79,8 +79,8 @@
     <string name="what_is_this_answer">Esta es una colección de skins creados por la comunidad para que los pruebes. Puedes descargarlos e importarlos con un solo clic. También puedes importar skins desde archivos zip.</string>
     <string name="the_formats_and_structure_of_the_skins">¿Los formatos y la estructura de los skins?</string>
     <string name="the_formats_and_structure_of_the_skins_answer">Los skins están en formato zip y siguen la misma estructura que el skin predeterminado. Cada skin debe tener un archivo "skin.xml" en su directorio raíz que defina los metadatos y la configuración del skin. Esto es gestionado de manera segura por la aplicación.</string>
-    <string name="queued">En cola #%1$d</string>
-    <string name="downloading">Descargando %1$d%%</string>
+    <string name="queued">En cola</string>
+    <string name="downloading">Descargando</string>
     <string name="importing">Importando…</string>
     <string name="installed">Instalado</string>
     <string name="retry">Reintentar</string>

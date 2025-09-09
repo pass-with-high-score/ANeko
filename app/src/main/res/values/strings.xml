@@ -87,8 +87,8 @@
     <string name="what_is_this_answer">This is a collection of skins made by the community for you to try out. You can download and import them with a single click. You can also import skins from zip files.</string>
     <string name="the_formats_and_structure_of_the_skins">The formats and structure of the skins?</string>
     <string name="the_formats_and_structure_of_the_skins_answer">The skins are in zip format and follow the same structure as the default skin. Each skin must have a \'skin.xml\' file in its root directory that defines the skin\'s metadata and configuration. This is safely handled by the app.</string>
-    <string name="queued">Queued #%1$d</string>
-    <string name="downloading">Downloading %1$d%</string>
+    <string name="queued">Queued</string>
+    <string name="downloading">Downloading</string>
     <string name="importing">Importing…</string>
     <string name="installed">Installed</string>
     <string name="retry">Retry</string>

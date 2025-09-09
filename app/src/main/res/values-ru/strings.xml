@@ -74,8 +74,8 @@
     <string name="what_is_this_answer">Это коллекция скинов, созданных сообществом, чтобы вы могли их попробовать. Вы можете загрузить и импортировать их одним щелчком. Также можно импортировать скины из zip-файлов.</string>
     <string name="the_formats_and_structure_of_the_skins">Форматы и структура скинов?</string>
     <string name="the_formats_and_structure_of_the_skins_answer">Скины находятся в формате zip и следуют той же структуре, что и стандартный скин. Каждый скин должен содержать файл «skin.xml» в корневой директории, который определяет метаданные и конфигурацию. Приложение обрабатывает это безопасно.</string>
-    <string name="queued">В очереди #%1$d</string>
-    <string name="downloading">Загрузка %1$d%%</string>
+    <string name="queued">В очереди</string>
+    <string name="downloading">Загрузка</string>
     <string name="importing">Импорт…</string>
     <string name="installed">Установлено</string>
     <string name="retry">Повторить</string>

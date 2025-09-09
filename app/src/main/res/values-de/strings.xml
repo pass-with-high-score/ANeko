@@ -83,8 +83,8 @@
     <string name="what_is_this_answer">Dies ist eine Sammlung von Skins, die von der Community erstellt wurden, damit Sie sie ausprobieren können. Sie können sie mit einem Klick herunterladen und importieren. Sie können auch Skins aus Zip-Dateien importieren.</string>
     <string name="the_formats_and_structure_of_the_skins">Die Formate und die Struktur der Skins?</string>
     <string name="the_formats_and_structure_of_the_skins_answer">Die Skins liegen im Zip-Format vor und folgen derselben Struktur wie der Standardskin. Jeder Skin muss im Hauptverzeichnis eine „skin.xml“-Datei enthalten, die die Metadaten und die Konfiguration definiert. Dies wird von der App sicher verarbeitet.</string>
-    <string name="queued">Warteschlange #%1$d</string>
-    <string name="downloading">Wird heruntergeladen %1$d%%</string>
+    <string name="queued">Warteschlange</string>
+    <string name="downloading">Wird heruntergeladen</string>
     <string name="importing">Wird importiert…</string>
     <string name="installed">Installiert</string>
     <string name="retry">Wiederholen</string>
