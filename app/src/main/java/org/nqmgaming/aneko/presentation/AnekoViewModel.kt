@@ -465,4 +465,152 @@ class AnekoViewModel @Inject constructor(
             }
         }
     }
+
+    fun createSkin(
+        context: Context,
+        name: String,
+        packageName: String,
+        author: String,
+        previewUri: Uri,
+        frameUris: List<Uri>,
+        onSuccess: (String) -> Unit,
+        onError: (String?) -> Unit,
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                // Basic validation: unique package and non-empty
+                if (_uiState.value.skins.any { it.packageName == packageName }) {
+                    withContext(Dispatchers.Main) { onError("Package already exists") }
+                    return@launch
+                }
+
+                val skinsRoot = File(context.filesDir, "skins").apply { mkdirs() }
+                val destDir = File(skinsRoot, packageName)
+                if (destDir.exists()) {
+                    withContext(Dispatchers.Main) { onError("Target skin folder already exists") }
+                    return@launch
+                }
+                destDir.mkdirs()
+
+                // Copy preview
+                val previewFileName = copyUriToNamedFile(
+                    context, previewUri, destDir, "icon"
+                )
+
+                // Copy frames (use first 2 frames for basic motions)
+                val selected = frameUris.take(2).ifEmpty { listOf(previewUri) }
+                val frameNames = mutableListOf<String>()
+                selected.forEachIndexed { idx, uri ->
+                    val base = "frame${idx + 1}"
+                    val fileName = copyUriToNamedFile(context, uri, destDir, base)
+                    frameNames.add(fileName.substringBeforeLast('.')) // base name without ext
+                }
+
+                val f1 = frameNames.getOrElse(0) { "frame1" }
+                val f2 = frameNames.getOrElse(1) { f1 }
+
+                // Generate minimal but complete skin.xml
+                val skinXml = buildString {
+                    appendLine("<?xml version=\"1.0\" encoding=\"utf-8\"?>")
+                    appendLine("<motion-params package=\"$packageName\" name=\"${name.trim()}\" preview=\"$previewFileName\" author=\"${author.trim()}\" ")
+                    appendLine("    acceleration=\"160\" awakeState=\"awake\" deaccelerationDistance=\"60\" initialState=\"stop\"")
+                    appendLine("    maxVelocity=\"100\" moveStatePrefix=\"move\" proximityDistance=\"10\" wallStatePrefix=\"wall\">")
+                    // stop (idle)
+                    appendLine("    <motion checkWall=\"true\" nextState=\"wait\" state=\"stop\">")
+                    appendLine("        <item drawable=\"$f1\" duration=\"2000\" />")
+                    appendLine("    </motion>")
+                    // wait (alternate idle)
+                    appendLine("    <motion state=\"wait\">")
+                    appendLine("        <item drawable=\"$f1\" duration=\"1500\" />")
+                    appendLine("        <item drawable=\"$f2\" duration=\"1500\" />")
+                    appendLine("    </motion>")
+                    // awake state enables movement
+                    appendLine("    <motion checkMove=\"true\" nextState=\"stop\" state=\"awake\">")
+                    appendLine("        <item drawable=\"$f1\" duration=\"750\" />")
+                    appendLine("    </motion>")
+                    // movement states (all 8 directions reuse frames)
+                    fun moveState(state: String) {
+                        appendLine("    <motion state=\"$state\">")
+                        appendLine("        <repeat-item>")
+                        appendLine("            <item drawable=\"$f1\" duration=\"250\" />")
+                        appendLine("            <item drawable=\"$f2\" duration=\"250\" />")
+                        appendLine("        </repeat-item>")
+                        appendLine("    </motion>")
+                    }
+                    listOf(
+                        "moveUp", "moveDown", "moveLeft", "moveRight",
+                        "moveUpLeft", "moveUpRight", "moveDownRight", "moveDownLeft"
+                    ).forEach { moveState(it) }
+
+                    // wall touch states (optional, simple loop)
+                    fun wallState(state: String) {
+                        appendLine("    <motion nextState=\"wait\" state=\"$state\">")
+                        appendLine("        <repeat-item repeatCount=\"3\">")
+                        appendLine("            <item drawable=\"$f1\" duration=\"250\" />")
+                        appendLine("            <item drawable=\"$f2\" duration=\"250\" />")
+                        appendLine("        </repeat-item>")
+                        appendLine("    </motion>")
+                    }
+                    listOf("wallUp", "wallDown", "wallLeft", "wallRight").forEach { wallState(it) }
+
+                    appendLine("</motion-params>")
+                }
+
+                File(destDir, "skin.xml").writeText(skinXml)
+
+                // Save DB entry
+                val skin = SkinEntity(
+                    packageName = packageName,
+                    name = name,
+                    author = author,
+                    previewPath = previewFileName,
+                    isActive = false,
+                    isFavorite = false,
+                    isBuiltin = false,
+                )
+                repo.upsertSkin(skin)
+
+                withContext(Dispatchers.Main) { onSuccess(packageName) }
+            } catch (e: Exception) {
+                Timber.e(e)
+                withContext(Dispatchers.Main) { onError(e.message) }
+            }
+        }
+    }
+
+    private fun copyUriToNamedFile(
+        context: Context,
+        uri: Uri,
+        destDir: File,
+        baseName: String
+    ): String {
+        val resolver = context.contentResolver
+        val nameWithExt = runCatching {
+            val type = resolver.getType(uri)
+            val ext = when {
+                type?.endsWith("png") == true -> ".png"
+                type?.endsWith("jpeg") == true || type?.endsWith("jpg") == true -> ".jpg"
+                type?.endsWith("webp") == true -> ".webp"
+                else -> {
+                    // Try to guess from uri
+                    val p = uri.lastPathSegment ?: ""
+                    when {
+                        p.endsWith(".png", true) -> ".png"
+                        p.endsWith(".jpg", true) || p.endsWith(".jpeg", true) -> ".jpg"
+                        p.endsWith(".webp", true) -> ".webp"
+                        else -> ".png"
+                    }
+                }
+            }
+            baseName + ext
+        }.getOrDefault("$baseName.png")
+
+        resolver.openInputStream(uri)?.use { input ->
+            val outFile = File(destDir, nameWithExt)
+            FileOutputStream(outFile).use { output ->
+                input.copyTo(output)
+            }
+        }
+        return nameWithExt
+    }
 }

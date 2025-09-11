@@ -93,4 +93,18 @@
     <string name="installed">Installed</string>
     <string name="retry">Retry</string>
 
+    <!-- Create Skin -->
+    <string name="create_skin_title">Create Skin</string>
+    <string name="skin_name_label">Skin name</string>
+    <string name="skin_package_label">Package name</string>
+    <string name="skin_author_label">Author</string>
+    <string name="pick_preview_image">Pick preview</string>
+    <string name="add_frames_button">Add frames</string>
+    <string name="preview_selected_label">Preview selected: %1$s</string>
+    <string name="frames_selected_label">Frames selected: %1$d</string>
+    <string name="create_skin_cta">Create skin</string>
+    <string name="created_skin_success">Created skin: %1$s</string>
+    <string name="create_skin_missing_fields">Please fill all fields and select images</string>
+    <string name="failed_to_create_skin">Failed to create skin</string>
+
 </resources>

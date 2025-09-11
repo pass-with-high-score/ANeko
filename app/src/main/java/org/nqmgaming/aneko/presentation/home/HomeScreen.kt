@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.LightMode
@@ -36,6 +37,8 @@ import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
+import com.ramcosta.composedestinations.generated.destinations.CreateSkinScreenDestination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import org.nqmgaming.aneko.R
 import org.nqmgaming.aneko.core.service.AnimationService
 import org.nqmgaming.aneko.presentation.AnekoViewModel
@@ -51,6 +54,7 @@ import java.util.Locale
 @Composable
 fun HomeScreen(
     viewModel: AnekoViewModel = hiltViewModel(),
+    navigator: DestinationsNavigator,
 ) {
     val uiState = viewModel.uiState.collectAsState()
     val isDarkTheme by viewModel.isDarkTheme.collectAsState()
@@ -110,6 +114,15 @@ fun HomeScreen(
                     }
                 },
                 actions = {
+                    IconButton(onClick = {
+                        navigator.navigate(CreateSkinScreenDestination())
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = stringResource(R.string.create_skin_title),
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
                     IconButton(onClick = {
                         val uri = context.getString(R.string.telegram_group_link).toUri()
                         val intent = Intent(Intent.ACTION_VIEW, uri)
@@ -191,4 +204,3 @@ fun HomeScreen(
         }
     }
 }
-
