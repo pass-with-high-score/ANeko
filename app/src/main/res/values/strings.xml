@@ -106,5 +106,9 @@
     <string name="created_skin_success">Created skin: %1$s</string>
     <string name="create_skin_missing_fields">Please fill all fields and select images</string>
     <string name="failed_to_create_skin">Failed to create skin</string>
+    <string name="edit_skin_title">Edit Skin</string>
+    <string name="save_changes">Save changes</string>
+    <string name="saved_skin_success">Saved skin: %1$s</string>
+    <string name="edit_skin_label">Edit Skin</string>
 
 </resources>

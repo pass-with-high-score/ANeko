@@ -466,6 +466,129 @@ class AnekoViewModel @Inject constructor(
         }
     }
 
+    fun updateSkin(
+        context: Context,
+        packageName: String,
+        name: String,
+        author: String,
+        existingFrameFiles: List<File>,
+        newFrameUris: List<Uri>,
+        newPreviewUri: Uri?,
+        onSuccess: (String) -> Unit,
+        onError: (String?) -> Unit,
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val skinsRoot = File(context.filesDir, "skins").apply { mkdirs() }
+                val destDir = File(skinsRoot, packageName).apply { mkdirs() }
+
+                // Preview: if provided, copy and use; else keep old previewPath if exists
+                var previewFileName: String? = null
+                if (newPreviewUri != null) {
+                    previewFileName =
+                        copyUriToNamedFile(context, newPreviewUri, destDir, "icon")
+                } else {
+                    // Try to reuse from existing skin.xml metadata
+                    val skinXml = File(destDir, "skin.xml")
+                    if (skinXml.exists()) {
+                        previewFileName = parseSkinMetadata(skinXml, context)?.previewPath
+                    }
+                }
+
+                // Normalize frames list: existing files + new URIs copied in order
+                val frameBaseNames = mutableListOf<String>()
+                existingFrameFiles.forEach { f ->
+                    if (f.exists()) frameBaseNames.add(f.nameWithoutExtension)
+                }
+                newFrameUris.forEachIndexed { idx, uri ->
+                    val base = "frame_added_${idx + 1}"
+                    val newName = copyUriToNamedFile(context, uri, destDir, base)
+                    frameBaseNames.add(newName.substringBeforeLast('.'))
+                }
+                if (frameBaseNames.isEmpty()) {
+                    withContext(Dispatchers.Main) { onError("No frames selected") }
+                    return@launch
+                }
+
+                val f1 = frameBaseNames[0]
+                val f2 = frameBaseNames.getOrElse(1) { f1 }
+
+                val xml = buildString {
+                    appendLine("<?xml version=\"1.0\" encoding=\"utf-8\"?>")
+                    appendLine("<motion-params package=\"$packageName\" name=\"${name.trim()}\" preview=\"${previewFileName ?: "icon.png"}\" author=\"${author.trim()}\" ")
+                    appendLine("    acceleration=\"160\" awakeState=\"awake\" deaccelerationDistance=\"60\" initialState=\"stop\"")
+                    appendLine("    maxVelocity=\"100\" moveStatePrefix=\"move\" proximityDistance=\"10\" wallStatePrefix=\"wall\">")
+                    appendLine("    <motion checkWall=\"true\" nextState=\"wait\" state=\"stop\">")
+                    // Use all frames as idle loop if >2
+                    if (frameBaseNames.size > 2) {
+                        appendLine("        <repeat-item>")
+                        frameBaseNames.forEach { base ->
+                            appendLine("            <item drawable=\"$base\" duration=\"300\" />")
+                        }
+                        appendLine("        </repeat-item>")
+                    } else {
+                        appendLine("        <item drawable=\"$f1\" duration=\"2000\" />")
+                    }
+                    appendLine("    </motion>")
+                    appendLine("    <motion state=\"wait\">")
+                    frameBaseNames.forEach { base ->
+                        appendLine("        <item drawable=\"$base\" duration=\"400\" />")
+                    }
+                    appendLine("    </motion>")
+                    appendLine("    <motion checkMove=\"true\" nextState=\"stop\" state=\"awake\">")
+                    appendLine("        <item drawable=\"$f1\" duration=\"750\" />")
+                    appendLine("    </motion>")
+                    fun moveState(state: String) {
+                        appendLine("    <motion state=\"$state\">")
+                        appendLine("        <repeat-item>")
+                        appendLine("            <item drawable=\"$f1\" duration=\"250\" />")
+                        appendLine("            <item drawable=\"$f2\" duration=\"250\" />")
+                        appendLine("        </repeat-item>")
+                        appendLine("    </motion>")
+                    }
+                    listOf(
+                        "moveUp", "moveDown", "moveLeft", "moveRight",
+                        "moveUpLeft", "moveUpRight", "moveDownRight", "moveDownLeft"
+                    ).forEach { moveState(it) }
+                    fun wallState(state: String) {
+                        appendLine("    <motion nextState=\"wait\" state=\"$state\">")
+                        appendLine("        <repeat-item repeatCount=\"3\">")
+                        appendLine("            <item drawable=\"$f1\" duration=\"250\" />")
+                        appendLine("            <item drawable=\"$f2\" duration=\"250\" />")
+                        appendLine("        </repeat-item>")
+                        appendLine("    </motion>")
+                    }
+                    listOf(
+                        "wallUp",
+                        "wallDown",
+                        "wallLeft",
+                        "wallRight"
+                    ).forEach { wallState(it) }
+                    appendLine("</motion-params>")
+                }
+
+                File(destDir, "skin.xml").writeText(xml)
+
+                val skin = SkinEntity(
+                    packageName = packageName,
+                    name = name,
+                    author = author,
+                    previewPath = previewFileName ?: "icon.png",
+                    isActive = _uiState.value.skins.find { it.packageName == packageName }?.isActive
+                        ?: false,
+                    isFavorite = _uiState.value.skins.find { it.packageName == packageName }?.isFavorite
+                        ?: false,
+                    isBuiltin = false,
+                )
+                repo.upsertSkin(skin)
+                withContext(Dispatchers.Main) { onSuccess(packageName) }
+            } catch (e: Exception) {
+                Timber.e(e)
+                withContext(Dispatchers.Main) { onError(e.message) }
+            }
+        }
+    }
+
     fun createSkin(
         context: Context,
         name: String,

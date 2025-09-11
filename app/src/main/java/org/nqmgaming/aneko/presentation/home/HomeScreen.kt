@@ -191,7 +191,8 @@ fun HomeScreen(
                 skins = uiState.value.skins,
                 onRequestDeleteSkin = {
                     viewModel.onDeselectSkin(it, context)
-                }
+                },
+                navigator = navigator,
             )
         }
 

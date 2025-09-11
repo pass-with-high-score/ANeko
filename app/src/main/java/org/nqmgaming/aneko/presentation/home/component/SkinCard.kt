@@ -41,6 +41,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import org.nqmgaming.aneko.R
 import org.nqmgaming.aneko.core.data.entity.SkinEntity
 import org.nqmgaming.aneko.core.data.entity.previewModel
@@ -52,6 +53,7 @@ fun SkinCard(
     isSelected: Boolean,
     onSkinSelected: () -> Unit,
     onRequestDeleteSkin: () -> Unit,
+    navigator: DestinationsNavigator? = null,
 ) {
     val context = LocalContext.current
     val borderColor = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent
@@ -152,5 +154,6 @@ fun SkinCard(
         onRequestDeleteSkin = onRequestDeleteSkin,
         isBottomSheetVisible = isBottomSheetVisible,
         bottomSheetState = bottomSheetState,
+        navigator = navigator,
     )
 }

@@ -1,4 +1,4 @@
-package org.nqmgaming.aneko.presentation.create
+package org.nqmgaming.aneko.presentation.edit
 
 import android.content.Context
 import android.content.Intent
@@ -31,6 +31,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -47,29 +48,58 @@ import com.ramcosta.composedestinations.annotation.RootGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import org.nqmgaming.aneko.R
 import org.nqmgaming.aneko.presentation.AnekoViewModel
+import org.nqmgaming.aneko.presentation.create.FramesPreview
 import timber.log.Timber
+import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Destination<RootGraph>
 @Composable
-fun CreateSkinScreen(
+fun EditSkinScreen(
     navigator: DestinationsNavigator,
+    packageName: String,
     viewModel: AnekoViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
 
     var name by remember { mutableStateOf("") }
-    var packageName by remember { mutableStateOf("") }
     var author by remember { mutableStateOf("") }
-    var previewUri by remember { mutableStateOf<Uri?>(null) }
-    val frameUris = remember { mutableStateListOf<Uri>() }
+    var previewPath by remember { mutableStateOf<String?>(null) }
+    var newPreviewUri by remember { mutableStateOf<Uri?>(null) }
+
+    val frameFiles = remember { mutableStateListOf<File>() }
+    val newFrameUris = remember { mutableStateListOf<Uri>() }
+
+    LaunchedEffect(packageName) {
+        try {
+            val dir = File(context.filesDir, "skins/$packageName")
+            val xml = File(dir, "skin.xml")
+            val meta = if (xml.exists()) viewModel.parseSkinMetadata(xml, context) else null
+            name = meta?.name ?: packageName
+            author = meta?.author ?: ""
+            previewPath = meta?.previewPath
+            val images = dir.listFiles { f ->
+                f.isFile && f.name != "skin.xml" && (f.extension.lowercase() in listOf(
+                    "png",
+                    "jpg",
+                    "jpeg",
+                    "webp"
+                ))
+            }?.sortedBy { it.name } ?: emptyList()
+            frameFiles.clear()
+            // Exclude preview image from frames
+            frameFiles.addAll(images.filterNot { it.name == previewPath })
+        } catch (e: Exception) {
+            Timber.e(e)
+        }
+    }
 
     val pickPreview = rememberLauncherForActivityResult(
         ActivityResultContracts.OpenDocument()
     ) { uri ->
         if (uri != null) {
             persistUri(context, uri)
-            previewUri = uri
+            newPreviewUri = uri
         }
     }
 
@@ -78,36 +108,43 @@ fun CreateSkinScreen(
     ) { uris ->
         uris.forEach { uri ->
             persistUri(context, uri)
-            frameUris.add(uri)
+            newFrameUris.add(uri)
         }
+    }
+
+    // Preview setup: map to Any for Coil
+    val previewFrames = remember(frameFiles, newFrameUris) {
+        val list = mutableListOf<Any>()
+        list.addAll(frameFiles)
+        list.addAll(newFrameUris)
+        list.toList()
     }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = stringResource(R.string.create_skin_title)) },
+                title = { Text(text = stringResource(R.string.edit_skin_title)) },
                 actions = {
                     IconButton(onClick = {
-                        onCreateClicked(
+                        onSaveClicked(
                             context = context,
                             viewModel = viewModel,
-                            name = name,
                             packageName = packageName,
+                            name = name,
                             author = author,
-                            previewUri = previewUri,
-                            frameUris = frameUris.toList(),
+                            existingFrameFiles = frameFiles.toList(),
+                            newFrameUris = newFrameUris.toList(),
+                            newPreviewUri = newPreviewUri,
                             onSuccess = {
                                 Toast.makeText(
                                     context,
-                                    context.getString(R.string.created_skin_success, it),
+                                    context.getString(R.string.saved_skin_success, it),
                                     Toast.LENGTH_SHORT
                                 ).show()
                                 navigator.popBackStack()
                             }
                         )
-                    }) {
-                        Icon(imageVector = Icons.Default.Check, contentDescription = null)
-                    }
+                    }) { Icon(imageVector = Icons.Default.Check, contentDescription = null) }
                 }
             )
         }
@@ -120,9 +157,6 @@ fun CreateSkinScreen(
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // Live preview controls
-            var frameMs by remember { mutableStateOf(250L) }
-            var previewSize by remember { mutableStateOf(120.dp) }
             OutlinedTextField(
                 value = name,
                 onValueChange = { name = it },
@@ -132,7 +166,8 @@ fun CreateSkinScreen(
 
             OutlinedTextField(
                 value = packageName,
-                onValueChange = { packageName = it },
+                onValueChange = {},
+                enabled = false,
                 modifier = Modifier.fillMaxWidth(),
                 label = { Text(stringResource(R.string.skin_package_label)) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Ascii)
@@ -146,31 +181,26 @@ fun CreateSkinScreen(
             )
 
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                Button(onClick = {
-                    pickPreview.launch(arrayOf("image/*"))
-                }) { Text(text = stringResource(R.string.pick_preview_image)) }
-
-                Button(onClick = {
-                    pickFrames.launch(arrayOf("image/*"))
-                }) { Text(text = stringResource(R.string.add_frames_button)) }
+                Button(onClick = { pickPreview.launch(arrayOf("image/*")) }) {
+                    Text(
+                        text = stringResource(
+                            R.string.pick_preview_image
+                        )
+                    )
+                }
+                Button(onClick = { pickFrames.launch(arrayOf("image/*")) }) {
+                    Text(
+                        text = stringResource(
+                            R.string.add_frames_button
+                        )
+                    )
+                }
             }
 
-            Text(
-                text = stringResource(
-                    R.string.preview_selected_label,
-                    (previewUri != null).toString()
-                )
-            )
-            Text(text = stringResource(R.string.frames_selected_label, frameUris.size))
-
-            // Preview widget
-            FramesPreview(
-                frames = frameUris.toList(),
-                frameDurationMs = frameMs,
-                size = previewSize,
-            )
-
-            // Simple controls for preview speed/size
+            // Preview
+            var frameMs by remember { mutableStateOf(250L) }
+            var previewSize by remember { mutableStateOf(120.dp) }
+            FramesPreview(frames = previewFrames, frameDurationMs = frameMs, size = previewSize)
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 Button(onClick = { frameMs = (frameMs - 50).coerceAtLeast(50) }) { Text("- speed") }
                 Button(onClick = { frameMs += 50 }) { Text("+ speed") }
@@ -180,34 +210,30 @@ fun CreateSkinScreen(
                 Button(onClick = { previewSize += 16.dp }) { Text("+ size") }
             }
 
-            // Reorder/remove frames list
+            // Reorder/remove existing frame files
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                frameUris.forEachIndexed { index, uri ->
+                frameFiles.forEachIndexed { index, file ->
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         Text(text = "${index + 1}.")
                         IconButton(onClick = {
                             if (index > 0) {
-                                frameUris.removeAt(index)
-                                frameUris.add(index - 1, uri)
+                                val removed = frameFiles.removeAt(index)
+                                frameFiles.add(index - 1, removed)
                             }
-                        }) {
-                            Icon(Icons.Default.KeyboardArrowLeft, contentDescription = null)
-                        }
+                        }) { Icon(Icons.Default.KeyboardArrowLeft, contentDescription = null) }
                         IconButton(onClick = {
-                            if (index < frameUris.lastIndex) {
-                                frameUris.removeAt(index)
-                                frameUris.add(index + 1, uri)
+                            if (index < frameFiles.lastIndex) {
+                                val removed = frameFiles.removeAt(index)
+                                frameFiles.add(index + 1, removed)
                             }
-                        }) {
-                            Icon(Icons.Default.KeyboardArrowRight, contentDescription = null)
+                        }) { Icon(Icons.Default.KeyboardArrowRight, contentDescription = null) }
+                        IconButton(onClick = { frameFiles.removeAt(index) }) {
+                            Icon(
+                                Icons.Default.Delete,
+                                contentDescription = null
+                            )
                         }
-                        IconButton(onClick = { frameUris.removeAt(index) }) {
-                            Icon(Icons.Default.Delete, contentDescription = null)
-                        }
-                        Text(
-                            text = uri.lastPathSegment ?: uri.toString(),
-                            modifier = Modifier.weight(1f)
-                        )
+                        Text(text = file.name, modifier = Modifier.weight(1f))
                     }
                 }
             }
@@ -216,27 +242,26 @@ fun CreateSkinScreen(
 
             Button(
                 onClick = {
-                    onCreateClicked(
+                    onSaveClicked(
                         context,
                         viewModel,
-                        name,
                         packageName,
+                        name,
                         author,
-                        previewUri,
-                        frameUris.toList()
-                    ) { createdPkg ->
+                        frameFiles.toList(),
+                        newFrameUris.toList(),
+                        newPreviewUri
+                    ) { savedPkg ->
                         Toast.makeText(
                             context,
-                            context.getString(R.string.created_skin_success, createdPkg),
+                            context.getString(R.string.saved_skin_success, savedPkg),
                             Toast.LENGTH_SHORT
                         ).show()
                         navigator.popBackStack()
                     }
                 },
-                enabled = name.isNotBlank() && packageName.isNotBlank() && author.isNotBlank() && (previewUri != null) && frameUris.isNotEmpty()
-            ) {
-                Text(text = stringResource(R.string.create_skin_cta))
-            }
+                enabled = name.isNotBlank() && packageName.isNotBlank() && (frameFiles.isNotEmpty() || newFrameUris.isNotEmpty())
+            ) { Text(text = stringResource(R.string.save_changes)) }
         }
     }
 }
@@ -251,32 +276,25 @@ private fun persistUri(context: Context, uri: Uri) {
     }
 }
 
-private fun onCreateClicked(
+private fun onSaveClicked(
     context: Context,
     viewModel: AnekoViewModel,
-    name: String,
     packageName: String,
+    name: String,
     author: String,
-    previewUri: Uri?,
-    frameUris: List<Uri>,
+    existingFrameFiles: List<File>,
+    newFrameUris: List<Uri>,
+    newPreviewUri: Uri?,
     onSuccess: (String) -> Unit,
 ) {
-    if (name.isBlank() || packageName.isBlank() || author.isBlank() || previewUri == null || frameUris.isEmpty()) {
-        Toast.makeText(
-            context,
-            context.getString(R.string.create_skin_missing_fields),
-            Toast.LENGTH_SHORT
-        ).show()
-        return
-    }
-
-    viewModel.createSkin(
+    viewModel.updateSkin(
         context = context,
-        name = name,
         packageName = packageName,
+        name = name,
         author = author,
-        previewUri = previewUri,
-        frameUris = frameUris,
+        existingFrameFiles = existingFrameFiles,
+        newFrameUris = newFrameUris,
+        newPreviewUri = newPreviewUri,
         onSuccess = onSuccess,
         onError = { msg ->
             Toast.makeText(
@@ -287,3 +305,4 @@ private fun onCreateClicked(
         }
     )
 }
+
