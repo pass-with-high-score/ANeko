@@ -174,6 +174,153 @@ class AnekoViewModel @Inject constructor(
         }
     }
 
+    suspend fun createSkinAdvanced(
+        context: Context,
+        name: String,
+        packageName: String,
+        author: String,
+        previewUri: Uri,
+        frameUrisPool: List<Uri>,
+        stateMapping: Map<String, List<Pair<Uri, Int>>>,
+    ): String? = withContext(Dispatchers.IO) {
+        try {
+            val skinsRoot = File(context.filesDir, "skins").apply { mkdirs() }
+            val destDir = File(skinsRoot, packageName)
+            if (destDir.exists()) destDir.deleteRecursively()
+            destDir.mkdirs()
+
+            // Copy preview icon
+            val previewFileName = copyUriToNamedFile(context, previewUri, destDir, "icon")
+
+            // Unique pool from mapping (or fallback to pool list)
+            val uniqueUris = LinkedHashSet<String>()
+            stateMapping.values.flatten().forEach { (uri, _) -> uniqueUris.add(uri.toString()) }
+            if (uniqueUris.isEmpty()) frameUrisPool.forEach { uniqueUris.add(it.toString()) }
+            if (uniqueUris.isEmpty()) return@withContext null
+
+            // Copy frames and map uri -> baseName
+            val uriToBase = LinkedHashMap<String, String>()
+            var idx = 1
+            uniqueUris.forEach { uriString ->
+                val u = Uri.parse(uriString)
+                val baseName = "f$idx"
+                val fileName = copyUriToNamedFile(context, u, destDir, baseName)
+                uriToBase[uriString] = fileName.substringBeforeLast('.')
+                idx++
+            }
+
+            // Helpers
+            fun writeItems(sb: StringBuilder, items: List<Pair<Uri, Int>>) {
+                if (items.isEmpty()) return
+                sb.appendLine("        <repeat-item>")
+                items.forEach { (u, dur) ->
+                    val base = uriToBase[u.toString()] ?: uriToBase.values.first()
+                    sb.appendLine("            <item drawable=\"$base\" duration=\"${dur.coerceAtLeast(50)}\" />")
+                }
+                sb.appendLine("        </repeat-item>")
+            }
+
+            val fallbackF1 = uriToBase.values.first()
+            val fallbackF2 = uriToBase.values.drop(1).firstOrNull() ?: fallbackF1
+
+            // Build XML
+            val xml = buildString {
+                appendLine("<?xml version=\"1.0\" encoding=\"utf-8\"?>")
+                appendLine("<motion-params package=\"$packageName\" name=\"${name.trim()}\" preview=\"$previewFileName\" author=\"${author.trim()}\" ")
+                appendLine("    acceleration=\"160\" awakeState=\"awake\" deaccelerationDistance=\"60\" initialState=\"stop\"")
+                appendLine("    maxVelocity=\"100\" moveStatePrefix=\"move\" proximityDistance=\"10\" wallStatePrefix=\"wall\">")
+
+                fun block(state: String, nextState: String? = null, checkMove: Boolean = false, checkWall: Boolean = false, items: List<Pair<Uri, Int>>? = null) {
+                    append("    <motion state=\"$state\"")
+                    if (nextState != null) append(" nextState=\"$nextState\"")
+                    if (checkMove) append(" checkMove=\"true\"")
+                    if (checkWall) append(" checkWall=\"true\"")
+                    appendLine(">")
+                    val mapped = items ?: emptyList()
+                    if (mapped.isNotEmpty()) {
+                        writeItems(this, mapped)
+                    } else {
+                        if (state.startsWith("move") || state.startsWith("wall")) {
+                            appendLine("        <repeat-item>")
+                            appendLine("            <item drawable=\"$fallbackF1\" duration=\"250\" />")
+                            appendLine("            <item drawable=\"$fallbackF2\" duration=\"250\" />")
+                            appendLine("        </repeat-item>")
+                        } else if (state == "awake") {
+                            appendLine("        <item drawable=\"$fallbackF1\" duration=\"750\" />")
+                        } else {
+                            appendLine("        <item drawable=\"$fallbackF1\" duration=\"2000\" />")
+                        }
+                    }
+                    appendLine("    </motion>")
+                }
+
+                val get = { key: String -> stateMapping[key] }
+                block("stop", nextState = "wait", checkWall = true, items = get("stop"))
+                block("wait", items = get("wait"))
+                block("awake", nextState = "stop", checkMove = true, items = get("awake"))
+
+                listOf(
+                    "moveUp",
+                    "moveDown",
+                    "moveLeft",
+                    "moveRight",
+                    "moveUpLeft",
+                    "moveUpRight",
+                    "moveDownRight",
+                    "moveDownLeft",
+                ).forEach { s -> block(s, items = get(s)) }
+
+                listOf("wallUp", "wallDown", "wallLeft", "wallRight").forEach { s ->
+                    block(s, nextState = "wait", items = get(s))
+                }
+
+                appendLine("</motion-params>")
+            }
+
+            File(destDir, "skin.xml").writeText(xml)
+
+            repo.upsertSkin(
+                SkinEntity(
+                    packageName = packageName,
+                    name = name,
+                    author = author,
+                    previewPath = previewFileName,
+                    isActive = false,
+                    isFavorite = false,
+                    isBuiltin = false,
+                )
+            )
+            return@withContext packageName
+        } catch (e: Exception) {
+            Timber.e(e)
+            return@withContext null
+        }
+    }
+
+    suspend fun createPreviewSkin(
+        context: Context,
+        name: String,
+        author: String,
+        previewUri: Uri?,
+        frameUrisPool: List<Uri>,
+        stateMapping: Map<String, List<Pair<Uri, Int>>>
+    ): String? {
+        val pkg = "org.nqmgaming.aneko.preview"
+        // Fallback preview icon
+        val preview = previewUri ?: frameUrisPool.firstOrNull()
+        return if (preview != null) {
+            createSkinAdvanced(
+                context = context,
+                name = name.ifBlank { "Preview" },
+                packageName = pkg,
+                author = author.ifBlank { "" },
+                previewUri = preview,
+                frameUrisPool = frameUrisPool,
+                stateMapping = stateMapping,
+            )
+        } else null
+    }
+
     suspend fun importSkinFromUri(
         context: Context,
         zipUri: Uri,

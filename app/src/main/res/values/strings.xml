@@ -110,5 +110,20 @@
     <string name="save_changes">Save changes</string>
     <string name="saved_skin_success">Saved skin: %1$s</string>
     <string name="edit_skin_label">Edit Skin</string>
+    <string name="advanced_mapping">Advanced mapping</string>
+    <string name="choose_state">Choose state</string>
+    <string name="add_all_frames_to_state">Add all frames</string>
+    <string name="clear_state_frames">Clear</string>
+    <string name="duration_ms">Duration (ms)</string>
+    <string name="preview_overlay_start">Preview overlay</string>
+    <string name="preview_overlay_stop">Stop preview</string>
+    <string name="section_details">Details</string>
+    <string name="section_assets">Assets</string>
+    <string name="section_preview">Preview</string>
+    <string name="section_advanced_mapping">Advanced Mapping</string>
+    <string name="label_speed">Speed (ms/frame)</string>
+    <string name="label_size">Preview size</string>
+    <string name="tab_basic">Basic</string>
+    <string name="tab_advanced">Advanced</string>
 
 </resources>

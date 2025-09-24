@@ -14,15 +14,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Button
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.Slider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -49,6 +54,8 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import org.nqmgaming.aneko.R
 import org.nqmgaming.aneko.presentation.AnekoViewModel
 import org.nqmgaming.aneko.presentation.create.FramesPreview
+import org.nqmgaming.aneko.presentation.components.SectionCard
+import coil.compose.AsyncImage
 import timber.log.Timber
 import java.io.File
 
@@ -124,6 +131,11 @@ fun EditSkinScreen(
         topBar = {
             TopAppBar(
                 title = { Text(text = stringResource(R.string.edit_skin_title)) },
+                navigationIcon = {
+                    IconButton(onClick = { navigator.popBackStack() }) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = null)
+                    }
+                },
                 actions = {
                     IconButton(onClick = {
                         onSaveClicked(
@@ -157,57 +169,48 @@ fun EditSkinScreen(
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            OutlinedTextField(
-                value = name,
-                onValueChange = { name = it },
-                modifier = Modifier.fillMaxWidth(),
-                label = { Text(stringResource(R.string.skin_name_label)) }
-            )
-
-            OutlinedTextField(
-                value = packageName,
-                onValueChange = {},
-                enabled = false,
-                modifier = Modifier.fillMaxWidth(),
-                label = { Text(stringResource(R.string.skin_package_label)) },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Ascii)
-            )
-
-            OutlinedTextField(
-                value = author,
-                onValueChange = { author = it },
-                modifier = Modifier.fillMaxWidth(),
-                label = { Text(stringResource(R.string.skin_author_label)) }
-            )
-
-            Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                Button(onClick = { pickPreview.launch(arrayOf("image/*")) }) {
-                    Text(
-                        text = stringResource(
-                            R.string.pick_preview_image
-                        )
-                    )
-                }
-                Button(onClick = { pickFrames.launch(arrayOf("image/*")) }) {
-                    Text(
-                        text = stringResource(
-                            R.string.add_frames_button
-                        )
-                    )
+            SectionCard(title = stringResource(R.string.section_details)) {
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    OutlinedTextField(value = name, onValueChange = { name = it }, modifier = Modifier.fillMaxWidth(), label = { Text(stringResource(R.string.skin_name_label)) })
+                    OutlinedTextField(value = packageName, onValueChange = {}, enabled = false, modifier = Modifier.fillMaxWidth(), label = { Text(stringResource(R.string.skin_package_label)) }, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Ascii))
+                    OutlinedTextField(value = author, onValueChange = { author = it }, modifier = Modifier.fillMaxWidth(), label = { Text(stringResource(R.string.skin_author_label)) })
                 }
             }
 
-            // Preview
-            var frameMs by remember { mutableStateOf(250L) }
-            var previewSize by remember { mutableStateOf(120.dp) }
-            FramesPreview(frames = previewFrames, frameDurationMs = frameMs, size = previewSize)
-            Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                Button(onClick = { frameMs = (frameMs - 50).coerceAtLeast(50) }) { Text("- speed") }
-                Button(onClick = { frameMs += 50 }) { Text("+ speed") }
-                Button(onClick = {
-                    previewSize = (previewSize - 16.dp).coerceAtLeast(64.dp)
-                }) { Text("- size") }
-                Button(onClick = { previewSize += 16.dp }) { Text("+ size") }
+            SectionCard(title = stringResource(R.string.section_assets)) {
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                        OutlinedButton(onClick = { pickPreview.launch(arrayOf("image/*")) }) { Text(stringResource(R.string.pick_preview_image)) }
+                        OutlinedButton(onClick = { pickFrames.launch(arrayOf("image/*")) }) { Text(stringResource(R.string.add_frames_button)) }
+                    }
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        frameFiles.forEachIndexed { index, file ->
+                            ListItem(
+                                headlineContent = { Text(file.name) },
+                                leadingContent = { AsyncImage(model = file, contentDescription = null) },
+                                trailingContent = {
+                                    Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                                        IconButton(onClick = { if (index > 0) { val r = frameFiles.removeAt(index); frameFiles.add(index - 1, r) } }) { Icon(Icons.Default.KeyboardArrowLeft, null) }
+                                        IconButton(onClick = { if (index < frameFiles.lastIndex) { val r = frameFiles.removeAt(index); frameFiles.add(index + 1, r) } }) { Icon(Icons.Default.KeyboardArrowRight, null) }
+                                        IconButton(onClick = { frameFiles.removeAt(index) }) { Icon(Icons.Default.Delete, null) }
+                                    }
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+
+            SectionCard(title = stringResource(R.string.section_preview)) {
+                var frameMs by remember { mutableStateOf(250L) }
+                var previewSize by remember { mutableStateOf(120f) }
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    FramesPreview(frames = previewFrames, frameDurationMs = frameMs, size = previewSize.dp)
+                    Text(stringResource(R.string.label_speed))
+                    Slider(value = frameMs.toFloat(), onValueChange = { frameMs = it.coerceIn(50f, 1000f).toLong() }, valueRange = 50f..1000f)
+                    Text(stringResource(R.string.label_size))
+                    Slider(value = previewSize, onValueChange = { previewSize = it.coerceIn(64f, 240f) }, valueRange = 64f..240f)
+                }
             }
 
             // Reorder/remove existing frame files
@@ -238,9 +241,18 @@ fun EditSkinScreen(
                 }
             }
 
-            Spacer(Modifier.height(8.dp))
+            Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                OutlinedButton(onClick = {
+                    val prefs = context.getSharedPreferences(context.packageName + "_preferences", Context.MODE_PRIVATE)
+                    prefs.edit().putString(org.nqmgaming.aneko.core.service.AnimationService.PREF_KEY_SKIN_COMPONENT, packageName).apply()
+                    prefs.edit().putBoolean(org.nqmgaming.aneko.core.service.AnimationService.PREF_KEY_VISIBLE, true).apply()
+                    context.startService(
+                        Intent(context, org.nqmgaming.aneko.core.service.AnimationService::class.java)
+                            .setAction(org.nqmgaming.aneko.core.service.AnimationService.ACTION_START)
+                    )
+                }) { Text(text = stringResource(R.string.preview_overlay_start)) }
 
-            Button(
+                Button(
                 onClick = {
                     onSaveClicked(
                         context,
@@ -261,7 +273,8 @@ fun EditSkinScreen(
                     }
                 },
                 enabled = name.isNotBlank() && packageName.isNotBlank() && (frameFiles.isNotEmpty() || newFrameUris.isNotEmpty())
-            ) { Text(text = stringResource(R.string.save_changes)) }
+                ) { Text(text = stringResource(R.string.save_changes)) }
+            }
         }
     }
 }
@@ -305,4 +318,3 @@ private fun onSaveClicked(
         }
     )
 }
-
