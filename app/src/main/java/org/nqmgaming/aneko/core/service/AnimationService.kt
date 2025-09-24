@@ -1,6 +1,5 @@
 package org.nqmgaming.aneko.core.service
 
-import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -147,7 +146,29 @@ class AnimationService : Service() {
             ).apply { gravity = Gravity.CENTER }
             wm.addView(touchView, touchParams)
 
-            imageView = ImageView(this)
+            imageView = ImageView(this).apply {
+                setOnClickListener {
+                    // move neko to other position
+                    motionState?.let { ms ->
+                        val wm = getSystemService(WINDOW_SERVICE) as WindowManager
+                        val pnt = Point().also { wm.defaultDisplay.getSize(it) }
+                        val dw = pnt.x
+                        val dh = pnt.y
+                        val (x, y) = if (random.nextFloat() < 0.4f) {
+                            when (random.nextInt(4)) {
+                                0 -> 0f to random.nextInt(dh).toFloat()
+                                1 -> dw.toFloat() to random.nextInt(dh).toFloat()
+                                2 -> random.nextInt(dw).toFloat() to 0f
+                                else -> random.nextInt(dw).toFloat() to dh.toFloat()
+                            }
+                        } else {
+                            random.nextInt(dw).toFloat() to random.nextInt(dh).toFloat()
+                        }
+                        ms.setTargetPosition(x, y)
+                        requestAnimate()
+                    }
+                }
+            }
             imageParams = WindowManager.LayoutParams(
                 imageWidth,
                 imageHeight,
@@ -159,7 +180,9 @@ class AnimationService : Service() {
 
             requestAnimate()
         }
+
     }
+
 
     private fun stopAnimation() {
         prefListener?.let { prefs.unregisterOnSharedPreferenceChangeListener(it) }
@@ -432,10 +455,12 @@ class AnimationService : Service() {
     }
 
     private inner class TouchListener : View.OnTouchListener {
-        @SuppressLint("ClickableViewAccessibility")
         override fun onTouch(v: View?, ev: MotionEvent): Boolean {
             val ms = motionState ?: return false
-
+            if (ev.action == MotionEvent.ACTION_UP) {
+                v?.performClick()
+                return true
+            }
             if (ev.action == MotionEvent.ACTION_OUTSIDE) {
                 val wm = getSystemService(WINDOW_SERVICE) as WindowManager
                 val pnt = Point().also { wm.defaultDisplay.getSize(it) }
@@ -455,13 +480,16 @@ class AnimationService : Service() {
 
                 ms.setTargetPosition(x, y)
                 requestAnimate()
+                return true
             } else if (ev.action == MotionEvent.ACTION_CANCEL) {
                 ms.forceStop()
                 requestAnimate()
+                return true
             }
             return false
         }
     }
+
 
     private inner class MotionEndListener : MotionDrawable.OnMotionEndListener {
         override fun onMotionEnd(drawable: MotionDrawable) {
