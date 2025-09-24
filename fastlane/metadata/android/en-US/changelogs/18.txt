@@ -1,0 +1,1 @@
+- Fix can not interact with ANeko
