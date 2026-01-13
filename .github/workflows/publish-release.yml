@@ -2,8 +2,6 @@ name: Publish Releases
 
 on:
   push:
-    branches:
-      - 'update/v*'
     tags:
       - "v*"
 
@@ -42,9 +40,6 @@ jobs:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: ./gradlew assembleRelease bundleRelease
-
-      - name: Run Unit Tests
-        run: ./gradlew test
 
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
