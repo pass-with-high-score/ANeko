@@ -36,6 +36,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
@@ -49,11 +50,14 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import coil.compose.AsyncImage
 import com.ramcosta.composedestinations.utils.isRouteOnBackStackAsState
 import com.ramcosta.composedestinations.utils.rememberDestinationsNavigator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.nqmgaming.aneko.R
+import org.nqmgaming.aneko.util.openUrl
 import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -233,11 +237,26 @@ fun StandardScaffold(
                 viewModel.setFirstLaunchDone()
             },
             title = {
-                Text("Impotant Notice", style = typography.headlineSmall)
+                Text(
+                    "Custom skins made easy with ANeko Builder",
+                    style = typography.headlineSmall
+                )
             },
             text = {
-                Column {
-                    Text("Thank you for installing ANeko! From version 1.3.0 you are no longer needed to import skins by installing APKs. You can now import skin by selecting ZIP files directly from the app.")
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    AsyncImage(
+                        model = R.drawable.skin_builder,
+                        contentDescription = "Skin builder preview",
+                        modifier = Modifier
+                            .size(200.dp),
+
+                        )
+                    Text(
+                        "Thank you for installing ANeko! ANeko Builder is a new web tool designed to make creating and customizing skins simple and fun.",
+                        style = typography.bodyMedium
+                    )
                 }
             },
             confirmButton = {
@@ -245,12 +264,9 @@ fun StandardScaffold(
                     // go to explore
                     isShowingDialog = false
                     viewModel.setFirstLaunchDone()
-                    navigator.navigate(BottomNavItem.Explore.direction) {
-                        launchSingleTop = true
-                        restoreState = true
-                    }
+                    context.openUrl(context.getString(R.string.skin_builder_url))
                 }) {
-                    Text("Explore Now")
+                    Text("Take me there")
                 }
             },
             dismissButton = {
@@ -259,7 +275,7 @@ fun StandardScaffold(
                     viewModel.setFirstLaunchDone()
                     Toast.makeText(
                         context,
-                        "You can access Explore from the bottom navigation bar later.",
+                        "You can access ANeko Builder later from the Explore tab.",
                         Toast.LENGTH_LONG
                     ).show()
                 }) {

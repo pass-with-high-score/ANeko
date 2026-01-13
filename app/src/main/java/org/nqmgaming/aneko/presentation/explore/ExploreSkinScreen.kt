@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.AlertDialog
@@ -204,6 +205,14 @@ fun ExploreSkin(
                     )
                 },
                 actions = {
+                    IconButton(onClick = {
+                        context.openUrl(context.getString(R.string.skin_builder_url))
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = null
+                        )
+                    }
                     IconButton(onClick = { isShowInfoDialog = true }) {
                         Icon(
                             imageVector = Icons.Default.Info,
@@ -389,8 +398,7 @@ fun ExploreSkin(
                     )
                     TextButton(
                         onClick = {
-                            openUrl(
-                                context,
+                            context.openUrl(
                                 context.getString(R.string.skin_collection_link)
                             )
                         }

@@ -83,7 +83,7 @@ fun SettingsScreen() {
                 summary = stringResource(R.string.github_contribute_summary),
                 icon = R.drawable.ic_github_mark,
                 onClick = {
-                    openUrl(context, context.getString(R.string.github_uri))
+                    context.openUrl(context.getString(R.string.github_uri))
                 }
             )
 
@@ -96,7 +96,7 @@ fun SettingsScreen() {
                 summary = stringResource(R.string.translate_contribute_summary),
                 icon = R.drawable.ic_language,
                 onClick = {
-                    openUrl(context, context.getString(R.string.poeditor_url))
+                    context.openUrl(context.getString(R.string.poeditor_url))
                 }
             )
 
@@ -109,7 +109,7 @@ fun SettingsScreen() {
                 summary = stringResource(R.string.rate_app_summary),
                 icon = R.drawable.ic_star, // Or any icon you have
                 onClick = {
-                    openUrl(context, context.getString(R.string.rate_app_url))
+                    context.openUrl(context.getString(R.string.rate_app_url))
                 }
             )
         }

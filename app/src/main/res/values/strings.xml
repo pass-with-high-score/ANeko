@@ -92,5 +92,6 @@
     <string name="importing">Importing…</string>
     <string name="installed">Installed</string>
     <string name="retry">Retry</string>
+    <string name="skin_builder_url">https://devtool.pwhs.app/aneko-builder</string>
 
 </resources>
