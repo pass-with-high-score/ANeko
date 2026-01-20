@@ -68,19 +68,9 @@ Join our community on Telegram:
 
 ## Creating Custom Skins
 
-ANeko supports two skin types:
-
-### App-based Skins (version <= 1.2.3)
-
-* Create a new module with your assets and logic
-* Refer to  
-  the [skin documentation](http://www.tamanegi.org/prog/android-apps/aneko-skin.html#create-skin)
-
-### File-based Skins (version >= 1.3.0) Recommended
-
-* Manually place skin files in the correct directory
-* More detailed instructions will be provided soon
-
+* Go to [ANeko Builder](https://devtool.pwhs.app/aneko-builder)
+* Upload your assets
+* Then create your custom skin
 ---  
 
 ## Roadmap
