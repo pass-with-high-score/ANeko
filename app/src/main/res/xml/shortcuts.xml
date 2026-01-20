@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="toggle_aneko"
+        android:enabled="true"
+        android:icon="@drawable/sleep2"
+        android:shortcutShortLabel="@string/shortcut_toggle_short"
+        android:shortcutLongLabel="@string/shortcut_toggle_long">
+        <intent
+            android:action="org.nqmgaming.aneko.action.TOGGLE_FROM_SHORTCUT"
+            android:targetPackage="org.nqmgaming.aneko"
+            android:targetClass="org.nqmgaming.aneko.presentation.ShortcutHandlerActivity" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+</shortcuts>
