@@ -4,7 +4,7 @@ import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.PushPin
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -35,7 +36,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -45,6 +46,7 @@ import coil.request.ImageRequest
 import org.nqmgaming.aneko.R
 import org.nqmgaming.aneko.core.data.entity.SkinEntity
 import org.nqmgaming.aneko.core.data.entity.previewModel
+import org.nqmgaming.aneko.core.shortcuts.ShortcutManagerHelper
 import org.nqmgaming.aneko.core.util.zipDirectory
 import timber.log.Timber
 import java.io.File
@@ -104,9 +106,12 @@ fun SkinDetailsBottomSheet(
                             modifier = Modifier
                                 .size(80.dp)
                                 .clip(CircleShape)
-                                .shadow(4.dp, CircleShape)
-                                .background(MaterialTheme.colorScheme.surfaceVariant),
-                            contentScale = androidx.compose.ui.layout.ContentScale.Crop
+                                .border(
+                                    width = 1.dp,
+                                    color = MaterialTheme.colorScheme.primary,
+                                    shape = CircleShape
+                                ),
+                            contentScale = ContentScale.Fit
                         )
                         Spacer(modifier = Modifier.width(16.dp))
                         Column(
@@ -156,8 +161,8 @@ fun SkinDetailsBottomSheet(
                                 .height(48.dp),
                             shape = RoundedCornerShape(12.dp),
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = MaterialTheme.colorScheme.error,
-                                contentColor = MaterialTheme.colorScheme.onError
+                                containerColor = MaterialTheme.colorScheme.primary,
+                                contentColor = MaterialTheme.colorScheme.onPrimary
                             )
                         ) {
                             Row(
@@ -256,6 +261,67 @@ fun SkinDetailsBottomSheet(
                                 )
                             }
 
+                        }
+                    }
+
+                    // Pin Shortcut Button
+                    Button(
+                        onClick = {
+                            try {
+                                val activity = context as? android.app.Activity
+                                if (activity != null) {
+                                    ShortcutManagerHelper.createPinnedSkinShortcut(
+                                        context = context,
+                                        skinName = skin.name,
+                                        skinPackage = skin.packageName,
+                                        previewPath = skin.previewPath
+                                    )
+                                    Toast.makeText(
+                                        context,
+                                        context.getString(R.string.message_shortcut_request_sent),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    onDismissRequest()
+                                } else {
+                                    Toast.makeText(
+                                        context,
+                                        context.getString(R.string.message_unable_create_shortcut),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            } catch (e: Exception) {
+                                Timber.e(e, "Error creating skin shortcut")
+                                Toast.makeText(
+                                    context,
+                                    context.getString(R.string.message_failed_to_create_shortcut),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(48.dp),
+                        shape = RoundedCornerShape(12.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary
+                        )
+                    ) {
+                        Row(
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.PushPin,
+                                contentDescription = null,
+                                modifier = Modifier.size(20.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = stringResource(id = R.string.button_pin_shortcut),
+                                style = MaterialTheme.typography.labelLarge,
+                                fontWeight = FontWeight.Medium
+                            )
                         }
                     }
                 }

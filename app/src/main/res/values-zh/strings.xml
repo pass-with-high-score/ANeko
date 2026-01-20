@@ -79,4 +79,12 @@
     <string name="importing">正在导入…</string>
     <string name="installed">已安装</string>
     <string name="retry">重试</string>
+
+    <!-- App Shortcuts -->
+    <string name="shortcut_toggle_short">切换 ANeko</string>
+    <string name="shortcut_toggle_long">切换 ANeko 动画</string>
+    <string name="button_pin_shortcut">固定快捷方式</string>
+    <string name="message_shortcut_request_sent">快捷方式请求已发送。请检查您的启动器。</string>
+    <string name="message_unable_create_shortcut">无法创建快捷方式</string>
+    <string name="message_failed_to_create_shortcut">创建快捷方式失败</string>
 </resources>

@@ -85,4 +85,12 @@
     <string name="installed">Instalado</string>
     <string name="retry">Reintentar</string>
 
+
+    <!-- App Shortcuts -->
+    <string name="shortcut_toggle_short">Alternar ANeko</string>
+    <string name="shortcut_toggle_long">Alternar animación ANeko</string>
+    <string name="button_pin_shortcut">Fijar acceso directo</string>
+    <string name="message_shortcut_request_sent">Solicitud de acceso directo enviada. Por favor, revisa tu launcher.</string>
+    <string name="message_unable_create_shortcut">No se puede crear el acceso directo</string>
+    <string name="message_failed_to_create_shortcut">Error al crear el acceso directo</string>
 </resources>

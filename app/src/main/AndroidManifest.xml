@@ -45,6 +45,7 @@
             <!-- App Shortcuts Intent Filters -->
             <intent-filter>
                 <action android:name="org.nqmgaming.aneko.action.TOGGLE_FROM_SHORTCUT" />
+                <action android:name="org.nqmgaming.aneko.action.SKIN_FROM_SHORTCUT" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>

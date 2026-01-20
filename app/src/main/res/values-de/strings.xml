@@ -89,4 +89,12 @@
     <string name="installed">Installiert</string>
     <string name="retry">Wiederholen</string>
 
+
+    <!-- App Shortcuts -->
+    <string name="shortcut_toggle_short">ANeko umschalten</string>
+    <string name="shortcut_toggle_long">ANeko Animation umschalten</string>
+    <string name="button_pin_shortcut">Verknüpfung anheften</string>
+    <string name="message_shortcut_request_sent">Verknüpfungsanfrage gesendet. Bitte überprüfen Sie Ihren Launcher.</string>
+    <string name="message_unable_create_shortcut">Verknüpfung kann nicht erstellt werden</string>
+    <string name="message_failed_to_create_shortcut">Verknüpfung konnte nicht erstellt werden</string>
 </resources>

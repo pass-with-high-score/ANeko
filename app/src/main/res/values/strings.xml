@@ -92,9 +92,13 @@
     <string name="importing">Importing…</string>
     <string name="installed">Installed</string>
     <string name="retry">Retry</string>
-    <string name="skin_builder_url">https://devtool.pwhs.app/aneko-builder</string>
+    <string name="skin_builder_url" translatable="false">https://devtool.pwhs.app/aneko-builder</string>
 
     <!-- App Shortcuts -->
     <string name="shortcut_toggle_short">Toggle ANeko</string>
     <string name="shortcut_toggle_long">Toggle ANeko on/off</string>
+    <string name="button_pin_shortcut">Pin Shortcut</string>
+    <string name="message_shortcut_request_sent">Shortcut request sent. Please check your launcher.</string>
+    <string name="message_unable_create_shortcut">Unable to create shortcut</string>
+    <string name="message_failed_to_create_shortcut">Failed to create shortcut</string>
 </resources>

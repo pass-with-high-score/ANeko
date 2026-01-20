@@ -83,4 +83,11 @@
     <string name="retry">Thử lại</string>
 
 
+    <!-- App Shortcuts -->
+    <string name="shortcut_toggle_short">Bật/Tắt ANeko</string>
+    <string name="shortcut_toggle_long">Bật/Tắt hoạt ảnh ANeko</string>
+    <string name="button_pin_shortcut">Ghim Lối tắt</string>
+    <string name="message_shortcut_request_sent">Đã gửi yêu cầu lối tắt. Vui lòng kiểm tra màn hình chính.</string>
+    <string name="message_unable_create_shortcut">Không thể tạo lối tắt</string>
+    <string name="message_failed_to_create_shortcut">Không thể tạo lối tắt</string>
 </resources>

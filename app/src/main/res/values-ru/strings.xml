@@ -80,4 +80,12 @@
     <string name="installed">Установлено</string>
     <string name="retry">Повторить</string>
 
+
+    <!-- App Shortcuts -->
+    <string name="shortcut_toggle_short">Переключить ANeko</string>
+    <string name="shortcut_toggle_long">Переключить анимацию ANeko</string>
+    <string name="button_pin_shortcut">Закрепить ярлык</string>
+    <string name="message_shortcut_request_sent">Запрос ярлыка отправлен. Проверьте свой лаунчер.</string>
+    <string name="message_unable_create_shortcut">Невозможно создать ярлык</string>
+    <string name="message_failed_to_create_shortcut">Не удалось создать ярлык</string>
 </resources>

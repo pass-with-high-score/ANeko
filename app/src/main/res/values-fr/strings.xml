@@ -79,4 +79,12 @@
     <string name="installed">Installé</string>
     <string name="retry">Réessayer</string>
 
+
+    <!-- App Shortcuts -->
+    <string name="shortcut_toggle_short">Basculer ANeko</string>
+    <string name="shortcut_toggle_long">Basculer l\'animation ANeko</string>
+    <string name="button_pin_shortcut">Épingler le raccourci</string>
+    <string name="message_shortcut_request_sent">Demande de raccourci envoyée. Veuillez vérifier votre lanceur.</string>
+    <string name="message_unable_create_shortcut">Impossible de créer le raccourci</string>
+    <string name="message_failed_to_create_shortcut">Échec de la création du raccourci</string>
 </resources>

@@ -81,4 +81,12 @@
     <string name="installed">Zainstalowano</string>
     <string name="retry">Ponów</string>
 
+
+    <!-- App Shortcuts -->
+    <string name="shortcut_toggle_short">Przełącz ANeko</string>
+    <string name="shortcut_toggle_long">Przełącz animację ANeko</string>
+    <string name="button_pin_shortcut">Przypnij skrót</string>
+    <string name="message_shortcut_request_sent">Wysłano żądanie skrótu. Sprawdź swój launcher.</string>
+    <string name="message_unable_create_shortcut">Nie można utworzyć skrótu</string>
+    <string name="message_failed_to_create_shortcut">Nie udało się utworzyć skrótu</string>
 </resources>
