@@ -16,7 +16,9 @@
 
     <!-- Motion Settings -->
     <string name="motion_transparency_title">Motion Transparency</string>
+    <string name="motion_focus_title">Motion Focus</string>
     <string name="motion_transparency_summary">Adjust the transparency level of motion effects.</string>
+    <string name="motion_focus_summary">When enabled, ANeko won’t be transparent, but it will steal your focus.</string>
     <string name="motion_size_title">Motion Size</string>
     <string name="motion_size_summary">Set the size of motion elements.</string>
     <string name="motion_settings_title">Motion Settings</string>

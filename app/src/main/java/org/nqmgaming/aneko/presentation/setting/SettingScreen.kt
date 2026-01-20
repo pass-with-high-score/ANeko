@@ -18,6 +18,7 @@ import org.nqmgaming.aneko.core.service.AnimationService
 import org.nqmgaming.aneko.presentation.setting.component.PreferenceContainer
 import org.nqmgaming.aneko.presentation.setting.component.PreferenceItem
 import org.nqmgaming.aneko.presentation.setting.component.SliderPreferenceItem
+import org.nqmgaming.aneko.presentation.setting.component.SwitchPreferenceItem
 import org.nqmgaming.aneko.presentation.ui.theme.ANekoTheme
 import org.nqmgaming.aneko.util.openUrl
 
@@ -39,6 +40,19 @@ fun SettingsScreen() {
                 entryValues = context.run { resources.getStringArray(R.array.pref_motion_transparency_entry_values) },
                 key = AnimationService.PREF_KEY_TRANSPARENCY,
                 defaultValue = "0.0",
+                prefs = prefs
+            )
+            HorizontalDivider(
+                color = MaterialTheme.colorScheme.outline.copy(
+                    alpha = 0.5f
+                ),
+            )
+            SwitchPreferenceItem(
+                title = stringResource(R.string.motion_focus_title),
+                summary = stringResource(R.string.motion_focus_summary),
+                icon = R.drawable.ic_shape_exclude,
+                key = AnimationService.PREF_KEY_FOCUS,
+                defaultValue = false,
                 prefs = prefs
             )
             HorizontalDivider(

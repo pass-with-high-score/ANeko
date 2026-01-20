@@ -51,6 +51,7 @@ class AnimationService : Service() {
         const val PREF_KEY_ENABLE = "motion.enable"
         const val PREF_KEY_VISIBLE = "motion.visible"
         const val PREF_KEY_TRANSPARENCY = "motion.transparency"
+        const val PREF_KEY_FOCUS = "motion.focus"
         const val PREF_KEY_SIZE = "motion.size"
         const val PREF_KEY_SPEED = "motion.speed"
         const val PREF_KEY_BEHAVIOUR = "motion.behaviour"
@@ -145,6 +146,11 @@ class AnimationService : Service() {
                 PixelFormat.TRANSLUCENT
             ).apply { gravity = Gravity.CENTER }
             wm.addView(touchView, touchParams)
+            val focusFlag = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+            val unfocusFlag = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or
+                    WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
+            val isFocus = prefs.getBoolean(PREF_KEY_FOCUS, false)
 
             imageView = ImageView(this).apply {
                 setOnClickListener {
@@ -173,7 +179,7 @@ class AnimationService : Service() {
                 imageWidth,
                 imageHeight,
                 WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                if (isFocus) focusFlag else unfocusFlag,
                 PixelFormat.TRANSLUCENT
             ).apply { gravity = Gravity.TOP or Gravity.START }
             wm.addView(imageView, imageParams)
@@ -448,6 +454,15 @@ class AnimationService : Service() {
                         it.alpha = (opacity * 0xff).roundToInt()
                     }
                 }
+                PREF_KEY_FOCUS -> {
+                    val focusFlag = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                    val unfocusFlag = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+                            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or
+                            WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
+                    val isFocus = prefs.getBoolean(PREF_KEY_FOCUS, false)
+                    imageParams?.flags = if (isFocus) focusFlag else unfocusFlag
+                }
+
 
                 else -> if (loadMotionState()) requestAnimate()
             }
