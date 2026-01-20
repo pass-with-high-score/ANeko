@@ -1,0 +1,3 @@
+- Quick toggle: Long-press app icon → "Toggle ANeko"
+- Pin your favorite skins to home screen
+- New "Motion Focus" setting to fix touch-blocking issue
