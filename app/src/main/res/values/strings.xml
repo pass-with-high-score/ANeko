@@ -15,17 +15,15 @@
     <string name="msg_skin_load_failed">Failed to load skin. Please check the skin application.</string>
 
     <!-- Motion Settings -->
-    <string name="motion_transparency_title">Motion Transparency</string>
-    <string name="motion_focus_title">Motion Focus</string>
+    <string name="motion_transparency_title" translatable="false">Motion Transparency</string>
     <string name="motion_transparency_summary">Adjust the transparency level of motion effects.</string>
+    <string name="motion_focus_title" translatable="false">Motion Focus</string>
     <string name="motion_focus_summary">When enabled, ANeko won’t be transparent, but it will steal your focus.</string>
-    <string name="motion_size_title">Motion Size</string>
+    <string name="motion_size_title" translatable="false">Motion Size</string>
     <string name="motion_size_summary">Set the size of motion elements.</string>
     <string name="motion_settings_title">Motion Settings</string>
-    <string name="motion_speed_title">Motion Speed</string>
+    <string name="motion_speed_title" translatable="false">Motion Speed</string>
     <string name="motion_speed_summary">Adjust the speed of motion effects.</string>
-    <string name="motion_keep_alive_title">Allow background running</string>
-    <string name="motion_keep_alive_summary">Keep the skin active when the app is closed</string>
 
     <!-- Community & Contributions -->
     <string name="community_title">Community &amp; Contributions</string>

@@ -12,15 +12,11 @@
     <string name="msg_skin_load_failed">Không thể tải skin. Vui lòng kiểm tra lại gói skin nhé.</string>
 
     <!-- Motion Settings -->
-    <string name="motion_transparency_title">Độ trong suốt chuyển động</string>
     <string name="motion_transparency_summary">Điều chỉnh mức độ trong suốt của hiệu ứng chuyển động.</string>
-    <string name="motion_size_title">Kích thước chuyển động</string>
+    <string name="motion_focus_summary">Khi bật, ANeko sẽ không trong suốt, nhưng sẽ không chiếm focus (bạn vẫn thao tác được với ứng dụng phía dưới).</string>
     <string name="motion_size_summary">Tuỳ chỉnh kích thước cho các hiệu ứng chuyển động.</string>
     <string name="motion_settings_title">Cài đặt chuyển động</string>
-    <string name="motion_speed_title">Tốc độ di chuyển</string>
     <string name="motion_speed_summary">Điều chỉnh tốc độ của hiệu ứng di chuyển.</string>
-    <string name="motion_keep_alive_title">Cho phép chạy nền</string>
-    <string name="motion_keep_alive_summary">Giữ skin hoạt động khi đóng ứng dụng</string>
 
     <!-- Community & Contributions -->
     <string name="community_title">Cộng đồng &amp; Đóng góp</string>

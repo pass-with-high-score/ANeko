@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Transparency -->
-    <string-array name="pref_motion_transparency_entries">
-        <item>0% (đục)</item>
-        <item>20%</item>
-        <item>40%</item>
-        <item>60%</item>
-        <item>80%</item>
-    </string-array>
 
     <!-- Motion Speed -->
     <string-array name="pref_motion_speed_entries">

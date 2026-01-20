@@ -10,15 +10,11 @@
     <string name="msg_skin_load_failed">Échec lors du chargement du skin. Merci de vérifier l\'application de skin.</string>
 
     <!-- Motion Settings -->
-    <string name="motion_transparency_title">Transparence du mouvement</string>
     <string name="motion_transparency_summary">Ajuster le niveau de transparence pour les effets de mouvement.</string>
-    <string name="motion_size_title">Taille des mouvements</string>
+    <string name="motion_focus_summary">Lorsqu\'il est activé, ANeko ne sera pas transparent mais capturera le focus.</string>
     <string name="motion_size_summary">Applique une taille pour les éléments de mouvement.</string>
     <string name="motion_settings_title">Paramètres de mouvement</string>
-    <string name="motion_speed_title">Vitesse de mouvement</string>
     <string name="motion_speed_summary">Ajuste la vitesse des effets de mouvement.</string>
-    <string name="motion_keep_alive_title">Autoriser à fonctionner en arrière-plan</string>
-    <string name="motion_keep_alive_summary">Garde le skin actif quand l\'appli est fermée</string>
 
     <!-- Community & Contributions -->
     <string name="community_title">Communauté &amp; Contributions</string>
@@ -78,7 +74,6 @@
     <string name="importing">Importation…</string>
     <string name="installed">Installé</string>
     <string name="retry">Réessayer</string>
-
 
     <!-- App Shortcuts -->
     <string name="shortcut_toggle_short">Basculer ANeko</string>

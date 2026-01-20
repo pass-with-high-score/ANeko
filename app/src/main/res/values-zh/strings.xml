@@ -10,15 +10,11 @@
     <string name="msg_skin_load_failed">skin 加载失败，请检查 skin 应用是否正常。</string>
 
     <!-- Motion Settings -->
-    <string name="motion_transparency_title">动作透明度</string>
     <string name="motion_transparency_summary">调整动作效果的透明程度。</string>
-    <string name="motion_size_title">动作大小</string>
+    <string name="motion_focus_summary">启用后,ANeko 将不透明但会捕获焦点。</string>
     <string name="motion_size_summary">设置动作元素的大小。</string>
     <string name="motion_settings_title">动作设置</string>
-    <string name="motion_speed_title">运动速度</string>
     <string name="motion_speed_summary">调整运动效果的速度。</string>
-    <string name="motion_keep_alive_title">允许后台运行</string>
-    <string name="motion_keep_alive_summary">关闭应用时保持 skin 活动</string>
 
     <!-- Community & Contributions -->
     <string name="community_title">社区与贡献</string>

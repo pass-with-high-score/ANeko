@@ -12,15 +12,11 @@
     <string name="msg_skin_load_failed">Nie udało się załadować przebrania. Proszę sprawdź aplikację z przebraniami</string>
 
     <!-- Motion Settings -->
-    <string name="motion_transparency_title">Przezroczystość</string>
     <string name="motion_transparency_summary">Po prostu widoczność towarzysza</string>
-    <string name="motion_size_title">Wielkość</string>
+    <string name="motion_focus_summary">Gdy włączone, ANeko nie będzie przezroczyste, ale przejmie fokus.</string>
     <string name="motion_size_summary">Rozmiar towarzysza</string>
     <string name="motion_settings_title">Ustawienia</string>
-    <string name="motion_speed_title">Szybkość</string>
     <string name="motion_speed_summary">Po prostu szybkość towarzysza</string>
-    <string name="motion_keep_alive_title">Zezwól na działanie w tle</string>
-    <string name="motion_keep_alive_summary">Zostaw przebranie aktywne gdy aplikacja jest zamknięta</string>
 
     <!-- Community & Contributions -->
     <string name="community_title">Społeczności i wspierającym</string>
@@ -80,7 +76,6 @@
     <string name="importing">Importowanie…</string>
     <string name="installed">Zainstalowano</string>
     <string name="retry">Ponów</string>
-
 
     <!-- App Shortcuts -->
     <string name="shortcut_toggle_short">Przełącz ANeko</string>

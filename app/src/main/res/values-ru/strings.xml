@@ -10,15 +10,11 @@
     <string name="msg_skin_load_failed">Не удалось загрузить скин. Пожалуйста, проверьте приложение скина.</string>
 
     <!-- Motion Settings -->
-    <string name="motion_transparency_title">Прозрачность движения</string>
     <string name="motion_transparency_summary">Настройте уровень прозрачности эффектов движения.</string>
-    <string name="motion_size_title">Размер движения</string>
+    <string name="motion_focus_summary">При включении ANeko не будет прозрачным, но захватит фокус.</string>
     <string name="motion_size_summary">Установите размер элементов движения.</string>
     <string name="motion_settings_title">Настройки движения</string>
-    <string name="motion_speed_title">Скорость движения</string>
     <string name="motion_speed_summary">Настройте скорость эффектов движения.</string>
-    <string name="motion_keep_alive_title">Разрешить работу в фоновом режиме</string>
-    <string name="motion_keep_alive_summary">Оставлять skin активным при закрытии приложения</string>
 
     <!-- Community & Contributions -->
     <string name="community_title">Сообщество и вклад</string>
@@ -79,7 +75,6 @@
     <string name="importing">Импорт…</string>
     <string name="installed">Установлено</string>
     <string name="retry">Повторить</string>
-
 
     <!-- App Shortcuts -->
     <string name="shortcut_toggle_short">Переключить ANeko</string>
