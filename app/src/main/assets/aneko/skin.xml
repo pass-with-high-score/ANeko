@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<motion-params package="org.nqmgaming.aneko" name="ANeko" preview="icon.png" author="nqmgaming"
-    acceleration="160" awakeState="awake" deaccelerationDistance="60" initialState="stop"
-    maxVelocity="100" moveStatePrefix="move" proximityDistance="10" wallStatePrefix="wall">
+<motion-params name="ANeko" acceleration="160" author="nqmgaming" awakeState="awake"
+    deaccelerationDistance="60" initialState="stop" maxVelocity="100" moveStatePrefix="move"
+    package="org.nqmgaming.aneko" preview="icon.png" proximityDistance="10" wallStatePrefix="wall">
     <motion checkWall="true" nextState="wait" state="stop">
         <item drawable="mati1" duration="5000" />
         <repeat-item repeatCount="4">

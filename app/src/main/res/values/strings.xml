@@ -95,10 +95,6 @@
     <string name="skin_builder_url">https://devtool.pwhs.app/aneko-builder</string>
 
     <!-- App Shortcuts -->
-    <string name="shortcut_start_short">Start ANeko</string>
-    <string name="shortcut_start_long">Start ANeko on screen</string>
-    <string name="shortcut_stop_short">Stop ANeko</string>
-    <string name="shortcut_stop_long">Stop ANeko animation</string>
     <string name="shortcut_toggle_short">Toggle ANeko</string>
     <string name="shortcut_toggle_long">Toggle ANeko on/off</string>
 </resources>

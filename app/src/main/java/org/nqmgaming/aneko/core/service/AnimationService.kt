@@ -249,7 +249,7 @@ class AnimationService : Service() {
     // ================== Load Motion ==================
 
     private fun loadMotionState(): Boolean {
-        val packageName = prefs.getString(PREF_KEY_SKIN_COMPONENT, "") ?: ""
+        val packageName = prefs.getString(PREF_KEY_SKIN_COMPONENT, "org.nqmgaming.aneko") ?: ""
         return loadMotionDir(packageName = packageName)
     }
 
