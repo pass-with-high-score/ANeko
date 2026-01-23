@@ -71,10 +71,7 @@ Join our community on Telegram:
 * Go to [ANeko Builder](https://devtool.pwhs.app/aneko-builder)
 * Upload your assets
 * Then create your custom skin
----  
-
-## Roadmap
-You can see it here: [Link](https://github.com/pass-with-high-score/ANeko/discussions/35#discussion-8397935)
+---
 
 ## License
 
