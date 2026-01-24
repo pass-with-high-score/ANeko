@@ -5,31 +5,24 @@ import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
@@ -46,25 +39,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.AsyncImage
-import coil.request.CachePolicy
-import coil.request.ImageRequest
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
 import kotlinx.coroutines.launch
 import org.nqmgaming.aneko.R
 import org.nqmgaming.aneko.core.data.entity.SkinEntity
 import org.nqmgaming.aneko.core.download.DownloadStatus
-import org.nqmgaming.aneko.core.download.DownloadTask
 import org.nqmgaming.aneko.core.download.SkinDownloadQueue
 import org.nqmgaming.aneko.data.SkinCollection
 import org.nqmgaming.aneko.presentation.AnekoViewModel
 import org.nqmgaming.aneko.presentation.components.LoadingOverlay
+import org.nqmgaming.aneko.presentation.explore.component.ExploreItem
+import org.nqmgaming.aneko.presentation.explore.component.InfoAlertDialog
 import org.nqmgaming.aneko.presentation.ui.theme.ANekoTheme
 import org.nqmgaming.aneko.util.openUrl
 import timber.log.Timber
@@ -275,108 +265,12 @@ fun ExploreSkin(
                         val st = statusMap[collection.packageName] ?: DownloadStatus.Idle
                         val queuePos = SkinDownloadQueue.queuePositionOf(collection.packageName)
 
-                        Column {
-                            Row(
-                                modifier = Modifier.padding(16.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                AsyncImage(
-                                    model = ImageRequest.Builder(context)
-                                        .data(collection.image)
-                                        .diskCachePolicy(CachePolicy.ENABLED)
-                                        .memoryCachePolicy(CachePolicy.ENABLED)
-                                        .build(),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(60.dp)
-                                )
-                                Spacer(modifier = Modifier.size(16.dp))
-                                Column(modifier = Modifier.weight(4f)) {
-                                    Text(
-                                        text = collection.name,
-                                        style = MaterialTheme.typography.titleLarge,
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis,
-                                    )
-                                    Text(
-                                        text = collection.packageName,
-                                        style = MaterialTheme.typography.labelSmall,
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
-                                    Text(
-                                        text = collection.author
-                                            ?: stringResource(R.string.unknown_author),
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis,
-                                        style = MaterialTheme.typography.labelMedium,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
-                                }
-                                Spacer(modifier = Modifier.weight(1f))
-
-                                Button(
-                                    onClick = {
-                                        when (st) {
-                                            is DownloadStatus.Idle,
-                                            is DownloadStatus.Failed,
-                                            DownloadStatus.Done -> {
-                                                SkinDownloadQueue.enqueue(
-                                                    context = context,
-                                                    task = DownloadTask(
-                                                        id = collection.packageName,
-                                                        url = collection.url,
-                                                        fileName = "${collection.packageName}.zip"
-                                                    )
-                                                )
-                                            }
-
-                                            is DownloadStatus.Queued -> {
-                                                SkinDownloadQueue.cancel(collection.packageName)
-                                            }
-
-                                            is DownloadStatus.Downloading,
-                                            DownloadStatus.Importing -> {
-                                            }
-                                        }
-                                    },
-                                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
-                                ) {
-                                    Column(
-                                        horizontalAlignment = Alignment.CenterHorizontally,
-                                        modifier = Modifier.padding(8.dp)
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Default.Download,
-                                            contentDescription = stringResource(R.string.download),
-                                        )
-                                        val label = when (st) {
-                                            is DownloadStatus.Idle -> if (isInstalled(collection.packageName))
-                                                stringResource(R.string.installed)
-                                            else stringResource(R.string.download)
-
-                                            is DownloadStatus.Queued -> "${stringResource(R.string.queued)} #$queuePos"
-
-                                            is DownloadStatus.Downloading -> "${stringResource(R.string.downloading)}  ${st.progressPct}%"
-
-                                            is DownloadStatus.Importing -> stringResource(R.string.importing)
-                                            is DownloadStatus.Done -> stringResource(R.string.installed)
-                                            is DownloadStatus.Failed -> stringResource(R.string.retry)
-                                        }
-                                        Text(
-                                            text = label,
-                                            style = MaterialTheme.typography.labelMedium,
-                                            maxLines = 1,
-                                            overflow = TextOverflow.Ellipsis,
-                                        )
-                                    }
-                                }
-                            }
-                            HorizontalDivider(
-                                modifier = Modifier.padding(horizontal = 16.dp),
-                                color = MaterialTheme.colorScheme.outline
-                            )
-                        }
+                        ExploreItem(
+                            collection = collection,
+                            isInstalled = isInstalled(collection.packageName),
+                            st = st,
+                            queuePos = queuePos,
+                        )
                     }
                     item { Spacer(modifier = Modifier.height(90.dp)) }
                 }
@@ -387,51 +281,8 @@ fun ExploreSkin(
     LoadingOverlay(isLoading && !isRefreshing)
 
     if (isShowInfoDialog) {
-        AlertDialog(
-            containerColor = MaterialTheme.colorScheme.surface,
-            onDismissRequest = { isShowInfoDialog = false },
-            title = {
-                Column {
-                    Text(
-                        text = stringResource(R.string.do_you_have_questions),
-                        style = MaterialTheme.typography.headlineSmall
-                    )
-                    TextButton(
-                        onClick = {
-                            context.openUrl(
-                                context.getString(R.string.skin_collection_link)
-                            )
-                        }
-                    ) {
-                        Text(stringResource(R.string.open_the_skin_collection_configuration_file))
-                    }
-                }
-            },
-            text = {
-                Column {
-                    Text(
-                        stringResource(R.string.what_is_this),
-                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
-                    )
-                    Text(
-                        stringResource(R.string.what_is_this_answer),
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Text(
-                        stringResource(R.string.the_formats_and_structure_of_the_skins),
-                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
-                    )
-                    Text(
-                        stringResource(R.string.the_formats_and_structure_of_the_skins_answer),
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                }
-            },
-            confirmButton = {
-                TextButton(onClick = { isShowInfoDialog = false }) { Text("Ok") }
-            },
+        InfoAlertDialog(
+            onDismiss = { isShowInfoDialog = false }
         )
     }
 }

@@ -102,7 +102,9 @@ class AnekoViewModel @Inject constructor(
 
     fun updateAnimationEnabled(enabled: Boolean) {
         // if empty, use default skin
-        if (prefs.getString(AnimationService.PREF_KEY_SKIN_COMPONENT, "").isNullOrBlank()) {
+        if (prefs.getString(AnimationService.PREF_KEY_SKIN_COMPONENT, "org.nqmgaming.aneko")
+                .isNullOrBlank()
+        ) {
             val defaultSkin = _uiState.value.skins.firstOrNull { it.isBuiltin }
             defaultSkin?.let {
                 prefs.edit {
@@ -321,7 +323,7 @@ class AnekoViewModel @Inject constructor(
                         author = author,
                         name = name,
                         previewPath = preview,
-                        isActive = false,
+                        isActive = context.packageName == pkg,
                         isFavorite = false,
                         isBuiltin = context.packageName == pkg,
                     )
