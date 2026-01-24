@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">ANeko</string>
+
+    <string name="notification_enabled">ANeko يعمل.</string>
+    <string name="notification_disabled">ANeko نائم.</string>
+
+    <string name="github_uri" translatable="false">https://github.com/pass-with-high-score/ANeko</string>
+    <string name="power_on">تشغيل</string>
+    <string name="power_off">إيقاف</string>
+    <string name="download_skins_link" translatable="false">https://github.com/pass-with-high-score/Aneko-skin</string>
+    <string name="choose_skin">اختر شكلك</string>
+    <string name="invalid_selection">اختيار غير صالح</string>
+    <string name="cancel">إلغاء</string>
+    <string name="msg_skin_load_failed">فشل تحميل الشكل. يرجى التحقق من تطبيق الشكل.</string>
+
+    <!-- Motion Settings -->
+    <string name="motion_transparency_title" translatable="true">شفافية الحركة</string>
+    <string name="motion_transparency_summary">ضبط مستوى الشفافية لتأثيرات الحركة.</string>
+    <string name="motion_focus_title" translatable="true">تركيز الحركة</string>
+    <string name="motion_focus_summary">عند التفعيل، لن يكون ANeko شفافًا، لكنه سيأخذ تركيزك.</string>
+    <string name="motion_size_title" translatable="true">حجم الحركة</string>
+    <string name="motion_size_summary">ضبط حجم عناصر الحركة.</string>
+    <string name="motion_settings_title">إعدادات الحركة</string>
+    <string name="motion_speed_title" translatable="true">سرعة الحركة</string>
+    <string name="motion_speed_summary">ضبط سرعة تأثيرات الحركة.</string>
+
+    <!-- Community & Contributions -->
+    <string name="community_title">المجتمع والمساهمات</string>
+    <string name="github_contribute_title">المساهمة على GitHub</string>
+    <string name="github_contribute_summary">استكشف الكود المصدري وساهم في إضافة ميزات جديدة على GitHub!</string>
+
+    <!-- Rate App -->
+    <string name="rate_app_title">قيم هذا التطبيق</string>
+    <string name="rate_app_summary">إذا كنت تستمتع باستخدام ANeko، يرجى تقييمه!</string>
+    <string name="rate_app_url" translatable="false">https://play.google.com/store/apps/details?id=org.nqmgaming.aneko</string>
+
+    <string name="select_prompt">اختر %1$s</string>
+    <string name="make_with_love">صُنِع بحب لـ ANeko</string>
+    <string name="app_version">الإصدار: %1$s</string>
+    <string name="unknown_value">غير معروف</string>
+    <string name="toggle_theme_title">تبديل السمة</string>
+    <string name="app_store_uri" translatable="false"><![CDATA[https://play.google.com/store/apps/details?id=org.nqmgaming.aneko]]></string>
+    <string name="share_title">مشاركة</string>
+    <string name="notification_permission_title">صلاحية الإشعارات</string>
+    <string name="notification_permission_description">ANeko يحتاج إلى صلاحية الإشعارات لإظهار تحديثات حالته، مثل عندما يكون يعمل أو نائم. يرجى منح هذه الصلاحية حتى يعمل التطبيق بالكامل.</string>
+    <string name="allow_button">السماح</string>
+    <string name="cancel_button">إلغاء</string>
+    <string name="overlay_permission_title">صلاحية التراكب مطلوبة</string>
+    <string name="overlay_permission_description">لن يعمل ANeko دون صلاحية الرسم فوق التطبيقات الأخرى. يرجى السماح بها في الإعدادات.</string>
+    <string name="notification_permission_denied_msg">تم رفض صلاحية الإشعارات. قد لا تعمل بعض الميزات.</string>
+    <string name="loading_skins_label">جاري تحميل الأشكال...</string>
+    <string name="default_label">(افتراضي)</string>
+    <string name="share_apk_label">مشاركة ملف APK لـ %1$s</string>
+    <string name="failed_to_share_apk_label">فشل مشاركة ملف APK لـ %1$s</string>
+    <string name="package_skin_label">الحزمة: %1$s</string>
+    <string name="version_skin_label">الإصدار: %1$s</string>
+    <string name="delete_skin_label">حذف الشكل</string>
+    <string name="unknown_skin_version">غير معروف</string>
+    <string name="aneko_notification_channel_name" translatable="false">ANeko Service</string>
+    <string name="notification_chanel_description">خدمة خلفية لـ ANeko</string>
+    <string name="telegram_group_link" translatable="false">https://t.me/aneko_community</string>
+    <string name="search_app" translatable="false"><![CDATA[https://play.google.com/store/search?q=aneko%20skin&c=apps]]></string>
+    <string name="poeditor_url" translatable="false">https://poeditor.com/join/project/zX7Nu44XDh</string>
+    <string name="translate_contribute_title">تريد رؤية ANeko بلغتك؟</string>
+    <string name="translate_contribute_summary">انضم إلى مشروع الترجمة على POEditor\nكل مساهمة صغيرة تساعد. شكرًا جزيلاً مسبقًا!</string>
+    <string name="choose_language_title">اختر اللغة</string>
+    <string name="contribute_to_translation">المساهمة في الترجمة</string>
+    <string name="txt_explore">استكشف</string>
+    <string name="txt_loading">جاري التحميل</string>
+    <string name="share_skin_label">مشاركة</string>
+    <string name="label_author">المؤلف: %1$s</string>
+    <string name="importing_skin_please_wait">جاري استيراد الشكل، يرجى الانتظار...</string>
+    <string name="imported_skin_from_zip">تم استيراد الشكل من ZIP: %1$s</string>
+    <string name="failed_to_import_skin_from_zip">فشل استيراد الشكل من ZIP</string>
+    <string name="failed_to_import_skin">فشل استيراد الشكل: %1$s</string>
+    <string name="unknown_author">مؤلف غير معروف</string>
+    <string name="download">تنزيل</string>
+    <string name="hi_there_is_no_skin_collection_for_now">مرحبًا! لا يوجد مجموعة أشكال حاليًا.</string>
+    <string name="try_to_import_from_zip">حاول الاستيراد من ملف ZIP</string>
+    <string name="do_you_have_questions">هل لديك أسئلة؟</string>
+    <string name="open_the_skin_collection_configuration_file">افتح ملف إعدادات مجموعة الأشكال</string>
+    <string name="skin_collection_link" translatable="false">https://github.com/pass-with-high-score/Aneko-skin/blob/main/skin.json</string>
+    <string name="what_is_this">ما هذا؟</string>
+    <string name="what_is_this_answer">هذه مجموعة من الأشكال التي صنعها المجتمع لتجربتها. يمكنك تنزيلها واستيرادها بنقرة واحدة. يمكنك أيضًا استيراد الأشكال من ملفات ZIP.</string>
+    <string name="the_formats_and_structure_of_the_skins">تنسيقات وهياكل الأشكال؟</string>
+    <string name="the_formats_and_structure_of_the_skins_answer">الأشكال بتنسيق ZIP وتتبع نفس الهيكل مثل الشكل الافتراضي. يجب أن يحتوي كل شكل على ملف \'skin.xml\' في مجلده الرئيسي يحدد بيانات الشكل وإعداداته. يتم التعامل مع ذلك بشكل آمن من قبل التطبيق.</string>
+    <string name="queued">في الانتظار</string>
+    <string name="downloading">جاري التنزيل</string>
+    <string name="importing">جاري الاستيراد...</string>
+    <string name="installed">مثبت</string>
+    <string name="retry">إعادة المحاولة</string>
+    <string name="skin_builder_url" translatable="false">https://devtool.pwhs.app/aneko-builder</string>
+
+    <!-- App Shortcuts -->
+    <string name="shortcut_toggle_short">تبديل ANeko</string>
+    <string name="shortcut_toggle_long">تبديل تشغيل/إيقاف ANeko</string>
+    <string name="button_pin_shortcut">تثبيت الاختصار</string>
+    <string name="message_shortcut_request_sent">تم إرسال طلب الاختصار. يرجى التحقق من شاشتك الرئيسية.</string>
+    <string name="message_unable_create_shortcut">تعذر إنشاء الاختصار</string>
+    <string name="message_failed_to_create_shortcut">فشل إنشاء الاختصار</string>
+</resources>
