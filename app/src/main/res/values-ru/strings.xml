@@ -59,7 +59,6 @@
     <string name="imported_skin_from_zip">Скин импортирован из ZIP: %1$s</string>
     <string name="failed_to_import_skin_from_zip">Не удалось импортировать скин из ZIP</string>
     <string name="failed_to_import_skin">Не удалось импортировать скин: %1$s</string>
-    <string name="skin_collection">Коллекция скинов</string>
     <string name="unknown_author">Неизвестный автор</string>
     <string name="download">Скачать</string>
     <string name="hi_there_is_no_skin_collection_for_now">Привет! Коллекция скинов пока отсутствует.</string>

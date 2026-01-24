@@ -188,7 +188,7 @@ fun ExploreSkin(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = stringResource(R.string.skin_collection),
+                        text = stringResource(R.string.txt_explore),
                         style = MaterialTheme.typography.headlineSmall.copy(
                             fontWeight = FontWeight.Black
                         ),

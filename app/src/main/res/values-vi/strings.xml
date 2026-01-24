@@ -61,7 +61,6 @@
     <string name="imported_skin_from_zip">Đã nhập skin từ ZIP: %1$s</string>
     <string name="failed_to_import_skin_from_zip">Không thể nhập skin từ ZIP</string>
     <string name="failed_to_import_skin">Không thể nhập skin: %1$s</string>
-    <string name="skin_collection">Bộ sưu tập skin</string>
     <string name="unknown_author">Tác giả không xác định</string>
     <string name="download">Tải xuống</string>
     <string name="hi_there_is_no_skin_collection_for_now">Xin chào! Hiện tại chưa có bộ sưu tập skin nào.</string>

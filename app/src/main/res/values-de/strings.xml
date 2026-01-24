@@ -68,7 +68,6 @@
     <string name="imported_skin_from_zip">Skin aus ZIP importiert: %1$s</string>
     <string name="failed_to_import_skin_from_zip">Fehler beim Importieren des Skins aus ZIP</string>
     <string name="failed_to_import_skin">Fehler beim Importieren des Skins: %1$s</string>
-    <string name="skin_collection">Skin-Sammlung</string>
     <string name="unknown_author">Unbekannter Autor</string>
     <string name="download">Herunterladen</string>
     <string name="hi_there_is_no_skin_collection_for_now">Hallo! Es gibt derzeit keine Skin-Sammlung.</string>
