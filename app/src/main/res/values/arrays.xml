@@ -74,6 +74,7 @@
 
     <!-- Language Options -->
     <string-array name="language_codes">
+        <item>ar</item>
         <item>en</item>
         <item>de</item>
         <item>es</item>
@@ -85,6 +86,7 @@
     </string-array>
 
     <string-array name="language_names">
+        <item>Arabic</item>
         <item>English</item>
         <item>Deutsch</item>
         <item>Español</item>
