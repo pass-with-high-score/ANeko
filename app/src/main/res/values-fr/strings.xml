@@ -81,4 +81,23 @@
     <string name="message_shortcut_request_sent">Demande de raccourci envoyée. Veuillez vérifier votre lanceur.</string>
     <string name="message_unable_create_shortcut">Impossible de créer le raccourci</string>
     <string name="message_failed_to_create_shortcut">Échec de la création du raccourci</string>
+
+    <!-- Permission Onboarding -->
+    <string name="permission_onboarding_appbar_title">Autorisations</string>
+    <string name="permission_onboarding_skip">Plus tard</string>
+    <string name="permission_onboarding_page1_title">Laissez ANeko « apparaître » à l’écran</string>
+    <string name="permission_onboarding_page1_body">ANeko a besoin de l’autorisation « Afficher par‑dessus les autres apps » pour que le chat puisse apparaître partout.</string>
+    <string name="permission_onboarding_page1_primary">Continuer</string>
+    <string name="permission_onboarding_page1_info_title">Pourquoi cette autorisation est‑elle nécessaire ?</string>
+    <string name="permission_onboarding_page1_info_body1">Pour que le personnage apparaisse au‑dessus des autres apps.</string>
+    <string name="permission_onboarding_page1_info_body2">Vous pouvez la désactiver à tout moment dans les paramètres.</string>
+    <string name="permission_onboarding_page2_title">Étape 1 : Choisir ANeko</string>
+    <string name="permission_onboarding_page2_body">Dans l’écran des paramètres, faites défiler et sélectionnez ANeko dans la liste des applications.</string>
+    <string name="permission_onboarding_page2_image_desc">Sélectionner l’application ANeko</string>
+    <string name="permission_onboarding_page2_primary">Continuer</string>
+    <string name="permission_onboarding_page3_title">Étape 2 : Activer l’autorisation de superposition</string>
+    <string name="permission_onboarding_page3_body">Activez « Afficher par‑dessus les autres apps ». Revenez ensuite à ANeko ✨</string>
+    <string name="permission_onboarding_page3_image_desc">Basculer l’autorisation de superposition</string>
+    <string name="permission_onboarding_page3_primary">Ouvrir les paramètres</string>
+    <string name="permission_onboarding_footer">Après activation, revenez à ANeko — l’app continue automatiquement.</string>
 </resources>

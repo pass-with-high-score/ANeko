@@ -11,10 +11,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import org.nqmgaming.aneko.data.PermissionPage
+import org.nqmgaming.aneko.R
 
 @Composable
 fun PermissionPageContent(
@@ -26,13 +28,13 @@ fun PermissionPageContent(
     ) {
 
         Text(
-            text = page.title,
+            text = stringResource(page.titleRes),
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold
         )
 
         Text(
-            text = page.body,
+            text = stringResource(page.bodyRes),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -47,7 +49,7 @@ fun PermissionPageContent(
             ) {
                 AsyncImage(
                     model = page.imageRes,
-                    contentDescription = page.imageDesc,
+                    contentDescription = page.imageDescRes?.let { stringResource(it) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(12.dp)
@@ -65,14 +67,17 @@ fun PermissionPageContent(
                     modifier = Modifier.padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Text("Vì sao cần quyền này?", style = MaterialTheme.typography.titleSmall)
                     Text(
-                        "Để nhân vật có thể xuất hiện nổi trên các ứng dụng khác.",
+                        stringResource(R.string.permission_onboarding_page1_info_title),
+                        style = MaterialTheme.typography.titleSmall
+                    )
+                    Text(
+                        stringResource(R.string.permission_onboarding_page1_info_body1),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Text(
-                        "Bạn có thể tắt bất cứ lúc nào trong Cài đặt.",
+                        stringResource(R.string.permission_onboarding_page1_info_body2),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )

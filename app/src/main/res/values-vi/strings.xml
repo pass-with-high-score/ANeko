@@ -85,4 +85,23 @@
     <string name="message_shortcut_request_sent">Đã gửi yêu cầu lối tắt. Vui lòng kiểm tra màn hình chính.</string>
     <string name="message_unable_create_shortcut">Không thể tạo lối tắt</string>
     <string name="message_failed_to_create_shortcut">Không thể tạo lối tắt</string>
+
+    <!-- Permission Onboarding -->
+    <string name="permission_onboarding_appbar_title">Quyền</string>
+    <string name="permission_onboarding_skip">Để sau</string>
+    <string name="permission_onboarding_page1_title">Cho ANeko “xuất hiện” trên màn hình</string>
+    <string name="permission_onboarding_page1_body">ANeko cần quyền hiển thị trên ứng dụng khác để thả mèo lên mọi nơi bạn đang dùng.</string>
+    <string name="permission_onboarding_page1_primary">Tiếp tục</string>
+    <string name="permission_onboarding_page1_info_title">Vì sao cần quyền này?</string>
+    <string name="permission_onboarding_page1_info_body1">Để nhân vật có thể xuất hiện nổi trên các ứng dụng khác.</string>
+    <string name="permission_onboarding_page1_info_body2">Bạn có thể tắt bất cứ lúc nào trong Cài đặt.</string>
+    <string name="permission_onboarding_page2_title">Bước 1: Chọn ANeko</string>
+    <string name="permission_onboarding_page2_body">Trong màn hình cài đặt, cuộn xuống và chọn ANeko trong danh sách ứng dụng.</string>
+    <string name="permission_onboarding_page2_image_desc">Chọn ứng dụng ANeko</string>
+    <string name="permission_onboarding_page2_primary">Tiếp tục</string>
+    <string name="permission_onboarding_page3_title">Bước 2: Bật quyền hiển thị</string>
+    <string name="permission_onboarding_page3_body">Bật “Cho phép hiển thị trên ứng dụng khác”. Xong bạn quay lại ANeko là được ✨</string>
+    <string name="permission_onboarding_page3_image_desc">Bật quyền overlay</string>
+    <string name="permission_onboarding_page3_primary">Mở Cài đặt</string>
+    <string name="permission_onboarding_footer">Bật xong quay lại ANeko — ứng dụng sẽ tự tiếp tục.</string>
 </resources>

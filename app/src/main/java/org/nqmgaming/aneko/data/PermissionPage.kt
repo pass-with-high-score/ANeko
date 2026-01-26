@@ -1,9 +1,9 @@
 package org.nqmgaming.aneko.data
 
 data class PermissionPage(
-    val title: String,
-    val body: String,
+    val titleRes: Int,
+    val bodyRes: Int,
     val imageRes: Int?,
-    val imageDesc: String?,
-    val primaryLabel: String,
+    val imageDescRes: Int?,
+    val primaryLabelRes: Int,
 )

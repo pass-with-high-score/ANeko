@@ -82,4 +82,23 @@
     <string name="message_shortcut_request_sent">快捷方式请求已发送。请检查您的启动器。</string>
     <string name="message_unable_create_shortcut">无法创建快捷方式</string>
     <string name="message_failed_to_create_shortcut">创建快捷方式失败</string>
+
+    <!-- Permission Onboarding -->
+    <string name="permission_onboarding_appbar_title">权限</string>
+    <string name="permission_onboarding_skip">稍后</string>
+    <string name="permission_onboarding_page1_title">让 ANeko “出现在”你的屏幕上</string>
+    <string name="permission_onboarding_page1_body">ANeko 需要“在其他应用上层显示”的权限，才能让小猫出现在你使用的任何地方。</string>
+    <string name="permission_onboarding_page1_primary">继续</string>
+    <string name="permission_onboarding_page1_info_title">为什么需要此权限？</string>
+    <string name="permission_onboarding_page1_info_body1">这样角色就能显示在其他应用之上。</string>
+    <string name="permission_onboarding_page1_info_body2">你可以随时在设置中关闭。</string>
+    <string name="permission_onboarding_page2_title">步骤 1：选择 ANeko</string>
+    <string name="permission_onboarding_page2_body">在设置页面向下滚动，在应用列表中选择 ANeko。</string>
+    <string name="permission_onboarding_page2_image_desc">选择 ANeko 应用</string>
+    <string name="permission_onboarding_page2_primary">继续</string>
+    <string name="permission_onboarding_page3_title">步骤 2：开启悬浮窗权限</string>
+    <string name="permission_onboarding_page3_body">打开“在其他应用上层显示”。然后返回 ANeko ✨</string>
+    <string name="permission_onboarding_page3_image_desc">切换悬浮窗权限</string>
+    <string name="permission_onboarding_page3_primary">打开设置</string>
+    <string name="permission_onboarding_footer">开启后返回 ANeko — 应用会自动继续。</string>
 </resources>

@@ -35,6 +35,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -138,25 +139,25 @@ private fun PermissionPagerUI(
     val pages = remember {
         listOf(
             PermissionPage(
-                title = "Cho ANeko “xuất hiện” trên màn hình",
-                body = "ANeko cần quyền hiển thị trên ứng dụng khác để thả mèo lên mọi nơi bạn đang dùng.",
+                titleRes = R.string.permission_onboarding_page1_title,
+                bodyRes = R.string.permission_onboarding_page1_body,
                 imageRes = null,
-                imageDesc = null,
-                primaryLabel = "Tiếp tục"
+                imageDescRes = null,
+                primaryLabelRes = R.string.permission_onboarding_page1_primary
             ),
             PermissionPage(
-                title = "Bước 1: Chọn ANeko",
-                body = "Trong màn hình cài đặt, cuộn xuống và chọn ANeko trong danh sách ứng dụng.",
+                titleRes = R.string.permission_onboarding_page2_title,
+                bodyRes = R.string.permission_onboarding_page2_body,
                 imageRes = R.drawable.select_aneko,
-                imageDesc = "Chọn ứng dụng ANeko",
-                primaryLabel = "Tiếp tục"
+                imageDescRes = R.string.permission_onboarding_page2_image_desc,
+                primaryLabelRes = R.string.permission_onboarding_page2_primary
             ),
             PermissionPage(
-                title = "Bước 2: Bật quyền hiển thị",
-                body = "Bật “Cho phép hiển thị trên ứng dụng khác”. Xong bạn quay lại ANeko là được ✨",
+                titleRes = R.string.permission_onboarding_page3_title,
+                bodyRes = R.string.permission_onboarding_page3_body,
                 imageRes = R.drawable.grant_permission,
-                imageDesc = "Bật quyền overlay",
-                primaryLabel = "Mở Cài đặt"
+                imageDescRes = R.string.permission_onboarding_page3_image_desc,
+                primaryLabelRes = R.string.permission_onboarding_page3_primary
             )
         )
     }
@@ -167,9 +168,9 @@ private fun PermissionPagerUI(
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("Cấp quyền cho ANeko") },
+                title = { Text(stringResource(R.string.permission_onboarding_appbar_title)) },
                 actions = {
-                    TextButton(onClick = onSkip) { Text("Để sau") }
+                    TextButton(onClick = onSkip) { Text(stringResource(R.string.permission_onboarding_skip)) }
                 }
             )
         }
@@ -224,7 +225,7 @@ private fun PermissionPagerUI(
                     Spacer(Modifier.width(8.dp))
                 }
                 Text(
-                    pages[pagerState.currentPage].primaryLabel,
+                    stringResource(pages[pagerState.currentPage].primaryLabelRes),
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Bold
@@ -232,7 +233,7 @@ private fun PermissionPagerUI(
             }
 
             Text(
-                text = "Bật xong quay lại ANeko — ứng dụng sẽ tự tiếp tục.",
+                text = stringResource(R.string.permission_onboarding_footer),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center,

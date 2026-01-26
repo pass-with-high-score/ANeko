@@ -91,4 +91,23 @@
     <string name="message_shortcut_request_sent">Verknüpfungsanfrage gesendet. Bitte überprüfen Sie Ihren Launcher.</string>
     <string name="message_unable_create_shortcut">Verknüpfung kann nicht erstellt werden</string>
     <string name="message_failed_to_create_shortcut">Verknüpfung konnte nicht erstellt werden</string>
+
+    <!-- Permission Onboarding -->
+    <string name="permission_onboarding_appbar_title">Berechtigungen</string>
+    <string name="permission_onboarding_skip">Später</string>
+    <string name="permission_onboarding_page1_title">ANeko auf deinem Bildschirm „einblenden“</string>
+    <string name="permission_onboarding_page1_body">ANeko benötigt die Berechtigung „Über anderen Apps einblenden“, damit die Katze überall auftauchen kann.</string>
+    <string name="permission_onboarding_page1_primary">Weiter</string>
+    <string name="permission_onboarding_page1_info_title">Warum wird diese Berechtigung benötigt?</string>
+    <string name="permission_onboarding_page1_info_body1">Damit die Figur über anderen Apps erscheinen kann.</string>
+    <string name="permission_onboarding_page1_info_body2">Du kannst sie jederzeit in den Einstellungen deaktivieren.</string>
+    <string name="permission_onboarding_page2_title">Schritt 1: ANeko auswählen</string>
+    <string name="permission_onboarding_page2_body">Im Einstellungsbildschirm nach unten scrollen und ANeko in der App‑Liste auswählen.</string>
+    <string name="permission_onboarding_page2_image_desc">App ANeko auswählen</string>
+    <string name="permission_onboarding_page2_primary">Weiter</string>
+    <string name="permission_onboarding_page3_title">Schritt 2: Überlagerung aktivieren</string>
+    <string name="permission_onboarding_page3_body">„Über anderen Apps anzeigen“ einschalten. Kehre dann zu ANeko zurück ✨</string>
+    <string name="permission_onboarding_page3_image_desc">Überlagerungsberechtigung umschalten</string>
+    <string name="permission_onboarding_page3_primary">Einstellungen öffnen</string>
+    <string name="permission_onboarding_footer">Nach dem Aktivieren zu ANeko zurückkehren — die App macht automatisch weiter.</string>
 </resources>

@@ -83,4 +83,23 @@
     <string name="message_shortcut_request_sent">Wysłano żądanie skrótu. Sprawdź swój launcher.</string>
     <string name="message_unable_create_shortcut">Nie można utworzyć skrótu</string>
     <string name="message_failed_to_create_shortcut">Nie udało się utworzyć skrótu</string>
+
+    <!-- Permission Onboarding -->
+    <string name="permission_onboarding_appbar_title">Uprawnienia</string>
+    <string name="permission_onboarding_skip">Później</string>
+    <string name="permission_onboarding_page1_title">Pozwól, aby ANeko „pojawiło się” na ekranie</string>
+    <string name="permission_onboarding_page1_body">ANeko potrzebuje uprawnienia „wyświetlanie nad innymi aplikacjami”, aby kotek mógł być widoczny wszędzie.</string>
+    <string name="permission_onboarding_page1_primary">Dalej</string>
+    <string name="permission_onboarding_page1_info_title">Dlaczego to uprawnienie jest potrzebne?</string>
+    <string name="permission_onboarding_page1_info_body1">Aby postać mogła pojawiać się nad innymi aplikacjami.</string>
+    <string name="permission_onboarding_page1_info_body2">Możesz je wyłączyć w Ustawieniach w każdej chwili.</string>
+    <string name="permission_onboarding_page2_title">Krok 1: Wybierz ANeko</string>
+    <string name="permission_onboarding_page2_body">W ekranie ustawień przewiń w dół i wybierz ANeko z listy aplikacji.</string>
+    <string name="permission_onboarding_page2_image_desc">Wybierz aplikację ANeko</string>
+    <string name="permission_onboarding_page2_primary">Dalej</string>
+    <string name="permission_onboarding_page3_title">Krok 2: Włącz uprawnienie nakładki</string>
+    <string name="permission_onboarding_page3_body">Włącz „Wyświetlanie nad innymi aplikacjami”. Następnie wróć do ANeko ✨</string>
+    <string name="permission_onboarding_page3_image_desc">Przełącz uprawnienie nakładki</string>
+    <string name="permission_onboarding_page3_primary">Otwórz ustawienia</string>
+    <string name="permission_onboarding_footer">Po włączeniu wróć do ANeko — aplikacja automatycznie wznowi działanie.</string>
 </resources>

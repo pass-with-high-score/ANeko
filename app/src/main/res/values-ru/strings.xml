@@ -82,4 +82,23 @@
     <string name="message_shortcut_request_sent">Запрос ярлыка отправлен. Проверьте свой лаунчер.</string>
     <string name="message_unable_create_shortcut">Невозможно создать ярлык</string>
     <string name="message_failed_to_create_shortcut">Не удалось создать ярлык</string>
+
+    <!-- Permission Onboarding -->
+    <string name="permission_onboarding_appbar_title">Разрешения</string>
+    <string name="permission_onboarding_skip">Позже</string>
+    <string name="permission_onboarding_page1_title">Позвольте ANeko «появляться» на экране</string>
+    <string name="permission_onboarding_page1_body">ANeko нужно разрешение «Отображать поверх других приложений», чтобы кот мог появляться везде.</string>
+    <string name="permission_onboarding_page1_primary">Далее</string>
+    <string name="permission_onboarding_page1_info_title">Зачем нужно это разрешение?</string>
+    <string name="permission_onboarding_page1_info_body1">Чтобы персонаж мог отображаться поверх других приложений.</string>
+    <string name="permission_onboarding_page1_info_body2">Вы можете отключить его в настройках в любое время.</string>
+    <string name="permission_onboarding_page2_title">Шаг 1: Выберите ANeko</string>
+    <string name="permission_onboarding_page2_body">В экране настроек прокрутите вниз и выберите ANeko в списке приложений.</string>
+    <string name="permission_onboarding_page2_image_desc">Выбор приложения ANeko</string>
+    <string name="permission_onboarding_page2_primary">Далее</string>
+    <string name="permission_onboarding_page3_title">Шаг 2: Включите разрешение наложения</string>
+    <string name="permission_onboarding_page3_body">Включите «Отображать поверх других приложений». Затем вернитесь в ANeko ✨</string>
+    <string name="permission_onboarding_page3_image_desc">Переключить разрешение наложения</string>
+    <string name="permission_onboarding_page3_primary">Открыть настройки</string>
+    <string name="permission_onboarding_footer">После включения вернитесь в ANeko — приложение продолжит автоматически.</string>
 </resources>

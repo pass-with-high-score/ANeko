@@ -87,4 +87,23 @@
     <string name="message_shortcut_request_sent">Solicitud de acceso directo enviada. Por favor, revisa tu launcher.</string>
     <string name="message_unable_create_shortcut">No se puede crear el acceso directo</string>
     <string name="message_failed_to_create_shortcut">Error al crear el acceso directo</string>
+
+    <!-- Permission Onboarding -->
+    <string name="permission_onboarding_appbar_title">Permisos</string>
+    <string name="permission_onboarding_skip">Más tarde</string>
+    <string name="permission_onboarding_page1_title">Deja que ANeko “aparezca” en tu pantalla</string>
+    <string name="permission_onboarding_page1_body">ANeko necesita el permiso de “mostrar sobre otras apps” para que el gato pueda aparecer en cualquier lugar.</string>
+    <string name="permission_onboarding_page1_primary">Continuar</string>
+    <string name="permission_onboarding_page1_info_title">¿Por qué se necesita este permiso?</string>
+    <string name="permission_onboarding_page1_info_body1">Para que el personaje aparezca sobre otras apps.</string>
+    <string name="permission_onboarding_page1_info_body2">Puedes desactivarlo en Ajustes cuando quieras.</string>
+    <string name="permission_onboarding_page2_title">Paso 1: Elige ANeko</string>
+    <string name="permission_onboarding_page2_body">En la pantalla de ajustes, baja y elige ANeko en la lista de apps.</string>
+    <string name="permission_onboarding_page2_image_desc">Seleccionar la app ANeko</string>
+    <string name="permission_onboarding_page2_primary">Continuar</string>
+    <string name="permission_onboarding_page3_title">Paso 2: Activa la superposición</string>
+    <string name="permission_onboarding_page3_body">Activa “Mostrar sobre otras apps”. Luego vuelve a ANeko ✨</string>
+    <string name="permission_onboarding_page3_image_desc">Activar permiso de superposición</string>
+    <string name="permission_onboarding_page3_primary">Abrir Ajustes</string>
+    <string name="permission_onboarding_footer">Tras activarlo, vuelve a ANeko — la app continuará automáticamente.</string>
 </resources>

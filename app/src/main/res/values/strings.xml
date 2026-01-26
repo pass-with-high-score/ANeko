@@ -100,4 +100,23 @@
     <string name="message_shortcut_request_sent">Shortcut request sent. Please check your launcher.</string>
     <string name="message_unable_create_shortcut">Unable to create shortcut</string>
     <string name="message_failed_to_create_shortcut">Failed to create shortcut</string>
+
+    <!-- Permission Onboarding -->
+    <string name="permission_onboarding_appbar_title">Permissions</string>
+    <string name="permission_onboarding_skip">Maybe later</string>
+    <string name="permission_onboarding_page1_title">Let ANeko "appear" on your screen</string>
+    <string name="permission_onboarding_page1_body">ANeko needs the "display over other apps" permission so the cat can show up anywhere you use.</string>
+    <string name="permission_onboarding_page1_primary">Continue</string>
+    <string name="permission_onboarding_page1_info_title">Why is this permission needed?</string>
+    <string name="permission_onboarding_page1_info_body1">So the character can appear over other apps.</string>
+    <string name="permission_onboarding_page1_info_body2">You can turn it off anytime in Settings.</string>
+    <string name="permission_onboarding_page2_title">Step 1: Choose ANeko</string>
+    <string name="permission_onboarding_page2_body">In the settings screen, scroll down and choose ANeko in the app list.</string>
+    <string name="permission_onboarding_page2_image_desc">Select ANeko app</string>
+    <string name="permission_onboarding_page2_primary">Continue</string>
+    <string name="permission_onboarding_page3_title">Step 2: Enable overlay permission</string>
+    <string name="permission_onboarding_page3_body">Turn on "Allow display over other apps". Then return to ANeko ✨</string>
+    <string name="permission_onboarding_page3_image_desc">Toggle overlay permission</string>
+    <string name="permission_onboarding_page3_primary">Open Settings</string>
+    <string name="permission_onboarding_footer">After enabling, return to ANeko — the app continues automatically.</string>
 </resources>
