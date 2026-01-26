@@ -8,7 +8,7 @@ import org.nqmgaming.aneko.core.data.entity.SkinEntity
 @Database(
     entities = [SkinEntity::class],
     version = 1,
-    exportSchema = true,
+    exportSchema = false,
 )
 abstract class AnekoDatabase : RoomDatabase() {
     abstract fun skinDao(): SkinDao
