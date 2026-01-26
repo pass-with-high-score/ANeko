@@ -1,5 +1,6 @@
 package org.nqmgaming.aneko.presentation.home.component
 
+import android.app.Activity
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -22,9 +23,9 @@ import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import org.nqmgaming.aneko.R
+import org.nqmgaming.aneko.core.util.LocaleHelper
 import org.nqmgaming.aneko.data.Language
 import org.nqmgaming.aneko.core.util.extension.changeLanguage
-import org.nqmgaming.aneko.core.util.extension.getLanguageCode
 
 @Composable
 fun SelectLanguageDialog(
@@ -36,7 +37,7 @@ fun SelectLanguageDialog(
     val languages = codes.zip(names) { code, name -> Language(code, name) }
 
     val currentLanguage = remember {
-        mutableStateOf(context.getLanguageCode())
+        mutableStateOf(LocaleHelper.getLocale(context))
     }
 
     AlertDialog(
@@ -91,11 +92,11 @@ fun SelectLanguageDialog(
         confirmButton = {
             TextButton(
                 onClick = {
-                    context.changeLanguage(currentLanguage.value)
                     onDismiss()
+                    (context as Activity).changeLanguage(currentLanguage.value)
                 }
             ) {
-                Text("Ok")
+                Text(stringResource(android.R.string.ok))
             }
         },
         dismissButton = {

@@ -1,18 +1,17 @@
 package org.nqmgaming.aneko.core.util.extension
 
 import android.Manifest
-import android.app.LocaleManager
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
-import android.os.LocaleList
 import androidx.activity.result.ActivityResultLauncher
 import androidx.annotation.StringRes
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
-import androidx.core.os.LocaleListCompat
+import org.nqmgaming.aneko.core.util.LocaleHelper
+import org.nqmgaming.aneko.presentation.ANekoActivity
 
 fun Context.checkNotificationPermission(
     requestPermissionLauncher: ActivityResultLauncher<String>,
@@ -31,22 +30,20 @@ fun Context.checkNotificationPermission(
     onGranted()
 }
 
-fun Context.changeLanguage(languageCode: String) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        this.getSystemService(LocaleManager::class.java).applicationLocales =
-            LocaleList.forLanguageTags(languageCode)
-    } else {
-        AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(languageCode))
-    }
-}
+fun Activity.changeLanguage(languageCode: String) {
+    LocaleHelper.setLocale(this, languageCode)
 
-fun Context.getLanguageCode(): String {
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        this.getSystemService(LocaleManager::class.java).applicationLocales[0]?.toLanguageTag()
-            ?.split("-")?.first() ?: "en"
-    } else {
-        AppCompatDelegate.getApplicationLocales()[0]?.toLanguageTag()?.split("-")?.first() ?: "en"
-    }
+    // Restart from root with smooth transition
+    val intent = Intent(this, ANekoActivity::class.java)
+    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+
+    startActivity(intent)
+    overrideActivityTransition(
+        Activity.OVERRIDE_TRANSITION_OPEN,
+        android.R.anim.fade_in,
+        android.R.anim.fade_out
+    )
+    finish()
 }
 
 fun Context.getStringResource(@StringRes id: Int, vararg formatArgs: Any): String {

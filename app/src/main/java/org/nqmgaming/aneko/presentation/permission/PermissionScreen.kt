@@ -16,10 +16,12 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
+import androidx.compose.material.icons.filled.Language
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -57,6 +59,7 @@ import kotlinx.coroutines.launch
 import org.nqmgaming.aneko.R
 import org.nqmgaming.aneko.data.PermissionPage
 import org.nqmgaming.aneko.presentation.AnekoViewModel
+import org.nqmgaming.aneko.presentation.home.component.SelectLanguageDialog
 import org.nqmgaming.aneko.presentation.permission.component.CatRunning
 import org.nqmgaming.aneko.presentation.permission.component.PagerDots
 import org.nqmgaming.aneko.presentation.permission.component.PermissionPageContent
@@ -136,6 +139,7 @@ private fun PermissionPagerUI(
     onSkip: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    var showLanguageDialog by remember { mutableStateOf(false) }
     val pages = remember {
         listOf(
             PermissionPage(
@@ -169,6 +173,16 @@ private fun PermissionPagerUI(
         topBar = {
             CenterAlignedTopAppBar(
                 title = { Text(stringResource(R.string.permission_onboarding_appbar_title)) },
+                navigationIcon = {
+                    IconButton(onClick = {
+                        showLanguageDialog = true
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.Language,
+                            contentDescription = stringResource(R.string.toggle_theme_title)
+                        )
+                    }
+                },
                 actions = {
                     TextButton(onClick = onSkip) { Text(stringResource(R.string.permission_onboarding_skip)) }
                 }
@@ -238,6 +252,13 @@ private fun PermissionPagerUI(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
+            )
+        }
+        if (showLanguageDialog) {
+            SelectLanguageDialog(
+                onDismiss = {
+                    showLanguageDialog = false
+                }
             )
         }
     }

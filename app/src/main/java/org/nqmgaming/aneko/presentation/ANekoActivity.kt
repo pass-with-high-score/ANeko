@@ -1,5 +1,6 @@
 package org.nqmgaming.aneko.presentation
 
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -20,6 +21,7 @@ import com.ramcosta.composedestinations.generated.destinations.HomeScreenDestina
 import com.ramcosta.composedestinations.rememberNavHostEngine
 import dagger.hilt.android.AndroidEntryPoint
 import org.nqmgaming.aneko.core.service.AnimationService
+import org.nqmgaming.aneko.core.util.LocaleHelper
 import org.nqmgaming.aneko.presentation.ui.theme.ANekoTheme
 
 @AndroidEntryPoint
@@ -86,5 +88,9 @@ class ANekoActivity : AppCompatActivity() {
             Intent(this, AnimationService::class.java)
                 .setAction(AnimationService.ACTION_START)
         )
+    }
+
+    override fun attachBaseContext(base: Context) {
+        super.attachBaseContext(LocaleHelper.applyLocale(base))
     }
 }
