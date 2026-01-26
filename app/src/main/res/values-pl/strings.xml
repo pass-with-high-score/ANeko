@@ -102,4 +102,12 @@
     <string name="permission_onboarding_page3_image_desc">Przełącz uprawnienie nakładki</string>
     <string name="permission_onboarding_page3_primary">Otwórz ustawienia</string>
     <string name="permission_onboarding_footer">Po włączeniu wróć do ANeko — aplikacja automatycznie wznowi działanie.</string>
+
+    <!-- Skin Builder Dialog -->
+    <string name="skin_builder_dialog_title">Tworzenie skórek jest łatwe dzięki ANeko Builder</string>
+    <string name="skin_builder_dialog_image_desc">Podgląd kreatora skórek</string>
+    <string name="skin_builder_dialog_body">Dziękujemy za zainstalowanie ANeko! ANeko Builder to nowe narzędzie webowe, które ułatwia tworzenie i personalizowanie skórek — prosto i przyjemnie.</string>
+    <string name="skin_builder_dialog_confirm">Otwórz</string>
+    <string name="skin_builder_dialog_dismiss">Później</string>
+    <string name="skin_builder_dialog_toast_hint">Do ANeko Builder możesz wrócić później z karty Eksploruj.</string>
 </resources>

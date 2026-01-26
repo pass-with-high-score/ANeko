@@ -93,6 +93,14 @@
     <string name="retry">Retry</string>
     <string name="skin_builder_url" translatable="false">https://devtool.pwhs.app/aneko-builder</string>
 
+    <!-- Skin Builder Dialog -->
+    <string name="skin_builder_dialog_title">Custom skins made easy with ANeko Builder</string>
+    <string name="skin_builder_dialog_image_desc">Skin builder preview</string>
+    <string name="skin_builder_dialog_body">Thank you for installing ANeko! ANeko Builder is a new web tool designed to make creating and customizing skins simple and fun.</string>
+    <string name="skin_builder_dialog_confirm">Take me there</string>
+    <string name="skin_builder_dialog_dismiss">Maybe later</string>
+    <string name="skin_builder_dialog_toast_hint">You can access ANeko Builder later from the Explore tab.</string>
+
     <!-- App Shortcuts -->
     <string name="shortcut_toggle_short">Toggle ANeko</string>
     <string name="shortcut_toggle_long">Toggle ANeko on/off</string>

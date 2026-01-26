@@ -11,6 +11,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -28,7 +29,7 @@ fun NotificationAlertDialog(
         onDismissRequest = onDismiss,
         title = {
             Text(
-                "Custom skins made easy with ANeko Builder",
+                stringResource(R.string.skin_builder_dialog_title),
                 style = typography.headlineSmall
             )
         },
@@ -38,13 +39,13 @@ fun NotificationAlertDialog(
             ) {
                 AsyncImage(
                     model = R.drawable.skin_builder,
-                    contentDescription = "Skin builder preview",
+                    contentDescription = stringResource(R.string.skin_builder_dialog_image_desc),
                     modifier = Modifier
                         .size(200.dp),
 
                     )
                 Text(
-                    "Thank you for installing ANeko! ANeko Builder is a new web tool designed to make creating and customizing skins simple and fun.",
+                    stringResource(R.string.skin_builder_dialog_body),
                     style = typography.bodyMedium
                 )
             }
@@ -54,7 +55,7 @@ fun NotificationAlertDialog(
                 onDismiss()
                 context.openUrl(context.getStringResource(R.string.skin_builder_url))
             }) {
-                Text("Take me there")
+                Text(stringResource(R.string.skin_builder_dialog_confirm))
             }
         },
         dismissButton = {
@@ -62,11 +63,11 @@ fun NotificationAlertDialog(
                 onDismiss()
                 Toast.makeText(
                     context,
-                    "You can access ANeko Builder later from the Explore tab.",
+                    context.getString(R.string.skin_builder_dialog_toast_hint),
                     Toast.LENGTH_LONG
                 ).show()
             }) {
-                Text("Maybe Later")
+                Text(stringResource(R.string.skin_builder_dialog_dismiss))
             }
         }
     )

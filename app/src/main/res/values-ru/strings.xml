@@ -101,4 +101,12 @@
     <string name="permission_onboarding_page3_image_desc">Переключить разрешение наложения</string>
     <string name="permission_onboarding_page3_primary">Открыть настройки</string>
     <string name="permission_onboarding_footer">После включения вернитесь в ANeko — приложение продолжит автоматически.</string>
+
+    <!-- Skin Builder Dialog -->
+    <string name="skin_builder_dialog_title">Создавайте скины легко с ANeko Builder</string>
+    <string name="skin_builder_dialog_image_desc">Предпросмотр конструктора скинов</string>
+    <string name="skin_builder_dialog_body">Спасибо за установку ANeko! ANeko Builder — новый веб‑инструмент, который делает создание и настройку скинов простыми и увлекательными.</string>
+    <string name="skin_builder_dialog_confirm">Открыть</string>
+    <string name="skin_builder_dialog_dismiss">Позже</string>
+    <string name="skin_builder_dialog_toast_hint">Позже вы можете открыть ANeko Builder во вкладке «Исследовать».</string>
 </resources>
