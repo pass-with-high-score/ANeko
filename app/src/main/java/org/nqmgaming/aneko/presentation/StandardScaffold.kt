@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Download
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -28,16 +27,13 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
@@ -51,16 +47,12 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import coil.compose.AsyncImage
 import com.ramcosta.composedestinations.utils.isRouteOnBackStackAsState
 import com.ramcosta.composedestinations.utils.rememberDestinationsNavigator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.nqmgaming.aneko.R
-import org.nqmgaming.aneko.core.util.extension.getStringResource
-import org.nqmgaming.aneko.core.util.extension.openUrl
 import timber.log.Timber
 import kotlin.time.Duration.Companion.seconds
 
@@ -79,8 +71,6 @@ fun StandardScaffold(
     val navigator = navController.rememberDestinationsNavigator()
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    val isFirstLaunch = viewModel.isFirstLaunch.collectAsState().value
-    var isShowingDialog by rememberSaveable { mutableStateOf(isFirstLaunch) }
     var isShowFAB by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
@@ -236,62 +226,5 @@ fun StandardScaffold(
         }
     ) { innerPadding ->
         content(innerPadding)
-    }
-
-    if (isFirstLaunch && isShowingDialog) {
-        // show welcome dialog
-        AlertDialog(
-            containerColor = colorScheme.surface,
-            onDismissRequest = {
-                isShowingDialog = false
-                viewModel.setFirstLaunchDone()
-            },
-            title = {
-                Text(
-                    "Custom skins made easy with ANeko Builder",
-                    style = typography.headlineSmall
-                )
-            },
-            text = {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    AsyncImage(
-                        model = R.drawable.skin_builder,
-                        contentDescription = "Skin builder preview",
-                        modifier = Modifier
-                            .size(200.dp),
-
-                        )
-                    Text(
-                        "Thank you for installing ANeko! ANeko Builder is a new web tool designed to make creating and customizing skins simple and fun.",
-                        style = typography.bodyMedium
-                    )
-                }
-            },
-            confirmButton = {
-                TextButton(onClick = {
-                    // go to explore
-                    isShowingDialog = false
-                    viewModel.setFirstLaunchDone()
-                    context.openUrl(context.getStringResource(R.string.skin_builder_url))
-                }) {
-                    Text("Take me there")
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = {
-                    isShowingDialog = false
-                    viewModel.setFirstLaunchDone()
-                    Toast.makeText(
-                        context,
-                        "You can access ANeko Builder later from the Explore tab.",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }) {
-                    Text("Maybe Later")
-                }
-            }
-        )
     }
 }

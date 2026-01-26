@@ -14,6 +14,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -27,6 +28,7 @@ import org.nqmgaming.aneko.presentation.home.component.HomeAppBar
 import org.nqmgaming.aneko.presentation.home.component.HomeContent
 import org.nqmgaming.aneko.presentation.home.component.SelectLanguageDialog
 import org.nqmgaming.aneko.core.util.extension.checkNotificationPermission
+import org.nqmgaming.aneko.presentation.home.component.NotificationAlertDialog
 
 @Destination<RootGraph>
 @OptIn(ExperimentalMaterial3Api::class)
@@ -37,6 +39,8 @@ fun HomeScreen(
     val uiState = viewModel.uiState.collectAsState()
     val isDarkTheme by viewModel.isDarkTheme.collectAsState()
     val isEnabledState by viewModel.isEnabledState.collectAsState()
+    val isFirstLaunch = viewModel.isFirstLaunch.collectAsState().value
+    var isShowingDialog by rememberSaveable { mutableStateOf(isFirstLaunch) }
     val context = LocalContext.current
 
     fun startAnimationService() {
@@ -111,6 +115,13 @@ fun HomeScreen(
                     showLanguageDialog = false
                 }
             )
+        }
+        if (isFirstLaunch && isShowingDialog) {
+            // show welcome dialog
+            NotificationAlertDialog {
+                isShowingDialog = false
+                viewModel.setFirstLaunchDone()
+            }
         }
     }
 }
