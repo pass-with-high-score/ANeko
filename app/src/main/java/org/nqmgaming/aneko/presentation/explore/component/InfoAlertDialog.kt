@@ -14,7 +14,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import org.nqmgaming.aneko.R
-import org.nqmgaming.aneko.util.openUrl
+import org.nqmgaming.aneko.core.util.extension.getStringResource
+import org.nqmgaming.aneko.core.util.extension.openUrl
 
 @Composable
 fun InfoAlertDialog(onDismiss: () -> Unit) {
@@ -31,7 +32,7 @@ fun InfoAlertDialog(onDismiss: () -> Unit) {
                 TextButton(
                     onClick = {
                         context.openUrl(
-                            context.getString(R.string.skin_collection_link)
+                            context.getStringResource(R.string.skin_collection_link)
                         )
                     }
                 ) {

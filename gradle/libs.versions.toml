@@ -9,53 +9,53 @@ versionCode = "21"
 versionName = "1.5.1"
 
 # Java/Kotlin
-kotlin = "2.2.10"
-kotlinStdlibJdk8 = "2.1.21"
+kotlin = "2.3.0"
+kotlinStdlibJdk8 = "2.2.0"
 
 # AGP
 agp = "8.11.1"
 
 # AndroidX
-activityCompose = "1.10.1"
+activityCompose = "1.12.2"
 appcompat = "1.7.1"
 constraintlayout = "2.2.1"
 espressoCore = "3.7.0"
 junit = "4.13.2"
 androidxJunit = "1.3.0"
-lifecycleRuntimeKtx = "2.9.3"
+lifecycleRuntimeKtx = "2.10.0"
 preferenceKtx = "1.2.1"
-workRuntime = "2.10.3"
+workRuntime = "2.11.0"
 
 # Compose
-composeBom = "2025.08.01"
+composeBom = "2026.01.00"
 composeAnimations = "1.11.9"
-material = "1.12.0"
+material = "1.13.0"
 materialIconsExtended = "1.7.8"
-uiTooling = "1.9.0"
+uiTooling = "1.10.1"
 
 # Compose Destinations
-composeDestinations = "2.2.0"
+composeDestinations = "2.3.0"
 
 # Hilt
-hilt = "2.57.1"
-hiltWork = "1.2.0"
-hiltCompose = "1.2.0"
+hilt = "2.58"
+hiltWork = "1.3.0"
+hiltCompose = "1.3.0"
 
 # Ktor
-ktor = "3.2.3"
+ktor = "3.4.0"
 
 # Serialization
-serialization = "1.9.0"
+serialization = "1.10.0"
 
 # KSP
-ksp = "2.2.10-2.0.2"
+ksp = "2.3.4"
 
 # Other libs
 accompanistPermissions = "0.37.3"
 coilCompose = "2.7.0"
 slf4jAndroid = "1.7.36"
 timber = "5.0.1"
-room = "2.7.2"
+room = "2.8.4"
 
 [libraries]
 # Accompanist

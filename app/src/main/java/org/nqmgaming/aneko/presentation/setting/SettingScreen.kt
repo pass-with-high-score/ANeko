@@ -20,7 +20,8 @@ import org.nqmgaming.aneko.presentation.setting.component.PreferenceItem
 import org.nqmgaming.aneko.presentation.setting.component.SliderPreferenceItem
 import org.nqmgaming.aneko.presentation.setting.component.SwitchPreferenceItem
 import org.nqmgaming.aneko.presentation.ui.theme.ANekoTheme
-import org.nqmgaming.aneko.util.openUrl
+import org.nqmgaming.aneko.core.util.extension.getStringResource
+import org.nqmgaming.aneko.core.util.extension.openUrl
 
 @Composable
 fun SettingsScreen() {
@@ -97,7 +98,7 @@ fun SettingsScreen() {
                 summary = stringResource(R.string.github_contribute_summary),
                 icon = R.drawable.ic_github_mark,
                 onClick = {
-                    context.openUrl(context.getString(R.string.github_uri))
+                    context.openUrl(context.getStringResource(R.string.github_uri))
                 }
             )
 
@@ -110,7 +111,7 @@ fun SettingsScreen() {
                 summary = stringResource(R.string.translate_contribute_summary),
                 icon = R.drawable.ic_language,
                 onClick = {
-                    context.openUrl(context.getString(R.string.poeditor_url))
+                    context.openUrl(context.getStringResource(R.string.poeditor_url))
                 }
             )
 
@@ -123,7 +124,7 @@ fun SettingsScreen() {
                 summary = stringResource(R.string.rate_app_summary),
                 icon = R.drawable.ic_star, // Or any icon you have
                 onClick = {
-                    context.openUrl(context.getString(R.string.rate_app_url))
+                    context.openUrl(context.getStringResource(R.string.rate_app_url))
                 }
             )
         }

@@ -84,8 +84,7 @@ class MotionConfigParser(
             ) break
             if (type != XmlPullParser.START_TAG) continue
 
-            val name = xml.name
-            when (name) {
+            when (val name = xml.name) {
                 TAG_ITEM -> parseItem(dr, attrs)
                 TAG_REPEAT_ITEM -> parseRepeatItem(res, dr, xml, attrs)
                 else -> throw IllegalArgumentException("unknown tag: $name")

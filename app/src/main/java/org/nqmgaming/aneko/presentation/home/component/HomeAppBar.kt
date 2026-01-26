@@ -23,6 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import org.nqmgaming.aneko.R
+import org.nqmgaming.aneko.core.util.extension.getStringResource
 import timber.log.Timber
 import java.util.Locale
 
@@ -61,7 +62,7 @@ fun HomeAppBar(
         },
         actions = {
             IconButton(onClick = {
-                val uri = context.getString(R.string.telegram_group_link).toUri()
+                val uri = context.getStringResource(R.string.telegram_group_link).toUri()
                 val intent = Intent(Intent.ACTION_VIEW, uri)
                 context.startActivity(intent)
             }) {
@@ -72,7 +73,7 @@ fun HomeAppBar(
                 )
             }
             IconButton(onClick = {
-                val baseUri = context.getString(R.string.app_store_uri)
+                val baseUri = context.getStringResource(R.string.app_store_uri)
                 val locale = Locale.getDefault().language
                 val fullUri = "$baseUri&hl=$locale&gl=US"
                 Timber.d("Share URI: $fullUri")

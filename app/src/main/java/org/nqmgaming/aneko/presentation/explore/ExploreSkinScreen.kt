@@ -42,7 +42,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
 import kotlinx.coroutines.launch
@@ -56,7 +56,8 @@ import org.nqmgaming.aneko.presentation.components.LoadingOverlay
 import org.nqmgaming.aneko.presentation.explore.component.ExploreItem
 import org.nqmgaming.aneko.presentation.explore.component.InfoAlertDialog
 import org.nqmgaming.aneko.presentation.ui.theme.ANekoTheme
-import org.nqmgaming.aneko.util.openUrl
+import org.nqmgaming.aneko.core.util.extension.getStringResource
+import org.nqmgaming.aneko.core.util.extension.openUrl
 import timber.log.Timber
 
 @Destination<RootGraph>
@@ -81,16 +82,16 @@ fun ExploreSkinScreen(
                 Toast.makeText(
                     context,
                     if (pkg != null)
-                        context.getString(R.string.imported_skin_from_zip, pkg)
+                        context.getStringResource(R.string.imported_skin_from_zip, pkg)
                     else
-                        context.getString(R.string.failed_to_import_skin_from_zip),
+                        context.getStringResource(R.string.failed_to_import_skin_from_zip),
                     Toast.LENGTH_SHORT
                 ).show()
             } catch (e: Exception) {
                 Timber.e(e)
                 Toast.makeText(
                     context,
-                    context.getString(R.string.failed_to_import_skin, e.message ?: ""),
+                    context.getStringResource(R.string.failed_to_import_skin, e.message ?: ""),
                     Toast.LENGTH_SHORT
                 ).show()
             } finally {
@@ -109,7 +110,7 @@ fun ExploreSkinScreen(
             if (isImporting) {
                 Toast.makeText(
                     context,
-                    context.getString(R.string.importing_skin_please_wait),
+                    context.getStringResource(R.string.importing_skin_please_wait),
                     Toast.LENGTH_SHORT
                 ).show()
                 return@ExploreSkin
@@ -125,16 +126,16 @@ fun ExploreSkinScreen(
                     Toast.makeText(
                         context,
                         if (pkg != null)
-                            context.getString(R.string.imported_skin_from_zip, pkg)
+                            context.getStringResource(R.string.imported_skin_from_zip, pkg)
                         else
-                            context.getString(R.string.failed_to_import_skin_from_zip),
+                            context.getStringResource(R.string.failed_to_import_skin_from_zip),
                         Toast.LENGTH_SHORT
                     ).show()
                 } catch (e: Exception) {
                     Timber.e(e)
                     Toast.makeText(
                         context,
-                        context.getString(R.string.failed_to_import_skin, e.message ?: ""),
+                        context.getStringResource(R.string.failed_to_import_skin, e.message ?: ""),
                         Toast.LENGTH_SHORT
                     ).show()
                 } finally {
@@ -196,7 +197,7 @@ fun ExploreSkin(
                 },
                 actions = {
                     IconButton(onClick = {
-                        context.openUrl(context.getString(R.string.skin_builder_url))
+                        context.openUrl(context.getStringResource(R.string.skin_builder_url))
                     }) {
                         Icon(
                             imageVector = Icons.Default.Add,

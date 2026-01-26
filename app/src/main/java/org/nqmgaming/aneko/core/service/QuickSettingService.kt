@@ -13,7 +13,7 @@ class QuickSettingService : TileService() {
     private lateinit var prefs: SharedPreferences
 
     private val prefsListener =
-        SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
+        SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
             if (key == AnimationService.PREF_KEY_ENABLE) {
                 tile?.let {
                     when {

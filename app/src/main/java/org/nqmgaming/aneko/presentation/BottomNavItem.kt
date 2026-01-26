@@ -1,15 +1,13 @@
 package org.nqmgaming.aneko.presentation
 
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import com.ramcosta.composedestinations.generated.destinations.ExploreSkinScreenDestination
 import com.ramcosta.composedestinations.generated.destinations.HomeScreenDestination
 import com.ramcosta.composedestinations.spec.Direction
 import org.nqmgaming.aneko.R
 
 sealed class BottomNavItem(
-    @StringRes val title: Int,
-    @DrawableRes val icon: Int,
+    val title: Int,
+    val icon: Int,
     val route: String,
     val direction: Direction,
 ) {

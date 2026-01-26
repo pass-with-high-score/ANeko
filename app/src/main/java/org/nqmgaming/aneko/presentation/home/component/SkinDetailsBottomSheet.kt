@@ -48,6 +48,7 @@ import org.nqmgaming.aneko.core.data.entity.SkinEntity
 import org.nqmgaming.aneko.core.data.entity.previewModel
 import org.nqmgaming.aneko.core.shortcuts.ShortcutManagerHelper
 import org.nqmgaming.aneko.core.util.zipDirectory
+import org.nqmgaming.aneko.core.util.extension.getStringResource
 import timber.log.Timber
 import java.io.File
 
@@ -220,14 +221,14 @@ fun SkinDetailsBottomSheet(
                                     context.startActivity(
                                         android.content.Intent.createChooser(
                                             shareIntent,
-                                            context.getString(R.string.share_skin_label)
+                                            context.getStringResource(R.string.share_skin_label)
                                         )
                                     )
                                 } catch (e: Exception) {
                                     Timber.e(e, "Error sharing skin: ${skin.name}")
                                     Toast.makeText(
                                         context,
-                                        context.getString(
+                                        context.getStringResource(
                                             R.string.failed_to_share_apk_label,
                                             skin.name
                                         ),
@@ -278,14 +279,14 @@ fun SkinDetailsBottomSheet(
                                     )
                                     Toast.makeText(
                                         context,
-                                        context.getString(R.string.message_shortcut_request_sent),
+                                        context.getStringResource(R.string.message_shortcut_request_sent),
                                         Toast.LENGTH_SHORT
                                     ).show()
                                     onDismissRequest()
                                 } else {
                                     Toast.makeText(
                                         context,
-                                        context.getString(R.string.message_unable_create_shortcut),
+                                        context.getStringResource(R.string.message_unable_create_shortcut),
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 }
@@ -293,7 +294,7 @@ fun SkinDetailsBottomSheet(
                                 Timber.e(e, "Error creating skin shortcut")
                                 Toast.makeText(
                                     context,
-                                    context.getString(R.string.message_failed_to_create_shortcut),
+                                    context.getStringResource(R.string.message_failed_to_create_shortcut),
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }

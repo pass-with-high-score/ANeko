@@ -48,7 +48,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import coil.compose.AsyncImage
@@ -59,7 +59,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.nqmgaming.aneko.R
-import org.nqmgaming.aneko.util.openUrl
+import org.nqmgaming.aneko.core.util.extension.getStringResource
+import org.nqmgaming.aneko.core.util.extension.openUrl
 import timber.log.Timber
 import kotlin.time.Duration.Companion.seconds
 
@@ -273,7 +274,7 @@ fun StandardScaffold(
                     // go to explore
                     isShowingDialog = false
                     viewModel.setFirstLaunchDone()
-                    context.openUrl(context.getString(R.string.skin_builder_url))
+                    context.openUrl(context.getStringResource(R.string.skin_builder_url))
                 }) {
                     Text("Take me there")
                 }

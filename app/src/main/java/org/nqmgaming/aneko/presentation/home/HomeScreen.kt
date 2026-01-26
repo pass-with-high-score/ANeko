@@ -18,7 +18,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
 import org.nqmgaming.aneko.core.service.AnimationService
@@ -26,7 +26,7 @@ import org.nqmgaming.aneko.presentation.AnekoViewModel
 import org.nqmgaming.aneko.presentation.home.component.HomeAppBar
 import org.nqmgaming.aneko.presentation.home.component.HomeContent
 import org.nqmgaming.aneko.presentation.home.component.SelectLanguageDialog
-import org.nqmgaming.aneko.util.extension.checkNotificationPermission
+import org.nqmgaming.aneko.core.util.extension.checkNotificationPermission
 
 @Destination<RootGraph>
 @OptIn(ExperimentalMaterial3Api::class)

@@ -1,14 +1,17 @@
-package org.nqmgaming.aneko.util.extension
+package org.nqmgaming.aneko.core.util.extension
 
 import android.Manifest
 import android.app.LocaleManager
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.LocaleList
 import androidx.activity.result.ActivityResultLauncher
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.core.os.LocaleListCompat
 
 fun Context.checkNotificationPermission(
@@ -46,3 +49,11 @@ fun Context.getLanguageCode(): String {
     }
 }
 
+fun Context.getStringResource(@StringRes id: Int, vararg formatArgs: Any): String {
+    return this.resources.getString(id, *formatArgs)
+}
+
+fun Context.openUrl(url: String) {
+    val intent = Intent(Intent.ACTION_VIEW, url.toUri())
+    this.startActivity(intent)
+}

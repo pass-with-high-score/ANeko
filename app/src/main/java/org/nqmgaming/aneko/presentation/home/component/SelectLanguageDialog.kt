@@ -23,8 +23,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import org.nqmgaming.aneko.R
 import org.nqmgaming.aneko.data.Language
-import org.nqmgaming.aneko.util.extension.changeLanguage
-import org.nqmgaming.aneko.util.extension.getLanguageCode
+import org.nqmgaming.aneko.core.util.extension.changeLanguage
+import org.nqmgaming.aneko.core.util.extension.getLanguageCode
 
 @Composable
 fun SelectLanguageDialog(

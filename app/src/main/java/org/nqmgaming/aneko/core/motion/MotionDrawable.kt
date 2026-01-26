@@ -164,14 +164,14 @@ class MotionDrawable() : Drawable(), Animatable {
         if (next >= nf) {
             next = 0
             nextRepeat = curRepeat + 1
-            if (constantState.repeatCount >= 0 && nextRepeat >= constantState.repeatCount) {
+            if (constantState.repeatCount in 0..nextRepeat) {
                 curDuration = -1
                 invokeOnMotionEndListener()
                 return
             }
         }
 
-        if (constantState.totalDuration >= 0 && curDuration >= constantState.totalDuration) {
+        if (constantState.totalDuration in 0..curDuration) {
             curDuration = -1
             invokeOnMotionEndListener()
             return
