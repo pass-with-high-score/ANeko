@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">ANeko</string>
-
     <string name="notification_enabled">ANeko está en ejecución.</string>
     <string name="notification_disabled">ANeko está en reposo.</string>
 
-    <string name="github_uri" translatable="false">https://github.com/pass-with-high-score/ANeko</string>
     <string name="power_on">Encender</string>
     <string name="power_off">Apagar</string>
     <string name="choose_skin">Elige tu skin</string>
@@ -28,7 +25,6 @@
     <!-- Rate App -->
     <string name="rate_app_title">Valora esta app</string>
     <string name="rate_app_summary">Si disfrutas usando ANeko, por favor, considera valorarla.</string>
-    <string name="rate_app_url" translatable="false">https://play.google.com/store/apps/details?id=org.nqmgaming.aneko</string>
 
     <string name="select_prompt">Seleccionar %1$s</string>
     <string name="make_with_love">Hecho con ❤️ para ANeko</string>
