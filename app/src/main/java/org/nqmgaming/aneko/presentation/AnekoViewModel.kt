@@ -42,6 +42,7 @@ class AnekoViewModel @Inject constructor(
 ) : AndroidViewModel(application) {
     companion object {
         const val PREF_KEY_THEME = "theme"
+        const val PREF_KEY_FINISHED_SETUP = "finished_setup"
     }
 
     private val _uiState = MutableStateFlow(ANekoState())
@@ -52,6 +53,10 @@ class AnekoViewModel @Inject constructor(
     private val _isEnabledState =
         MutableStateFlow(prefs.getBoolean(AnimationService.PREF_KEY_ENABLE, false))
     val isEnabledState: StateFlow<Boolean> = _isEnabledState.asStateFlow()
+
+    private val _isFinishedSetup =
+        MutableStateFlow(prefs.getBoolean(PREF_KEY_FINISHED_SETUP, false))
+    val isFinishedSetup: StateFlow<Boolean> = _isFinishedSetup.asStateFlow()
     private val preferenceChangeListener =
         SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
             when (key) {
@@ -465,6 +470,12 @@ class AnekoViewModel @Inject constructor(
                     }
                 }
             }
+        }
+    }
+
+    fun finishedSetup() {
+        prefs.edit {
+            putBoolean(PREF_KEY_FINISHED_SETUP, true)
         }
     }
 }

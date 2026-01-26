@@ -27,6 +27,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,10 +36,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -52,6 +55,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.nqmgaming.aneko.R
 import org.nqmgaming.aneko.data.PermissionPage
+import org.nqmgaming.aneko.presentation.AnekoViewModel
 import org.nqmgaming.aneko.presentation.permission.component.CatRunning
 import org.nqmgaming.aneko.presentation.permission.component.PagerDots
 import org.nqmgaming.aneko.presentation.permission.component.PermissionPageContent
@@ -60,24 +64,27 @@ import kotlin.time.Duration.Companion.seconds
 
 @Destination<RootGraph>(start = true)
 @Composable
-fun PermissionScreen(navigator: DestinationsNavigator) {
+fun PermissionScreen(
+    navigator: DestinationsNavigator,
+    viewModel: AnekoViewModel = hiltViewModel()
+) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     var checking by remember { mutableStateOf(true) }
+    val isFinishedSetup = viewModel.isFinishedSetup.collectAsState().value
 
-
-    suspend fun checkAndNavigate() {
+    suspend fun checkAndNavigate() = run {
         checking = true
         delay(2.seconds)
-//        val granted = Settings.canDrawOverlays(context)
-//        if (granted) {
-//            navigator.navigate(HomeScreenDestination()) {
-//                popUpTo(PermissionScreenDestination) { inclusive = true }
-//            }
-//        } else {
-//            checking = false
-//        }
-        checking = false
+
+        if (isFinishedSetup || Settings.canDrawOverlays(context)) {
+            if (!isFinishedSetup) viewModel.finishedSetup()
+            navigator.navigate(HomeScreenDestination()) {
+                popUpTo(PermissionScreenDestination) { inclusive = true }
+            }
+        } else {
+            checking = false
+        }
     }
 
 
@@ -109,6 +116,7 @@ fun PermissionScreen(navigator: DestinationsNavigator) {
                 context.startActivity(intent)
             },
             onSkip = {
+                viewModel.finishedSetup()
                 navigator.navigate(HomeScreenDestination()) {
                     popUpTo(PermissionScreenDestination) {
                         inclusive = true
@@ -183,8 +191,6 @@ private fun PermissionPagerUI(
             ) { page ->
                 PermissionPageContent(
                     page = pages[page],
-                    pageIndex = page,
-                    pageCount = pages.size
                 )
             }
 
@@ -217,7 +223,12 @@ private fun PermissionPagerUI(
                     Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null)
                     Spacer(Modifier.width(8.dp))
                 }
-                Text(pages[pagerState.currentPage].primaryLabel)
+                Text(
+                    pages[pagerState.currentPage].primaryLabel,
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Bold
+                )
             }
 
             Text(
