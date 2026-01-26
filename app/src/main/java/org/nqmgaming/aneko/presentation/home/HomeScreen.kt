@@ -28,7 +28,7 @@ import org.nqmgaming.aneko.presentation.home.component.HomeContent
 import org.nqmgaming.aneko.presentation.home.component.SelectLanguageDialog
 import org.nqmgaming.aneko.util.extension.checkNotificationPermission
 
-@Destination<RootGraph>(start = true)
+@Destination<RootGraph>
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(

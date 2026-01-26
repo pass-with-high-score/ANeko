@@ -30,6 +30,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -54,11 +55,13 @@ import coil.compose.AsyncImage
 import com.ramcosta.composedestinations.utils.isRouteOnBackStackAsState
 import com.ramcosta.composedestinations.utils.rememberDestinationsNavigator
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.nqmgaming.aneko.R
 import org.nqmgaming.aneko.util.openUrl
 import timber.log.Timber
+import kotlin.time.Duration.Companion.seconds
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -77,6 +80,12 @@ fun StandardScaffold(
     val scope = rememberCoroutineScope()
     val isFirstLaunch = viewModel.isFirstLaunch.collectAsState().value
     var isShowingDialog by rememberSaveable { mutableStateOf(isFirstLaunch) }
+    var isShowFAB by rememberSaveable { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        delay(4.seconds)
+        isShowFAB = true
+    }
 
     val filePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenMultipleDocuments(),
@@ -204,7 +213,7 @@ fun StandardScaffold(
             }
         },
         floatingActionButton = {
-            if (currentDestination?.route?.contains(BottomNavItem.Home.route) == true) {
+            if (currentDestination?.route?.contains(BottomNavItem.Home.route) == true && isShowFAB) {
                 FloatingActionButton(
                     containerColor = colorScheme.primary,
                     contentColor = colorScheme.onPrimary,
