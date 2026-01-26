@@ -26,23 +26,52 @@ android {
 
     signingConfigs {
         val keystoreProperties = Properties()
-        try {
-            file(rootProject.file("local.properties")).inputStream()
-                .use { keystoreProperties.load(it) }.let {
-                    create("release") {
-                        storeFile = file(keystoreProperties.getProperty("KEYSTORE_FILE"))
-                        storePassword = keystoreProperties.getProperty("KEYSTORE_PASSWORD")
-                        keyAlias = keystoreProperties.getProperty("KEY_ALIAS")
-                        keyPassword = keystoreProperties.getProperty("KEY_PASSWORD")
-                    }
-                }
-        } catch (_: Exception) {
-            println("local.properties not found, using default values")
-            create("release") {
-                storeFile = file(rootProject.file("app/keystore"))
-                storePassword = System.getenv("KEYSTORE_PASSWORD")
-                keyAlias = System.getenv("KEY_ALIAS")
-                keyPassword = System.getenv("KEY_PASSWORD")
+        val localPropsFile = rootProject.file("local.properties")
+
+
+        val hasLocalProps = localPropsFile.exists() && runCatching {
+            localPropsFile.inputStream().use { keystoreProperties.load(it) }
+        }.isSuccess
+
+
+        fun prop(name: String): String? =
+            keystoreProperties.getProperty(name)?.takeIf { it.isNotBlank() }
+
+
+        val release = maybeCreate("release")
+
+
+        when {
+            hasLocalProps &&
+                    prop("KEYSTORE_FILE") != null &&
+                    prop("KEYSTORE_PASSWORD") != null &&
+                    prop("KEY_ALIAS") != null &&
+                    prop("KEY_PASSWORD") != null -> {
+
+
+                println("Using signing config from local.properties")
+
+
+                release.storeFile = file(prop("KEYSTORE_FILE")!!)
+                release.storePassword = prop("KEYSTORE_PASSWORD")
+                release.keyAlias = prop("KEY_ALIAS")
+                release.keyPassword = prop("KEY_PASSWORD")
+            }
+
+
+            System.getenv("KEYSTORE_PASSWORD") != null -> {
+                println("Using signing config from environment variables")
+
+
+                release.storeFile = file("app/keystore")
+                release.storePassword = System.getenv("KEYSTORE_PASSWORD")
+                release.keyAlias = System.getenv("KEY_ALIAS")
+                release.keyPassword = System.getenv("KEY_PASSWORD")
+            }
+
+
+            else -> {
+                println("⚠️ No signing config found. Release build may fail.")
             }
         }
     }
