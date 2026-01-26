@@ -101,4 +101,5 @@
     <string name="message_shortcut_request_sent">Shortcut request sent. Please check your launcher.</string>
     <string name="message_unable_create_shortcut">Unable to create shortcut</string>
     <string name="message_failed_to_create_shortcut">Failed to create shortcut</string>
+    <string name="behavior_settings_title">Behavior Settings</string>
 </resources>

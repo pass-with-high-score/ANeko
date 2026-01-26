@@ -52,6 +52,7 @@ class AnimationService : Service() {
         const val PREF_KEY_VISIBLE = "motion.visible"
         const val PREF_KEY_TRANSPARENCY = "motion.transparency"
         const val PREF_KEY_FOCUS = "motion.focus"
+        const val PREF_BOTTOM_ONLY = "behavior.bottom_only"
         const val PREF_KEY_SIZE = "motion.size"
         const val PREF_KEY_SPEED = "motion.speed"
         const val PREF_KEY_BEHAVIOUR = "motion.behaviour"

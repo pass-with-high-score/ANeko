@@ -26,7 +26,20 @@ import org.nqmgaming.aneko.util.openUrl
 fun SettingsScreen() {
     val context = LocalContext.current
     val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-
+    Column(modifier = Modifier.padding(16.dp)) {
+        PreferenceContainer(
+            title = R.string.behavior_settings_title
+        ) {
+            SwitchPreferenceItem(
+                title = "Run bottom only",
+                summary = "ANeko only runs in bottom screen",
+                icon = R.drawable.ic_vertical_align_bottom,
+                key = AnimationService.PREF_BOTTOM_ONLY,
+                defaultValue = false,
+                prefs = prefs
+            )
+        }
+    }
 
     Column(modifier = Modifier.padding(16.dp)) {
         PreferenceContainer(
