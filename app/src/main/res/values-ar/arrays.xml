@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Motion Speed -->
+    <string-array name="pref_motion_speed_entries">
+        <item>بطيء جدًا</item>
+        <item>بطيء</item>
+        <item>عادي</item>
+        <item>سريع</item>
+        <item>سريع جدًا</item>
+    </string-array>
+</resources>
