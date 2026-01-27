@@ -40,7 +40,7 @@
     <string name="toggle_theme_title">تبديل السمة</string>
     <string name="app_store_uri" translatable="false"><![CDATA[https://play.google.com/store/apps/details?id=org.nqmgaming.aneko]]></string>
     <string name="share_title">مشاركة</string>
-    <string name="notification_permission_title"> إذن الإشعارات</string>
+    <string name="notification_permission_title">إذن الإشعارات</string>
     <string name="notification_permission_description">يحتاج ANeko إلى إذن الإشعارات لإظهار تحديثات حول حالته، مثل عندما يكون ANeko يعمل أو نائمًا. يرجى منح هذا الإذن حتى يعمل التطبيق بالكامل.</string>
     <string name="allow_button">السماح</string>
     <string name="cancel_button">إلغاء</string>
