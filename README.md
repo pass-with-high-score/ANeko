@@ -46,41 +46,19 @@
 
 ANeko can be controlled by external apps like **Tasker**, **MacroDroid**, or any automation tool that supports sending Android intents.
 
-### Starting ANeko
+For detailed instructions and examples, see the [Automation Guide](AUTOMATION.md).
 
-Send a broadcast intent with the following action:
-```
-Action: org.nqmgaming.aneko.intent.action.START
-```
+### Quick Start
 
-**Example using ADB:**
+**Starting ANeko:**
 ```bash
 adb shell am broadcast -a org.nqmgaming.aneko.intent.action.START
 ```
 
-**Example in Tasker:**
-1. Create a new task
-2. Add action: System → Send Intent
-3. Set Action: `org.nqmgaming.aneko.intent.action.START`
-4. Set Target: `Broadcast Receiver`
-
-### Stopping ANeko
-
-Send a broadcast intent with the following action:
-```
-Action: org.nqmgaming.aneko.intent.action.STOP
-```
-
-**Example using ADB:**
+**Stopping ANeko:**
 ```bash
 adb shell am broadcast -a org.nqmgaming.aneko.intent.action.STOP
 ```
-
-**Example in Tasker:**
-1. Create a new task
-2. Add action: System → Send Intent
-3. Set Action: `org.nqmgaming.aneko.intent.action.STOP`
-4. Set Target: `Broadcast Receiver`
 
 **Note:** ANeko must have overlay permission granted for the start intent to work.
 
