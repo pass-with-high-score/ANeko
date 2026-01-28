@@ -5,8 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.provider.Settings
+import androidx.core.content.ContextCompat
 import androidx.core.content.edit
-import androidx.core.net.toUri
 import org.nqmgaming.aneko.core.service.AnimationService
 import timber.log.Timber
 
@@ -47,8 +47,6 @@ class AnekoIntentReceiver : BroadcastReceiver() {
         // Check for overlay permission
         if (!Settings.canDrawOverlays(context)) {
             Timber.w("Cannot start ANeko: Overlay permission not granted")
-            // Optionally, we could open the permission settings
-            // but from a BroadcastReceiver context, this may not be ideal
             return
         }
 
@@ -58,11 +56,11 @@ class AnekoIntentReceiver : BroadcastReceiver() {
             putBoolean(AnimationService.PREF_KEY_VISIBLE, true)
         }
 
-        // Start the service
+        // Start the service (use ContextCompat for proper API level handling)
         val serviceIntent = Intent(context, AnimationService::class.java).apply {
             action = AnimationService.ACTION_START
         }
-        context.startService(serviceIntent)
+        ContextCompat.startForegroundService(context, serviceIntent)
         
         Timber.d("ANeko started via external intent")
     }
