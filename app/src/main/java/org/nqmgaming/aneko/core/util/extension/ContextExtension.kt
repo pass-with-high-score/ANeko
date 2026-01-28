@@ -38,11 +38,16 @@ fun Activity.changeLanguage(languageCode: String) {
     intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
 
     startActivity(intent)
-    overrideActivityTransition(
-        Activity.OVERRIDE_TRANSITION_OPEN,
-        android.R.anim.fade_in,
-        android.R.anim.fade_out
-    )
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+        overrideActivityTransition(
+            Activity.OVERRIDE_TRANSITION_OPEN,
+            android.R.anim.fade_in,
+            android.R.anim.fade_out
+        )
+    } else {
+        @Suppress("DEPRECATION")
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+    }
     finish()
 }
 
