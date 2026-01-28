@@ -38,6 +38,29 @@
 * Handles overlay permissions automatically
 * Smoother animations and improved performance
 * Supports custom cat skins
+* Intent support for automation apps (Tasker, MacroDroid, etc.)
+
+---
+
+## Automation with Intents
+
+ANeko can be controlled by external apps like **Tasker**, **MacroDroid**, or any automation tool that supports sending Android intents.
+
+For detailed instructions and examples, see the [Automation Guide](AUTOMATION.md).
+
+### Quick Start
+
+**Starting ANeko:**
+```bash
+adb shell am broadcast -a org.nqmgaming.aneko.intent.action.START
+```
+
+**Stopping ANeko:**
+```bash
+adb shell am broadcast -a org.nqmgaming.aneko.intent.action.STOP
+```
+
+**Note:** ANeko must have overlay permission granted for the start intent to work.
 
 ---  
 
