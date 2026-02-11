@@ -1,0 +1,2 @@
+- Enhanced Arabic language support
+- Minor bug fixes and improvements
