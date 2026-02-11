@@ -34,8 +34,30 @@ Since there's only one small enhancement commit after v1.5.1 and the open issues
 
 ## Release Instructions
 
-### For Repository Maintainers
-To complete the release:
+### Automated Release (Recommended)
+The repository has automated CI/CD set up. To trigger a release:
+
+1. **Create and push a tag**:
+   ```bash
+   git tag v1.5.2
+   git push origin v1.5.2
+   ```
+
+2. **GitHub Actions will automatically**:
+   - Build the signed APK and AAB
+   - Create a GitHub Release with the APK attached
+   - Deploy to Google Play Store
+   - Use the changelog from `fastlane/metadata/android/en-US/changelogs/22.txt`
+
+3. **Monitor the workflow**:
+   - Go to: https://github.com/pass-with-high-score/ANeko/actions
+   - Watch the "Publish Releases" workflow
+   - Ensure both jobs complete successfully:
+     - "Build and publish GitHub release"
+     - "Build and publish to Play Store"
+
+### Manual Release (If needed)
+If automated release fails or you need to build locally:
 
 1. **Build the APK**:
    ```bash
@@ -57,8 +79,12 @@ To complete the release:
      ```
    - Upload the APK from: `app/build/outputs/apk/release/app-release.apk`
 
-4. **Push to Google Play Store**:
-   - Use Fastlane automation or manual upload
+4. **Push to Google Play Store** (Manual):
+   - Option A: Use Fastlane:
+     ```bash
+     fastlane android release_all
+     ```
+   - Option B: Manual upload through Play Console
    - The changelog will be automatically picked up from `fastlane/metadata/android/en-US/changelogs/22.txt`
 
 5. **Optional - Update F-Droid**:
