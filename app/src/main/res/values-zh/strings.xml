@@ -47,8 +47,8 @@
     <string name="delete_skin_label">删除 Skin</string>
     <string name="unknown_skin_version">Unknown</string>
     <string name="notification_chanel_description">ANeko 的后台服务</string>
-    <string name="translate_contribute_title">想用你的语言看到 ANeko 吗？</string>
-    <string name="translate_contribute_summary">加入我们的 POEditor 翻译项目\n每一份小小的贡献都非常宝贵，提前感谢你！</string>
+    <string name="website_title">网站</string>
+    <string name="website_summary">ANeko 官方网站</string>
     <string name="choose_language_title">选择语言</string>
     <string name="contribute_to_translation">参与翻译</string>
     <string name="txt_explore">探索</string>

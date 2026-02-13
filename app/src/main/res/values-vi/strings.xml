@@ -49,8 +49,8 @@
     <string name="delete_skin_label">Xóa Skin</string>
     <string name="unknown_skin_version">Unknown</string>
     <string name="notification_chanel_description">Thông báo nền để điều khiển ANeko</string>
-    <string name="translate_contribute_title">Bạn muốn thấy ANeko bằng ngôn ngữ của mình?</string>
-    <string name="translate_contribute_summary">Tham gia dự án dịch của tụi mình trên POEditor nhé\nMỗi đóng góp nhỏ đều rất quý. Cảm ơn bạn nhiều lắm!</string>
+    <string name="website_title">Trang web</string>
+    <string name="website_summary">Trang web chính thức của ANeko</string>
     <string name="choose_language_title">Chọn ngôn ngữ</string>
     <string name="contribute_to_translation">Đóng góp vào việc dịch thuật</string>
     <string name="txt_explore">Khám phá</string>

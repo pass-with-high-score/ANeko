@@ -62,9 +62,9 @@
     <string name="notification_chanel_description">Background service for ANeko</string>
     <string name="telegram_group_link" translatable="false">https://t.me/aneko_community</string>
     <string name="search_app" translatable="false"><![CDATA[https://play.google.com/store/search?q=aneko%20skin&c=apps]]></string>
-    <string name="poeditor_url" translatable="false">https://poeditor.com/join/project/zX7Nu44XDh</string>
-    <string name="translate_contribute_title">Want to see ANeko in your language?</string>
-    <string name="translate_contribute_summary">Join our translation project on POEditor\nEvery little bit helps. Thanks a ton in advance!</string>
+    <string name="aneko_url" translatable="false">https://aneko.pwhs.app</string>
+    <string name="website_title">Website</string>
+    <string name="website_summary">The official ANeko website</string>
     <string name="choose_language_title">Choose language</string>
     <string name="contribute_to_translation">Contribute to translation</string>
     <string name="txt_explore">Explore</string>

@@ -51,8 +51,8 @@
     <string name="delete_skin_label">حذف الشكل</string>
     <string name="unknown_skin_version">غير معروف</string>
     <string name="notification_chanel_description">خدمة خلفية لـ ANeko</string>
-    <string name="translate_contribute_title">هل تريد رؤية ANeko بلغتك؟</string>
-    <string name="translate_contribute_summary">انضم إلى مشروع الترجمة على POEditor\nكل مساهمة صغيرة تساعد. شكرًا جزيلاً مسبقًا!</string>
+    <string name="website_title">الموقع الإلكتروني</string>
+    <string name="website_summary">الموقع الرسمي لـ ANeko</string>
     <string name="choose_language_title">اختر اللغة</string>
     <string name="contribute_to_translation">ساهم في الترجمة</string>
     <string name="txt_explore">استكشف</string>

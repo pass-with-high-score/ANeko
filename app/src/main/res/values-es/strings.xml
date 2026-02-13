@@ -48,8 +48,8 @@
     <string name="delete_skin_label">Eliminar Skin</string>
     <string name="unknown_skin_version">Desconocido</string>
     <string name="notification_chanel_description">Servicio en segundo plano para ANeko</string>
-    <string name="translate_contribute_title">¿Quieres ver ANeko en tu idioma?</string>
-    <string name="translate_contribute_summary">Únete a nuestro proyecto de traducción en POEditor\n¡Cada pequeño aporte cuenta. Muchas gracias de antemano!</string>
+    <string name="website_title">Sitio web</string>
+    <string name="website_summary">El sitio web oficial de ANeko</string>
     <string name="choose_language_title">Elegir idioma</string>
     <string name="contribute_to_translation">Contribuir a la traducción</string>
     <string name="txt_explore">Explorar</string>

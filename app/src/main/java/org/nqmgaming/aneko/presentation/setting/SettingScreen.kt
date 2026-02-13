@@ -15,13 +15,13 @@ import androidx.compose.ui.unit.dp
 import androidx.preference.PreferenceManager
 import org.nqmgaming.aneko.R
 import org.nqmgaming.aneko.core.service.AnimationService
+import org.nqmgaming.aneko.core.util.extension.getStringResource
+import org.nqmgaming.aneko.core.util.extension.openUrl
 import org.nqmgaming.aneko.presentation.setting.component.PreferenceContainer
 import org.nqmgaming.aneko.presentation.setting.component.PreferenceItem
 import org.nqmgaming.aneko.presentation.setting.component.SliderPreferenceItem
 import org.nqmgaming.aneko.presentation.setting.component.SwitchPreferenceItem
 import org.nqmgaming.aneko.presentation.ui.theme.ANekoTheme
-import org.nqmgaming.aneko.core.util.extension.getStringResource
-import org.nqmgaming.aneko.core.util.extension.openUrl
 
 @Composable
 fun SettingsScreen() {
@@ -107,11 +107,11 @@ fun SettingsScreen() {
             )
 
             PreferenceItem(
-                title = stringResource(R.string.translate_contribute_title),
-                summary = stringResource(R.string.translate_contribute_summary),
+                title = stringResource(R.string.website_title),
+                summary = stringResource(R.string.website_summary),
                 icon = R.drawable.ic_language,
                 onClick = {
-                    context.openUrl(context.getStringResource(R.string.poeditor_url))
+                    context.openUrl(context.getStringResource(R.string.aneko_url))
                 }
             )
 
