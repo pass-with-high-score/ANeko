@@ -1,0 +1,5 @@
+- Enhance explore screen
+- Added share skin action in explore screen
+- Added permission request screen
+- Added arabic language support
+- Minor bug fixes and performance improvements
