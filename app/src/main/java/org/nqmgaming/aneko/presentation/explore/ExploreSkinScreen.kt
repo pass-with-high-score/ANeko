@@ -196,6 +196,14 @@ fun ExploreSkin(
                         ),
                     )
                 },
+                navigationIcon = {
+                    IconButton(onClick = { isShowInfoDialog = true }) {
+                        Icon(
+                            imageVector = Icons.Default.Info,
+                            contentDescription = null
+                        )
+                    }
+                },
                 actions = {
                     IconButton(onClick = {
                         context.openUrl(context.getStringResource(R.string.skin_share_url))
@@ -210,12 +218,6 @@ fun ExploreSkin(
                     }) {
                         Icon(
                             imageVector = Icons.Default.Add,
-                            contentDescription = null
-                        )
-                    }
-                    IconButton(onClick = { isShowInfoDialog = true }) {
-                        Icon(
-                            imageVector = Icons.Default.Info,
                             contentDescription = null
                         )
                     }

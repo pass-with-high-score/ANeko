@@ -83,7 +83,7 @@ fun ExploreItem(
                     modifier = Modifier
                         .size(60.dp)
                         .background(
-                            color = MaterialTheme.colorScheme.onSurface,
+                            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
                             shape = RoundedCornerShape(12.dp)
                         )
                         .clip(

@@ -1,2 +1,2 @@
 package_name("org.nqmgaming.aneko")
-json_key_file("play-store-config.json")
+json_key_file("fastlane/play-store-key.json")

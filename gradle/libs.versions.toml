@@ -13,7 +13,7 @@ kotlin = "2.3.10"
 kotlinStdlibJdk8 = "2.2.0"
 
 # AGP
-agp = "8.11.1"
+agp = "8.13.2"
 
 # AndroidX
 activityCompose = "1.12.4"
