@@ -24,54 +24,20 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    signingConfigs {
-        val keystoreProperties = Properties()
-        val localPropsFile = rootProject.file("local.properties")
+    // Load signing config from key.properties (CI/CD)
+    val keyPropertiesFile = rootProject.file("key.properties")
+    val useReleaseKeystore = keyPropertiesFile.exists()
 
-
-        val hasLocalProps = localPropsFile.exists() && runCatching {
-            localPropsFile.inputStream().use { keystoreProperties.load(it) }
-        }.isSuccess
-
-
-        fun prop(name: String): String? =
-            keystoreProperties.getProperty(name)?.takeIf { it.isNotBlank() }
-
-
-        val release = maybeCreate("release")
-
-
-        when {
-            hasLocalProps &&
-                    prop("KEYSTORE_FILE") != null &&
-                    prop("KEYSTORE_PASSWORD") != null &&
-                    prop("KEY_ALIAS") != null &&
-                    prop("KEY_PASSWORD") != null -> {
-
-
-                println("Using signing config from local.properties")
-
-
-                release.storeFile = file(prop("KEYSTORE_FILE")!!)
-                release.storePassword = prop("KEYSTORE_PASSWORD")
-                release.keyAlias = prop("KEY_ALIAS")
-                release.keyPassword = prop("KEY_PASSWORD")
-            }
-
-
-            System.getenv("KEYSTORE_PASSWORD") != null -> {
-                println("Using signing config from environment variables")
-
-
-                release.storeFile = file("app/keystore")
-                release.storePassword = System.getenv("KEYSTORE_PASSWORD")
-                release.keyAlias = System.getenv("KEY_ALIAS")
-                release.keyPassword = System.getenv("KEY_PASSWORD")
-            }
-
-
-            else -> {
-                println("⚠️ No signing config found. Release build may fail.")
+    if (useReleaseKeystore) {
+        val keyProperties = Properties().apply {
+            load(keyPropertiesFile.inputStream())
+        }
+        signingConfigs {
+            create("release") {
+                storeFile = file(keyProperties["storeFile"] as String)
+                storePassword = keyProperties["storePassword"] as String
+                keyAlias = keyProperties["keyAlias"] as String
+                keyPassword = keyProperties["keyPassword"] as String
             }
         }
     }
@@ -84,7 +50,9 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("release")
+            if (useReleaseKeystore) {
+                signingConfig = signingConfigs.getByName("release")
+            }
         }
     }
 

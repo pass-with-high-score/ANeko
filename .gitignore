@@ -332,3 +332,4 @@ sample
 keystore
 # All .DS_Store files
 .DS_Store
+key.properties
