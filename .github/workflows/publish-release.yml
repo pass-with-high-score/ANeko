@@ -45,19 +45,19 @@ jobs:
 
       # Signing
       - name: Decode keystore
-        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > app/blockads-release.jks
+        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > app/aneko-release.jks
 
       - name: Create key.properties
         run: |
           cat > key.properties <<EOF
-          storeFile=blockads-release.jks
+          storeFile=aneko-release.jks
           storePassword=${{ secrets.STORE_PASSWORD }}
           keyAlias=${{ secrets.KEY_ALIAS }}
           keyPassword=${{ secrets.KEY_PASSWORD }}
           EOF
 
       - name: Decode Play Store key
-        run: echo "${{ secrets.PLAY_STORE_KEY_BASE64 }}" | base64 --decode > fastlane/play-store-key.json
+        run: echo "${{ secrets.PLAY_STORE_CONFIG_JSON }}" | base64 --decode > fastlane/play-store-key.json
 
       # Build & Deploy
       - name: Grant execute permission
