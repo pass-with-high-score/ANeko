@@ -90,12 +90,13 @@ class AnekoViewModel @Inject constructor(
         MutableStateFlow(prefs.getString(PREF_KEY_THEME, "light") == "dark")
     val isDarkTheme: StateFlow<Boolean> = _isDarkTheme.asStateFlow()
 
-    private val _isFirstLaunch = MutableStateFlow(prefs.getBoolean("is_first_launch", true))
+    private val _isFirstLaunch =
+        MutableStateFlow(prefs.getBoolean("is_first_launch_share_skin", true))
     val isFirstLaunch: StateFlow<Boolean> = _isFirstLaunch.asStateFlow()
 
     fun setFirstLaunchDone() {
         prefs.edit {
-            putBoolean("is_first_launch", false)
+            putBoolean("is_first_launch_share_skin", false)
         }
         _isFirstLaunch.value = false
     }

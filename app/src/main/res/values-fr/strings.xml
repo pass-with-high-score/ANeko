@@ -102,10 +102,11 @@
     <string name="permission_onboarding_footer">Après activation, revenez à ANeko — l’app continue automatiquement.</string>
 
     <!-- Skin Builder Dialog -->
-    <string name="skin_builder_dialog_title">Des skins personnalisés, facilement, avec ANeko Builder</string>
-    <string name="skin_builder_dialog_image_desc">Aperçu de l’outil de création de skins</string>
-    <string name="skin_builder_dialog_body">Merci d’avoir installé ANeko ! ANeko Builder est un nouvel outil web conçu pour créer et personnaliser des skins simplement et avec plaisir.</string>
-    <string name="skin_builder_dialog_confirm">Ouvrir</string>
-    <string name="skin_builder_dialog_dismiss">Plus tard</string>
-    <string name="skin_builder_dialog_toast_hint">Vous pourrez accéder à ANeko Builder plus tard depuis l’onglet Explorer.</string>
+    <string name="skin_share_dialog_title">Partage ton skin</string>
+    <string name="skin_share_dialog_image_desc">Partager le skin</string>
+    <string name="skin_share_dialog_body">Tu as créé un skin ANeko personnalisé ? Partage-le avec la communauté !</string>
+    <string name="skin_share_dialog_confirm">Emmène-moi là-bas</string>
+    <string name="skin_share_dialog_dismiss">Peut-être plus tard</string>
+    <string name="skin_share_dialog_toast_hint">Tu peux accéder à Partager le skin plus tard depuis l’onglet Explorer.</string>
+
 </resources>

@@ -80,12 +80,12 @@
     <string name="retry">إعادة المحاولة</string>
 
     <!-- Skin Builder Dialog -->
-    <string name="skin_builder_dialog_title">إنشاء أشكال مخصصة بسهولة باستخدام منشئ ANeko</string>
-    <string name="skin_builder_dialog_image_desc">معاينة منشئ الأشكال</string>
-    <string name="skin_builder_dialog_body">شكرًا لتثبيت ANeko! منشئ ANeko هو أداة ويب جديدة مصممة لجعل إنشاء وتخصيص الأشكال بسيطًا وممتعًا.</string>
-    <string name="skin_builder_dialog_confirm">خذني إلى هناك</string>
-    <string name="skin_builder_dialog_dismiss">ربما لاحقًا</string>
-    <string name="skin_builder_dialog_toast_hint">يمكنك الوصول إلى منشئ ANeko لاحقًا من علامة تبويب "استكشف".</string>
+    <string name="skin_share_dialog_title">إنشاء أشكال مخصصة بسهولة باستخدام منشئ ANeko</string>
+    <string name="skin_share_dialog_image_desc">معاينة منشئ الأشكال</string>
+    <string name="skin_share_dialog_body">شكرًا لتثبيت ANeko! منشئ ANeko هو أداة ويب جديدة مصممة لجعل إنشاء وتخصيص الأشكال بسيطًا وممتعًا.</string>
+    <string name="skin_share_dialog_confirm">خذني إلى هناك</string>
+    <string name="skin_share_dialog_dismiss">ربما لاحقًا</string>
+    <string name="skin_share_dialog_toast_hint">يمكنك الوصول إلى منشئ ANeko لاحقًا من علامة تبويب "استكشف".</string>
 
     <!-- App Shortcuts -->
     <string name="shortcut_toggle_short">تبديل ANeko</string>

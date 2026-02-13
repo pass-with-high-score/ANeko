@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -50,14 +51,14 @@ import org.nqmgaming.aneko.R
 import org.nqmgaming.aneko.core.data.entity.SkinEntity
 import org.nqmgaming.aneko.core.download.DownloadStatus
 import org.nqmgaming.aneko.core.download.SkinDownloadQueue
+import org.nqmgaming.aneko.core.util.extension.getStringResource
+import org.nqmgaming.aneko.core.util.extension.openUrl
 import org.nqmgaming.aneko.data.SkinCollection
 import org.nqmgaming.aneko.presentation.AnekoViewModel
 import org.nqmgaming.aneko.presentation.components.LoadingOverlay
 import org.nqmgaming.aneko.presentation.explore.component.ExploreItem
 import org.nqmgaming.aneko.presentation.explore.component.InfoAlertDialog
 import org.nqmgaming.aneko.presentation.ui.theme.ANekoTheme
-import org.nqmgaming.aneko.core.util.extension.getStringResource
-import org.nqmgaming.aneko.core.util.extension.openUrl
 import timber.log.Timber
 
 @Destination<RootGraph>
@@ -196,6 +197,14 @@ fun ExploreSkin(
                     )
                 },
                 actions = {
+                    IconButton(onClick = {
+                        context.openUrl(context.getStringResource(R.string.skin_share_url))
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.Share,
+                            contentDescription = null
+                        )
+                    }
                     IconButton(onClick = {
                         context.openUrl(context.getStringResource(R.string.skin_builder_url))
                     }) {

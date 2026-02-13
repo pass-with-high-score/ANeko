@@ -85,12 +85,12 @@
     <string name="message_failed_to_create_shortcut">Error al crear el acceso directo</string>
 
     <!-- Skin Builder Dialog -->
-    <string name="skin_builder_dialog_title">Crear skins es fácil con ANeko Builder</string>
-    <string name="skin_builder_dialog_image_desc">Vista previa del creador de skins</string>
-    <string name="skin_builder_dialog_body">Gracias por instalar ANeko. ANeko Builder es una nueva herramienta web pensada para crear y personalizar skins de forma sencilla y divertida.</string>
-    <string name="skin_builder_dialog_confirm">Abrir</string>
-    <string name="skin_builder_dialog_dismiss">Más tarde</string>
-    <string name="skin_builder_dialog_toast_hint">Puedes acceder a ANeko Builder más tarde desde la pestaña Explorar.</string>
+    <string name="skin_share_dialog_title">Comparte tu skin</string>
+    <string name="skin_share_dialog_image_desc">Compartir skin</string>
+    <string name="skin_share_dialog_body">¿Creaste un skin personalizado de ANeko? ¡Compártelo con la comunidad!</string>
+    <string name="skin_share_dialog_confirm">Llévame allí</string>
+    <string name="skin_share_dialog_dismiss">Quizás más tarde</string>
+    <string name="skin_share_dialog_toast_hint">Puedes acceder a Compartir skin más tarde desde la pestaña Explorar.</string>
 
     <!-- Permission Onboarding -->
     <string name="permission_onboarding_appbar_title">Permisos</string>

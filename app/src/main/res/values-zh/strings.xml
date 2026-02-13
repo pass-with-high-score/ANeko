@@ -103,10 +103,11 @@
     <string name="permission_onboarding_footer">开启后返回 ANeko — 应用会自动继续。</string>
 
     <!-- Skin Builder Dialog -->
-    <string name="skin_builder_dialog_title">使用 ANeko Builder 轻松创建自定义皮肤</string>
-    <string name="skin_builder_dialog_image_desc">皮肤构建器预览</string>
-    <string name="skin_builder_dialog_body">感谢安装 ANeko！ANeko Builder 是一个新的网页工具，让制作和自定义皮肤变得简单有趣。</string>
-    <string name="skin_builder_dialog_confirm">打开</string>
-    <string name="skin_builder_dialog_dismiss">稍后</string>
-    <string name="skin_builder_dialog_toast_hint">你可以稍后在“探索”标签页访问 ANeko Builder。</string>
+    <string name="skin_share_dialog_title">分享你的皮肤</string>
+    <string name="skin_share_dialog_image_desc">分享皮肤</string>
+    <string name="skin_share_dialog_body">创建了自定义的 ANeko 皮肤？与社区分享吧！</string>
+    <string name="skin_share_dialog_confirm">带我过去</string>
+    <string name="skin_share_dialog_dismiss">稍后再说</string>
+    <string name="skin_share_dialog_toast_hint">你可以稍后在“探索”标签页中访问“分享皮肤”。</string>
+
 </resources>

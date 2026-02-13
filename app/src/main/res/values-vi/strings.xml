@@ -106,10 +106,11 @@
     <string name="permission_onboarding_footer">Bật xong quay lại ANeko — ứng dụng sẽ tự tiếp tục.</string>
 
     <!-- Skin Builder Dialog -->
-    <string name="skin_builder_dialog_title">Tạo skin dễ dàng với ANeko Builder</string>
-    <string name="skin_builder_dialog_image_desc">Xem trước công cụ tạo skin</string>
-    <string name="skin_builder_dialog_body">Cảm ơn bạn đã cài ANeko! ANeko Builder là công cụ web mới giúp bạn tạo và tùy biến skin thật đơn giản và thú vị.</string>
-    <string name="skin_builder_dialog_confirm">Mở</string>
-    <string name="skin_builder_dialog_dismiss">Để sau</string>
-    <string name="skin_builder_dialog_toast_hint">Bạn có thể mở ANeko Builder sau này trong tab Khám phá.</string>
+    <string name="skin_share_dialog_title">Chia sẻ skin của bạn</string>
+    <string name="skin_share_dialog_image_desc">Chia sẻ skin</string>
+    <string name="skin_share_dialog_body">Bạn đã tạo skin ANeko tùy chỉnh? Hãy chia sẻ với cộng đồng!</string>
+    <string name="skin_share_dialog_confirm">Đưa tôi đến đó</string>
+    <string name="skin_share_dialog_dismiss">Có thể sau</string>
+    <string name="skin_share_dialog_toast_hint">Bạn có thể truy cập Chia sẻ skin sau từ tab Khám phá.</string>
+
 </resources>

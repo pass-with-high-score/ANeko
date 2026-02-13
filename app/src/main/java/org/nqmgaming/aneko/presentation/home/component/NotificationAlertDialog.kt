@@ -11,26 +11,28 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import org.nqmgaming.aneko.R
-import org.nqmgaming.aneko.core.util.extension.getStringResource
 import org.nqmgaming.aneko.core.util.extension.openUrl
 
 @Composable
 fun NotificationAlertDialog(
     onDismiss: () -> Unit,
 ) {
+    val resource = LocalResources.current
     val context = LocalContext.current
     AlertDialog(
         containerColor = colorScheme.surface,
         onDismissRequest = onDismiss,
         title = {
             Text(
-                stringResource(R.string.skin_builder_dialog_title),
-                style = typography.headlineSmall
+                stringResource(R.string.skin_share_dialog_title),
+                style = typography.headlineSmall,
+                color = colorScheme.primary
             )
         },
         text = {
@@ -38,14 +40,14 @@ fun NotificationAlertDialog(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 AsyncImage(
-                    model = R.drawable.skin_builder,
-                    contentDescription = stringResource(R.string.skin_builder_dialog_image_desc),
+                    model = R.drawable.share_skin,
+                    contentDescription = stringResource(R.string.skin_share_dialog_image_desc),
                     modifier = Modifier
                         .size(200.dp),
 
                     )
                 Text(
-                    stringResource(R.string.skin_builder_dialog_body),
+                    stringResource(R.string.skin_share_dialog_body),
                     style = typography.bodyMedium
                 )
             }
@@ -53,9 +55,9 @@ fun NotificationAlertDialog(
         confirmButton = {
             TextButton(onClick = {
                 onDismiss()
-                context.openUrl(context.getStringResource(R.string.skin_builder_url))
+                context.openUrl(resource.getString(R.string.skin_share_url))
             }) {
-                Text(stringResource(R.string.skin_builder_dialog_confirm))
+                Text(stringResource(R.string.skin_share_dialog_confirm))
             }
         },
         dismissButton = {
@@ -63,11 +65,11 @@ fun NotificationAlertDialog(
                 onDismiss()
                 Toast.makeText(
                     context,
-                    context.getString(R.string.skin_builder_dialog_toast_hint),
+                    resource.getString(R.string.skin_share_dialog_toast_hint),
                     Toast.LENGTH_LONG
                 ).show()
             }) {
-                Text(stringResource(R.string.skin_builder_dialog_dismiss))
+                Text(stringResource(R.string.skin_share_dialog_dismiss))
             }
         }
     )
