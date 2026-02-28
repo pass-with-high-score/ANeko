@@ -46,6 +46,13 @@
 Join our community on Telegram:  
 [![Telegram](https://img.shields.io/badge/Telegram-Join%20Group-blue?logo=telegram)](https://t.me/aneko_community)
 
+## Sponsor
+
+If you enjoy ANeko Reborn, consider supporting the project! Your sponsorship helps us maintain and
+improve the app.
+
+[![Sponsor](https://img.shields.io/badge/Sponsor-❤️-red?logo=github-sponsors)](https://github.com/sponsors/pass-with-high-score)
+
 ## Build Instructions
 
 ### Requirements

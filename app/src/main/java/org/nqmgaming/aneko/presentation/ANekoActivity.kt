@@ -51,6 +51,8 @@ class ANekoActivity : AppCompatActivity() {
                 }
             }
             val isDarkTheme by viewModel.isDarkTheme.collectAsState()
+            val accentColor by viewModel.accentColor.collectAsState()
+            val isDynamicColor by viewModel.isDynamicColor.collectAsState()
             val navController = rememberNavController()
             val navHostEngine = rememberNavHostEngine(
                 navHostContentAlignment = Alignment.TopCenter,
@@ -61,7 +63,8 @@ class ANekoActivity : AppCompatActivity() {
 
             ANekoTheme(
                 darkTheme = isDarkTheme,
-                dynamicColor = false
+                dynamicColor = isDynamicColor,
+                accentColor = accentColor
             ) {
                 StandardScaffold(
                     navController = navController,

@@ -4,9 +4,8 @@ import android.content.Intent
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Language
-import androidx.compose.material.icons.filled.LightMode
+import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -15,6 +14,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -24,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import org.nqmgaming.aneko.R
 import org.nqmgaming.aneko.core.util.extension.getStringResource
+import org.nqmgaming.aneko.presentation.ui.theme.AccentColor
 import timber.log.Timber
 import java.util.Locale
 
@@ -32,9 +36,15 @@ import java.util.Locale
 fun HomeAppBar(
     onToggleTheme: () -> Unit,
     isDarkTheme: Boolean,
+    accentColor: AccentColor,
+    isDynamicColor: Boolean,
+    onAccentSelected: (AccentColor) -> Unit,
+    onToggleDynamicColor: () -> Unit,
     onShowLanguageDialog: () -> Unit
 ) {
     val context = LocalContext.current
+    var showThemePicker by remember { mutableStateOf(false) }
+
     CenterAlignedTopAppBar(
         title = {
             Text(
@@ -46,10 +56,10 @@ fun HomeAppBar(
         },
         navigationIcon = {
             Row {
-                IconButton(onClick = onToggleTheme) {
+                IconButton(onClick = { showThemePicker = true }) {
                     Icon(
-                        imageVector = if (isDarkTheme) Icons.Default.LightMode else Icons.Default.DarkMode,
-                        contentDescription = stringResource(R.string.toggle_theme_title)
+                        imageVector = Icons.Default.Palette,
+                        contentDescription = stringResource(R.string.theme_picker_title)
                     )
                 }
                 IconButton(onClick = onShowLanguageDialog) {
@@ -97,4 +107,16 @@ fun HomeAppBar(
             }
         }
     )
+
+    if (showThemePicker) {
+        ThemePickerDialog(
+            currentAccent = accentColor,
+            isDarkTheme = isDarkTheme,
+            isDynamicColor = isDynamicColor,
+            onAccentSelected = onAccentSelected,
+            onToggleDarkMode = onToggleTheme,
+            onToggleDynamicColor = onToggleDynamicColor,
+            onDismiss = { showThemePicker = false }
+        )
+    }
 }

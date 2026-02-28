@@ -138,6 +138,15 @@
     <string name="update_now">Update</string>
     <string name="up_to_date">You\'re up to date!</string>
     <string name="checking_for_update">Checking…</string>
+    <!-- Theme Picker -->
+    <string name="theme_picker_title">Choose Theme</string>
+    <string name="dark_mode_label">Dark Mode</string>
+    <string name="dynamic_color_label">Dynamic Color (Material You)</string>
+
+    <!-- Sponsor -->
+    <string name="sponsor_title">Sponsor this project</string>
+    <string name="sponsor_summary">Support ANeko development ❤️</string>
+    <string name="sponsor_url" translatable="false">https://github.com/sponsors/pass-with-high-score</string>
 
     <!-- Onboarding Skin -->
     <string name="onboarding_skin_title">Get Some Skins</string>

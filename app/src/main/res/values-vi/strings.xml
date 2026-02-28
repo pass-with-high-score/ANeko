@@ -122,5 +122,10 @@
     <string name="up_to_date">Bạn đang dùng phiên bản mới nhất!</string>
     <string name="checking_for_update">Đang kiểm tra…</string>
     <string name="onboarding_skin_title">Tải một số skin</string>
+    <string name="sponsor_title">Tài trợ dự án</string>
+    <string name="theme_picker_title">Chọn giao diện</string>
+    <string name="dark_mode_label">Chế độ tối</string>
+    <string name="dynamic_color_label">Màu động (Material You)</string>
+    <string name="sponsor_summary">Hỗ trợ phát triển ANeko ❤️</string>
     <string name="onboarding_skin_continue">Tiếp tục</string>
 </resources>

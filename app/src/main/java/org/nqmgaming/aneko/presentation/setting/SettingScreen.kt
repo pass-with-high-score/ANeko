@@ -141,6 +141,19 @@ fun SettingsScreen(
             )
 
             PreferenceItem(
+                title = stringResource(R.string.sponsor_title),
+                summary = stringResource(R.string.sponsor_summary),
+                icon = R.drawable.ic_heart,
+                onClick = {
+                    context.openUrl(context.getStringResource(R.string.sponsor_url))
+                }
+            )
+
+            HorizontalDivider(
+                color = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f),
+            )
+
+            PreferenceItem(
                 title = stringResource(R.string.check_for_update_title),
                 summary = if (uiState.isCheckingUpdate)
                     stringResource(R.string.checking_for_update)

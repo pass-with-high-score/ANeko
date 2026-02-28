@@ -119,5 +119,10 @@
     <string name="up_to_date">¡Estás al día!</string>
     <string name="checking_for_update">Comprobando…</string>
     <string name="onboarding_skin_title">Obtén algunos skins</string>
+    <string name="sponsor_title">Patrocinar este proyecto</string>
+    <string name="theme_picker_title">Elegir tema</string>
+    <string name="dark_mode_label">Modo oscuro</string>
+    <string name="dynamic_color_label">Color dinámico (Material You)</string>
+    <string name="sponsor_summary">Apoya el desarrollo de ANeko ❤️</string>
     <string name="onboarding_skin_continue">Continuar</string>
 </resources>

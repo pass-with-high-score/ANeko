@@ -38,6 +38,8 @@ fun HomeScreen(
 ) {
     val uiState = viewModel.uiState.collectAsState()
     val isDarkTheme by viewModel.isDarkTheme.collectAsState()
+    val accentColor by viewModel.accentColor.collectAsState()
+    val isDynamicColor by viewModel.isDynamicColor.collectAsState()
     val isEnabledState by viewModel.isEnabledState.collectAsState()
     val isFirstLaunch = viewModel.isFirstLaunch.collectAsState().value
     var isShowingDialog by rememberSaveable { mutableStateOf(isFirstLaunch) }
@@ -69,6 +71,10 @@ fun HomeScreen(
             HomeAppBar(
                 onToggleTheme = viewModel::toggleTheme,
                 isDarkTheme = isDarkTheme,
+                accentColor = accentColor,
+                isDynamicColor = isDynamicColor,
+                onAccentSelected = viewModel::setAccentColor,
+                onToggleDynamicColor = viewModel::toggleDynamicColor,
                 onShowLanguageDialog = {
                     showLanguageDialog = true
                 }

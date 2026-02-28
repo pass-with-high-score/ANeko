@@ -42,6 +42,8 @@ class AnekoViewModel @Inject constructor(
 ) : AndroidViewModel(application) {
     companion object {
         const val PREF_KEY_THEME = "theme"
+        const val PREF_KEY_ACCENT = "accent_color"
+        const val PREF_KEY_DYNAMIC_COLOR = "dynamic_color"
         const val PREF_KEY_FINISHED_SETUP = "finished_setup"
     }
 
@@ -67,6 +69,17 @@ class AnekoViewModel @Inject constructor(
                 PREF_KEY_THEME -> {
                     _isDarkTheme.value = sharedPreferences.getString(key, "light") == "dark"
                 }
+
+                PREF_KEY_ACCENT -> {
+                    _accentColor.value =
+                        org.nqmgaming.aneko.presentation.ui.theme.AccentColor.fromKey(
+                            sharedPreferences.getString(key, "coral") ?: "coral"
+                        )
+                }
+
+                PREF_KEY_DYNAMIC_COLOR -> {
+                    _isDynamicColor.value = sharedPreferences.getBoolean(key, false)
+                }
             }
         }
 
@@ -90,13 +103,25 @@ class AnekoViewModel @Inject constructor(
         MutableStateFlow(prefs.getString(PREF_KEY_THEME, "light") == "dark")
     val isDarkTheme: StateFlow<Boolean> = _isDarkTheme.asStateFlow()
 
+    private val _accentColor = MutableStateFlow(
+        org.nqmgaming.aneko.presentation.ui.theme.AccentColor.fromKey(
+            prefs.getString(PREF_KEY_ACCENT, "coral") ?: "coral"
+        )
+    )
+    val accentColor: StateFlow<org.nqmgaming.aneko.presentation.ui.theme.AccentColor> =
+        _accentColor.asStateFlow()
+
+    private val _isDynamicColor =
+        MutableStateFlow(prefs.getBoolean(PREF_KEY_DYNAMIC_COLOR, false))
+    val isDynamicColor: StateFlow<Boolean> = _isDynamicColor.asStateFlow()
+
     private val _isFirstLaunch =
         MutableStateFlow(prefs.getBoolean("is_first_launch_share_skin_fix_ar", true))
     val isFirstLaunch: StateFlow<Boolean> = _isFirstLaunch.asStateFlow()
 
     fun setFirstLaunchDone() {
         prefs.edit {
-            putBoolean("is_first_launch_share_skin", false)
+            putBoolean("is_first_launch_share_skin_fix_ar", false)
         }
         _isFirstLaunch.value = false
     }
@@ -104,6 +129,17 @@ class AnekoViewModel @Inject constructor(
     fun toggleTheme() {
         val newTheme = if (_isDarkTheme.value) "light" else "dark"
         prefs.edit { putString(PREF_KEY_THEME, newTheme) }
+    }
+
+    fun setAccentColor(accent: org.nqmgaming.aneko.presentation.ui.theme.AccentColor) {
+        prefs.edit {
+            putString(PREF_KEY_ACCENT, accent.key)
+            putBoolean(PREF_KEY_DYNAMIC_COLOR, false)
+        }
+    }
+
+    fun toggleDynamicColor() {
+        prefs.edit { putBoolean(PREF_KEY_DYNAMIC_COLOR, !_isDynamicColor.value) }
     }
 
     fun updateAnimationEnabled(enabled: Boolean) {

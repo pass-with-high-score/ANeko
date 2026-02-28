@@ -119,5 +119,10 @@
     <string name="up_to_date">已是最新版本！</string>
     <string name="checking_for_update">正在检查…</string>
     <string name="onboarding_skin_title">获取皮肤</string>
+    <string name="sponsor_title">赞助此项目</string>
+    <string name="theme_picker_title">选择主题</string>
+    <string name="dark_mode_label">深色模式</string>
+    <string name="dynamic_color_label">动态颜色 (Material You)</string>
+    <string name="sponsor_summary">支持 ANeko 开发 ❤️</string>
     <string name="onboarding_skin_continue">继续</string>
 </resources>

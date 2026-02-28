@@ -122,5 +122,10 @@
     <string name="up_to_date">أنت تستخدم أحدث إصدار!</string>
     <string name="checking_for_update">جارٍ التحقق…</string>
     <string name="onboarding_skin_title">احصل على بعض المظاهر</string>
+    <string name="sponsor_title">ادعم هذا المشروع</string>
+    <string name="theme_picker_title">اختر المظهر</string>
+    <string name="dark_mode_label">الوضع الداكن</string>
+    <string name="dynamic_color_label">لون ديناميكي (Material You)</string>
+    <string name="sponsor_summary">ادعم تطوير ANeko ❤️</string>
     <string name="onboarding_skin_continue">متابعة</string>
 </resources>
