@@ -20,6 +20,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Set Version Name
+        run: echo "VERSION_NAME=${{ github.ref_name }}" >> $GITHUB_ENV
+
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
@@ -84,7 +87,7 @@ jobs:
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
-          name: Release ${{ env.VERSION_NAME }}
+          name: ${{ env.VERSION_NAME }}
           draft: false
           prerelease: false
           files: app/build/outputs/apk/release/app-release.apk
