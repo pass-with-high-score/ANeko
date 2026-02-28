@@ -1,0 +1,4 @@
+- Added app update checking
+- Added Built-in and Community tabs to the Explore screen
+- Added an onboarding screen to pre-download skins
+- Removed Arabic language from the English locale
