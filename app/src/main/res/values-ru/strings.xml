@@ -52,6 +52,8 @@
     <string name="choose_language_title">Выберите язык</string>
     <string name="contribute_to_translation">Помочь с переводом</string>
     <string name="txt_explore">Исследовать</string>
+    <string name="tab_built_in">Встроенные</string>
+    <string name="tab_community">Сообщество</string>
     <string name="txt_loading">Загрузка</string>
     <string name="share_skin_label">Поделиться</string>
     <string name="label_author">Автор: %1$s</string>
@@ -110,4 +112,12 @@
     <string name="skin_share_dialog_dismiss">Может быть позже</string>
     <string name="skin_share_dialog_toast_hint">Вы можете получить доступ к функции «Поделиться скином» позже на вкладке «Обзор».</string>
 
+    <string name="check_for_update_title">Проверить обновления</string>
+    <string name="check_for_update_summary">Нажмите, чтобы проверить наличие новой версии</string>
+    <string name="update_available_title">Доступно обновление</string>
+    <string name="update_now">Обновить</string>
+    <string name="up_to_date">У вас последняя версия!</string>
+    <string name="checking_for_update">Проверка…</string>
+    <string name="onboarding_skin_title">Выберите скины</string>
+    <string name="onboarding_skin_continue">Продолжить</string>
 </resources>

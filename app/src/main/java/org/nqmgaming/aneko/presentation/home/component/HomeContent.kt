@@ -26,6 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.nqmgaming.aneko.R
 import org.nqmgaming.aneko.core.data.entity.SkinEntity
+import org.nqmgaming.aneko.presentation.AnekoViewModel
 import org.nqmgaming.aneko.presentation.setting.SettingsScreen
 import org.nqmgaming.aneko.presentation.ui.theme.ANekoTheme
 
@@ -37,7 +38,8 @@ fun HomeContent(
     onChangeEnable: (Boolean) -> Unit = {},
     skins: List<SkinEntity> = emptyList(),
     onSelectSkin: (String) -> Unit = { _ -> },
-    onRequestDeleteSkin: (SkinEntity) -> Unit = { _ -> }
+    onRequestDeleteSkin: (SkinEntity) -> Unit = { _ -> },
+    viewModel: AnekoViewModel? = null,
 ) {
     val context = LocalContext.current
 
@@ -106,7 +108,7 @@ fun HomeContent(
                 )
             }
 
-            SettingsScreen()
+            SettingsScreen(viewModel = viewModel)
             Spacer(modifier = Modifier.height(24.dp))
             Column(
                 modifier = Modifier

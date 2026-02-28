@@ -12,17 +12,23 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.outlined.Inventory2
+import androidx.compose.material.icons.outlined.People
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
@@ -160,6 +166,7 @@ fun ExploreSkin(
 ) {
     val context = LocalContext.current
     val state = rememberPullToRefreshState()
+    val scope = rememberCoroutineScope()
 
     val statusMap by SkinDownloadQueue.status.collectAsState()
 
@@ -184,6 +191,26 @@ fun ExploreSkin(
     )
 
     var isShowInfoDialog by remember { mutableStateOf(false) }
+
+    // Tab definitions
+    val tabTitles = listOf(
+        stringResource(R.string.tab_built_in),
+        stringResource(R.string.tab_community),
+    )
+    val tabIcons = listOf(
+        Icons.Outlined.Inventory2,
+        Icons.Outlined.People,
+    )
+
+    val pagerState = rememberPagerState(pageCount = { tabTitles.size })
+
+    // Filter skins based on selected tab
+    val builtInSkins = remember(skinCollection) {
+        skinCollection?.filter { it.isBuiltIn } ?: emptyList()
+    }
+    val communitySkins = remember(skinCollection) {
+        skinCollection?.filter { !it.isBuiltIn } ?: emptyList()
+    }
 
     Scaffold(
         topBar = {
@@ -225,66 +252,111 @@ fun ExploreSkin(
             )
         }
     ) { innerPadding ->
-        PullToRefreshBox(
-            isRefreshing = isRefreshing,
-            onRefresh = onRefresh,
-            state = state,
-            indicator = {
-                Indicator(
-                    modifier = Modifier.align(Alignment.TopCenter),
-                    isRefreshing = isRefreshing,
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    color = MaterialTheme.colorScheme.primary,
-                    state = state
-                )
-            },
+        Column(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
         ) {
-            skinCollection?.let {
-                LazyColumn(modifier = modifier) {
-                    if (it.isEmpty() && !isLoading) {
-                        item {
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(16.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.Center,
-                            ) {
-                                Text(
-                                    text = stringResource(R.string.hi_there_is_no_skin_collection_for_now),
-                                    modifier = Modifier.padding(16.dp),
-                                    style = MaterialTheme.typography.bodyLarge
-                                )
-                                Button(onClick = {
-                                    filePickerLauncher.launch(
-                                        arrayOf("application/zip", "application/x-zip-compressed")
-                                    )
-                                }) {
-                                    Text(
-                                        text = stringResource(R.string.try_to_import_from_zip),
-                                        style = MaterialTheme.typography.bodyLarge
-                                    )
+            // Tab Row
+            PrimaryTabRow(
+                selectedTabIndex = pagerState.currentPage,
+            ) {
+                tabTitles.forEachIndexed { index, title ->
+                    Tab(
+                        selected = pagerState.currentPage == index,
+                        onClick = {
+                            scope.launch { pagerState.animateScrollToPage(index) }
+                        },
+                        text = {
+                            Text(
+                                text = title,
+                                style = MaterialTheme.typography.labelLarge,
+                                fontWeight = if (pagerState.currentPage == index)
+                                    FontWeight.Bold else FontWeight.Normal,
+                            )
+                        },
+                        icon = {
+                            Icon(
+                                imageVector = tabIcons[index],
+                                contentDescription = title,
+                            )
+                        },
+                    )
+                }
+            }
+
+            // Pager content
+            PullToRefreshBox(
+                isRefreshing = isRefreshing,
+                onRefresh = onRefresh,
+                state = state,
+                indicator = {
+                    Indicator(
+                        modifier = Modifier.align(Alignment.TopCenter),
+                        isRefreshing = isRefreshing,
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        color = MaterialTheme.colorScheme.primary,
+                        state = state
+                    )
+                },
+                modifier = Modifier.fillMaxSize()
+            ) {
+                HorizontalPager(
+                    state = pagerState,
+                    modifier = Modifier.fillMaxSize(),
+                ) { page ->
+                    val currentSkins = if (page == 0) builtInSkins else communitySkins
+
+                    if (skinCollection != null) {
+                        LazyColumn(modifier = modifier.fillMaxSize()) {
+                            if (currentSkins.isEmpty() && !isLoading) {
+                                item {
+                                    Column(
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .padding(16.dp),
+                                        horizontalAlignment = Alignment.CenterHorizontally,
+                                        verticalArrangement = Arrangement.Center,
+                                    ) {
+                                        Text(
+                                            text = stringResource(R.string.hi_there_is_no_skin_collection_for_now),
+                                            modifier = Modifier.padding(16.dp),
+                                            style = MaterialTheme.typography.bodyLarge
+                                        )
+                                        Button(onClick = {
+                                            filePickerLauncher.launch(
+                                                arrayOf(
+                                                    "application/zip",
+                                                    "application/x-zip-compressed"
+                                                )
+                                            )
+                                        }) {
+                                            Text(
+                                                text = stringResource(R.string.try_to_import_from_zip),
+                                                style = MaterialTheme.typography.bodyLarge
+                                            )
+                                        }
+                                    }
                                 }
                             }
+
+                            items(currentSkins.size) { index ->
+                                val collection = currentSkins[index]
+                                val st =
+                                    statusMap[collection.packageName] ?: DownloadStatus.Idle
+                                val queuePos =
+                                    SkinDownloadQueue.queuePositionOf(collection.packageName)
+
+                                ExploreItem(
+                                    collection = collection,
+                                    isInstalled = isInstalled(collection.packageName),
+                                    st = st,
+                                    queuePos = queuePos,
+                                )
+                            }
+                            item { Spacer(modifier = Modifier.height(90.dp)) }
                         }
                     }
-
-                    items(it.size) { index ->
-                        val collection = it[index]
-                        val st = statusMap[collection.packageName] ?: DownloadStatus.Idle
-                        val queuePos = SkinDownloadQueue.queuePositionOf(collection.packageName)
-
-                        ExploreItem(
-                            collection = collection,
-                            isInstalled = isInstalled(collection.packageName),
-                            st = st,
-                            queuePos = queuePos,
-                        )
-                    }
-                    item { Spacer(modifier = Modifier.height(90.dp)) }
                 }
             }
         }

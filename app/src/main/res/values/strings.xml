@@ -68,6 +68,8 @@
     <string name="choose_language_title">Choose language</string>
     <string name="contribute_to_translation">Contribute to translation</string>
     <string name="txt_explore">Explore</string>
+    <string name="tab_built_in">Built-in</string>
+    <string name="tab_community">Community</string>
     <string name="txt_loading">Loading</string>
     <string name="share_skin_label">Share</string>
     <string name="label_author">Author: %1$s</string>
@@ -95,12 +97,12 @@
     <string name="skin_share_url" translatable="false">https://aneko.pwhs.app/share-skin</string>
 
     <!-- Skin Builder Dialog -->
-    <string name="skin_share_dialog_title">شارك مظهرك</string>
-    <string name="skin_share_dialog_image_desc">مشاركة المظهر</string>
-    <string name="skin_share_dialog_body">هل أنشأت مظهر ANeko مخصصًا؟ شاركه مع المجتمع!</string>
-    <string name="skin_share_dialog_confirm">خذني إلى هناك</string>
-    <string name="skin_share_dialog_dismiss">ربما لاحقًا</string>
-    <string name="skin_share_dialog_toast_hint">يمكنك الوصول إلى مشاركة المظهر لاحقًا من علامة تبويب الاستكشاف.</string>
+    <string name="skin_share_dialog_title">Share your skin</string>
+    <string name="skin_share_dialog_image_desc">Share skin</string>
+    <string name="skin_share_dialog_body">Have you created a custom ANeko skin? Share it with the community!</string>
+    <string name="skin_share_dialog_confirm">Take me there</string>
+    <string name="skin_share_dialog_dismiss">Maybe later</string>
+    <string name="skin_share_dialog_toast_hint">You can access skin sharing later from the Explore tab.</string>
 
     <!-- App Shortcuts -->
     <string name="shortcut_toggle_short">Toggle ANeko</string>
@@ -128,4 +130,16 @@
     <string name="permission_onboarding_page3_image_desc">Toggle overlay permission</string>
     <string name="permission_onboarding_page3_primary">Open Settings</string>
     <string name="permission_onboarding_footer">After enabling, return to ANeko — the app continues automatically.</string>
+
+    <!-- Check for Update -->
+    <string name="check_for_update_title">Check for update</string>
+    <string name="check_for_update_summary">Tap to check for a newer version</string>
+    <string name="update_available_title">Update available</string>
+    <string name="update_now">Update</string>
+    <string name="up_to_date">You\'re up to date!</string>
+    <string name="checking_for_update">Checking…</string>
+
+    <!-- Onboarding Skin -->
+    <string name="onboarding_skin_title">Get Some Skins</string>
+    <string name="onboarding_skin_continue">Continue</string>
 </resources>

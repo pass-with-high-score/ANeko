@@ -52,6 +52,8 @@
     <string name="choose_language_title">选择语言</string>
     <string name="contribute_to_translation">参与翻译</string>
     <string name="txt_explore">探索</string>
+    <string name="tab_built_in">内置</string>
+    <string name="tab_community">社区</string>
     <string name="txt_loading">加载中</string>
     <string name="share_skin_label">分享</string>
     <string name="label_author">作者: %1$s</string>
@@ -110,4 +112,12 @@
     <string name="skin_share_dialog_dismiss">稍后再说</string>
     <string name="skin_share_dialog_toast_hint">你可以稍后在“探索”标签页中访问“分享皮肤”。</string>
 
+    <string name="check_for_update_title">检查更新</string>
+    <string name="check_for_update_summary">点击检查是否有更新版本</string>
+    <string name="update_available_title">有可用更新</string>
+    <string name="update_now">更新</string>
+    <string name="up_to_date">已是最新版本！</string>
+    <string name="checking_for_update">正在检查…</string>
+    <string name="onboarding_skin_title">获取皮肤</string>
+    <string name="onboarding_skin_continue">继续</string>
 </resources>

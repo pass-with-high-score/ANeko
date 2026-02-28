@@ -37,8 +37,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -50,7 +50,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
-import com.ramcosta.composedestinations.generated.destinations.HomeScreenDestination
+import com.ramcosta.composedestinations.generated.destinations.OnboardingSkinScreenDestination
 import com.ramcosta.composedestinations.generated.destinations.PermissionScreenDestination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.MainScope
@@ -81,9 +81,12 @@ fun PermissionScreen(
         checking = true
         delay(2.seconds)
 
-        if (isFinishedSetup || Settings.canDrawOverlays(context)) {
-            if (!isFinishedSetup) viewModel.finishedSetup()
-            navigator.navigate(HomeScreenDestination()) {
+        if (isFinishedSetup) {
+            navigator.navigate(com.ramcosta.composedestinations.generated.destinations.HomeScreenDestination()) {
+                popUpTo(PermissionScreenDestination) { inclusive = true }
+            }
+        } else if (Settings.canDrawOverlays(context)) {
+            navigator.navigate(OnboardingSkinScreenDestination()) {
                 popUpTo(PermissionScreenDestination) { inclusive = true }
             }
         } else {
@@ -120,8 +123,7 @@ fun PermissionScreen(
                 context.startActivity(intent)
             },
             onSkip = {
-                viewModel.finishedSetup()
-                navigator.navigate(HomeScreenDestination()) {
+                navigator.navigate(OnboardingSkinScreenDestination()) {
                     popUpTo(PermissionScreenDestination) {
                         inclusive = true
                     }

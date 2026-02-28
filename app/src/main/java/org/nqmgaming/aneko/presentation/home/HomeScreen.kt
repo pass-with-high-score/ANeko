@@ -23,12 +23,12 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
 import org.nqmgaming.aneko.core.service.AnimationService
+import org.nqmgaming.aneko.core.util.extension.checkNotificationPermission
 import org.nqmgaming.aneko.presentation.AnekoViewModel
 import org.nqmgaming.aneko.presentation.home.component.HomeAppBar
 import org.nqmgaming.aneko.presentation.home.component.HomeContent
-import org.nqmgaming.aneko.presentation.home.component.SelectLanguageDialog
-import org.nqmgaming.aneko.core.util.extension.checkNotificationPermission
 import org.nqmgaming.aneko.presentation.home.component.NotificationAlertDialog
+import org.nqmgaming.aneko.presentation.home.component.SelectLanguageDialog
 
 @Destination<RootGraph>
 @OptIn(ExperimentalMaterial3Api::class)
@@ -105,7 +105,8 @@ fun HomeScreen(
                 skins = uiState.value.skins,
                 onRequestDeleteSkin = {
                     viewModel.onDeselectSkin(it, context)
-                }
+                },
+                viewModel = viewModel,
             )
         }
 

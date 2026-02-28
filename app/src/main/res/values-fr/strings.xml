@@ -51,6 +51,8 @@
     <string name="choose_language_title">Choisir la langue</string>
     <string name="contribute_to_translation">Contribuer à la traduction</string>
     <string name="txt_explore">Explorer</string>
+    <string name="tab_built_in">Intégré</string>
+    <string name="tab_community">Communauté</string>
     <string name="txt_loading">Chargement</string>
     <string name="share_skin_label">Partager</string>
     <string name="label_author">Auteur : %1$s</string>
@@ -109,4 +111,12 @@
     <string name="skin_share_dialog_dismiss">Peut-être plus tard</string>
     <string name="skin_share_dialog_toast_hint">Tu peux accéder à Partager le skin plus tard depuis l’onglet Explorer.</string>
 
+    <string name="check_for_update_title">Rechercher une mise à jour</string>
+    <string name="check_for_update_summary">Appuyez pour vérifier s\'il existe une version plus récente</string>
+    <string name="update_available_title">Mise à jour disponible</string>
+    <string name="update_now">Mettre à jour</string>
+    <string name="up_to_date">Vous êtes à jour !</string>
+    <string name="checking_for_update">Vérification…</string>
+    <string name="onboarding_skin_title">Obtenez des skins</string>
+    <string name="onboarding_skin_continue">Continuer</string>
 </resources>

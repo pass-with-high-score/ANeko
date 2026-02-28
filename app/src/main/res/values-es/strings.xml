@@ -53,6 +53,8 @@
     <string name="choose_language_title">Elegir idioma</string>
     <string name="contribute_to_translation">Contribuir a la traducción</string>
     <string name="txt_explore">Explorar</string>
+    <string name="tab_built_in">Integrado</string>
+    <string name="tab_community">Comunidad</string>
     <string name="txt_loading">Cargando</string>
     <string name="share_skin_label">Compartir</string>
     <string name="label_author">Autor: %1$s</string>
@@ -110,4 +112,12 @@
     <string name="permission_onboarding_page3_image_desc">Activar permiso de superposición</string>
     <string name="permission_onboarding_page3_primary">Abrir Ajustes</string>
     <string name="permission_onboarding_footer">Tras activarlo, vuelve a ANeko — la app continuará automáticamente.</string>
+    <string name="check_for_update_title">Buscar actualización</string>
+    <string name="check_for_update_summary">Toca para buscar una versión más nueva</string>
+    <string name="update_available_title">Actualización disponible</string>
+    <string name="update_now">Actualizar</string>
+    <string name="up_to_date">¡Estás al día!</string>
+    <string name="checking_for_update">Comprobando…</string>
+    <string name="onboarding_skin_title">Obtén algunos skins</string>
+    <string name="onboarding_skin_continue">Continuar</string>
 </resources>

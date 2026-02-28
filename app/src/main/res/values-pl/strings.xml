@@ -53,6 +53,8 @@
     <string name="choose_language_title">Wybierz język</string>
     <string name="contribute_to_translation">Przyczyń się do tłumaczenia</string>
     <string name="txt_explore">Eksploruj</string>
+    <string name="tab_built_in">Wbudowane</string>
+    <string name="tab_community">Społeczność</string>
     <string name="txt_loading">Ładowanie</string>
     <string name="share_skin_label">Udostępnij</string>
     <string name="label_author">Autor: %1$s</string>
@@ -111,4 +113,12 @@
     <string name="skin_share_dialog_dismiss">Może później</string>
     <string name="skin_share_dialog_toast_hint">Możesz uzyskać dostęp do opcji Udostępnij skin później z karty Odkrywaj.</string>
 
+    <string name="check_for_update_title">Sprawdź aktualizację</string>
+    <string name="check_for_update_summary">Dotknij, aby sprawdzić nowszą wersję</string>
+    <string name="update_available_title">Dostępna aktualizacja</string>
+    <string name="update_now">Aktualizuj</string>
+    <string name="up_to_date">Masz najnowszą wersję!</string>
+    <string name="checking_for_update">Sprawdzanie…</string>
+    <string name="onboarding_skin_title">Pobierz skiny</string>
+    <string name="onboarding_skin_continue">Kontynuuj</string>
 </resources>

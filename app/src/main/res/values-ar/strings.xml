@@ -56,6 +56,8 @@
     <string name="choose_language_title">اختر اللغة</string>
     <string name="contribute_to_translation">ساهم في الترجمة</string>
     <string name="txt_explore">استكشف</string>
+    <string name="tab_built_in">مدمج</string>
+    <string name="tab_community">المجتمع</string>
     <string name="txt_loading">جاري التحميل</string>
     <string name="share_skin_label">مشاركة</string>
     <string name="label_author">المؤلف: %1$s</string>
@@ -113,4 +115,12 @@
     <string name="permission_onboarding_page3_image_desc">تبديل إذن التراكب</string>
     <string name="permission_onboarding_page3_primary">افتح الإعدادات</string>
     <string name="permission_onboarding_footer">بعد التفعيل، عد إلى ANeko — سيستمر التطبيق تلقائيًا.</string>
+    <string name="check_for_update_title">التحقق من التحديث</string>
+    <string name="check_for_update_summary">اضغط للتحقق من وجود إصدار أحدث</string>
+    <string name="update_available_title">تحديث متاح</string>
+    <string name="update_now">تحديث</string>
+    <string name="up_to_date">أنت تستخدم أحدث إصدار!</string>
+    <string name="checking_for_update">جارٍ التحقق…</string>
+    <string name="onboarding_skin_title">احصل على بعض المظاهر</string>
+    <string name="onboarding_skin_continue">متابعة</string>
 </resources>

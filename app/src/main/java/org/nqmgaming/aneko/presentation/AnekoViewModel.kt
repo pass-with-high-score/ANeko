@@ -91,7 +91,7 @@ class AnekoViewModel @Inject constructor(
     val isDarkTheme: StateFlow<Boolean> = _isDarkTheme.asStateFlow()
 
     private val _isFirstLaunch =
-        MutableStateFlow(prefs.getBoolean("is_first_launch_share_skin", true))
+        MutableStateFlow(prefs.getBoolean("is_first_launch_share_skin_fix_ar", true))
     val isFirstLaunch: StateFlow<Boolean> = _isFirstLaunch.asStateFlow()
 
     fun setFirstLaunchDone() {
@@ -478,5 +478,55 @@ class AnekoViewModel @Inject constructor(
         prefs.edit {
             putBoolean(PREF_KEY_FINISHED_SETUP, true)
         }
+    }
+
+    fun checkForUpdate() {
+        viewModelScope.launch {
+            apiService.getLatestRelease().collect { result ->
+                when (result) {
+                    is ApiResult.Loading -> {
+                        _uiState.update { it.copy(isCheckingUpdate = true) }
+                    }
+
+                    is ApiResult.Error -> {
+                        _uiState.update { it.copy(isCheckingUpdate = false) }
+                    }
+
+                    is ApiResult.Success -> {
+                        val release = result.data
+                        val latestVersion = release?.tagName
+                            ?.removePrefix("v")
+                            ?.trim()
+                            ?: ""
+                        val currentVersion = org.nqmgaming.aneko.BuildConfig.VERSION_NAME
+
+                        val isNewer = compareVersions(latestVersion, currentVersion) > 0
+
+                        _uiState.update {
+                            it.copy(
+                                updateInfo = if (isNewer) release else null,
+                                isCheckingUpdate = false
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    fun dismissUpdate() {
+        _uiState.update { it.copy(updateInfo = null) }
+    }
+
+    private fun compareVersions(v1: String, v2: String): Int {
+        val parts1 = v1.split(".").map { it.toIntOrNull() ?: 0 }
+        val parts2 = v2.split(".").map { it.toIntOrNull() ?: 0 }
+        val maxLen = maxOf(parts1.size, parts2.size)
+        for (i in 0 until maxLen) {
+            val p1 = parts1.getOrElse(i) { 0 }
+            val p2 = parts2.getOrElse(i) { 0 }
+            if (p1 != p2) return p1.compareTo(p2)
+        }
+        return 0
     }
 }
