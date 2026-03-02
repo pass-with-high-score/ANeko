@@ -17,6 +17,7 @@
     <string name="motion_size_summary">Rozmiar towarzysza</string>
     <string name="motion_settings_title">Ustawienia</string>
     <string name="motion_speed_summary">Po prostu szybkość towarzysza</string>
+    <string name="motion_bottom_offset_summary">Trzymaj neko z dala od dołu ekranu, aby uniknąć nakładania się na klawiaturę.</string>
 
     <!-- Community & Contributions -->
     <string name="community_title">Społeczności i wspierającym</string>

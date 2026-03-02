@@ -24,6 +24,8 @@
     <string name="motion_settings_title">Motion Settings</string>
     <string name="motion_speed_title" translatable="false">Motion Speed</string>
     <string name="motion_speed_summary">Adjust the speed of motion effects.</string>
+    <string name="motion_bottom_offset_title" translatable="false">Avoid Keyboard</string>
+    <string name="motion_bottom_offset_summary">Keep the neko away from the bottom of the screen to avoid overlapping the keyboard.</string>
 
     <!-- Community & Contributions -->
     <string name="community_title">Community &amp; Contributions</string>

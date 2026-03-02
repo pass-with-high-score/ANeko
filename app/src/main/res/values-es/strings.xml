@@ -16,6 +16,7 @@
     <string name="motion_size_summary">Configura el tamaño de los elementos de movimiento.</string>
     <string name="motion_settings_title">Configuraciones de Movimiento</string>
     <string name="motion_speed_summary">Ajusta la velocidad de los efectos de movimiento.</string>
+    <string name="motion_bottom_offset_summary">Mantén al neko alejado de la parte inferior de la pantalla para evitar que se superponga con el teclado.</string>
 
     <!-- Community & Contributions -->
     <string name="community_title">Comunidad &amp; Contribuciones</string>

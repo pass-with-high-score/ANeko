@@ -58,6 +58,7 @@ class AnimationService : Service() {
         const val PREF_KEY_SKIN_COMPONENT = "motion.skin"
         const val PREF_KEY_NEKO_COUNT = "motion.neko_count"
         const val PREF_KEY_NOTIFICATION_ENABLE = "notification.enable"
+        const val PREF_KEY_BOTTOM_OFFSET = "motion.bottom_offset"
 
         private const val MSG_ANIMATE = 1
         private const val ANIMATION_INTERVAL = 125L
@@ -127,7 +128,8 @@ class AnimationService : Service() {
         val wm = getSystemService(WINDOW_SERVICE) as WindowManager
         val display: Display = wm.defaultDisplay
         val size = Point().also { display.getSize(it) }
-        nekos.forEach { it.motionState.setDisplaySize(size.x, size.y) }
+        val offsetPct = if (prefs.getBoolean(PREF_KEY_BOTTOM_OFFSET, false)) 33 else 0
+        nekos.forEach { it.motionState.setDisplaySize(size.x, size.y, offsetPct) }
     }
 
     private fun startAnimation() {
@@ -172,16 +174,17 @@ class AnimationService : Service() {
                     // move this neko to a random position
                     val pnt = Point().also { wm.defaultDisplay.getSize(it) }
                     val dw = pnt.x
-                    val dh = pnt.y
+                    pnt.y
+                    val effectiveDh = ms.effectiveDisplayHeight
                     val (x, y) = if (random.nextFloat() < 0.4f) {
                         when (random.nextInt(4)) {
-                            0 -> 0f to random.nextInt(dh).toFloat()
-                            1 -> dw.toFloat() to random.nextInt(dh).toFloat()
+                            0 -> 0f to random.nextInt(effectiveDh).toFloat()
+                            1 -> dw.toFloat() to random.nextInt(effectiveDh).toFloat()
                             2 -> random.nextInt(dw).toFloat() to 0f
-                            else -> random.nextInt(dw).toFloat() to dh.toFloat()
+                            else -> random.nextInt(dw).toFloat() to effectiveDh.toFloat()
                         }
                     } else {
-                        random.nextInt(dw).toFloat() to random.nextInt(dh).toFloat()
+                        random.nextInt(dw).toFloat() to random.nextInt(effectiveDh).toFloat()
                     }
                     ms.setTargetPosition(x, y)
                     requestAnimate()
@@ -347,12 +350,16 @@ class AnimationService : Service() {
         val size = Point().also { d.getSize(it) }
         val dw = size.x
         val dh = size.y
+        val offsetPct = if (prefs.getBoolean(PREF_KEY_BOTTOM_OFFSET, false)) 33 else 0
+
+        ms.setDisplaySize(dw, dh, offsetPct)
+        val effectiveDh = ms.effectiveDisplayHeight
 
         val (cx, cy) = when (random.nextInt(4)) {
-            0 -> 0 to random.nextInt(dh)
-            1 -> dw to random.nextInt(dh)
+            0 -> 0 to random.nextInt(effectiveDh)
+            1 -> dw to random.nextInt(effectiveDh)
             2 -> random.nextInt(dw) to 0
-            else -> random.nextInt(dw) to dh
+            else -> random.nextInt(dw) to effectiveDh
         }
 
         val alphaStr = prefs.getString(PREF_KEY_TRANSPARENCY, "0.0") ?: "0.0"
@@ -365,12 +372,11 @@ class AnimationService : Service() {
             )
         )
 
-        ms.setDisplaySize(dw, dh)
         ms.setCurrentPosition(cx.toFloat(), cy.toFloat())
         // Give each neko a unique random target so they spread out
         ms.setTargetPositionDirect(
             random.nextInt(dw).toFloat(),
-            random.nextInt(dh).toFloat()
+            random.nextInt(effectiveDh).toFloat()
         )
         refreshMotionSize()
     }
@@ -505,6 +511,14 @@ class AnimationService : Service() {
                     }
                 }
 
+                PREF_KEY_BOTTOM_OFFSET -> {
+                    val wm = getSystemService(WINDOW_SERVICE) as WindowManager
+                    val display: Display = wm.defaultDisplay
+                    val size = Point().also { display.getSize(it) }
+                    val offsetPct = if (prefs.getBoolean(PREF_KEY_BOTTOM_OFFSET, false)) 33 else 0
+                    nekos.forEach { it.motionState.setDisplaySize(size.x, size.y, offsetPct) }
+                }
+
                 else -> {
                     // Skin or other change — reload all nekos
                     if (isStarted) {
@@ -527,19 +541,19 @@ class AnimationService : Service() {
                 val wm = getSystemService(WINDOW_SERVICE) as WindowManager
                 val pnt = Point().also { wm.defaultDisplay.getSize(it) }
                 val dw = pnt.x
-                val dh = pnt.y
 
                 // Each neko gets its own random target
                 nekos.forEach { neko ->
+                    val effectiveDh = neko.motionState.effectiveDisplayHeight
                     val (x, y) = if (random.nextFloat() < 0.4f) {
                         when (random.nextInt(4)) {
-                            0 -> 0f to random.nextInt(dh).toFloat()
-                            1 -> dw.toFloat() to random.nextInt(dh).toFloat()
+                            0 -> 0f to random.nextInt(effectiveDh).toFloat()
+                            1 -> dw.toFloat() to random.nextInt(effectiveDh).toFloat()
                             2 -> random.nextInt(dw).toFloat() to 0f
-                            else -> random.nextInt(dw).toFloat() to dh.toFloat()
+                            else -> random.nextInt(dw).toFloat() to effectiveDh.toFloat()
                         }
                     } else {
-                        random.nextInt(dw).toFloat() to random.nextInt(dh).toFloat()
+                        random.nextInt(dw).toFloat() to random.nextInt(effectiveDh).toFloat()
                     }
                     neko.motionState.setTargetPosition(x, y)
                 }
@@ -648,6 +662,14 @@ class AnimationService : Service() {
 
             curX += vx * interval
             curY += vy * interval
+
+            // When hitting the effective bottom boundary, stop and enter idle
+            if (curY > effectiveDisplayHeight.toFloat()) {
+                curY = effectiveDisplayHeight.toFloat()
+                vy = 0f
+                targetY = curY  // redirect so neko stops moving
+            }
+
             positionMoved = true
 
             changeToMovingState()
@@ -664,7 +686,7 @@ class AnimationService : Service() {
                 curX >= 0 && curX < dw2 -> MotionParams.WallDirection.LEFT
                 curX <= displayWidth && curX > displayWidth - dw2 -> MotionParams.WallDirection.RIGHT
                 curY >= 0 && curY < dh2 -> MotionParams.WallDirection.UP
-                curY <= displayHeight && curY > displayHeight - dh2 -> MotionParams.WallDirection.DOWN
+                curY <= effectiveDisplayHeight && curY > effectiveDisplayHeight - dh2 -> MotionParams.WallDirection.DOWN
                 else -> return false
             }
 
@@ -722,8 +744,15 @@ class AnimationService : Service() {
             movingState = true
         }
 
-        fun setDisplaySize(w: Int, h: Int) {
-            displayWidth = w; displayHeight = h
+        var effectiveDisplayHeight: Int = 1
+            private set
+        private var bottomOffsetPct: Int = 0
+
+        fun setDisplaySize(w: Int, h: Int, offsetPct: Int = bottomOffsetPct) {
+            displayWidth = w
+            displayHeight = h
+            bottomOffsetPct = offsetPct.coerceIn(0, 50)
+            effectiveDisplayHeight = (h * (100 - bottomOffsetPct) / 100).coerceAtLeast(1)
         }
 
         fun setBehaviour(b: Behaviour) {
@@ -743,7 +772,7 @@ class AnimationService : Service() {
                 Behaviour.Closer -> setTargetPositionDirect(x, y)
                 Behaviour.Further -> {
                     var dx = displayWidth / 2f - x
-                    var dy = displayHeight / 2f - y
+                    var dy = effectiveDisplayHeight / 2f - y
                     if (dx == 0f && dy == 0f) {
                         val ang = random.nextFloat() * (PI.toFloat()) * 2
                         dx = cos(ang); dy = sin(ang)
@@ -754,19 +783,19 @@ class AnimationService : Service() {
                     val e: PointF = run {
                         val e1: PointF
                         val e2: PointF
-                        if (dy > dx * displayHeight / displayWidth || dy < -dx * displayHeight / displayWidth) {
+                        if (dy > dx * effectiveDisplayHeight / displayWidth || dy < -dx * effectiveDisplayHeight / displayWidth) {
                             val dxdy = dx / dy
-                            e1 = PointF((displayWidth - displayHeight * dxdy) / 2f, 0f)
+                            e1 = PointF((displayWidth - effectiveDisplayHeight * dxdy) / 2f, 0f)
                             e2 = PointF(
-                                (displayWidth + displayHeight * dxdy) / 2f,
-                                displayHeight.toFloat()
+                                (displayWidth + effectiveDisplayHeight * dxdy) / 2f,
+                                effectiveDisplayHeight.toFloat()
                             )
                         } else {
                             val dydx = dy / dx
-                            e1 = PointF(0f, (displayHeight - displayWidth * dydx) / 2f)
+                            e1 = PointF(0f, (effectiveDisplayHeight - displayWidth * dydx) / 2f)
                             e2 = PointF(
                                 displayWidth.toFloat(),
-                                (displayHeight + displayWidth * dydx) / 2f
+                                (effectiveDisplayHeight + displayWidth * dydx) / 2f
                             )
                         }
                         val d1 = hypot(e1.x - x, e1.y - y).toDouble()
@@ -787,16 +816,16 @@ class AnimationService : Service() {
                     if (random.nextFloat() < 0.15f) nx =
                         if (random.nextBoolean()) 0f else displayWidth.toFloat()
                     if (random.nextFloat() < 0.15f) ny =
-                        if (random.nextBoolean()) 0f else displayHeight.toFloat()
+                        if (random.nextBoolean()) 0f else effectiveDisplayHeight.toFloat()
 
                     if (random.nextFloat() < 0.15f) {
                         nx = nx.coerceIn(0f, displayWidth.toFloat())
-                        ny = ny.coerceIn(0f, displayHeight.toFloat())
+                        ny = ny.coerceIn(0f, effectiveDisplayHeight.toFloat())
                     } else {
                         nx =
                             if (nx < 0) -nx else if (nx >= displayWidth) displayWidth * 2 - nx - 1 else nx
                         ny =
-                            if (ny < 0) -ny else if (ny >= displayHeight) displayHeight * 2 - ny - 1 else ny
+                            if (ny < 0) -ny else if (ny >= effectiveDisplayHeight) effectiveDisplayHeight * 2 - ny - 1 else ny
                     }
                     setTargetPositionDirect(nx, ny)
                 }
@@ -804,7 +833,8 @@ class AnimationService : Service() {
         }
 
         fun setTargetPositionDirect(x: Float, y: Float) {
-            targetX = x; targetY = y
+            targetX = x
+            targetY = y.coerceAtMost(effectiveDisplayHeight.toFloat())
         }
 
         fun forceStop() {

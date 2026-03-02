@@ -86,6 +86,19 @@ fun SettingsScreen(
                 defaultValue = "80",
                 prefs = prefs
             )
+            HorizontalDivider(
+                color = MaterialTheme.colorScheme.outline.copy(
+                    alpha = 0.5f
+                ),
+            )
+            SwitchPreferenceItem(
+                title = stringResource(R.string.motion_bottom_offset_title),
+                summary = stringResource(R.string.motion_bottom_offset_summary),
+                icon = R.drawable.ic_keyboard,
+                key = AnimationService.PREF_KEY_BOTTOM_OFFSET,
+                defaultValue = false,
+                prefs = prefs
+            )
         }
 
         Spacer(Modifier.height(16.dp))

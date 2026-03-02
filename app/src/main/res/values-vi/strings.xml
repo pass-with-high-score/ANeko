@@ -17,6 +17,7 @@
     <string name="motion_size_summary">Tuỳ chỉnh kích thước cho các hiệu ứng chuyển động.</string>
     <string name="motion_settings_title">Cài đặt chuyển động</string>
     <string name="motion_speed_summary">Điều chỉnh tốc độ của hiệu ứng di chuyển.</string>
+    <string name="motion_bottom_offset_summary">Giữ neko tránh xa phía dưới màn hình để không bị che bàn phím.</string>
 
     <!-- Community & Contributions -->
     <string name="community_title">Cộng đồng &amp; Đóng góp</string>
