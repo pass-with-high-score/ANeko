@@ -1,0 +1,3 @@
+- Removed check update
+- Multiple ANeko (max 6)
+- Move enable/disable ANeko to the bottom navigation bar
