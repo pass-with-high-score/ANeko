@@ -154,10 +154,6 @@ fun SettingsScreen(
                 }
             )
 
-            HorizontalDivider(
-                color = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f),
-            )
-
         }
     }
 }

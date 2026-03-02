@@ -59,6 +59,7 @@ class AnimationService : Service() {
         const val PREF_KEY_NEKO_COUNT = "motion.neko_count"
         const val PREF_KEY_NOTIFICATION_ENABLE = "notification.enable"
         const val PREF_KEY_BOTTOM_OFFSET = "motion.bottom_offset"
+        const val AVOID_KEYBOARD = 33
 
         private const val MSG_ANIMATE = 1
         private const val ANIMATION_INTERVAL = 125L
@@ -128,7 +129,7 @@ class AnimationService : Service() {
         val wm = getSystemService(WINDOW_SERVICE) as WindowManager
         val display: Display = wm.defaultDisplay
         val size = Point().also { display.getSize(it) }
-        val offsetPct = if (prefs.getBoolean(PREF_KEY_BOTTOM_OFFSET, false)) 33 else 0
+        val offsetPct = if (prefs.getBoolean(PREF_KEY_BOTTOM_OFFSET, false)) AVOID_KEYBOARD else 0
         nekos.forEach { it.motionState.setDisplaySize(size.x, size.y, offsetPct) }
     }
 
@@ -350,7 +351,7 @@ class AnimationService : Service() {
         val size = Point().also { d.getSize(it) }
         val dw = size.x
         val dh = size.y
-        val offsetPct = if (prefs.getBoolean(PREF_KEY_BOTTOM_OFFSET, false)) 33 else 0
+        val offsetPct = if (prefs.getBoolean(PREF_KEY_BOTTOM_OFFSET, false)) AVOID_KEYBOARD else 0
 
         ms.setDisplaySize(dw, dh, offsetPct)
         val effectiveDh = ms.effectiveDisplayHeight
@@ -515,7 +516,8 @@ class AnimationService : Service() {
                     val wm = getSystemService(WINDOW_SERVICE) as WindowManager
                     val display: Display = wm.defaultDisplay
                     val size = Point().also { display.getSize(it) }
-                    val offsetPct = if (prefs.getBoolean(PREF_KEY_BOTTOM_OFFSET, false)) 33 else 0
+                    val offsetPct =
+                        if (prefs.getBoolean(PREF_KEY_BOTTOM_OFFSET, false)) AVOID_KEYBOARD else 0
                     nekos.forEach { it.motionState.setDisplaySize(size.x, size.y, offsetPct) }
                 }
 

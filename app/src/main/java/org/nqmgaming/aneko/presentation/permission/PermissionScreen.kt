@@ -80,7 +80,7 @@ fun PermissionScreen(
 
     suspend fun checkAndNavigate() = run {
         checking = true
-        delay(2.seconds)
+        delay(1.seconds)
 
         if (isFinishedSetup) {
             navigator.navigate(HomeScreenDestination()) {

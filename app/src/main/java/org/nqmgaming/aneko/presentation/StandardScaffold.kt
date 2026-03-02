@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -243,7 +244,7 @@ private fun AppBottomBar(
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(72.dp),
+                .navigationBarsPadding(),
             color = colorScheme.surface,
             shadowElevation = 8.dp,
             tonalElevation = 2.dp,
