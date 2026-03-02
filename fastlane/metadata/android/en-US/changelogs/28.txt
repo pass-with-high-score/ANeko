@@ -1,0 +1,2 @@
+- Fixed background of splash screen
+- Added single screen for themes and languages settings
