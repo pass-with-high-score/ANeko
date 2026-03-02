@@ -14,10 +14,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -27,23 +23,16 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import org.nqmgaming.aneko.R
 import org.nqmgaming.aneko.core.util.extension.getStringResource
-import org.nqmgaming.aneko.presentation.ui.theme.AccentColor
 import timber.log.Timber
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeAppBar(
-    onToggleTheme: () -> Unit,
-    isDarkTheme: Boolean,
-    accentColor: AccentColor,
-    isDynamicColor: Boolean,
-    onAccentSelected: (AccentColor) -> Unit,
-    onToggleDynamicColor: () -> Unit,
-    onShowLanguageDialog: () -> Unit
+    onShowLanguageScreen: () -> Unit,
+    onShowThemeScreen: () -> Unit,
 ) {
     val context = LocalContext.current
-    var showThemePicker by remember { mutableStateOf(false) }
 
     CenterAlignedTopAppBar(
         title = {
@@ -56,16 +45,16 @@ fun HomeAppBar(
         },
         navigationIcon = {
             Row {
-                IconButton(onClick = { showThemePicker = true }) {
+                IconButton(onClick = onShowThemeScreen) {
                     Icon(
                         imageVector = Icons.Default.Palette,
                         contentDescription = stringResource(R.string.theme_picker_title)
                     )
                 }
-                IconButton(onClick = onShowLanguageDialog) {
+                IconButton(onClick = onShowLanguageScreen) {
                     Icon(
                         imageVector = Icons.Default.Language,
-                        contentDescription = stringResource(R.string.toggle_theme_title)
+                        contentDescription = stringResource(R.string.choose_language_title)
                     )
                 }
             }
@@ -107,16 +96,4 @@ fun HomeAppBar(
             }
         }
     )
-
-    if (showThemePicker) {
-        ThemePickerDialog(
-            currentAccent = accentColor,
-            isDarkTheme = isDarkTheme,
-            isDynamicColor = isDynamicColor,
-            onAccentSelected = onAccentSelected,
-            onToggleDarkMode = onToggleTheme,
-            onToggleDynamicColor = onToggleDynamicColor,
-            onDismiss = { showThemePicker = false }
-        )
-    }
 }

@@ -50,6 +50,8 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
+import com.ramcosta.composedestinations.generated.destinations.HomeScreenDestination
+import com.ramcosta.composedestinations.generated.destinations.LanguageScreenDestination
 import com.ramcosta.composedestinations.generated.destinations.OnboardingSkinScreenDestination
 import com.ramcosta.composedestinations.generated.destinations.PermissionScreenDestination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -59,7 +61,6 @@ import kotlinx.coroutines.launch
 import org.nqmgaming.aneko.R
 import org.nqmgaming.aneko.data.PermissionPage
 import org.nqmgaming.aneko.presentation.AnekoViewModel
-import org.nqmgaming.aneko.presentation.home.component.SelectLanguageDialog
 import org.nqmgaming.aneko.presentation.permission.component.CatRunning
 import org.nqmgaming.aneko.presentation.permission.component.PagerDots
 import org.nqmgaming.aneko.presentation.permission.component.PermissionPageContent
@@ -82,7 +83,7 @@ fun PermissionScreen(
         delay(2.seconds)
 
         if (isFinishedSetup) {
-            navigator.navigate(com.ramcosta.composedestinations.generated.destinations.HomeScreenDestination()) {
+            navigator.navigate(HomeScreenDestination()) {
                 popUpTo(PermissionScreenDestination) { inclusive = true }
             }
         } else if (Settings.canDrawOverlays(context)) {
@@ -115,6 +116,9 @@ fun PermissionScreen(
         CatRunning()
     } else {
         PermissionPagerUI(
+            onNavigateToLanguage = {
+                navigator.navigate(LanguageScreenDestination())
+            },
             onOpenSettings = {
                 val intent = Intent(
                     Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
@@ -139,9 +143,9 @@ fun PermissionScreen(
 private fun PermissionPagerUI(
     onOpenSettings: () -> Unit,
     onSkip: () -> Unit,
+    onNavigateToLanguage: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var showLanguageDialog by remember { mutableStateOf(false) }
     val pages = remember {
         listOf(
             PermissionPage(
@@ -172,13 +176,12 @@ private fun PermissionPagerUI(
     val scope = rememberCoroutineScope()
 
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             CenterAlignedTopAppBar(
                 title = { Text(stringResource(R.string.permission_onboarding_appbar_title)) },
                 navigationIcon = {
-                    IconButton(onClick = {
-                        showLanguageDialog = true
-                    }) {
+                    IconButton(onClick = onNavigateToLanguage) {
                         Icon(
                             imageVector = Icons.Default.Language,
                             contentDescription = stringResource(R.string.toggle_theme_title)
@@ -256,13 +259,7 @@ private fun PermissionPagerUI(
                 modifier = Modifier.fillMaxWidth()
             )
         }
-        if (showLanguageDialog) {
-            SelectLanguageDialog(
-                onDismiss = {
-                    showLanguageDialog = false
-                }
-            )
-        }
+
     }
 }
 
@@ -270,6 +267,6 @@ private fun PermissionPagerUI(
 @Composable
 private fun PermissionScreenPreview() {
     ANekoTheme {
-        PermissionPagerUI(onOpenSettings = {}, onSkip = {})
+        PermissionPagerUI(onOpenSettings = {}, onSkip = {}, onNavigateToLanguage = {})
     }
 }
