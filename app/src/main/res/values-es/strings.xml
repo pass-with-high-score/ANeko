@@ -112,12 +112,6 @@
     <string name="permission_onboarding_page3_image_desc">Activar permiso de superposición</string>
     <string name="permission_onboarding_page3_primary">Abrir Ajustes</string>
     <string name="permission_onboarding_footer">Tras activarlo, vuelve a ANeko — la app continuará automáticamente.</string>
-    <string name="check_for_update_title">Buscar actualización</string>
-    <string name="check_for_update_summary">Toca para buscar una versión más nueva</string>
-    <string name="update_available_title">Actualización disponible</string>
-    <string name="update_now">Actualizar</string>
-    <string name="up_to_date">¡Estás al día!</string>
-    <string name="checking_for_update">Comprobando…</string>
     <string name="onboarding_skin_title">Obtén algunos skins</string>
     <string name="sponsor_title">Patrocinar este proyecto</string>
     <string name="theme_picker_title">Elegir tema</string>
@@ -125,4 +119,5 @@
     <string name="dynamic_color_label">Color dinámico (Material You)</string>
     <string name="sponsor_summary">Apoya el desarrollo de ANeko ❤️</string>
     <string name="onboarding_skin_continue">Continuar</string>
+    <string name="max_neko_reached">Puedes seleccionar hasta 6 skins a la vez.</string>
 </resources>

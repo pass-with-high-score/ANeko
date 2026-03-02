@@ -120,12 +120,6 @@
     <string name="skin_share_dialog_confirm">Bring mich dorthin</string>
     <string name="skin_share_dialog_dismiss">Vielleicht später</string>
     <string name="skin_share_dialog_toast_hint">Du kannst „Skin teilen“ später im Tab „Entdecken“ aufrufen.</string>
-    <string name="check_for_update_title">Nach Update suchen</string>
-    <string name="check_for_update_summary">Tippen, um nach einer neueren Version zu suchen</string>
-    <string name="update_available_title">Update verfügbar</string>
-    <string name="update_now">Aktualisieren</string>
-    <string name="up_to_date">Sie sind auf dem neuesten Stand!</string>
-    <string name="checking_for_update">Überprüfung…</string>
     <string name="onboarding_skin_title">Hol dir Skins</string>
     <string name="sponsor_title">Projekt unterstützen</string>
     <string name="theme_picker_title">Design wählen</string>
@@ -133,4 +127,5 @@
     <string name="dynamic_color_label">Dynamische Farbe (Material You)</string>
     <string name="sponsor_summary">Unterstütze die Entwicklung von ANeko ❤️</string>
     <string name="onboarding_skin_continue">Weiter</string>
+    <string name="max_neko_reached">Du kannst maximal 6 Skins gleichzeitig auswählen.</string>
 </resources>

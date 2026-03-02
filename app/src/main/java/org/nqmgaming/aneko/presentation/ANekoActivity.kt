@@ -4,7 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -22,6 +24,7 @@ import com.ramcosta.composedestinations.rememberNavHostEngine
 import dagger.hilt.android.AndroidEntryPoint
 import org.nqmgaming.aneko.core.service.AnimationService
 import org.nqmgaming.aneko.core.util.LocaleHelper
+import org.nqmgaming.aneko.core.util.extension.checkNotificationPermission
 import org.nqmgaming.aneko.presentation.ui.theme.ANekoTheme
 
 @AndroidEntryPoint
@@ -53,6 +56,7 @@ class ANekoActivity : AppCompatActivity() {
             val isDarkTheme by viewModel.isDarkTheme.collectAsState()
             val accentColor by viewModel.accentColor.collectAsState()
             val isDynamicColor by viewModel.isDynamicColor.collectAsState()
+            val isAnimationEnabled by viewModel.isEnabledState.collectAsState()
             val navController = rememberNavController()
             val navHostEngine = rememberNavHostEngine(
                 navHostContentAlignment = Alignment.TopCenter,
@@ -60,6 +64,17 @@ class ANekoActivity : AppCompatActivity() {
 
             val newBackStackEntry by navController.currentBackStackEntryAsState()
             val route = newBackStackEntry?.destination?.route
+
+            val requestNotificationPermissionLauncher = rememberLauncherForActivityResult(
+                contract = ActivityResultContracts.RequestPermission()
+            ) { isGranted ->
+                viewModel.updateNotificationPermission(isGranted)
+                viewModel.enableAnimation()
+                startService(
+                    Intent(this, AnimationService::class.java)
+                        .setAction(AnimationService.ACTION_START)
+                )
+            }
 
             ANekoTheme(
                 darkTheme = isDarkTheme,
@@ -72,6 +87,25 @@ class ANekoActivity : AppCompatActivity() {
                         HomeScreenDestination.route,
                         ExploreSkinScreenDestination.route,
                     ),
+                    isAnimationEnabled = isAnimationEnabled,
+                    onToggleAnimation = { enabled ->
+                        viewModel.updateAnimationEnabled(enabled)
+                        if (enabled) {
+                            checkNotificationPermission(requestNotificationPermissionLauncher) {
+                                viewModel.enableAnimation()
+                                startService(
+                                    Intent(this, AnimationService::class.java)
+                                        .setAction(AnimationService.ACTION_START)
+                                )
+                            }
+                        } else {
+                            viewModel.disableAnimation()
+                            stopService(
+                                Intent(this, AnimationService::class.java)
+                                    .setAction(AnimationService.ACTION_STOP)
+                            )
+                        }
+                    },
                     content = {
                         DestinationsNavHost(
                             navGraph = NavGraphs.root,

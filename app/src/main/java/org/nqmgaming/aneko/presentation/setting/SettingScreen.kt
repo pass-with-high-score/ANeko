@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -19,23 +17,17 @@ import org.nqmgaming.aneko.R
 import org.nqmgaming.aneko.core.service.AnimationService
 import org.nqmgaming.aneko.core.util.extension.getStringResource
 import org.nqmgaming.aneko.core.util.extension.openUrl
-import org.nqmgaming.aneko.presentation.AnekoViewModel
 import org.nqmgaming.aneko.presentation.setting.component.PreferenceContainer
 import org.nqmgaming.aneko.presentation.setting.component.PreferenceItem
 import org.nqmgaming.aneko.presentation.setting.component.SliderPreferenceItem
 import org.nqmgaming.aneko.presentation.setting.component.SwitchPreferenceItem
-import org.nqmgaming.aneko.presentation.setting.component.UpdateDialog
 import org.nqmgaming.aneko.presentation.ui.theme.ANekoTheme
 
 @Composable
 fun SettingsScreen(
-    viewModel: AnekoViewModel? = null,
 ) {
     val context = LocalContext.current
     val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-
-    val uiState by viewModel?.uiState?.collectAsState()
-        ?: return SettingsScreenContent()
 
     Column(modifier = Modifier.padding(16.dp)) {
         PreferenceContainer(
@@ -153,40 +145,8 @@ fun SettingsScreen(
                 color = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f),
             )
 
-            PreferenceItem(
-                title = stringResource(R.string.check_for_update_title),
-                summary = if (uiState.isCheckingUpdate)
-                    stringResource(R.string.checking_for_update)
-                else
-                    stringResource(R.string.check_for_update_summary),
-                icon = R.drawable.ic_update,
-                onClick = {
-                    if (!uiState.isCheckingUpdate) {
-                        viewModel.checkForUpdate()
-                    }
-                }
-            )
         }
     }
-
-    // Update dialog
-    uiState.updateInfo?.let { release ->
-        UpdateDialog(
-            release = release,
-            onDismiss = { viewModel.dismissUpdate() }
-        )
-    }
-
-    // Show "up to date" toast when check finishes with no update
-    if (!uiState.isCheckingUpdate && uiState.updateInfo == null) {
-        // This is handled reactively - toast shown from the click handler
-    }
-}
-
-@Composable
-private fun SettingsScreenContent() {
-    // Fallback for preview without ViewModel
-    Column(modifier = Modifier.padding(16.dp)) {}
 }
 
 @Preview(showSystemUi = true, showBackground = true)

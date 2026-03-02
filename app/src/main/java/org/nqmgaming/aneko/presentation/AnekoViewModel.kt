@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.nqmgaming.aneko.R
 import org.nqmgaming.aneko.core.data.ApiService
 import org.nqmgaming.aneko.core.data.entity.SkinEntity
 import org.nqmgaming.aneko.core.data.repository.SkinRepository
@@ -163,6 +164,57 @@ class AnekoViewModel @Inject constructor(
         }
         prefs.edit {
             putString(AnimationService.PREF_KEY_SKIN_COMPONENT, packageName)
+        }
+    }
+
+    fun onToggleSkin(packageName: String, context: Context) {
+        viewModelScope.launch {
+            val currentActive = repo.countActive()
+            val skin = _uiState.value.skins.find { it.packageName == packageName }
+            val isCurrentlyActive = skin?.isActive == true
+
+            // If trying to select and already at max 6, show toast
+            if (!isCurrentlyActive && currentActive >= 6) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.max_neko_reached),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                return@launch
+            }
+
+            // If trying to deselect the last one, ignore (must have at least 1)
+            if (isCurrentlyActive && currentActive <= 1) return@launch
+
+            repo.toggleActive(packageName)
+
+            // After toggling, sync prefs with active skins
+            // Small delay to let Flow update
+            kotlinx.coroutines.delay(100)
+            val activeSkins =
+                _uiState.value.skins.filter { it.isActive || (it.packageName == packageName && !isCurrentlyActive) }
+                    .filterNot { it.packageName == packageName && isCurrentlyActive }
+
+            prefs.edit {
+                putString(AnimationService.PREF_KEY_NEKO_COUNT, activeSkins.size.toString())
+                // Set the first active skin as primary
+                if (activeSkins.isNotEmpty()) {
+                    putString(
+                        AnimationService.PREF_KEY_SKIN_COMPONENT,
+                        activeSkins.first().packageName
+                    )
+                }
+                // Map each active skin to a slot
+                activeSkins.forEachIndexed { index, skinEntity ->
+                    putString("motion.skin.$index", skinEntity.packageName)
+                }
+                // Clean up slots beyond current count
+                for (i in activeSkins.size until 6) {
+                    remove("motion.skin.$i")
+                }
+            }
         }
     }
 
@@ -516,53 +568,4 @@ class AnekoViewModel @Inject constructor(
         }
     }
 
-    fun checkForUpdate() {
-        viewModelScope.launch {
-            apiService.getLatestRelease().collect { result ->
-                when (result) {
-                    is ApiResult.Loading -> {
-                        _uiState.update { it.copy(isCheckingUpdate = true) }
-                    }
-
-                    is ApiResult.Error -> {
-                        _uiState.update { it.copy(isCheckingUpdate = false) }
-                    }
-
-                    is ApiResult.Success -> {
-                        val release = result.data
-                        val latestVersion = release?.tagName
-                            ?.removePrefix("v")
-                            ?.trim()
-                            ?: ""
-                        val currentVersion = org.nqmgaming.aneko.BuildConfig.VERSION_NAME
-
-                        val isNewer = compareVersions(latestVersion, currentVersion) > 0
-
-                        _uiState.update {
-                            it.copy(
-                                updateInfo = if (isNewer) release else null,
-                                isCheckingUpdate = false
-                            )
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    fun dismissUpdate() {
-        _uiState.update { it.copy(updateInfo = null) }
-    }
-
-    private fun compareVersions(v1: String, v2: String): Int {
-        val parts1 = v1.split(".").map { it.toIntOrNull() ?: 0 }
-        val parts2 = v2.split(".").map { it.toIntOrNull() ?: 0 }
-        val maxLen = maxOf(parts1.size, parts2.size)
-        for (i in 0 until maxLen) {
-            val p1 = parts1.getOrElse(i) { 0 }
-            val p2 = parts2.getOrElse(i) { 0 }
-            if (p1 != p2) return p1.compareTo(p2)
-        }
-        return 0
-    }
 }

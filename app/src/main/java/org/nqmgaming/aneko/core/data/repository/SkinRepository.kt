@@ -17,5 +17,12 @@ class SkinRepository @Inject constructor(
         skinDao.switchActive(pkg)
     }
 
+    suspend fun toggleActive(pkg: String) {
+        Timber.d("Toggling active state for skin: $pkg")
+        skinDao.toggleActive(pkg)
+    }
+
+    suspend fun countActive(): Int = skinDao.countActive()
+
     suspend fun removeSkin(skin: SkinEntity) = skinDao.deleteSkin(skin)
 }

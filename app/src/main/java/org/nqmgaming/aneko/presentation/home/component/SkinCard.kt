@@ -65,82 +65,84 @@ fun SkinCard(
             .build()
     }
 
-    Card(
-        modifier = Modifier
-            .width(160.dp)
-            .height(200.dp)
-            .border(
-                width = 2.dp,
-                color = borderColor,
-                shape = MaterialTheme.shapes.large
-            ),
-        shape = MaterialTheme.shapes.large,
-        elevation = CardDefaults.cardElevation(6.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        onClick = onSkinSelected
-    ) {
-
-        Row(
-            horizontalArrangement = Arrangement.End,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            IconButton(
-                onClick = {
-                    isBottomSheetVisible = !isBottomSheetVisible
-                }
-            ) {
-                if (!isDefaultSkin) {
-                    Icon(
-                        imageVector = Icons.Filled.MoreVert,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier.size(24.dp)
-                    )
-                } else {
-                    Spacer(modifier = Modifier.height(24.dp))
-                }
-
-            }
-        }
-
-        Column(
+    Box {
+        Card(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(bottom = 24.dp)
-                .padding(horizontal = 16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+                .width(160.dp)
+                .height(200.dp)
+                .border(
+                    width = 2.dp,
+                    color = borderColor,
+                    shape = MaterialTheme.shapes.large
+                ),
+            shape = MaterialTheme.shapes.large,
+            elevation = CardDefaults.cardElevation(6.dp),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+            onClick = onSkinSelected
         ) {
-            Box(
-                modifier = Modifier
-                    .size(100.dp)
-                    .clip(CircleShape)
-                    .background(
-                        Color.White,
-                    ),
-                contentAlignment = Alignment.Center,
+
+            Row(
+                horizontalArrangement = Arrangement.End,
+                modifier = Modifier.fillMaxWidth()
             ) {
-                AsyncImage(
-                    model = model,
-                    contentDescription = null,
+                IconButton(
+                    onClick = {
+                        isBottomSheetVisible = !isBottomSheetVisible
+                    }
+                ) {
+                    if (!isDefaultSkin) {
+                        Icon(
+                            imageVector = Icons.Filled.MoreVert,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurface,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    } else {
+                        Spacer(modifier = Modifier.height(24.dp))
+                    }
+
+                }
+            }
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(bottom = 24.dp)
+                    .padding(horizontal = 16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Box(
                     modifier = Modifier
-                        .padding(4.dp)
-                        .size(80.dp)
+                        .size(100.dp)
+                        .clip(CircleShape)
                         .background(
                             Color.White,
                         ),
-                    contentScale = ContentScale.Fit
+                    contentAlignment = Alignment.Center,
+                ) {
+                    AsyncImage(
+                        model = model,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(4.dp)
+                            .size(80.dp)
+                            .background(
+                                Color.White,
+                            ),
+                        contentScale = ContentScale.Fit
+                    )
+                }
+                Spacer(modifier = Modifier.height(12.dp))
+                Text(
+                    text = "${skin.name} ${if (isDefaultSkin) stringResource(R.string.default_label) else ""}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontWeight = if (isDefaultSkin) FontWeight.Bold else null,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                 )
             }
-            Spacer(modifier = Modifier.height(12.dp))
-            Text(
-                text = "${skin.name} ${if (isDefaultSkin) stringResource(R.string.default_label) else ""}",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface,
-                fontWeight = if (isDefaultSkin) FontWeight.Bold else null,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
         }
     }
 

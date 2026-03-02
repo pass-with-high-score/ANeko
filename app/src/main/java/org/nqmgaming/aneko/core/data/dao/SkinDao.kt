@@ -18,6 +18,12 @@ interface SkinDao {
     @Query("UPDATE skin SET isActive = (packageName = :pkg)")
     suspend fun switchActive(pkg: String)
 
+    @Query("UPDATE skin SET isActive = NOT isActive WHERE packageName = :pkg")
+    suspend fun toggleActive(pkg: String)
+
+    @Query("SELECT COUNT(*) FROM skin WHERE isActive = 1")
+    suspend fun countActive(): Int
+
     @Delete
     suspend fun deleteSkin(skin: SkinEntity)
 

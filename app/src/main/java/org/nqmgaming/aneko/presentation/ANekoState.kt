@@ -1,7 +1,6 @@
 package org.nqmgaming.aneko.presentation
 
 import org.nqmgaming.aneko.core.data.entity.SkinEntity
-import org.nqmgaming.aneko.data.GitHubRelease
 import org.nqmgaming.aneko.data.SkinCollection
 
 data class ANekoState (
@@ -9,6 +8,4 @@ data class ANekoState (
     val isLoading: Boolean = false,
     val isRefreshing: Boolean = false,
     val skinCollections: List<SkinCollection>? = emptyList(),
-    val updateInfo: GitHubRelease? = null,
-    val isCheckingUpdate: Boolean = false,
 )

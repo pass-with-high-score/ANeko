@@ -131,13 +131,6 @@
     <string name="permission_onboarding_page3_primary">Open Settings</string>
     <string name="permission_onboarding_footer">After enabling, return to ANeko — the app continues automatically.</string>
 
-    <!-- Check for Update -->
-    <string name="check_for_update_title">Check for update</string>
-    <string name="check_for_update_summary">Tap to check for a newer version</string>
-    <string name="update_available_title">Update available</string>
-    <string name="update_now">Update</string>
-    <string name="up_to_date">You\'re up to date!</string>
-    <string name="checking_for_update">Checking…</string>
     <!-- Theme Picker -->
     <string name="theme_picker_title">Choose Theme</string>
     <string name="dark_mode_label">Dark Mode</string>
@@ -151,4 +144,7 @@
     <!-- Onboarding Skin -->
     <string name="onboarding_skin_title">Get Some Skins</string>
     <string name="onboarding_skin_continue">Continue</string>
+
+    <!-- Multi-select Skins -->
+    <string name="max_neko_reached">You can select up to 6 skins at a time.</string>
 </resources>

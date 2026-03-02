@@ -1,8 +1,5 @@
 package org.nqmgaming.aneko.presentation.home
 
-import android.content.Intent
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -22,8 +19,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
-import org.nqmgaming.aneko.core.service.AnimationService
-import org.nqmgaming.aneko.core.util.extension.checkNotificationPermission
 import org.nqmgaming.aneko.presentation.AnekoViewModel
 import org.nqmgaming.aneko.presentation.home.component.HomeAppBar
 import org.nqmgaming.aneko.presentation.home.component.HomeContent
@@ -40,27 +35,9 @@ fun HomeScreen(
     val isDarkTheme by viewModel.isDarkTheme.collectAsState()
     val accentColor by viewModel.accentColor.collectAsState()
     val isDynamicColor by viewModel.isDynamicColor.collectAsState()
-    val isEnabledState by viewModel.isEnabledState.collectAsState()
     val isFirstLaunch = viewModel.isFirstLaunch.collectAsState().value
     var isShowingDialog by rememberSaveable { mutableStateOf(isFirstLaunch) }
     val context = LocalContext.current
-
-    fun startAnimationService() {
-        viewModel.enableAnimation()
-        context.startService(
-            Intent(
-                context,
-                AnimationService::class.java
-            ).setAction(AnimationService.ACTION_START)
-        )
-    }
-
-    val requestNotificationPermissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        viewModel.updateNotificationPermission(isGranted)
-        startAnimationService()
-    }
 
     var showLanguageDialog by remember { mutableStateOf(false) }
 
@@ -88,31 +65,13 @@ fun HomeScreen(
                 modifier = Modifier
                     .padding(innerPadding)
                     .padding(bottom = 82.dp),
-                isEnabled = isEnabledState,
-                onChangeEnable = { enabled ->
-                    viewModel.updateAnimationEnabled(enabled)
-                    if (enabled) {
-                        context.checkNotificationPermission(requestNotificationPermissionLauncher) {
-                            startAnimationService()
-                        }
-                    } else {
-                        viewModel.disableAnimation()
-                        context.stopService(
-                            Intent(
-                                context,
-                                AnimationService::class.java
-                            ).setAction(AnimationService.ACTION_STOP)
-                        )
-                    }
-                },
-                onSelectSkin = { packageName ->
-                    viewModel.onSelectSkin(packageName)
+                onToggleSkin = { packageName ->
+                    viewModel.onToggleSkin(packageName, context)
                 },
                 skins = uiState.value.skins,
                 onRequestDeleteSkin = {
                     viewModel.onDeselectSkin(it, context)
                 },
-                viewModel = viewModel,
             )
         }
 

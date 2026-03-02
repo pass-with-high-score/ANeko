@@ -113,12 +113,6 @@
     <string name="skin_share_dialog_dismiss">Może później</string>
     <string name="skin_share_dialog_toast_hint">Możesz uzyskać dostęp do opcji Udostępnij skin później z karty Odkrywaj.</string>
 
-    <string name="check_for_update_title">Sprawdź aktualizację</string>
-    <string name="check_for_update_summary">Dotknij, aby sprawdzić nowszą wersję</string>
-    <string name="update_available_title">Dostępna aktualizacja</string>
-    <string name="update_now">Aktualizuj</string>
-    <string name="up_to_date">Masz najnowszą wersję!</string>
-    <string name="checking_for_update">Sprawdzanie…</string>
     <string name="onboarding_skin_title">Pobierz skiny</string>
     <string name="sponsor_title">Wesprzyj projekt</string>
     <string name="theme_picker_title">Wybierz motyw</string>
@@ -126,4 +120,5 @@
     <string name="dynamic_color_label">Kolor dynamiczny (Material You)</string>
     <string name="sponsor_summary">Wesprzyj rozwój ANeko ❤️</string>
     <string name="onboarding_skin_continue">Kontynuuj</string>
+    <string name="max_neko_reached">Możesz wybrać maksymalnie 6 skórek naraz.</string>
 </resources>

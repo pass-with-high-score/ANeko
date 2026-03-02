@@ -26,7 +26,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.nqmgaming.aneko.R
 import org.nqmgaming.aneko.core.data.entity.SkinEntity
-import org.nqmgaming.aneko.presentation.AnekoViewModel
 import org.nqmgaming.aneko.presentation.setting.SettingsScreen
 import org.nqmgaming.aneko.presentation.ui.theme.ANekoTheme
 
@@ -34,14 +33,12 @@ import org.nqmgaming.aneko.presentation.ui.theme.ANekoTheme
 @Composable
 fun HomeContent(
     modifier: Modifier = Modifier,
-    isEnabled: Boolean = false,
-    onChangeEnable: (Boolean) -> Unit = {},
     skins: List<SkinEntity> = emptyList(),
-    onSelectSkin: (String) -> Unit = { _ -> },
+    onToggleSkin: (String) -> Unit = { _ -> },
     onRequestDeleteSkin: (SkinEntity) -> Unit = { _ -> },
-    viewModel: AnekoViewModel? = null,
 ) {
     val context = LocalContext.current
+    val activeCount = skins.count { it.isActive }
 
     Box {
         Column(
@@ -50,6 +47,7 @@ fun HomeContent(
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            // Skin cards list
             Crossfade(
                 targetState = skins.isNotEmpty()
             ) { isReady ->
@@ -67,7 +65,7 @@ fun HomeContent(
                                 skin = skin,
                                 isSelected = skin.isActive,
                                 onSkinSelected = {
-                                    onSelectSkin(skin.packageName)
+                                    onToggleSkin(skin.packageName)
                                 },
                                 onRequestDeleteSkin = {
                                     onRequestDeleteSkin(skin)
@@ -91,7 +89,7 @@ fun HomeContent(
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = stringResource(R.string.choose_skin),
+                text = stringResource(R.string.choose_skin) + " ($activeCount/6)",
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.padding(bottom = 8.dp),
                 color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -99,16 +97,7 @@ fun HomeContent(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                PowerToggleButton(
-                    isEnabled = isEnabled,
-                    onChangeEnable = { checked ->
-                        onChangeEnable(checked)
-                    }
-                )
-            }
-
-            SettingsScreen(viewModel = viewModel)
+            SettingsScreen()
             Spacer(modifier = Modifier.height(24.dp))
             Column(
                 modifier = Modifier

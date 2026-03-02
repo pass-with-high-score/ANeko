@@ -112,12 +112,6 @@
     <string name="skin_share_dialog_dismiss">稍后再说</string>
     <string name="skin_share_dialog_toast_hint">你可以稍后在“探索”标签页中访问“分享皮肤”。</string>
 
-    <string name="check_for_update_title">检查更新</string>
-    <string name="check_for_update_summary">点击检查是否有更新版本</string>
-    <string name="update_available_title">有可用更新</string>
-    <string name="update_now">更新</string>
-    <string name="up_to_date">已是最新版本！</string>
-    <string name="checking_for_update">正在检查…</string>
     <string name="onboarding_skin_title">获取皮肤</string>
     <string name="sponsor_title">赞助此项目</string>
     <string name="theme_picker_title">选择主题</string>
@@ -125,4 +119,5 @@
     <string name="dynamic_color_label">动态颜色 (Material You)</string>
     <string name="sponsor_summary">支持 ANeko 开发 ❤️</string>
     <string name="onboarding_skin_continue">继续</string>
+    <string name="max_neko_reached">最多只能同时选择 6 个皮肤。</string>
 </resources>

@@ -56,6 +56,7 @@ class AnimationService : Service() {
         const val PREF_KEY_SPEED = "motion.speed"
         const val PREF_KEY_BEHAVIOUR = "motion.behaviour"
         const val PREF_KEY_SKIN_COMPONENT = "motion.skin"
+        const val PREF_KEY_NEKO_COUNT = "motion.neko_count"
         const val PREF_KEY_NOTIFICATION_ENABLE = "notification.enable"
 
         private const val MSG_ANIMATE = 1
@@ -65,6 +66,13 @@ class AnimationService : Service() {
 
     private enum class Behaviour { Closer, Further, Whimsical }
 
+    // ================== Per-neko instance ==================
+    private inner class NekoInstance(
+        val motionState: MotionState,
+        val imageView: ImageView,
+        var imageParams: WindowManager.LayoutParams
+    )
+
     private var imageWidth = 80
     private var imageHeight = 80
 
@@ -72,12 +80,10 @@ class AnimationService : Service() {
     private lateinit var prefs: SharedPreferences
     private var prefListener: PreferenceChangeListener? = null
     private val handler = Handler(Looper.getMainLooper(), ::onHandleMessage)
-    private var motionState: MotionState? = null
+    private val nekos = mutableListOf<NekoInstance>()
     private val random = java.util.Random()
 
     private var touchView: View? = null
-    private var imageView: ImageView? = null
-    private var imageParams: WindowManager.LayoutParams? = null
 
     override fun onCreate() {
         super.onCreate()
@@ -121,7 +127,7 @@ class AnimationService : Service() {
         val wm = getSystemService(WINDOW_SERVICE) as WindowManager
         val display: Display = wm.defaultDisplay
         val size = Point().also { display.getSize(it) }
-        motionState?.setDisplaySize(size.x, size.y)
+        nekos.forEach { it.motionState.setDisplaySize(size.x, size.y) }
     }
 
     private fun startAnimation() {
@@ -129,77 +135,88 @@ class AnimationService : Service() {
             prefs.registerOnSharedPreferenceChangeListener(it)
         }
 
-        if (checkPrefEnable() && loadMotionState()) {
-            refreshMotionSpeed()
+        if (!checkPrefEnable()) return
 
-            val wm = getSystemService(WINDOW_SERVICE) as WindowManager
+        val nekoCount = prefs.getString(PREF_KEY_NEKO_COUNT, "1")
+            ?.toFloatOrNull()?.toInt()?.coerceIn(1, 6) ?: 1
 
-            touchView = View(this).apply {
-                setOnTouchListener(TouchListener())
-            }
-            val touchParams = WindowManager.LayoutParams(
-                1, 1,
-                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
-                        WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH or
-                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                PixelFormat.TRANSLUCENT
-            ).apply { gravity = Gravity.CENTER }
-            wm.addView(touchView, touchParams)
-            val focusFlag = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-            val unfocusFlag = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
-                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or
-                    WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
-            val isFocus = prefs.getBoolean(PREF_KEY_FOCUS, false)
+        val wm = getSystemService(WINDOW_SERVICE) as WindowManager
 
-            imageView = ImageView(this).apply {
+        // Shared touch overlay (1x1 pixel)
+        touchView = View(this).apply {
+            setOnTouchListener(TouchListener())
+        }
+        val touchParams = WindowManager.LayoutParams(
+            1, 1,
+            WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+                    WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH or
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+            PixelFormat.TRANSLUCENT
+        ).apply { gravity = Gravity.CENTER }
+        wm.addView(touchView, touchParams)
+
+        val focusFlag = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+        val unfocusFlag = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or
+                WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
+        val isFocus = prefs.getBoolean(PREF_KEY_FOCUS, false)
+
+        // Create each neko instance
+        for (i in 0 until nekoCount) {
+            val ms = loadMotionStateForSlot(i) ?: continue
+            refreshMotionSpeedFor(ms)
+
+            val iv = ImageView(this).apply {
                 setOnClickListener {
-                    // move neko to other position
-                    motionState?.let { ms ->
-                        val wm = getSystemService(WINDOW_SERVICE) as WindowManager
-                        val pnt = Point().also { wm.defaultDisplay.getSize(it) }
-                        val dw = pnt.x
-                        val dh = pnt.y
-                        val (x, y) = if (random.nextFloat() < 0.4f) {
-                            when (random.nextInt(4)) {
-                                0 -> 0f to random.nextInt(dh).toFloat()
-                                1 -> dw.toFloat() to random.nextInt(dh).toFloat()
-                                2 -> random.nextInt(dw).toFloat() to 0f
-                                else -> random.nextInt(dw).toFloat() to dh.toFloat()
-                            }
-                        } else {
-                            random.nextInt(dw).toFloat() to random.nextInt(dh).toFloat()
+                    // move this neko to a random position
+                    val pnt = Point().also { wm.defaultDisplay.getSize(it) }
+                    val dw = pnt.x
+                    val dh = pnt.y
+                    val (x, y) = if (random.nextFloat() < 0.4f) {
+                        when (random.nextInt(4)) {
+                            0 -> 0f to random.nextInt(dh).toFloat()
+                            1 -> dw.toFloat() to random.nextInt(dh).toFloat()
+                            2 -> random.nextInt(dw).toFloat() to 0f
+                            else -> random.nextInt(dw).toFloat() to dh.toFloat()
                         }
-                        ms.setTargetPosition(x, y)
-                        requestAnimate()
+                    } else {
+                        random.nextInt(dw).toFloat() to random.nextInt(dh).toFloat()
                     }
+                    ms.setTargetPosition(x, y)
+                    requestAnimate()
                 }
             }
-            imageParams = WindowManager.LayoutParams(
+
+            val params = WindowManager.LayoutParams(
                 imageWidth,
                 imageHeight,
                 WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
                 if (isFocus) focusFlag else unfocusFlag,
                 PixelFormat.TRANSLUCENT
             ).apply { gravity = Gravity.TOP or Gravity.START }
-            wm.addView(imageView, imageParams)
+            wm.addView(iv, params)
 
-            requestAnimate()
+            nekos.add(NekoInstance(ms, iv, params))
         }
 
+        requestAnimate()
     }
-
 
     private fun stopAnimation() {
         prefListener?.let { prefs.unregisterOnSharedPreferenceChangeListener(it) }
         val wm = getSystemService(WINDOW_SERVICE) as WindowManager
 
         touchView?.let { wm.removeView(it) }
-        imageView?.let { wm.removeView(it) }
-
-        motionState = null
         touchView = null
-        imageView = null
+
+        nekos.forEach { neko ->
+            try {
+                wm.removeView(neko.imageView)
+            } catch (_: Exception) {
+            }
+        }
+        nekos.clear()
 
         handler.removeMessages(MSG_ANIMATE)
     }
@@ -254,35 +271,36 @@ class AnimationService : Service() {
 
     // ================== Load Motion ==================
 
-    private fun loadMotionState(): Boolean {
-        val packageName = prefs.getString(PREF_KEY_SKIN_COMPONENT, "org.nqmgaming.aneko") ?: ""
-        return loadMotionDir(packageName = packageName)
+    /**
+     * Get skin path for a specific slot, falling back to global skin pref.
+     */
+    private fun getSkinForSlot(index: Int): String {
+        val slotSkin = prefs.getString("motion.skin.$index", null)
+        if (!slotSkin.isNullOrBlank()) return slotSkin
+        return prefs.getString(PREF_KEY_SKIN_COMPONENT, "org.nqmgaming.aneko")
+            ?: "org.nqmgaming.aneko"
+    }
+
+    /**
+     * Creates a new MotionState for a specific slot, with random spawn position.
+     */
+    private fun loadMotionStateForSlot(index: Int): MotionState? {
+        val skinPath = getSkinForSlot(index)
+        if (skinPath.isBlank()) return null
+        return try {
+            val params = getMotionParamsInternal(skinPath)
+            val ms = MotionState().apply { setParams(params) }
+            initMotionState(ms)
+            ms
+        } catch (e: Exception) {
+            Timber.e(e)
+            null
+        }
     }
 
     /**
      * Đọc từ INTERNAL: files/skins/<folder>/skin.xml (+ ảnh)
      * Giá trị prefs "motion.skin" có thể là "<folder>/skin.xml" hoặc "<folder>"
-     */
-    private fun loadMotionDir(packageName: String): Boolean {
-        if (packageName.isBlank()) return false
-        val loaded = try {
-            val params = getMotionParamsInternal(packageName)
-            motionState = MotionState().apply { setParams(params) }
-            true
-        } catch (e: Exception) {
-            Timber.e(e)
-            false
-        }
-
-        if (loaded) {
-            afterMotionLoaded()
-            return true
-        }
-        return false
-    }
-
-    /**
-     * Build path trong internal storage rồi parse bằng MotionConfigParser.parseFromFile(...)
      */
     @NonNull
     @Throws(PackageManager.NameNotFoundException::class)
@@ -320,7 +338,10 @@ class AnimationService : Service() {
         return MotionConfigParser.parseFromFile(this, skinXml, dir)
     }
 
-    private fun afterMotionLoaded() {
+    /**
+     * Initialise a MotionState with random edge spawn + global prefs.
+     */
+    private fun initMotionState(ms: MotionState) {
         val wm = getSystemService(WINDOW_SERVICE) as WindowManager
         val d: Display = wm.defaultDisplay
         val size = Point().also { d.getSize(it) }
@@ -336,17 +357,21 @@ class AnimationService : Service() {
 
         val alphaStr = prefs.getString(PREF_KEY_TRANSPARENCY, "0.0") ?: "0.0"
         val opacity = 1f - (alphaStr.toFloatOrNull() ?: 0f)
-        motionState!!.alpha = (opacity * 0xff).roundToInt()
+        ms.alpha = (opacity * 0xff).roundToInt()
 
-        motionState!!.setBehaviour(
+        ms.setBehaviour(
             Behaviour.valueOf(
-                prefs.getString(PREF_KEY_BEHAVIOUR, motionState!!.behaviour.toString())!!
+                prefs.getString(PREF_KEY_BEHAVIOUR, ms.behaviour.toString())!!
             )
         )
 
-        motionState!!.setDisplaySize(dw, dh)
-        motionState!!.setCurrentPosition(cx.toFloat(), cy.toFloat())
-        motionState!!.setTargetPositionDirect((dw shr 1).toFloat(), (dh shr 1).toFloat())
+        ms.setDisplaySize(dw, dh)
+        ms.setCurrentPosition(cx.toFloat(), cy.toFloat())
+        // Give each neko a unique random target so they spread out
+        ms.setTargetPositionDirect(
+            random.nextInt(dw).toFloat(),
+            random.nextInt(dh).toFloat()
+        )
         refreshMotionSize()
     }
 
@@ -358,15 +383,22 @@ class AnimationService : Service() {
         imageHeight = v
 
         val wm = getSystemService(WINDOW_SERVICE) as WindowManager
-        if (imageParams != null && imageView != null) {
-            imageParams!!.width = v
-            imageParams!!.height = v
-            wm.updateViewLayout(imageView, imageParams)
+        nekos.forEach { neko ->
+            neko.imageParams.width = v
+            neko.imageParams.height = v
+            try {
+                wm.updateViewLayout(neko.imageView, neko.imageParams)
+            } catch (_: Exception) {
+            }
         }
     }
 
     private fun refreshMotionSpeed() {
-        val ms = motionState ?: return
+        val speedFactor = prefs.getString(PREF_KEY_SPEED, "1.0")?.toFloatOrNull() ?: 1.0f
+        nekos.forEach { it.motionState.setSpeedFactor(if (speedFactor > 0f) speedFactor else 1.0f) }
+    }
+
+    private fun refreshMotionSpeedFor(ms: MotionState) {
         val speedFactor = prefs.getString(PREF_KEY_SPEED, "1.0")?.toFloatOrNull() ?: 1.0f
         ms.setSpeedFactor(if (speedFactor > 0f) speedFactor else 1.0f)
     }
@@ -377,37 +409,33 @@ class AnimationService : Service() {
         }
     }
 
-    private fun updateDrawable() {
-        val ms = motionState ?: return
-        val iv = imageView ?: return
-        val drawable = ms.currentDrawable()
-
-        drawable.alpha = ms.alpha
-        iv.setImageDrawable(drawable)
+    private fun updateDrawable(neko: NekoInstance) {
+        val drawable = neko.motionState.currentDrawable()
+        drawable.alpha = neko.motionState.alpha
+        neko.imageView.setImageDrawable(drawable)
         drawable.stop()
         drawable.start()
     }
 
-    private fun updatePosition() {
+    private fun updatePosition(neko: NekoInstance) {
         try {
-            val pos = motionState?.position() ?: return
-            imageParams?.x = pos.x
-            imageParams?.y = pos.y
+            val pos = neko.motionState.position()
+            neko.imageParams.x = pos.x
+            neko.imageParams.y = pos.y
             (getSystemService(WINDOW_SERVICE) as WindowManager).updateViewLayout(
-                imageView,
-                imageParams
+                neko.imageView,
+                neko.imageParams
             )
         } catch (e: Exception) {
-            // Log or handle the error as needed
             Timber.e(e, "Failed to update position")
         }
     }
 
-    private fun updateToNext() {
-        val ms = motionState ?: return
+    private fun updateToNext(neko: NekoInstance) {
+        val ms = neko.motionState
         if (ms.checkWall() || ms.updateMovingState() || ms.changeToNextState()) {
-            updateDrawable()
-            updatePosition()
+            updateDrawable(neko)
+            updatePosition(neko)
             requestAnimate()
         }
     }
@@ -415,13 +443,17 @@ class AnimationService : Service() {
     private fun onHandleMessage(msg: Message): Boolean {
         if (msg.what == MSG_ANIMATE) {
             handler.removeMessages(MSG_ANIMATE)
-            motionState?.updateState()
-            motionState?.let { ms ->
-                if (ms.isStateChanged() || ms.isPositionMoved()) {
-                    if (ms.isStateChanged()) updateDrawable()
-                    updatePosition()
-                    handler.sendEmptyMessageDelayed(MSG_ANIMATE, ANIMATION_INTERVAL)
+            var anyActive = false
+            nekos.forEach { neko ->
+                neko.motionState.updateState()
+                if (neko.motionState.isStateChanged() || neko.motionState.isPositionMoved()) {
+                    if (neko.motionState.isStateChanged()) updateDrawable(neko)
+                    updatePosition(neko)
+                    anyActive = true
                 }
+            }
+            if (anyActive) {
+                handler.sendEmptyMessageDelayed(MSG_ANIMATE, ANIMATION_INTERVAL)
             }
             return true
         }
@@ -448,30 +480,45 @@ class AnimationService : Service() {
                 PREF_KEY_SIZE -> refreshMotionSize()
                 PREF_KEY_SPEED -> refreshMotionSpeed()
                 PREF_KEY_TRANSPARENCY -> {
-                    motionState?.let {
-                        val s = prefs.getString(PREF_KEY_TRANSPARENCY, "0.0") ?: "0.0"
-                        val opacity = 1f - (s.toFloatOrNull() ?: 0f)
-                        it.alpha = (opacity * 0xff).roundToInt()
-                    }
+                    val s = prefs.getString(PREF_KEY_TRANSPARENCY, "0.0") ?: "0.0"
+                    val opacity = 1f - (s.toFloatOrNull() ?: 0f)
+                    val alpha = (opacity * 0xff).roundToInt()
+                    nekos.forEach { it.motionState.alpha = alpha }
                 }
+
                 PREF_KEY_FOCUS -> {
                     val focusFlag = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
                     val unfocusFlag = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
                             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or
                             WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
                     val isFocus = prefs.getBoolean(PREF_KEY_FOCUS, false)
-                    imageParams?.flags = if (isFocus) focusFlag else unfocusFlag
+                    nekos.forEach {
+                        it.imageParams.flags = if (isFocus) focusFlag else unfocusFlag
+                    }
                 }
 
+                PREF_KEY_NEKO_COUNT -> {
+                    // Restart animation to rebuild neko list
+                    if (isStarted) {
+                        stopAnimation()
+                        startAnimation()
+                    }
+                }
 
-                else -> if (loadMotionState()) requestAnimate()
+                else -> {
+                    // Skin or other change — reload all nekos
+                    if (isStarted) {
+                        stopAnimation()
+                        startAnimation()
+                    }
+                }
             }
         }
     }
 
     private inner class TouchListener : View.OnTouchListener {
         override fun onTouch(v: View?, ev: MotionEvent): Boolean {
-            val ms = motionState ?: return false
+            if (nekos.isEmpty()) return false
             if (ev.action == MotionEvent.ACTION_UP) {
                 v?.performClick()
                 return true
@@ -482,22 +529,25 @@ class AnimationService : Service() {
                 val dw = pnt.x
                 val dh = pnt.y
 
-                val (x, y) = if (random.nextFloat() < 0.4f) {
-                    when (random.nextInt(4)) {
-                        0 -> 0f to random.nextInt(dh).toFloat()
-                        1 -> dw.toFloat() to random.nextInt(dh).toFloat()
-                        2 -> random.nextInt(dw).toFloat() to 0f
-                        else -> random.nextInt(dw).toFloat() to dh.toFloat()
+                // Each neko gets its own random target
+                nekos.forEach { neko ->
+                    val (x, y) = if (random.nextFloat() < 0.4f) {
+                        when (random.nextInt(4)) {
+                            0 -> 0f to random.nextInt(dh).toFloat()
+                            1 -> dw.toFloat() to random.nextInt(dh).toFloat()
+                            2 -> random.nextInt(dw).toFloat() to 0f
+                            else -> random.nextInt(dw).toFloat() to dh.toFloat()
+                        }
+                    } else {
+                        random.nextInt(dw).toFloat() to random.nextInt(dh).toFloat()
                     }
-                } else {
-                    random.nextInt(dw).toFloat() to random.nextInt(dh).toFloat()
+                    neko.motionState.setTargetPosition(x, y)
                 }
 
-                ms.setTargetPosition(x, y)
                 requestAnimate()
                 return true
             } else if (ev.action == MotionEvent.ACTION_CANCEL) {
-                ms.forceStop()
+                nekos.forEach { it.motionState.forceStop() }
                 requestAnimate()
                 return true
             }
@@ -505,12 +555,11 @@ class AnimationService : Service() {
         }
     }
 
-
     private inner class MotionEndListener : MotionDrawable.OnMotionEndListener {
         override fun onMotionEnd(drawable: MotionDrawable) {
-            if (isStarted && motionState?.currentDrawable() === drawable) {
-                updateToNext()
-            }
+            if (!isStarted) return
+            val neko = nekos.find { it.motionState.currentDrawable() === drawable } ?: return
+            updateToNext(neko)
         }
     }
 

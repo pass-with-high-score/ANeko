@@ -2,38 +2,53 @@ package org.nqmgaming.aneko.presentation
 
 import android.content.Intent
 import android.net.Uri
+import android.provider.Settings
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.PowerSettingsNew
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
@@ -44,15 +59,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.ramcosta.composedestinations.utils.isRouteOnBackStackAsState
 import com.ramcosta.composedestinations.utils.rememberDestinationsNavigator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.nqmgaming.aneko.R
 import timber.log.Timber
 import kotlin.time.Duration.Companion.seconds
 
@@ -61,6 +77,8 @@ import kotlin.time.Duration.Companion.seconds
 fun StandardScaffold(
     navController: NavController,
     showBottomBar: Boolean,
+    isAnimationEnabled: Boolean = false,
+    onToggleAnimation: (Boolean) -> Unit = {},
     items: List<BottomNavItem> = listOf(
         BottomNavItem.Home,
         BottomNavItem.Explore,
@@ -119,88 +137,24 @@ fun StandardScaffold(
                 enter = fadeIn(),
                 exit = fadeOut()
             ) {
-                Column {
-                    NavigationBar(
-                        modifier = Modifier
-                            .shadow(4.dp, RoundedCornerShape(0.dp))
-                            .background(colorScheme.surface),
-                        containerColor = colorScheme.background,
-                        contentColor = colorScheme.onBackground,
-                        content = {
-                            items.forEach { item ->
-                                val isCurrentDestOnBackStack by navController.isRouteOnBackStackAsState(
-                                    item.direction
-                                )
-                                val color by animateColorAsState(
-                                    targetValue = if (currentDestination?.route?.contains(item.route) == true) {
-                                        colorScheme.primary
-                                    } else {
-                                        colorScheme.onBackground
-                                    },
-                                    label = "color_anim"
-                                )
-                                val iconScale by animateFloatAsState(
-                                    targetValue = if (currentDestination?.route?.contains(item.route) == true) {
-                                        1.2f
-                                    } else {
-                                        1f
-                                    },
-                                    label = "scale_anim"
-                                )
-                                NavigationBarItem(
-                                    colors = NavigationBarItemDefaults.colors(
-                                        selectedIconColor = colorScheme.primary,
-                                        unselectedIconColor = colorScheme.onBackground,
-                                        selectedTextColor = colorScheme.primary,
-                                        unselectedTextColor = colorScheme.onBackground,
-                                        indicatorColor = Color.Transparent,
-                                    ),
-                                    icon = {
-                                        Icon(
-                                            modifier = Modifier
-                                                .size(25.dp)
-                                                .scale(iconScale),
-                                            painter = painterResource(id = item.icon),
-                                            contentDescription = stringResource(item.title),
-                                            tint = color
-                                        )
-                                    },
-                                    label = {
-                                        Text(
-                                            text = stringResource(item.title),
-                                            maxLines = 1,
-                                            style = typography.bodySmall.copy(
-                                                color = color,
-                                                fontWeight = if (currentDestination?.route?.contains(
-                                                        item.route
-                                                    ) == true
-                                                ) {
-                                                    FontWeight.Bold
-                                                } else {
-                                                    FontWeight.Normal
-                                                },
-                                                fontSize = 10.sp
-                                            ),
-                                        )
-                                    },
-                                    alwaysShowLabel = true,
-                                    selected = currentDestination?.route?.contains(item.route) == true,
-                                    onClick = {
-                                        if (isCurrentDestOnBackStack) {
-                                            navigator.popBackStack(item.direction, false)
-                                            return@NavigationBarItem
-                                        }
-
-                                        navigator.navigate(item.direction) {
-                                            launchSingleTop = true
-                                            restoreState = true
-                                        }
-                                    }
-                                )
-                            }
+                AppBottomBar(
+                    items = items,
+                    currentRoute = currentDestination?.route,
+                    isAnimationEnabled = isAnimationEnabled,
+                    onToggleAnimation = onToggleAnimation,
+                    onItemClick = { item ->
+                        val isCurrentDestOnBackStack =
+                            currentDestination?.route?.contains(item.route) == true
+                        if (isCurrentDestOnBackStack) {
+                            navigator.popBackStack(item.direction, false)
+                            return@AppBottomBar
                         }
-                    )
-                }
+                        navigator.navigate(item.direction) {
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    },
+                )
             }
         },
         floatingActionButton = {
@@ -226,5 +180,178 @@ fun StandardScaffold(
         }
     ) { innerPadding ->
         content(innerPadding)
+    }
+}
+
+@Composable
+private fun AppBottomBar(
+    items: List<BottomNavItem>,
+    currentRoute: String?,
+    isAnimationEnabled: Boolean,
+    onToggleAnimation: (Boolean) -> Unit,
+    onItemClick: (BottomNavItem) -> Unit,
+) {
+    val context = LocalContext.current
+    var showPermissionDialog by remember { mutableStateOf(false) }
+
+    // Permission dialog
+    if (showPermissionDialog) {
+        AlertDialog(
+            containerColor = colorScheme.surface,
+            onDismissRequest = { showPermissionDialog = false },
+            title = { Text(text = stringResource(R.string.overlay_permission_title)) },
+            text = {
+                Text(stringResource(R.string.overlay_permission_description))
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    showPermissionDialog = false
+                    val intent = Intent(
+                        Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                        "package:${context.packageName}".toUri()
+                    )
+                    context.startActivity(intent)
+                }) {
+                    Text(stringResource(R.string.allow_button))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showPermissionDialog = false }) {
+                    Text(stringResource(R.string.cancel_button))
+                }
+            }
+        )
+    }
+
+
+    val powerBgColor by animateColorAsState(
+        targetValue = if (isAnimationEnabled) colorScheme.primary else colorScheme.surfaceVariant,
+        animationSpec = tween(400),
+        label = "power_bg"
+    )
+    val powerIconColor by animateColorAsState(
+        targetValue = if (isAnimationEnabled) colorScheme.onPrimary else colorScheme.onSurfaceVariant,
+        animationSpec = tween(400),
+        label = "power_icon"
+    )
+
+    Box(
+        modifier = Modifier.fillMaxWidth(),
+        contentAlignment = Alignment.BottomCenter
+    ) {
+        // The nav bar surface
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(72.dp),
+            color = colorScheme.surface,
+            shadowElevation = 8.dp,
+            tonalElevation = 2.dp,
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp),
+                horizontalArrangement = Arrangement.SpaceAround,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Left nav items (before center)
+                items.forEachIndexed { index, item ->
+                    if (index == 1) {
+                        // Spacer for center button
+                        Spacer(modifier = Modifier.width(72.dp))
+                    }
+
+                    val isSelected = currentRoute?.contains(item.route) == true
+                    val color by animateColorAsState(
+                        targetValue = if (isSelected) colorScheme.primary else colorScheme.onSurfaceVariant,
+                        label = "nav_color_$index"
+                    )
+                    val iconScale by animateFloatAsState(
+                        targetValue = if (isSelected) 1.15f else 1f,
+                        label = "nav_scale_$index"
+                    )
+
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null,
+                            ) {
+                                onItemClick(item)
+                            }
+                            .padding(vertical = 8.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Icon(
+                            modifier = Modifier
+                                .size(24.dp)
+                                .scale(iconScale),
+                            painter = painterResource(id = item.icon),
+                            contentDescription = stringResource(item.title),
+                            tint = color
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = stringResource(item.title),
+                            maxLines = 1,
+                            style = typography.labelSmall.copy(
+                                color = color,
+                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                                fontSize = 10.sp
+                            ),
+                        )
+                    }
+                }
+            }
+        }
+
+        // Center power button — protruding above the nav bar
+
+        Box(
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .offset(y = (-24).dp),
+            contentAlignment = Alignment.Center
+        ) {
+
+
+            // Main button
+            Surface(
+                modifier = Modifier
+                    .size(64.dp)
+                    .shadow(
+                        if (isAnimationEnabled) 8.dp else 0.dp,
+                        CircleShape,
+                        ambientColor = colorScheme.primary,
+                        spotColor = colorScheme.primary
+                    ),
+                shape = CircleShape,
+                color = powerBgColor,
+                shadowElevation = 6.dp,
+                onClick = {
+                    if (!Settings.canDrawOverlays(context)) {
+                        showPermissionDialog = true
+                    } else {
+                        onToggleAnimation(!isAnimationEnabled)
+                    }
+                }
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    Icon(
+                        imageVector = Icons.Filled.PowerSettingsNew,
+                        contentDescription = if (isAnimationEnabled) {
+                            stringResource(R.string.power_on)
+                        } else {
+                            stringResource(R.string.power_off)
+                        },
+                        tint = powerIconColor,
+                        modifier = Modifier.size(30.dp)
+                    )
+                }
+            }
+        }
     }
 }

@@ -112,12 +112,6 @@
     <string name="skin_share_dialog_dismiss">Может быть позже</string>
     <string name="skin_share_dialog_toast_hint">Вы можете получить доступ к функции «Поделиться скином» позже на вкладке «Обзор».</string>
 
-    <string name="check_for_update_title">Проверить обновления</string>
-    <string name="check_for_update_summary">Нажмите, чтобы проверить наличие новой версии</string>
-    <string name="update_available_title">Доступно обновление</string>
-    <string name="update_now">Обновить</string>
-    <string name="up_to_date">У вас последняя версия!</string>
-    <string name="checking_for_update">Проверка…</string>
     <string name="onboarding_skin_title">Выберите скины</string>
     <string name="sponsor_title">Поддержать проект</string>
     <string name="theme_picker_title">Выбрать тему</string>
@@ -125,4 +119,5 @@
     <string name="dynamic_color_label">Динамический цвет (Material You)</string>
     <string name="sponsor_summary">Поддержите разработку ANeko ❤️</string>
     <string name="onboarding_skin_continue">Продолжить</string>
+    <string name="max_neko_reached">Вы можете выбрать не более 6 скинов одновременно.</string>
 </resources>

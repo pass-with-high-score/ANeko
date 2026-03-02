@@ -128,4 +128,5 @@
     <string name="dynamic_color_label">Màu động (Material You)</string>
     <string name="sponsor_summary">Hỗ trợ phát triển ANeko ❤️</string>
     <string name="onboarding_skin_continue">Tiếp tục</string>
+    <string name="max_neko_reached">Bạn chỉ có thể chọn tối đa 6 skin cùng lúc.</string>
 </resources>
