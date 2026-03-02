@@ -5,8 +5,8 @@ minSdk = "28"
 targetSdk = "36"
 
 # App versioning
-versionCode = "26"
-versionName = "2.0.0"
+versionCode = "27"
+versionName = "2.0.1"
 
 # Java/Kotlin
 kotlin = "2.3.10"
@@ -27,11 +27,11 @@ preferenceKtx = "1.2.1"
 workRuntime = "2.11.1"
 
 # Compose
-composeBom = "2026.02.00"
+composeBom = "2026.02.01"
 composeAnimations = "1.11.9"
 material = "1.13.0"
 materialIconsExtended = "1.7.8"
-uiTooling = "1.10.3"
+uiTooling = "1.10.4"
 
 # Compose Destinations
 composeDestinations = "2.3.0"

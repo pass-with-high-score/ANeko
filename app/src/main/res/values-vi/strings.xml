@@ -115,12 +115,6 @@
     <string name="skin_share_dialog_dismiss">Có thể sau</string>
     <string name="skin_share_dialog_toast_hint">Bạn có thể truy cập Chia sẻ skin sau từ tab Khám phá.</string>
 
-    <string name="check_for_update_title">Kiểm tra cập nhật</string>
-    <string name="check_for_update_summary">Nhấn để kiểm tra phiên bản mới hơn</string>
-    <string name="update_available_title">Có bản cập nhật mới</string>
-    <string name="update_now">Cập nhật</string>
-    <string name="up_to_date">Bạn đang dùng phiên bản mới nhất!</string>
-    <string name="checking_for_update">Đang kiểm tra…</string>
     <string name="onboarding_skin_title">Tải một số skin</string>
     <string name="sponsor_title">Tài trợ dự án</string>
     <string name="theme_picker_title">Chọn giao diện</string>
