@@ -1,6 +1,7 @@
 package org.nqmgaming.aneko.core.data.entity
 
 import android.content.Context
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.io.File
@@ -15,6 +16,8 @@ data class SkinEntity(
     val isActive: Boolean,
     val isFavorite: Boolean,
     val isBuiltin: Boolean = false,
+    @ColumnInfo(defaultValue = "")
+    val version: String = "",
 )
 
 fun SkinEntity.previewFile(context: Context): File {

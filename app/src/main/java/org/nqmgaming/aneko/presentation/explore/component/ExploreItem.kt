@@ -8,14 +8,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.Update
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -40,13 +44,20 @@ fun ExploreItem(
     isInstalled: Boolean,
     st: DownloadStatus,
     queuePos: Int?,
+    onUninstall: (() -> Unit)? = null,
+    localVersion: String = "",
 ) {
     val context = LocalContext.current
 
+    val hasUpdate = isInstalled && localVersion.isNotBlank() &&
+            collection.version.isNotBlank() && localVersion < collection.version
+
     val label = when (st) {
-        is DownloadStatus.Idle -> if (isInstalled)
-            stringResource(R.string.installed)
-        else stringResource(R.string.download)
+        is DownloadStatus.Idle -> when {
+            hasUpdate -> stringResource(R.string.update)
+            isInstalled -> stringResource(R.string.installed)
+            else -> stringResource(R.string.download)
+        }
 
         is DownloadStatus.Queued -> "${stringResource(R.string.queued)} #$queuePos"
 
@@ -113,52 +124,86 @@ fun ExploreItem(
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
+                    if (collection.version.isNotBlank()) {
+                        Text(
+                            text = "v${collection.version}",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
+                        )
+                    }
                 }
             }
-            Button(
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 12.dp),
-                shape = RoundedCornerShape(12.dp),
-                onClick = {
-                    when (st) {
-                        is DownloadStatus.Idle,
-                        is DownloadStatus.Failed,
-                        DownloadStatus.Done -> {
-                            SkinDownloadQueue.enqueue(
-                                context = context,
-                                task = DownloadTask(
-                                    id = collection.packageName,
-                                    url = collection.url,
-                                    fileName = "${collection.packageName}.zip"
+            ) {
+                Button(
+                    modifier = Modifier.weight(1f),
+                    shape = RoundedCornerShape(12.dp),
+                    onClick = {
+                        when (st) {
+                            is DownloadStatus.Idle,
+                            is DownloadStatus.Failed,
+                            DownloadStatus.Done -> {
+                                SkinDownloadQueue.enqueue(
+                                    context = context,
+                                    task = DownloadTask(
+                                        id = collection.packageName,
+                                        url = collection.url,
+                                        fileName = "${collection.packageName}.zip"
+                                    )
                                 )
+                            }
+
+                            is DownloadStatus.Queued -> {
+                                SkinDownloadQueue.cancel(collection.packageName)
+                            }
+
+                            is DownloadStatus.Downloading,
+                            DownloadStatus.Importing -> {
+                            }
+                        }
+                    },
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(8.dp)
+                    ) {
+                        Icon(
+                            imageVector = if (hasUpdate) Icons.Default.Update else Icons.Default.Download,
+                            contentDescription = label,
+                        )
+                        Text(
+                            text = label,
+                            style = MaterialTheme.typography.labelMedium,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                    }
+                }
+                if (isInstalled && onUninstall != null) {
+                    Spacer(modifier = Modifier.width(8.dp))
+                    OutlinedButton(
+                        onClick = onUninstall,
+                        shape = RoundedCornerShape(12.dp),
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.padding(8.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Delete,
+                                contentDescription = stringResource(R.string.uninstall),
+                                tint = MaterialTheme.colorScheme.error,
+                            )
+                            Text(
+                                text = stringResource(R.string.uninstall),
+                                style = MaterialTheme.typography.labelMedium,
+                                color = MaterialTheme.colorScheme.error,
                             )
                         }
-
-                        is DownloadStatus.Queued -> {
-                            SkinDownloadQueue.cancel(collection.packageName)
-                        }
-
-                        is DownloadStatus.Downloading,
-                        DownloadStatus.Importing -> {
-                        }
                     }
-                },
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(8.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Download,
-                        contentDescription = stringResource(R.string.download),
-                    )
-                    Text(
-                        text = label,
-                        style = MaterialTheme.typography.labelMedium,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
                 }
             }
         }

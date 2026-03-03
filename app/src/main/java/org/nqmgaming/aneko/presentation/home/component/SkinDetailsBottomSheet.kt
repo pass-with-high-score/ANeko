@@ -177,7 +177,7 @@ fun SkinDetailsBottomSheet(
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(
-                                    text = stringResource(R.string.delete_skin_label),
+                                    text = stringResource(R.string.uninstall),
                                     style = MaterialTheme.typography.labelLarge,
                                     fontWeight = FontWeight.Medium
                                 )

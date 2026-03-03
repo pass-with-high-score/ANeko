@@ -384,6 +384,7 @@ class AnekoViewModel @Inject constructor(
         var author: String
         var name: String
         var preview: String
+        var version: String
 
         FileInputStream(xmlFile).use { input ->
             val parser = Xml.newPullParser()
@@ -412,6 +413,7 @@ class AnekoViewModel @Inject constructor(
                     if (preview.isBlank()) {
                         return null
                     }
+                    version = parser.getAttributeValue(null, "version") ?: ""
                     return SkinEntity(
                         packageName = pkg,
                         author = author,
@@ -420,6 +422,7 @@ class AnekoViewModel @Inject constructor(
                         isActive = context.packageName == pkg,
                         isFavorite = false,
                         isBuiltin = context.packageName == pkg,
+                        version = version,
                     )
                 }
                 event = parser.next()

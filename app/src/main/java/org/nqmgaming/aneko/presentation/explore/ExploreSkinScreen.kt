@@ -5,27 +5,38 @@ import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.outlined.FileOpen
 import androidx.compose.material.icons.outlined.Inventory2
 import androidx.compose.material.icons.outlined.People
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
@@ -34,6 +45,7 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -150,6 +162,12 @@ fun ExploreSkinScreen(
                 }
             }
         },
+        onUninstall = { packageName ->
+            val skin = uiState.value.skins.find { it.packageName == packageName }
+            if (skin != null) {
+                viewModel.onDeselectSkin(skin, context)
+            }
+        },
     )
 }
 
@@ -163,6 +181,7 @@ fun ExploreSkin(
     onRefresh: () -> Unit = { },
     skinsLocal: List<SkinEntity> = emptyList(),
     onImportSkin: (Uri) -> Unit = { _ -> },
+    onUninstall: (String) -> Unit = { },
 ) {
     val context = LocalContext.current
     val state = rememberPullToRefreshState()
@@ -212,6 +231,10 @@ fun ExploreSkin(
         skinCollection?.filter { !it.isBuiltIn } ?: emptyList()
     }
 
+    var isMenuExpanded by remember { mutableStateOf(false) }
+    var isSearchVisible by remember { mutableStateOf(false) }
+    var searchQuery by rememberSaveable { mutableStateOf("") }
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -223,29 +246,72 @@ fun ExploreSkin(
                         ),
                     )
                 },
-                navigationIcon = {
-                    IconButton(onClick = { isShowInfoDialog = true }) {
-                        Icon(
-                            imageVector = Icons.Default.Info,
-                            contentDescription = null
-                        )
-                    }
-                },
                 actions = {
                     IconButton(onClick = {
-                        context.openUrl(context.getStringResource(R.string.skin_share_url))
+                        isSearchVisible = !isSearchVisible
+                        if (!isSearchVisible) searchQuery = ""
                     }) {
                         Icon(
-                            imageVector = Icons.Default.Share,
+                            imageVector = if (isSearchVisible) Icons.Default.Close else Icons.Default.Search,
                             contentDescription = null
                         )
                     }
-                    IconButton(onClick = {
-                        context.openUrl(context.getStringResource(R.string.skin_builder_url))
-                    }) {
+                    IconButton(onClick = { isMenuExpanded = true }) {
                         Icon(
-                            imageVector = Icons.Default.Add,
+                            imageVector = Icons.Default.MoreVert,
                             contentDescription = null
+                        )
+                    }
+                    DropdownMenu(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        expanded = isMenuExpanded,
+                        onDismissRequest = { isMenuExpanded = false },
+                        shape = MaterialTheme.shapes.large,
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text(stringResource(R.string.what_is_this)) },
+                            onClick = {
+                                isMenuExpanded = false
+                                isShowInfoDialog = true
+                            },
+                            leadingIcon = {
+                                Icon(Icons.Default.Info, contentDescription = null)
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = { Text(stringResource(R.string.skin_share_dialog_title)) },
+                            onClick = {
+                                isMenuExpanded = false
+                                context.openUrl(context.getStringResource(R.string.skin_share_url))
+                            },
+                            leadingIcon = {
+                                Icon(Icons.Default.Share, contentDescription = null)
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = { Text(stringResource(R.string.skin_builder_title)) },
+                            onClick = {
+                                isMenuExpanded = false
+                                context.openUrl(context.getStringResource(R.string.skin_builder_url))
+                            },
+                            leadingIcon = {
+                                Icon(Icons.Default.Add, contentDescription = null)
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = { Text(stringResource(R.string.try_to_import_from_zip)) },
+                            onClick = {
+                                isMenuExpanded = false
+                                filePickerLauncher.launch(
+                                    arrayOf(
+                                        "application/zip",
+                                        "application/x-zip-compressed"
+                                    )
+                                )
+                            },
+                            leadingIcon = {
+                                Icon(Icons.Outlined.FileOpen, contentDescription = null)
+                            }
                         )
                     }
                 }
@@ -307,9 +373,67 @@ fun ExploreSkin(
                 ) { page ->
                     val currentSkins = if (page == 0) builtInSkins else communitySkins
 
+                    // Filter based on search query
+                    val filteredSkins = remember(currentSkins, searchQuery) {
+                        if (searchQuery.isBlank()) currentSkins
+                        else currentSkins.filter {
+                            it.name.contains(searchQuery, ignoreCase = true) ||
+                                    (it.author?.contains(searchQuery, ignoreCase = true) == true)
+                        }
+                    }
+
                     if (skinCollection != null) {
-                        LazyColumn(modifier = modifier.fillMaxSize()) {
-                            if (currentSkins.isEmpty() && !isLoading) {
+                        val listState = rememberLazyListState()
+
+                        LaunchedEffect(isSearchVisible) {
+                            if (isSearchVisible) listState.animateScrollToItem(0)
+                        }
+
+                        LazyColumn(
+                            state = listState,
+                            modifier = modifier.fillMaxSize()
+                        ) {
+                            // Search field inside tab
+                            item {
+                                Column {
+                                    AnimatedVisibility(visible = isSearchVisible) {
+                                        OutlinedTextField(
+                                            value = searchQuery,
+                                            onValueChange = { searchQuery = it },
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(horizontal = 16.dp, vertical = 8.dp),
+                                            placeholder = { Text(stringResource(R.string.search_skin_placeholder)) },
+                                            singleLine = true,
+                                            leadingIcon = {
+                                                Icon(
+                                                    Icons.Default.Search,
+                                                    contentDescription = null
+                                                )
+                                            },
+                                            trailingIcon = {
+                                                if (searchQuery.isNotEmpty()) {
+                                                    IconButton(onClick = { searchQuery = "" }) {
+                                                        Icon(
+                                                            Icons.Default.Close,
+                                                            contentDescription = null
+                                                        )
+                                                    }
+                                                }
+                                            },
+                                            shape = MaterialTheme.shapes.extraLarge,
+                                            colors = OutlinedTextFieldDefaults.colors(
+                                                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                                                unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(
+                                                    alpha = 0.5f
+                                                ),
+                                            )
+                                        )
+                                    }
+                                }
+                            }
+
+                            if (filteredSkins.isEmpty() && !isLoading) {
                                 item {
                                     Column(
                                         modifier = Modifier
@@ -340,8 +464,8 @@ fun ExploreSkin(
                                 }
                             }
 
-                            items(currentSkins.size) { index ->
-                                val collection = currentSkins[index]
+                            items(filteredSkins.size) { index ->
+                                val collection = filteredSkins[index]
                                 val st =
                                     statusMap[collection.packageName] ?: DownloadStatus.Idle
                                 val queuePos =
@@ -352,9 +476,17 @@ fun ExploreSkin(
                                     isInstalled = isInstalled(collection.packageName),
                                     st = st,
                                     queuePos = queuePos,
+                                    onUninstall = if (isInstalled(collection.packageName)) {
+                                        { onUninstall(collection.packageName) }
+                                    } else null,
+                                    localVersion = skinsLocal.find {
+                                        it.packageName == collection.packageName
+                                    }?.version ?: "",
                                 )
                             }
-                            item { Spacer(modifier = Modifier.height(90.dp)) }
+                            item {
+                                Spacer(modifier = Modifier.height(if (isSearchVisible) 300.dp else 90.dp))
+                            }
                         }
                     }
                 }

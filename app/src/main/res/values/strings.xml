@@ -70,6 +70,7 @@
     <string name="choose_language_title">Choose language</string>
     <string name="contribute_to_translation">Contribute to translation</string>
     <string name="txt_explore">Explore</string>
+    <string name="search_skin_placeholder">Search by name or author…</string>
     <string name="tab_built_in">Built-in</string>
     <string name="tab_community">Community</string>
     <string name="txt_loading">Loading</string>
@@ -94,8 +95,11 @@
     <string name="downloading">Downloading</string>
     <string name="importing">Importing…</string>
     <string name="installed">Installed</string>
+    <string name="uninstall">Uninstall</string>
+    <string name="update">Update</string>
     <string name="retry">Retry</string>
     <string name="skin_builder_url" translatable="false">https://devtool.pwhs.app/aneko-builder</string>
+    <string name="skin_builder_title">Skin Builder</string>
     <string name="skin_share_url" translatable="false">https://aneko.pwhs.app/share-skin</string>
 
     <!-- Skin Builder Dialog -->

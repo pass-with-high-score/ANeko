@@ -70,7 +70,7 @@ object ApiModule {
         @ApplicationContext context: Context
     ): AnekoDatabase =
         Room.databaseBuilder(context, AnekoDatabase::class.java, DB_NAME)
-            .fallbackToDestructiveMigration(false)
+            .fallbackToDestructiveMigration(true)
             .build()
 
     @Provides
