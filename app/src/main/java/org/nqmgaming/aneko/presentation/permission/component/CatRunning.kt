@@ -26,7 +26,7 @@ import org.nqmgaming.aneko.R
 
 
 @Composable
-fun CatRunning() {
+fun CatRunning(modifier: Modifier = Modifier) {
     val action = remember {
         listOf(CatAction.RIGHT, CatAction.KAKI).random()
     }
@@ -59,7 +59,7 @@ fun CatRunning() {
 
 
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
     ) { innerPadding ->
         Column(

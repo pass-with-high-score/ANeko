@@ -2,6 +2,7 @@ package org.nqmgaming.aneko.core.util
 
 import android.content.Context
 import android.content.res.Configuration
+import androidx.core.content.edit
 import java.util.Locale
 
 object LocaleHelper {
@@ -10,9 +11,9 @@ object LocaleHelper {
     fun setLocale(context: Context, languageCode: String) {
         // Save preference
         context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-            .edit()
-            .putString(SELECTED_LANGUAGE, languageCode)
-            .apply()
+            .edit {
+                putString(SELECTED_LANGUAGE, languageCode)
+            }
     }
 
     fun getLocale(context: Context): String {

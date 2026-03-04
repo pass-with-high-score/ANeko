@@ -37,13 +37,14 @@ fun SwitchPreferenceItem(
     key: String,
     defaultValue: Boolean,
     prefs: SharedPreferences,
+    modifier: Modifier = Modifier,
 ) {
     var isChecked by remember {
         mutableStateOf(prefs.getBoolean(key, defaultValue))
     }
 
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),

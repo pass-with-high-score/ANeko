@@ -158,15 +158,6 @@ class AnekoViewModel @Inject constructor(
         prefs.edit { putBoolean(AnimationService.PREF_KEY_ENABLE, enabled) }
     }
 
-    fun onSelectSkin(packageName: String) {
-        viewModelScope.launch {
-            repo.switchActive(packageName)
-        }
-        prefs.edit {
-            putString(AnimationService.PREF_KEY_SKIN_COMPONENT, packageName)
-        }
-    }
-
     fun onToggleSkin(packageName: String, context: Context) {
         viewModelScope.launch {
             val currentActive = repo.countActive()

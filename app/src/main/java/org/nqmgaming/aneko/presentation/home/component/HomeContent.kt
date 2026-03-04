@@ -18,6 +18,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -38,7 +39,7 @@ fun HomeContent(
     onRequestDeleteSkin: (SkinEntity) -> Unit = { _ -> },
 ) {
     val context = LocalContext.current
-    val activeCount = skins.count { it.isActive }
+    val activeCount = remember(skins) { skins.count { it.isActive } }
 
     Box {
         Column(
@@ -64,7 +65,7 @@ fun HomeContent(
                             SkinCard(
                                 skin = skin,
                                 isSelected = skin.isActive,
-                                onSkinSelected = {
+                                onSkinSelect = {
                                     onToggleSkin(skin.packageName)
                                 },
                                 onRequestDeleteSkin = {

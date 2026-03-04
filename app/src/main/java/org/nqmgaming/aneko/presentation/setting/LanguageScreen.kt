@@ -48,7 +48,7 @@ fun LanguageScreen(
     val context = LocalContext.current
     val codes = LocalResources.current.getStringArray(R.array.language_codes)
     val names = LocalResources.current.getStringArray(R.array.language_names)
-    val languages = codes.zip(names) { code, name -> Language(code, name) }
+    val languages = remember { codes.zip(names) { code, name -> Language(code, name) } }
 
     val currentLanguage = remember {
         mutableStateOf(LocaleHelper.getLocale(context))

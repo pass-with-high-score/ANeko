@@ -40,9 +40,10 @@ fun SliderPreferenceItem(
     entryValues: Array<String>,
     key: String,
     defaultValue: String,
-    prefs: SharedPreferences
+    prefs: SharedPreferences,
+    modifier: Modifier = Modifier
 ) {
-    val floatEntryValues = entryValues.mapNotNull { it.toFloatOrNull() }
+    val floatEntryValues = remember(entryValues) { entryValues.mapNotNull { it.toFloatOrNull() } }
     val valueRange = floatEntryValues.minOrNull()!!..floatEntryValues.maxOrNull()!!
     val steps = floatEntryValues.size - 2
 
@@ -57,7 +58,7 @@ fun SliderPreferenceItem(
         .coerceIn(0, entries.lastIndex)
 
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
@@ -93,7 +94,9 @@ fun SliderPreferenceItem(
                 value = sliderValue,
                 onValueChange = { sliderValue = it },
                 onValueChangeFinished = {
-                    val closest = floatEntryValues.minByOrNull { fv -> kotlin.math.abs(fv - sliderValue) } ?: floatEntryValues.first()
+                    val closest =
+                        floatEntryValues.minByOrNull { fv -> kotlin.math.abs(fv - sliderValue) }
+                            ?: floatEntryValues.first()
                     sliderValue = closest
                     prefs.edit { putString(key, closest.toString()) }
                 },

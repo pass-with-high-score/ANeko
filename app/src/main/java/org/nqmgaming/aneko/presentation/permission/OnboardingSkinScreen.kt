@@ -23,12 +23,8 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -38,6 +34,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
 import com.ramcosta.composedestinations.generated.destinations.HomeScreenDestination
@@ -60,10 +57,9 @@ fun OnboardingSkinScreen(
     navigator: DestinationsNavigator,
     viewModel: AnekoViewModel = hiltViewModel()
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    var isImporting by rememberSaveable { mutableStateOf(false) }
 
     val skinCollection = uiState.skinCollections
     val skinsLocal = uiState.skins
@@ -71,12 +67,11 @@ fun OnboardingSkinScreen(
     val isRefreshing = uiState.isRefreshing
 
     val state = rememberPullToRefreshState()
-    val statusMap by SkinDownloadQueue.status.collectAsState()
+    val statusMap by SkinDownloadQueue.status.collectAsStateWithLifecycle()
 
     SkinDownloadQueue.onImported = { _, uri ->
         scope.launch {
             try {
-                isImporting = true
                 val pkg = viewModel.importSkinFromUri(
                     context = context,
                     zipUri = uri.toUri(),
@@ -97,8 +92,6 @@ fun OnboardingSkinScreen(
                     context.getStringResource(R.string.failed_to_import_skin, e.message ?: ""),
                     Toast.LENGTH_SHORT
                 ).show()
-            } finally {
-                isImporting = false
             }
         }
     }

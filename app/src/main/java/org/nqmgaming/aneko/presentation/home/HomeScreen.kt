@@ -7,7 +7,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -16,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
 import com.ramcosta.composedestinations.generated.destinations.LanguageScreenDestination
@@ -33,8 +33,8 @@ fun HomeScreen(
     navigator: DestinationsNavigator,
     viewModel: AnekoViewModel = hiltViewModel(),
 ) {
-    val uiState = viewModel.uiState.collectAsState()
-    val isFirstLaunch = viewModel.isFirstLaunch.collectAsState().value
+    val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+    val isFirstLaunch = viewModel.isFirstLaunch.collectAsStateWithLifecycle().value
     var isShowingDialog by rememberSaveable { mutableStateOf(isFirstLaunch) }
     val context = LocalContext.current
 

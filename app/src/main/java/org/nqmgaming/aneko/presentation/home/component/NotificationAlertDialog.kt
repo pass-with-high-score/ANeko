@@ -20,12 +20,11 @@ import org.nqmgaming.aneko.R
 import org.nqmgaming.aneko.core.util.extension.openUrl
 
 @Composable
-fun NotificationAlertDialog(
-    onDismiss: () -> Unit,
-) {
+fun NotificationAlertDialog(onDismiss: () -> Unit, modifier: Modifier = Modifier) {
     val resource = LocalResources.current
     val context = LocalContext.current
     AlertDialog(
+        modifier = modifier,
         containerColor = colorScheme.surface,
         onDismissRequest = onDismiss,
         title = {

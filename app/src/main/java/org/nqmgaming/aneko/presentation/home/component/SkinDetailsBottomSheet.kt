@@ -47,8 +47,8 @@ import org.nqmgaming.aneko.R
 import org.nqmgaming.aneko.core.data.entity.SkinEntity
 import org.nqmgaming.aneko.core.data.entity.previewModel
 import org.nqmgaming.aneko.core.shortcuts.ShortcutManagerHelper
-import org.nqmgaming.aneko.core.util.zipDirectory
 import org.nqmgaming.aneko.core.util.extension.getStringResource
+import org.nqmgaming.aneko.core.util.zipDirectory
 import timber.log.Timber
 import java.io.File
 
@@ -59,7 +59,8 @@ fun SkinDetailsBottomSheet(
     isBottomSheetVisible: Boolean,
     bottomSheetState: SheetState,
     onDismissRequest: () -> Unit,
-    onRequestDeleteSkin: () -> Unit
+    onRequestDeleteSkin: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
     val model = remember(skin.packageName, skin.previewPath) {
@@ -70,6 +71,7 @@ fun SkinDetailsBottomSheet(
     }
     if (isBottomSheetVisible) {
         ModalBottomSheet(
+            modifier = modifier,
             sheetState = bottomSheetState,
             onDismissRequest = onDismissRequest,
             containerColor = MaterialTheme.colorScheme.surface,

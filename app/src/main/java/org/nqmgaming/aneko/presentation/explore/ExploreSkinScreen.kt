@@ -464,7 +464,9 @@ fun ExploreSkin(
                                 }
                             }
 
-                            items(filteredSkins.size) { index ->
+                            items(
+                                filteredSkins.size,
+                                key = { filteredSkins[it].packageName }) { index ->
                                 val collection = filteredSkins[index]
                                 val st =
                                     statusMap[collection.packageName] ?: DownloadStatus.Idle

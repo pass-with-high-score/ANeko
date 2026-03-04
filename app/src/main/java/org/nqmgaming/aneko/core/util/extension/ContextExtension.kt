@@ -33,16 +33,26 @@ fun Context.checkNotificationPermission(
 fun Activity.changeLanguage(languageCode: String) {
     LocaleHelper.setLocale(this, languageCode)
 
-    // Restart from root with smooth transition
-    val intent = Intent(this, ANekoActivity::class.java)
-    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+    val intent = Intent(this, ANekoActivity::class.java).apply {
+        flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+    }
 
     startActivity(intent)
-    overrideActivityTransition(
-        Activity.OVERRIDE_TRANSITION_OPEN,
-        android.R.anim.fade_in,
-        android.R.anim.fade_out
-    )
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+        overrideActivityTransition(
+            Activity.OVERRIDE_TRANSITION_OPEN,
+            android.R.anim.fade_in,
+            android.R.anim.fade_out
+        )
+    } else {
+        @Suppress("DEPRECATION")
+        overridePendingTransition(
+            android.R.anim.fade_in,
+            android.R.anim.fade_out
+        )
+    }
+
     finish()
 }
 

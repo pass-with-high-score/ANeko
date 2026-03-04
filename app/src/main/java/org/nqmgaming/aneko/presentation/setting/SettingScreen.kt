@@ -25,11 +25,12 @@ import org.nqmgaming.aneko.presentation.ui.theme.ANekoTheme
 
 @Composable
 fun SettingsScreen(
+    modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
     val prefs = PreferenceManager.getDefaultSharedPreferences(context)
 
-    Column(modifier = Modifier.padding(16.dp)) {
+    Column(modifier = modifier.padding(16.dp)) {
         PreferenceContainer(
             title = R.string.motion_settings_title
         ) {

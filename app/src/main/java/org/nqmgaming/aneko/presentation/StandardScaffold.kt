@@ -10,8 +10,11 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -53,7 +56,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -131,12 +133,12 @@ fun StandardScaffold(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
     Scaffold(
-        containerColor = Color.Transparent,
         bottomBar = {
             AnimatedVisibility(
                 visible = showBottomBar,
-                enter = fadeIn(),
-                exit = fadeOut()
+                enter = fadeIn() + expandVertically(),
+                exit = fadeOut() + shrinkVertically(),
+                modifier = Modifier.background(colorScheme.surface)
             ) {
                 AppBottomBar(
                     items = items,
@@ -237,17 +239,17 @@ private fun AppBottomBar(
     )
 
     Box(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(colorScheme.surface)
+            .navigationBarsPadding(),
         contentAlignment = Alignment.BottomCenter
     ) {
         // The nav bar surface
         Surface(
             modifier = Modifier
-                .fillMaxWidth()
-                .navigationBarsPadding(),
+                .fillMaxWidth(),
             color = colorScheme.surface,
-            shadowElevation = 8.dp,
-            tonalElevation = 2.dp,
         ) {
             Row(
                 modifier = Modifier
@@ -310,7 +312,6 @@ private fun AppBottomBar(
         }
 
         // Center power button — protruding above the nav bar
-
         Box(
             modifier = Modifier
                 .align(Alignment.TopCenter)

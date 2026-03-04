@@ -23,10 +23,11 @@ fun PreferenceItem(
     title: String,
     summary: String,
     icon: Int,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .clickable { onClick() }
             .padding(16.dp)
             .fillMaxWidth(),

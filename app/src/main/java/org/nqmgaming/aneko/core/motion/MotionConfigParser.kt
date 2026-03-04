@@ -50,7 +50,6 @@ class MotionConfigParser(
         val end = attrs.getAttributeIntValue(null, "end", -1)
 
         if (end > start) {
-            // Tạo chuỗi dạng prefix%03d.png theo quy tắc cũ
             val prefix = filename.replaceFirst("\\d+$".toRegex(), "")
             val fmt = "$resourceBaseDir/$prefix%03d.png"
             for (i in start..end) {

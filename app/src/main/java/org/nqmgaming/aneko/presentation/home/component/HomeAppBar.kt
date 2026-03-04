@@ -31,10 +31,12 @@ import java.util.Locale
 fun HomeAppBar(
     onShowLanguageScreen: () -> Unit,
     onShowThemeScreen: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
 
     CenterAlignedTopAppBar(
+        modifier = modifier,
         title = {
             Text(
                 text = stringResource(R.string.app_name),

@@ -15,8 +15,8 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun PreferenceContainer(
-    modifier: Modifier = Modifier,
     @StringRes title: Int,
+    modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
     Column(

@@ -44,8 +44,9 @@ fun ExploreItem(
     isInstalled: Boolean,
     st: DownloadStatus,
     queuePos: Int?,
+    modifier: Modifier = Modifier,
     onUninstall: (() -> Unit)? = null,
-    localVersion: String = "",
+    localVersion: String = ""
 ) {
     val context = LocalContext.current
 
@@ -68,7 +69,7 @@ fun ExploreItem(
         is DownloadStatus.Failed -> stringResource(R.string.retry)
     }
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp),
         shape = RoundedCornerShape(16.dp),

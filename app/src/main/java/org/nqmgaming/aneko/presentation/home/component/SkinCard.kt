@@ -50,8 +50,9 @@ import org.nqmgaming.aneko.core.data.entity.previewModel
 fun SkinCard(
     skin: SkinEntity,
     isSelected: Boolean,
-    onSkinSelected: () -> Unit,
+    onSkinSelect: () -> Unit,
     onRequestDeleteSkin: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
     val borderColor = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent
@@ -67,7 +68,7 @@ fun SkinCard(
 
     Box {
         Card(
-            modifier = Modifier
+            modifier = modifier
                 .width(160.dp)
                 .height(200.dp)
                 .border(
@@ -78,7 +79,7 @@ fun SkinCard(
             shape = MaterialTheme.shapes.large,
             elevation = CardDefaults.cardElevation(6.dp),
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-            onClick = onSkinSelected
+            onClick = onSkinSelect
         ) {
 
             Row(

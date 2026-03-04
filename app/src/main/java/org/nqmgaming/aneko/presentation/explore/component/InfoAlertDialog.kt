@@ -18,9 +18,10 @@ import org.nqmgaming.aneko.core.util.extension.getStringResource
 import org.nqmgaming.aneko.core.util.extension.openUrl
 
 @Composable
-fun InfoAlertDialog(onDismiss: () -> Unit) {
+fun InfoAlertDialog(onDismiss: () -> Unit, modifier: Modifier = Modifier) {
     val context = LocalContext.current
     AlertDialog(
+        modifier = modifier,
         containerColor = MaterialTheme.colorScheme.surface,
         onDismissRequest = onDismiss,
         title = {

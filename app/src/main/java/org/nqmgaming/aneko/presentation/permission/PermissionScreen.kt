@@ -29,7 +29,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -48,6 +47,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
 import com.ramcosta.composedestinations.generated.destinations.HomeScreenDestination
@@ -55,7 +55,6 @@ import com.ramcosta.composedestinations.generated.destinations.LanguageScreenDes
 import com.ramcosta.composedestinations.generated.destinations.OnboardingSkinScreenDestination
 import com.ramcosta.composedestinations.generated.destinations.PermissionScreenDestination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.nqmgaming.aneko.R
@@ -75,38 +74,47 @@ fun PermissionScreen(
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
+    val scope = rememberCoroutineScope()
     var checking by remember { mutableStateOf(true) }
-    val isFinishedSetup = viewModel.isFinishedSetup.collectAsState().value
+    var hasNavigated by remember { mutableStateOf(false) }
+    val isFinishedSetup = viewModel.isFinishedSetup.collectAsStateWithLifecycle().value
 
-    suspend fun checkAndNavigate() = run {
-        checking = true
-        delay(1.seconds)
+    fun checkAndNavigate() {
+        if (hasNavigated) return
+        scope.launch {
+            checking = true
+            delay(1.seconds)
 
-        if (isFinishedSetup) {
-            navigator.navigate(HomeScreenDestination()) {
-                popUpTo(PermissionScreenDestination) { inclusive = true }
+            // Guard: don't navigate if lifecycle is not at least RESUMED
+            val currentState = lifecycleOwner.lifecycle.currentState
+            if (!currentState.isAtLeast(Lifecycle.State.RESUMED) || hasNavigated) {
+                return@launch
             }
-        } else if (Settings.canDrawOverlays(context)) {
-            navigator.navigate(OnboardingSkinScreenDestination()) {
-                popUpTo(PermissionScreenDestination) { inclusive = true }
+
+            if (isFinishedSetup) {
+                hasNavigated = true
+                navigator.navigate(HomeScreenDestination()) {
+                    popUpTo(PermissionScreenDestination) { inclusive = true }
+                }
+            } else if (Settings.canDrawOverlays(context)) {
+                hasNavigated = true
+                navigator.navigate(OnboardingSkinScreenDestination()) {
+                    popUpTo(PermissionScreenDestination) { inclusive = true }
+                }
+            } else {
+                checking = false
             }
-        } else {
-            checking = false
         }
     }
-
 
     LaunchedEffect(Unit) {
         checkAndNavigate()
     }
 
-
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
-                MainScope().launch {
-                    checkAndNavigate()
-                }
+                checkAndNavigate()
             }
         }
         lifecycleOwner.lifecycle.addObserver(observer)
