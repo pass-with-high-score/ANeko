@@ -71,10 +71,12 @@ fun HomeScreen(
 
         if (isFirstLaunch && isShowingDialog) {
             // show welcome dialog
-            NotificationAlertDialog {
-                isShowingDialog = false
-                viewModel.setFirstLaunchDone()
-            }
+            NotificationAlertDialog(
+                onDismiss = {
+                    isShowingDialog = false
+                    viewModel.setFirstLaunchDone()
+                }
+            )
         }
     }
 }
