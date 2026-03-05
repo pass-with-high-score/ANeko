@@ -111,9 +111,7 @@ Pull requests and issue reports are welcome.
 Help us improve ANeko Reborn!
 
 ### Help us translate ANeko
-
-Want to see ANeko in your language?
-Create a pull request with your translation.
+* Want to see ANeko in your language? Create a pull request with your translation.
 ---
 
 ## Star History
