@@ -88,17 +88,6 @@ fun LanguageScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            item {
-                TextButton(
-                    onClick = { /* TODO: open translation contribution link */ },
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                ) {
-                    Text(stringResource(R.string.contribute_to_translation))
-                }
-                HorizontalDivider(
-                    color = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f)
-                )
-            }
             items(languages) { language ->
                 Row(
                     modifier = Modifier
