@@ -113,8 +113,7 @@ Help us improve ANeko Reborn!
 ### Help us translate ANeko
 
 Want to see ANeko in your language?
-Join our translation project here: [https://poeditor.com/join/project/zX7Nu44XDh](https://poeditor.com/join/project/zX7Nu44XDh)
-
+Create a pull request with your translation.
 ---
 
 ## Star History
