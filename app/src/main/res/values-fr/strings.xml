@@ -120,4 +120,8 @@
     <string name="sponsor_summary">Soutenez le développement d\'ANeko ❤️</string>
     <string name="onboarding_skin_continue">Continuer</string>
     <string name="max_neko_reached">Vous pouvez sélectionner jusqu\'à 6 skins à la fois.</string>
+    <string name="search_skin_placeholder">Rechercher par nom ou auteur…</string>
+    <string name="uninstall">Désinstaller</string>
+    <string name="update">Mettre à jour</string>
+    <string name="skin_builder_title">Créateur de skins</string>
 </resources>

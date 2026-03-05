@@ -124,4 +124,8 @@
     <string name="sponsor_summary">ادعم تطوير ANeko ❤️</string>
     <string name="onboarding_skin_continue">متابعة</string>
     <string name="max_neko_reached">يمكنك اختيار ما يصل إلى 6 أشكال في وقت واحد.</string>
+    <string name="search_skin_placeholder">ابحث بالاسم أو المؤلف…</string>
+    <string name="uninstall">إلغاء التثبيت</string>
+    <string name="update">تحديث</string>
+    <string name="skin_builder_title">منشئ المظهر</string>
 </resources>

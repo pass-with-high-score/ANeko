@@ -124,4 +124,8 @@
     <string name="sponsor_summary">Hỗ trợ phát triển ANeko ❤️</string>
     <string name="onboarding_skin_continue">Tiếp tục</string>
     <string name="max_neko_reached">Bạn chỉ có thể chọn tối đa 6 skin cùng lúc.</string>
+    <string name="search_skin_placeholder">Tìm theo tên hoặc tác giả…</string>
+    <string name="uninstall">Gỡ cài đặt</string>
+    <string name="update">Cập nhật</string>
+    <string name="skin_builder_title">Trình tạo skin</string>
 </resources>
