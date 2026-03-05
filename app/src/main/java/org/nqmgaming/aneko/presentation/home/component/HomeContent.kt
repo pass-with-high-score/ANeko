@@ -125,6 +125,7 @@ fun HomeContent(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
+            Spacer(modifier = Modifier.height(100.dp))
         }
     }
 
