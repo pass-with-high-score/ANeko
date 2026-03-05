@@ -45,7 +45,6 @@
     <string name="failed_to_share_apk_label">Не удалось поделиться APK %1$s</string>
     <string name="package_skin_label">Пакет skin: %1$s</string>
     <string name="version_skin_label">Версия skin: %1$s</string>
-    <string name="delete_skin_label">Удалить skin</string>
     <string name="unknown_skin_version">Unknown</string>
     <string name="notification_chanel_description">Фоновый сервис для ANeko</string>
     <string name="website_title">Веб-сайт</string>

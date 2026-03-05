@@ -63,6 +63,17 @@ fun HomeAppBar(
         },
         actions = {
             IconButton(onClick = {
+                val uri = context.getStringResource(R.string.discord_group_link).toUri()
+                val intent = Intent(Intent.ACTION_VIEW, uri)
+                context.startActivity(intent)
+            }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_discord),
+                    contentDescription = null,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+            IconButton(onClick = {
                 val uri = context.getStringResource(R.string.telegram_group_link).toUri()
                 val intent = Intent(Intent.ACTION_VIEW, uri)
                 context.startActivity(intent)

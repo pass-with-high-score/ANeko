@@ -47,7 +47,6 @@
     <string name="failed_to_share_apk_label">Không thể chia sẻ APK %1$s</string>
     <string name="package_skin_label">Gói Skin: %1$s</string>
     <string name="version_skin_label">Phiên bản Skin: %1$s</string>
-    <string name="delete_skin_label">Xóa Skin</string>
     <string name="unknown_skin_version">Unknown</string>
     <string name="notification_chanel_description">Thông báo nền để điều khiển ANeko</string>
     <string name="website_title">Trang web</string>

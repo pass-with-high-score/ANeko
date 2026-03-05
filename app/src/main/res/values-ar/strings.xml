@@ -49,7 +49,6 @@
     <string name="failed_to_share_apk_label">فشل في مشاركة ملف APK لـ %1$s</string>
     <string name="package_skin_label">الحزمة: %1$s</string>
     <string name="version_skin_label">الإصدار: %1$s</string>
-    <string name="delete_skin_label">حذف الشكل</string>
     <string name="unknown_skin_version">غير معروف</string>
     <string name="notification_chanel_description">خدمة خلفية لـ ANeko</string>
     <string name="website_title">الموقع الإلكتروني</string>

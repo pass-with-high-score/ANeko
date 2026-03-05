@@ -44,7 +44,6 @@
     <string name="failed_to_share_apk_label">Échec lors du partage de %1$s APK</string>
     <string name="package_skin_label">Paquet : %1$s</string>
     <string name="version_skin_label">Version : %1$s</string>
-    <string name="delete_skin_label">Supprimer le skin</string>
     <string name="unknown_skin_version">Inconnu</string>
     <string name="notification_chanel_description">Service d\'arrière-plan pour ANeko</string>
     <string name="website_title">Site web</string>

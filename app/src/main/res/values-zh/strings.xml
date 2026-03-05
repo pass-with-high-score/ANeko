@@ -45,7 +45,6 @@
     <string name="failed_to_share_apk_label">分享 %1$s APK 失败</string>
     <string name="package_skin_label">Skin 包名：%1$s</string>
     <string name="version_skin_label">Skin 版本：%1$s</string>
-    <string name="delete_skin_label">删除 Skin</string>
     <string name="unknown_skin_version">Unknown</string>
     <string name="notification_chanel_description">ANeko 的后台服务</string>
     <string name="website_title">网站</string>

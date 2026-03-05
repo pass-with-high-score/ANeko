@@ -58,11 +58,11 @@
     <string name="failed_to_share_apk_label">Failed to share %1$s APK</string>
     <string name="package_skin_label">Package: %1$s</string>
     <string name="version_skin_label">Version: %1$s</string>
-    <string name="delete_skin_label">Delete Skin</string>
     <string name="unknown_skin_version">Unknown</string>
     <string name="aneko_notification_channel_name" translatable="false">ANeko Service</string>
     <string name="notification_chanel_description">Background service for ANeko</string>
     <string name="telegram_group_link" translatable="false">https://t.me/aneko_community</string>
+    <string name="discord_group_link" translatable="false">https://discord.gg/EbQxjv2D</string>
     <string name="search_app" translatable="false"><![CDATA[https://play.google.com/store/search?q=aneko%20skin&c=apps]]></string>
     <string name="aneko_url" translatable="false">https://aneko.pwhs.app</string>
     <string name="website_title">Website</string>

@@ -52,7 +52,6 @@
     <string name="failed_to_share_apk_label">"Nicht geteilt %1$s APK"</string>
     <string name="package_skin_label">"Paket: %1$s"</string>
     <string name="version_skin_label">"Version: %1$s"</string>
-    <string name="delete_skin_label">"Skin gelöscht"</string>
     <string name="unknown_skin_version">"Unbekannt"</string>
 
     <!-- Fuzzy -->
