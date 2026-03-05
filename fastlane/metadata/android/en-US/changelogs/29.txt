@@ -1,0 +1,8 @@
+- Fixed an issue where part of the Home screen was cut off at the bottom
+- Fixed incorrect padding for the bottom navigation bar
+- Added support for custom motion per skin
+- Added keyboard avoidance to prevent UI overlap
+- Fixed an issue where the shortcut could not toggle skins on/off
+- Fixed the Quick Settings tile icon
+- Added update, search, and uninstall features for skins in the Explore screen
+- Added a Discord community group
