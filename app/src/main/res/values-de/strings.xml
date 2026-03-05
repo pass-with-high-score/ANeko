@@ -17,6 +17,7 @@
     <string name="motion_transparency_summary">"Stelle den Transparenzgrad ein."</string>
     <string name="motion_focus_summary">Wenn aktiviert, ist ANeko nicht transparent, nimmt aber den Fokus ein.</string>
     <string name="motion_size_summary">"Stelle die Größe ein."</string>
+    <string name="motion_settings_default_title">Bewegungseinstellung (Standard)</string>
     <string name="motion_settings_title">"Bewegungseinstellung"</string>
     <string name="motion_speed_summary">"Stelle die Geschwindigkeit der Bewegung ein."</string>
     <string name="motion_bottom_offset_summary">Halte das Neko vom unteren Bildschirmrand fern, um Überlappungen mit der Tastatur zu vermeiden.</string>
@@ -132,4 +133,10 @@
     <string name="uninstall">Deinstallieren</string>
     <string name="update">Aktualisieren</string>
     <string name="skin_builder_title">Skin-Builder</string>
+
+    <!-- Per-skin Settings -->
+    <string name="skin_size_label">Größe</string>
+    <string name="skin_transparency_label">Transparenz</string>
+    <string name="skin_speed_label">Geschwindigkeit</string>
+    <string name="skin_settings_title">Bewegungseinstellung</string>
 </resources>

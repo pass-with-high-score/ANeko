@@ -32,7 +32,7 @@ fun SettingsScreen(
 
     Column(modifier = modifier.padding(16.dp)) {
         PreferenceContainer(
-            title = R.string.motion_settings_title
+            title = R.string.motion_settings_default_title
         ) {
             SliderPreferenceItem(
                 title = stringResource(R.string.motion_transparency_title),

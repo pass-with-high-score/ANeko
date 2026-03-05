@@ -15,6 +15,7 @@
     <string name="motion_transparency_summary">Điều chỉnh mức độ trong suốt của hiệu ứng chuyển động.</string>
     <string name="motion_focus_summary">Khi bật, ANeko sẽ không trong suốt, nhưng sẽ không chiếm focus (bạn vẫn thao tác được với ứng dụng phía dưới).</string>
     <string name="motion_size_summary">Tuỳ chỉnh kích thước cho các hiệu ứng chuyển động.</string>
+    <string name="motion_settings_default_title">Cài đặt chuyển động (Mặc định)</string>
     <string name="motion_settings_title">Cài đặt chuyển động</string>
     <string name="motion_speed_summary">Điều chỉnh tốc độ của hiệu ứng di chuyển.</string>
     <string name="motion_bottom_offset_summary">Giữ neko tránh xa phía dưới màn hình để không bị che bàn phím.</string>
@@ -127,4 +128,10 @@
     <string name="uninstall">Gỡ cài đặt</string>
     <string name="update">Cập nhật</string>
     <string name="skin_builder_title">Trình tạo skin</string>
+
+    <!-- Per-skin Settings -->
+    <string name="skin_size_label">Kích thước</string>
+    <string name="skin_transparency_label">Độ trong suốt</string>
+    <string name="skin_speed_label">Tốc độ</string>
+    <string name="skin_settings_title">Cài đặt chuyển động</string>
 </resources>

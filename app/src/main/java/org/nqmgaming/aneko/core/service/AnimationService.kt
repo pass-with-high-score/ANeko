@@ -70,13 +70,11 @@ class AnimationService : Service() {
 
     // ================== Per-neko instance ==================
     private inner class NekoInstance(
+        val skinPackageName: String,
         val motionState: MotionState,
         val imageView: ImageView,
         var imageParams: WindowManager.LayoutParams
     )
-
-    private var imageWidth = 80
-    private var imageHeight = 80
 
     private var isStarted = false
     private lateinit var prefs: SharedPreferences
@@ -167,8 +165,15 @@ class AnimationService : Service() {
 
         // Create each neko instance
         for (i in 0 until nekoCount) {
+            val skinPkg = getSkinForSlot(i)
             val ms = loadMotionStateForSlot(i) ?: continue
-            refreshMotionSpeedFor(ms)
+            refreshMotionSpeedFor(ms, skinPkg)
+
+            // Per-skin transparency
+            val alphaStr = prefs.getString("motion.transparency.$skinPkg", null)
+                ?: prefs.getString(PREF_KEY_TRANSPARENCY, "0.0") ?: "0.0"
+            val opacity = 1f - (alphaStr.toFloatOrNull() ?: 0f)
+            ms.alpha = (opacity * 0xff).roundToInt()
 
             val iv = ImageView(this).apply {
                 setOnClickListener {
@@ -192,16 +197,19 @@ class AnimationService : Service() {
                 }
             }
 
+            // Per-skin size
+            val skinSize = getSizeForSkin(skinPkg)
+
             val params = WindowManager.LayoutParams(
-                imageWidth,
-                imageHeight,
+                skinSize,
+                skinSize,
                 WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
                 if (isFocus) focusFlag else unfocusFlag,
                 PixelFormat.TRANSLUCENT
             ).apply { gravity = Gravity.TOP or Gravity.START }
             wm.addView(iv, params)
 
-            nekos.add(NekoInstance(ms, iv, params))
+            nekos.add(NekoInstance(skinPkg, ms, iv, params))
         }
 
         requestAnimate()
@@ -363,6 +371,7 @@ class AnimationService : Service() {
             else -> random.nextInt(dw) to effectiveDh
         }
 
+        // Transparency is set later per-skin in startAnimation
         val alphaStr = prefs.getString(PREF_KEY_TRANSPARENCY, "0.0") ?: "0.0"
         val opacity = 1f - (alphaStr.toFloatOrNull() ?: 0f)
         ms.alpha = (opacity * 0xff).roundToInt()
@@ -382,15 +391,23 @@ class AnimationService : Service() {
         refreshMotionSize()
     }
 
+    /**
+     * Get the size for a specific skin, falling back to global size.
+     */
+    private fun getSizeForSkin(skinPkg: String): Int {
+        val perSkin = prefs.getString("motion.size.$skinPkg", null)
+        if (!perSkin.isNullOrBlank()) {
+            return perSkin.toFloatOrNull()?.toInt() ?: 80
+        }
+        return prefs.getString(PREF_KEY_SIZE, "80")?.toFloatOrNull()?.toInt() ?: 80
+    }
+
     // ================== UI refresh ==================
 
     private fun refreshMotionSize() {
-        val v = prefs.getString(PREF_KEY_SIZE, "80")?.toFloatOrNull()?.toInt() ?: 80
-        imageWidth = v
-        imageHeight = v
-
         val wm = getSystemService(WINDOW_SERVICE) as WindowManager
         nekos.forEach { neko ->
+            val v = getSizeForSkin(neko.skinPackageName)
             neko.imageParams.width = v
             neko.imageParams.height = v
             try {
@@ -401,13 +418,32 @@ class AnimationService : Service() {
     }
 
     private fun refreshMotionSpeed() {
-        val speedFactor = prefs.getString(PREF_KEY_SPEED, "1.0")?.toFloatOrNull() ?: 1.0f
-        nekos.forEach { it.motionState.setSpeedFactor(if (speedFactor > 0f) speedFactor else 1.0f) }
+        nekos.forEach { neko ->
+            val speedFactor = getSpeedForSkin(neko.skinPackageName)
+            neko.motionState.setSpeedFactor(if (speedFactor > 0f) speedFactor else 1.0f)
+        }
     }
 
-    private fun refreshMotionSpeedFor(ms: MotionState) {
-        val speedFactor = prefs.getString(PREF_KEY_SPEED, "1.0")?.toFloatOrNull() ?: 1.0f
+    private fun refreshMotionSpeedFor(ms: MotionState, skinPkg: String) {
+        val speedFactor = getSpeedForSkin(skinPkg)
         ms.setSpeedFactor(if (speedFactor > 0f) speedFactor else 1.0f)
+    }
+
+    private fun getSpeedForSkin(skinPkg: String): Float {
+        val perSkin = prefs.getString("motion.speed.$skinPkg", null)
+        if (!perSkin.isNullOrBlank()) {
+            return perSkin.toFloatOrNull() ?: 1.0f
+        }
+        return prefs.getString(PREF_KEY_SPEED, "1.0")?.toFloatOrNull() ?: 1.0f
+    }
+
+    private fun refreshMotionTransparency() {
+        nekos.forEach { neko ->
+            val alphaStr = prefs.getString("motion.transparency.${neko.skinPackageName}", null)
+                ?: prefs.getString(PREF_KEY_TRANSPARENCY, "0.0") ?: "0.0"
+            val opacity = 1f - (alphaStr.toFloatOrNull() ?: 0f)
+            neko.motionState.alpha = (opacity * 0xff).roundToInt()
+        }
     }
 
     private fun requestAnimate() {
@@ -482,18 +518,15 @@ class AnimationService : Service() {
     private inner class PreferenceChangeListener :
         SharedPreferences.OnSharedPreferenceChangeListener {
         override fun onSharedPreferenceChanged(prefs: SharedPreferences, key: String?) {
-            when (key) {
-                PREF_KEY_ENABLE, PREF_KEY_VISIBLE -> checkPrefEnable()
-                PREF_KEY_SIZE -> refreshMotionSize()
-                PREF_KEY_SPEED -> refreshMotionSpeed()
-                PREF_KEY_TRANSPARENCY -> {
-                    val s = prefs.getString(PREF_KEY_TRANSPARENCY, "0.0") ?: "0.0"
-                    val opacity = 1f - (s.toFloatOrNull() ?: 0f)
-                    val alpha = (opacity * 0xff).roundToInt()
-                    nekos.forEach { it.motionState.alpha = alpha }
+            when {
+                key == PREF_KEY_ENABLE || key == PREF_KEY_VISIBLE -> checkPrefEnable()
+                key == PREF_KEY_SIZE || (key != null && key.startsWith("motion.size.")) -> refreshMotionSize()
+                key == PREF_KEY_SPEED || (key != null && key.startsWith("motion.speed.")) -> refreshMotionSpeed()
+                key == PREF_KEY_TRANSPARENCY || (key != null && key.startsWith("motion.transparency.")) -> {
+                    refreshMotionTransparency()
                 }
 
-                PREF_KEY_FOCUS -> {
+                key == PREF_KEY_FOCUS -> {
                     val focusFlag = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
                     val unfocusFlag = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
                             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or
@@ -504,7 +537,7 @@ class AnimationService : Service() {
                     }
                 }
 
-                PREF_KEY_NEKO_COUNT -> {
+                key == PREF_KEY_NEKO_COUNT -> {
                     // Restart animation to rebuild neko list
                     if (isStarted) {
                         stopAnimation()
@@ -512,7 +545,7 @@ class AnimationService : Service() {
                     }
                 }
 
-                PREF_KEY_BOTTOM_OFFSET -> {
+                key == PREF_KEY_BOTTOM_OFFSET -> {
                     val wm = getSystemService(WINDOW_SERVICE) as WindowManager
                     val display: Display = wm.defaultDisplay
                     val size = Point().also { display.getSize(it) }

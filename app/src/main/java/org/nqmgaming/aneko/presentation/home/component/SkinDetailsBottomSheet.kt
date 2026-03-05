@@ -29,18 +29,26 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
+import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.core.content.edit
+import androidx.preference.PreferenceManager
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import org.nqmgaming.aneko.R
@@ -51,6 +59,7 @@ import org.nqmgaming.aneko.core.util.extension.getStringResource
 import org.nqmgaming.aneko.core.util.zipDirectory
 import timber.log.Timber
 import java.io.File
+import kotlin.math.abs
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -63,12 +72,72 @@ fun SkinDetailsBottomSheet(
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
+    val resource = LocalResources.current
+    val prefs = remember { PreferenceManager.getDefaultSharedPreferences(context) }
     val model = remember(skin.packageName, skin.previewPath) {
         ImageRequest.Builder(context)
             .data(skin.previewModel(context))
             .crossfade(true)
             .build()
     }
+
+    // Size slider state
+    val sizeEntryValues = remember {
+        resource.getStringArray(R.array.pref_motion_size_entry_values)
+            .mapNotNull { it.toFloatOrNull() }
+    }
+    val sizeEntries = remember {
+        resource.getStringArray(R.array.pref_motion_size)
+    }
+    val sizeRange = remember(sizeEntryValues) {
+        sizeEntryValues.min()..sizeEntryValues.max()
+    }
+    val sizeSteps = remember(sizeEntryValues) { sizeEntryValues.size - 2 }
+    var sizeValue by remember {
+        val perSkin = prefs.getString("motion.size.${skin.packageName}", null)
+        val global = prefs.getString("motion.size", "80")
+        val v = (perSkin ?: global)?.toFloatOrNull()?.coerceIn(sizeRange) ?: 80f
+        mutableFloatStateOf(v)
+    }
+
+    // Transparency slider state
+    val transparencyEntryValues = remember {
+        resource.getStringArray(R.array.pref_motion_transparency_entry_values)
+            .mapNotNull { it.toFloatOrNull() }
+    }
+    val transparencyEntries = remember {
+        resource.getStringArray(R.array.pref_motion_transparency_entries)
+    }
+    val transparencyRange = remember(transparencyEntryValues) {
+        transparencyEntryValues.min()..transparencyEntryValues.max()
+    }
+    val transparencySteps = remember(transparencyEntryValues) { transparencyEntryValues.size - 2 }
+    var transparencyValue by remember {
+        val perSkin = prefs.getString("motion.transparency.${skin.packageName}", null)
+        val global = prefs.getString("motion.transparency", "0.0")
+        val v = (perSkin ?: global)?.toFloatOrNull()?.coerceIn(transparencyRange) ?: 0f
+        mutableFloatStateOf(v)
+    }
+
+    // Speed slider state
+    val speedEntryValues = remember {
+        resource.getStringArray(R.array.pref_motion_speed_entry_values)
+            .mapNotNull { it.toFloatOrNull() }
+    }
+    val speedEntries = remember {
+        resource.getStringArray(R.array.pref_motion_speed_entries)
+    }
+    val speedRange = remember(speedEntryValues) {
+        speedEntryValues.min()..speedEntryValues.max()
+    }
+    val speedSteps = remember(speedEntryValues) { speedEntryValues.size - 2 }
+    var speedValue by remember {
+        val perSkin = prefs.getString("motion.speed.${skin.packageName}", null)
+        val global = prefs.getString("motion.speed", "1.0")
+        val v = (perSkin ?: global)?.toFloatOrNull()?.coerceIn(speedRange) ?: 1.0f
+        mutableFloatStateOf(v)
+    }
+
     if (isBottomSheetVisible) {
         ModalBottomSheet(
             modifier = modifier,
@@ -144,11 +213,96 @@ fun SkinDetailsBottomSheet(
 
                     // Divider
                     HorizontalDivider(
-                        modifier = Modifier.padding(vertical = 8.dp),
+                        modifier = Modifier.padding(vertical = 4.dp),
                         color = MaterialTheme.colorScheme.outline.copy(alpha = 0.2f)
                     )
 
-                    // Delete Button
+                    // ── Motion Settings Section Title ──
+                    Text(
+                        text = stringResource(R.string.skin_settings_title),
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+
+                    // ── Size Slider ──
+                    SkinSliderItem(
+                        label = stringResource(R.string.skin_size_label),
+                        value = sizeValue,
+                        valueRange = sizeRange,
+                        steps = sizeSteps,
+                        displayText = {
+                            val idx = sizeEntryValues.indexOfFirst { ev -> ev >= sizeValue }
+                                .coerceIn(0, sizeEntries.lastIndex)
+                            sizeEntries[idx]
+                        },
+                        onValueChange = { sizeValue = it },
+                        onValueChangeFinished = {
+                            val closest = sizeEntryValues.minByOrNull { abs(it - sizeValue) }
+                                ?: sizeEntryValues.first()
+                            sizeValue = closest
+                            prefs.edit {
+                                putString("motion.size.${skin.packageName}", closest.toString())
+                            }
+                        }
+                    )
+
+                    // ── Transparency Slider ──
+                    SkinSliderItem(
+                        label = stringResource(R.string.skin_transparency_label),
+                        value = transparencyValue,
+                        valueRange = transparencyRange,
+                        steps = transparencySteps,
+                        displayText = {
+                            val idx =
+                                transparencyEntryValues.indexOfFirst { ev -> ev >= transparencyValue }
+                                    .coerceIn(0, transparencyEntries.lastIndex)
+                            transparencyEntries[idx]
+                        },
+                        onValueChange = { transparencyValue = it },
+                        onValueChangeFinished = {
+                            val closest =
+                                transparencyEntryValues.minByOrNull { abs(it - transparencyValue) }
+                                    ?: transparencyEntryValues.first()
+                            transparencyValue = closest
+                            prefs.edit {
+                                putString(
+                                    "motion.transparency.${skin.packageName}",
+                                    closest.toString()
+                                )
+                            }
+                        }
+                    )
+
+                    // ── Speed Slider ──
+                    SkinSliderItem(
+                        label = stringResource(R.string.skin_speed_label),
+                        value = speedValue,
+                        valueRange = speedRange,
+                        steps = speedSteps,
+                        displayText = {
+                            val idx = speedEntryValues.indexOfFirst { ev -> ev >= speedValue }
+                                .coerceIn(0, speedEntries.lastIndex)
+                            speedEntries[idx]
+                        },
+                        onValueChange = { speedValue = it },
+                        onValueChangeFinished = {
+                            val closest = speedEntryValues.minByOrNull { abs(it - speedValue) }
+                                ?: speedEntryValues.first()
+                            speedValue = closest
+                            prefs.edit {
+                                putString("motion.speed.${skin.packageName}", closest.toString())
+                            }
+                        }
+                    )
+
+                    // Divider
+                    HorizontalDivider(
+                        modifier = Modifier.padding(vertical = 4.dp),
+                        color = MaterialTheme.colorScheme.outline.copy(alpha = 0.2f)
+                    )
+
+                    // Delete & Share Buttons
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(16.dp),
                         verticalAlignment = Alignment.CenterVertically,
@@ -330,5 +484,50 @@ fun SkinDetailsBottomSheet(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun SkinSliderItem(
+    label: String,
+    value: Float,
+    valueRange: ClosedFloatingPointRange<Float>,
+    steps: Int,
+    displayText: () -> String,
+    onValueChange: (Float) -> Unit,
+    onValueChangeFinished: () -> Unit,
+) {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
+                color = MaterialTheme.colorScheme.onSurface
+            )
+            Text(
+                text = displayText(),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
+        Slider(
+            value = value,
+            onValueChange = onValueChange,
+            onValueChangeFinished = onValueChangeFinished,
+            valueRange = valueRange,
+            steps = steps,
+            modifier = Modifier.fillMaxWidth(),
+            colors = SliderDefaults.colors(
+                thumbColor = MaterialTheme.colorScheme.primary,
+                activeTrackColor = MaterialTheme.colorScheme.primary,
+                inactiveTrackColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.24f),
+                activeTickColor = MaterialTheme.colorScheme.primary,
+                inactiveTickColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.24f)
+            )
+        )
     }
 }

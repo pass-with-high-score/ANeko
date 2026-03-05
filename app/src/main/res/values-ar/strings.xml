@@ -16,6 +16,7 @@
     <string name="motion_focus_summary">عند التفعيل، لن يكون ANeko شفافًا، لكنه سيأخذ تركيزك.</string>
     <string name="motion_size_title" translatable="false">حجم الحركة</string>
     <string name="motion_size_summary">ضبط حجم عناصر الحركة.</string>
+    <string name="motion_settings_default_title">إعدادات الحركة (افتراضي)</string>
     <string name="motion_settings_title">إعدادات الحركة</string>
     <string name="motion_speed_title" translatable="false">سرعة الحركة</string>
     <string name="motion_speed_summary">ضبط سرعة تأثيرات الحركة.</string>
@@ -127,4 +128,10 @@
     <string name="uninstall">إلغاء التثبيت</string>
     <string name="update">تحديث</string>
     <string name="skin_builder_title">منشئ المظهر</string>
+
+    <!-- Per-skin Settings -->
+    <string name="skin_size_label">الحجم</string>
+    <string name="skin_transparency_label">الشفافية</string>
+    <string name="skin_speed_label">السرعة</string>
+    <string name="skin_settings_title">إعدادات الحركة</string>
 </resources>

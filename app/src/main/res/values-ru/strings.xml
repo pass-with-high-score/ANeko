@@ -13,6 +13,7 @@
     <string name="motion_transparency_summary">Настройте уровень прозрачности эффектов движения.</string>
     <string name="motion_focus_summary">При включении ANeko не будет прозрачным, но захватит фокус.</string>
     <string name="motion_size_summary">Установите размер элементов движения.</string>
+    <string name="motion_settings_default_title">Настройки движения (По умолчанию)</string>
     <string name="motion_settings_title">Настройки движения</string>
     <string name="motion_speed_summary">Настройте скорость эффектов движения.</string>
     <string name="motion_bottom_offset_summary">Держите неко подальше от нижней части экрана, чтобы он не перекрывал клавиатуру.</string>
@@ -124,4 +125,10 @@
     <string name="uninstall">Удалить</string>
     <string name="update">Обновить</string>
     <string name="skin_builder_title">Конструктор скинов</string>
+
+    <!-- Per-skin Settings -->
+    <string name="skin_size_label">Размер</string>
+    <string name="skin_transparency_label">Прозрачность</string>
+    <string name="skin_speed_label">Скорость</string>
+    <string name="skin_settings_title">Настройки движения</string>
 </resources>

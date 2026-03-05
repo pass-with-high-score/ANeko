@@ -14,6 +14,7 @@
     <string name="motion_transparency_summary">Ajusta el nivel de transparencia de los efectos de movimiento.</string>
     <string name="motion_focus_summary">Cuando está activado, ANeko no será transparente pero capturará el foco.</string>
     <string name="motion_size_summary">Configura el tamaño de los elementos de movimiento.</string>
+    <string name="motion_settings_default_title">Configuraciones de Movimiento (Por defecto)</string>
     <string name="motion_settings_title">Configuraciones de Movimiento</string>
     <string name="motion_speed_summary">Ajusta la velocidad de los efectos de movimiento.</string>
     <string name="motion_bottom_offset_summary">Mantén al neko alejado de la parte inferior de la pantalla para evitar que se superponga con el teclado.</string>
@@ -124,4 +125,10 @@
     <string name="uninstall">Desinstalar</string>
     <string name="update">Actualizar</string>
     <string name="skin_builder_title">Constructor de skins</string>
+
+    <!-- Per-skin Settings -->
+    <string name="skin_size_label">Tamaño</string>
+    <string name="skin_transparency_label">Transparencia</string>
+    <string name="skin_speed_label">Velocidad</string>
+    <string name="skin_settings_title">Configuraciones de Movimiento</string>
 </resources>

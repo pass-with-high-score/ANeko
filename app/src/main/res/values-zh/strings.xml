@@ -13,6 +13,7 @@
     <string name="motion_transparency_summary">调整动作效果的透明程度。</string>
     <string name="motion_focus_summary">启用后,ANeko 将不透明但会捕获焦点。</string>
     <string name="motion_size_summary">设置动作元素的大小。</string>
+    <string name="motion_settings_default_title">动作设置 (默认)</string>
     <string name="motion_settings_title">动作设置</string>
     <string name="motion_speed_summary">调整运动效果的速度。</string>
     <string name="motion_bottom_offset_summary">让猫咪远离屏幕底部，避免遮挡键盘。</string>
@@ -124,4 +125,10 @@
     <string name="uninstall">卸载</string>
     <string name="update">更新</string>
     <string name="skin_builder_title">皮肤构建器</string>
+
+    <!-- Per-skin Settings -->
+    <string name="skin_size_label">大小</string>
+    <string name="skin_transparency_label">透明度</string>
+    <string name="skin_speed_label">速度</string>
+    <string name="skin_settings_title">动作设置</string>
 </resources>
