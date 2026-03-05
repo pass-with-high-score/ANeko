@@ -19,9 +19,6 @@
   <a href="https://github.com/pass-with-high-score/ANeko/releases">
     <img src="https://raw.githubusercontent.com/NeoApplications/Neo-Backup/034b226cea5c1b30eb4f6a6f313e4dadcbb0ece4/badge_github.png" height="80">
   </a>
-  <a href="https://www.openapk.net/vi/aneko/org.nqmgaming.aneko/">
-    <img src="https://www.openapk.net/images/openapk-badge.png" height="80">
-  </a>
   <a href="https://f-droid.org/en/packages/org.nqmgaming.aneko/">
     <img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" height="80">
   </a>
