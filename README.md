@@ -54,6 +54,9 @@
 Join our community on Telegram:  
 [![Telegram](https://img.shields.io/badge/Telegram-Join%20Group-blue?logo=telegram)](https://t.me/aneko_community)
 
+Join our community on Discord:  
+[![Discord](https://img.shields.io/badge/Discord-Join%20Server-7289DA?logo=discord)](https://discord.gg/EbQxjv2D)
+
 ## Sponsor
 
 If you enjoy ANeko Reborn, consider supporting the project! Your sponsorship helps us maintain and
