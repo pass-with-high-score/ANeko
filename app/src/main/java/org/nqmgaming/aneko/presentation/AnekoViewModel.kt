@@ -12,6 +12,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.preference.PreferenceManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -183,7 +184,7 @@ class AnekoViewModel @Inject constructor(
 
             // After toggling, sync prefs with active skins
             // Small delay to let Flow update
-            kotlinx.coroutines.delay(100)
+            delay(100)
             val activeSkins =
                 _uiState.value.skins.filter { it.isActive || (it.packageName == packageName && !isCurrentlyActive) }
                     .filterNot { it.packageName == packageName && isCurrentlyActive }
@@ -219,18 +220,53 @@ class AnekoViewModel @Inject constructor(
             return
         }
         viewModelScope.launch {
-            prefs.edit {
-                remove(AnimationService.PREF_KEY_SKIN_COMPONENT)
-            }
-            // remove skin in storage first
+            // 1. Remove skin files from storage
             val skinsRoot = File(context.filesDir, "skins").apply { mkdirs() }
             val destDir = File(skinsRoot, skin.packageName)
-
-            // remove files in storage
             if (destDir.exists()) {
                 destDir.deleteRecursively()
             }
+
+            // 2. Remove skin from database
             repo.removeSkin(skin)
+
+            // 3. Small delay to let Flow update the skins list
+            delay(100)
+
+            // 4. Rebuild slot prefs from remaining active skins
+            val remainingActive = _uiState.value.skins
+                .filter { it.isActive && it.packageName != skin.packageName }
+
+            prefs.edit {
+                if (remainingActive.isNotEmpty()) {
+                    // Set first remaining active skin as primary
+                    putString(
+                        AnimationService.PREF_KEY_SKIN_COMPONENT,
+                        remainingActive.first().packageName
+                    )
+                    // Reassign slots to consecutive indices
+                    remainingActive.forEachIndexed { index, skinEntity ->
+                        putString("motion.skin.$index", skinEntity.packageName)
+                    }
+                    // Clean up leftover slots
+                    for (i in remainingActive.size until 6) {
+                        remove("motion.skin.$i")
+                    }
+                    // Update neko count → triggers AnimationService restart
+                    putString(
+                        AnimationService.PREF_KEY_NEKO_COUNT,
+                        remainingActive.size.toString()
+                    )
+                } else {
+                    // No active skins left → clear everything and stop the service
+                    remove(AnimationService.PREF_KEY_SKIN_COMPONENT)
+                    for (i in 0 until 6) {
+                        remove("motion.skin.$i")
+                    }
+                    putString(AnimationService.PREF_KEY_NEKO_COUNT, "0")
+                    putBoolean(AnimationService.PREF_KEY_ENABLE, false)
+                }
+            }
         }
     }
 
