@@ -60,7 +60,6 @@ class AnimationService : Service() {
         const val PREF_KEY_NOTIFICATION_ENABLE = "notification.enable"
         const val PREF_KEY_BOTTOM_OFFSET = "motion.bottom_offset"
         const val AVOID_KEYBOARD = 33
-
         private const val MSG_ANIMATE = 1
         private const val ANIMATION_INTERVAL = 125L
         private const val SKINS_DIR_NAME = "skins"
@@ -351,7 +350,7 @@ class AnimationService : Service() {
     }
 
     /**
-     * Initialise a MotionState with random edge spawn + global prefs.
+     * Initialize a MotionState with random edge spawn + global prefs.
      */
     private fun initMotionState(ms: MotionState) {
         val wm = getSystemService(WINDOW_SERVICE) as WindowManager

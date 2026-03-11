@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notification_enabled">"ANeko está rodando."</string>
+    <string name="notification_disabled">"ANeko está dormindo."</string>
+    <string name="power_on">"Ligado"</string>
+    <string name="power_off">"Desligado"</string>
+    <string name="choose_skin">"Escolha sua skin"</string>
+    <string name="invalid_selection">"Seleção Inválida"</string>
+    <string name="cancel">"Cancelar"</string>
+    <string name="msg_skin_load_failed">"Falha ao carregar skin. Por favor verifique a aplicação da skin."</string>
+    <string name="motion_transparency_summary">"Ajuste o nível de transparência dos efeitos de movimento."</string>
+    <string name="motion_focus_summary">"Quando habilitado, O ANeko não será transparente, mas roubará sua atenção."</string>
+    <string name="motion_size_summary">"Defina o tamanho dos elementos de movimento."</string>
+    <string name="motion_settings_default_title">"Configurações de Movimento (Padrão)"</string>
+    <string name="motion_settings_title">"Configurações de Movimento"</string>
+    <string name="motion_speed_summary">"Ajustar velocidade dos efeitos de movimento."</string>
+    <string name="motion_bottom_offset_summary">"Mantenha o neko longe da parte inferior da tela para evitar sobrepor o teclado."</string>
+
+    <!-- Community & Contributions -->
+    <string name="community_title">"Comunidade e Contribuições"</string>
+    <string name="github_contribute_title">"Contribua no Github"</string>
+    <string name="github_contribute_summary">"Explore o código e contribua com novas funções no Github!"</string>
+
+    <!-- Rate App -->
+    <string name="rate_app_title">"Avalie o app"</string>
+    <string name="rate_app_summary">"Se você gostou de usar o ANeko, Por favor considere avaliar!"</string>
+    <string name="select_prompt">"Selecionar %1$s"</string>
+    <string name="make_with_love">"Feito com ❤️ para ANeko"</string>
+    <string name="app_version">"Versão: %1$s"</string>
+    <string name="unknown_value">"Desconhecido"</string>
+    <string name="toggle_theme_title">"Trocar Tema"</string>
+    <string name="share_title">"Compartilhar"</string>
+    <string name="notification_permission_title">"Permissão de Notificação"</string>
+    <string name="notification_permission_description">"ANeko precisa de permissão de notificação para mostrar atualizações sobre seu status, como quando o ANeko está em execução ou dormindo. Por favor, conceda esta permissão para que o aplicativo funcione plenamente."</string>
+    <string name="allow_button">"Aceitar"</string>
+    <string name="cancel_button">"Cancelar"</string>
+    <string name="overlay_permission_title">"Permissão de Sobreposição Requerida"</string>
+    <string name="overlay_permission_description">"A ANeko não funcionará sem a permissão para sobrepor outros aplicativos. Por favor, permita-o nas configurações."</string>
+    <string name="notification_permission_denied_msg">"Permissão de notificação negada. Algumas funções podem não funcionar."</string>
+    <string name="loading_skins_label">"Carregando skins…"</string>
+    <string name="default_label">"(Padrão)"</string>
+    <string name="share_apk_label">"Compartilhar %1$s APK"</string>
+    <string name="failed_to_share_apk_label">"Falha ao compartilhar %1$s APK"</string>
+    <string name="package_skin_label">"Pacote: %1$s "</string>
+    <string name="version_skin_label">"Versão: %1$s "</string>
+    <string name="unknown_skin_version">"Desconhecido"</string>
+    <string name="notification_chanel_description">"Serviço em segundo plano do ANeko"</string>
+    <string name="website_title">"Website"</string>
+    <string name="website_summary">"O website oficial do ANeko"</string>
+    <string name="choose_language_title">"Escolha o Idioma"</string>
+    <string name="txt_explore">"Explore"</string>
+    <string name="search_skin_placeholder">"Procurar por nome ou autor…"</string>
+    <string name="tab_built_in">"Integrado"</string>
+    <string name="tab_community">"Comunidade"</string>
+    <string name="txt_loading">"Carregando"</string>
+    <string name="share_skin_label">"Compartilhe"</string>
+    <string name="label_author">"Autor: %1$s"</string>
+    <string name="importing_skin_please_wait">"Importando skin, Por favor aguarde…"</string>
+    <string name="imported_skin_from_zip">"Skin Importada do ZIP: %1$s"</string>
+    <string name="failed_to_import_skin_from_zip">"Falha ao importar skin do ZIP"</string>
+    <string name="failed_to_import_skin">"Falha ao importar skin: %1$s"</string>
+    <string name="unknown_author">"Autor Desconhecido"</string>
+    <string name="download">"Donwload"</string>
+    <string name="hi_there_is_no_skin_collection_for_now">"Olá! Por enquanto, não há coleção de skin."</string>
+    <string name="try_to_import_from_zip">"Tente importar do zip"</string>
+    <string name="do_you_have_questions">"Tem perguntas?"</string>
+    <string name="open_the_skin_collection_configuration_file">"Abra o arquivo de configuração de coleção de skin "</string>
+    <string name="what_is_this">"O que é isso?"</string>
+    <string name="what_is_this_answer">"Esta é uma coleção de skins feitas pela comunidade para você experimentar. Você pode fazer o download e importá-los com um único clique. Você também pode importar skins de arquivos zip."</string>
+    <string name="the_formats_and_structure_of_the_skins">"Os formatos e a estrutura das skins?"</string>
+    <string name="the_formats_and_structure_of_the_skins_answer">"As skins estão em formato zip e seguem a mesma estrutura que a skin padrão. Cada skin deve ter um arquivo 'skin.xml' em seu diretório raiz que define os metadados e a configuração da skin. Isso é tratado com segurança pelo aplicativo."</string>
+    <string name="queued">"Fila"</string>
+    <string name="downloading">"Baixando"</string>
+    <string name="importing">"Importando…"</string>
+    <string name="installed">"Instalado"</string>
+    <string name="uninstall">"Desinstalar"</string>
+    <string name="update">"Atualizar"</string>
+    <string name="retry">"Tentar Novamente"</string>
+    <string name="skin_builder_title">"Construtor de Skin"</string>
+
+    <!-- Skin Builder Dialog -->
+    <string name="skin_share_dialog_title">"Compartilhe sua skin"</string>
+    <string name="skin_share_dialog_image_desc">"compartilhar skin"</string>
+    <string name="skin_share_dialog_body">"Você criou uma skin personalizada da ANeko? Compartilhe com a comunidade!"</string>
+    <string name="skin_share_dialog_confirm">"Leve-me até lá"</string>
+    <string name="skin_share_dialog_dismiss">"Talvez mais tarde"</string>
+    <string name="skin_share_dialog_toast_hint">"Você pode acessar o compartilhamento de skins mais tarde na guia Explorar."</string>
+
+    <!-- App Shortcuts -->
+    <string name="shortcut_toggle_short">"Alternar ANeko"</string>
+    <string name="shortcut_toggle_long">"Alternar ANeko on/off"</string>
+    <string name="button_pin_shortcut">"Atalho de Pin"</string>
+    <string name="message_shortcut_request_sent">"Pedido de atalho enviado. Por favor, verifique o seu launcher."</string>
+    <string name="message_unable_create_shortcut">"Não é possível criar um atalho"</string>
+    <string name="message_failed_to_create_shortcut">"Falha ao criar atalho"</string>
+
+    <!-- Permission Onboarding -->
+    <string name="permission_onboarding_appbar_title">"Permissões"</string>
+    <string name="permission_onboarding_skip">"Talvez mais tarde"</string>
+    <string name="permission_onboarding_page1_title">"Deixe o ANeko aparecer na sua tela"</string>
+    <string name="permission_onboarding_page1_body">"A ANeko precisa da permissão de sobreposição sobre outros aplicativos para que o gato possa aparecer em qualquer lugar que você use."</string>
+    <string name="permission_onboarding_page1_primary">"Continue"</string>
+    <string name="permission_onboarding_page1_info_title">"Por que essa permissão é necessária?"</string>
+    <string name="permission_onboarding_page1_info_body1">"Assim, o personagem pode aparecer em relação a outros aplicativos."</string>
+    <string name="permission_onboarding_page1_info_body2">"Você pode desativá-lo a qualquer momento em Configurações."</string>
+    <string name="permission_onboarding_page2_title">"Passo 1: Escolha o ANeko"</string>
+    <string name="permission_onboarding_page2_body">"Na tela de configurações, role para baixo e escolha ANeko na lista de aplicativos."</string>
+    <string name="permission_onboarding_page2_image_desc">"Selecione o aplicativo ANeko"</string>
+    <string name="permission_onboarding_page2_primary">"Continue"</string>
+    <string name="permission_onboarding_page3_title">"Passo 2: Habilite a permissão de sobreposição"</string>
+    <string name="permission_onboarding_page3_body">"Ative a sobreposição para permitir manter sobre outros aplicativos. Em seguida, volte para Aneko ✨"</string>
+    <string name="permission_onboarding_page3_image_desc">"Alternar a permissão de sobreposição"</string>
+    <string name="permission_onboarding_page3_primary">"Abrir configurações"</string>
+    <string name="permission_onboarding_footer">"Depois de habilitar, retorne ao ANeko — o aplicativo continua automaticamente."</string>
+
+    <!-- Theme Picker -->
+    <string name="theme_picker_title">"Escolher Tema"</string>
+    <string name="dark_mode_label">"Modo Escuro"</string>
+    <string name="dynamic_color_label">"Cor Dinâmica (Material You)"</string>
+
+    <!-- Sponsor -->
+    <string name="sponsor_title">"Patrocine este projeto"</string>
+    <string name="sponsor_summary">"Aooie o desenvolvimento do ANeko ❤️"</string>
+
+    <!-- Onboarding Skin -->
+    <string name="onboarding_skin_title">"Obtenha Algumas Skins"</string>
+    <string name="onboarding_skin_continue">"Continue"</string>
+
+    <!-- Multi-select Skins -->
+    <string name="max_neko_reached">"Você pode selecionar até 6 skins de cada vez."</string>
+
+    <!-- Per-skin Settings -->
+    <string name="skin_size_label">"Tamanho"</string>
+    <string name="skin_transparency_label">"Transparência"</string>
+    <string name="skin_speed_label">"Velocidade"</string>
+    <string name="skin_settings_title">"Configurações de movimento"</string>
+</resources>
