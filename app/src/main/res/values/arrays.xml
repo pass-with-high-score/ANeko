@@ -81,6 +81,7 @@
         <item>fr</item>
         <item>pl</item>
         <item>ru</item>
+        <item>pt-BR</item>
         <item>vi</item>
         <item>zh</item>
     </string-array>
@@ -93,6 +94,7 @@
         <item>Français</item>
         <item>Polski</item>
         <item>Русский</item>
+        <item>Português (Brasil)</item>
         <item>Tiếng Việt</item>
         <item>中文</item>
     </string-array>

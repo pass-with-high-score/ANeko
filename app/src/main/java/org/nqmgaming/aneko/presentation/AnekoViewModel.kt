@@ -25,6 +25,7 @@ import org.nqmgaming.aneko.core.data.entity.SkinEntity
 import org.nqmgaming.aneko.core.data.repository.SkinRepository
 import org.nqmgaming.aneko.core.networking.ApiResult
 import org.nqmgaming.aneko.core.service.AnimationService
+import org.nqmgaming.aneko.data.SkinCollection
 import org.xmlpull.v1.XmlPullParser
 import timber.log.Timber
 import java.io.BufferedInputStream
@@ -47,6 +48,7 @@ class AnekoViewModel @Inject constructor(
         const val PREF_KEY_ACCENT = "accent_color"
         const val PREF_KEY_DYNAMIC_COLOR = "dynamic_color"
         const val PREF_KEY_FINISHED_SETUP = "finished_setup"
+        const val PREF_KEY_KNOWN_SKINS = "known_skins"
     }
 
     private val _uiState = MutableStateFlow(ANekoState())
@@ -578,11 +580,22 @@ class AnekoViewModel @Inject constructor(
                     }
 
                     is ApiResult.Success -> {
+                        val fetchedCollections = result.data ?: emptyList()
+                        val knownSkins = prefs.getStringSet(PREF_KEY_KNOWN_SKINS, emptySet()) ?: emptySet()
+                        
+                        var newSkins: List<SkinCollection> = emptyList()
+                        if (!_isFirstLaunch.value) {
+                            newSkins = fetchedCollections.filter { 
+                                !it.isBuiltIn && !knownSkins.contains(it.packageName) 
+                            }
+                        }
+
                         _uiState.update {
                             it.copy(
-                                skinCollections = result.data,
+                                skinCollections = fetchedCollections,
                                 isLoading = false,
-                                isRefreshing = false
+                                isRefreshing = false,
+                                newAvailableSkins = newSkins
                             )
                         }
 
@@ -598,4 +611,18 @@ class AnekoViewModel @Inject constructor(
         }
     }
 
+    fun dismissNewSkinDialog() {
+        val currentSkins = _uiState.value.newAvailableSkins
+        if (currentSkins.isNotEmpty()) {
+            val knownSkins = prefs.getStringSet(PREF_KEY_KNOWN_SKINS, emptySet()) ?: emptySet()
+            val updatedKnownSkins = knownSkins.toMutableSet().apply {
+                addAll(currentSkins.map { it.packageName })
+            }
+            prefs.edit { putStringSet(PREF_KEY_KNOWN_SKINS, updatedKnownSkins) }
+        }
+
+        _uiState.update {
+            it.copy(newAvailableSkins = emptyList())
+        }
+    }
 }

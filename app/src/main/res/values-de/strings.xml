@@ -138,4 +138,9 @@
     <string name="skin_transparency_label">Transparenz</string>
     <string name="skin_speed_label">Geschwindigkeit</string>
     <string name="skin_settings_title">Bewegungseinstellung</string>
+
+    <string name="new_skin_available_title">Neuer Skin verfügbar!</string>
+    <string name="new_skins_available_title">Neue Skins verfügbar!</string>
+    <string name="new_skin_dialog_navigate_button">Entdecken</string>
+    <string name="new_skin_dialog_dismiss_button">Schließen</string>
 </resources>

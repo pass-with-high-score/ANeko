@@ -9,6 +9,7 @@ import org.nqmgaming.aneko.core.networking.ApiResult
 import org.nqmgaming.aneko.core.util.Constants
 import org.nqmgaming.aneko.data.SkinCollection
 import timber.log.Timber
+import kotlin.coroutines.cancellation.CancellationException
 
 class ApiServiceImpl(
     private val httpClient: HttpClient
@@ -19,6 +20,8 @@ class ApiServiceImpl(
             val response = httpClient.get(Constants.SKIN_COLLECTION_URL)
             Timber.d("Responses: ${response.status}")
             emit(ApiResult.Success(response.body()))
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             Timber.e(e)
             emit(ApiResult.Error(e.message ?: "Unknown error occurred"))

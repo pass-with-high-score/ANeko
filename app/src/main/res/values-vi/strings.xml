@@ -133,4 +133,9 @@
     <string name="skin_transparency_label">Độ trong suốt</string>
     <string name="skin_speed_label">Tốc độ</string>
     <string name="skin_settings_title">Cài đặt chuyển động</string>
+
+    <string name="new_skin_available_title">Đã có trang phục mới!</string>
+    <string name="new_skins_available_title">Đã có nhiều trang phục mới!</string>
+    <string name="new_skin_dialog_navigate_button">Khám phá</string>
+    <string name="new_skin_dialog_dismiss_button">Bỏ qua</string>
 </resources>

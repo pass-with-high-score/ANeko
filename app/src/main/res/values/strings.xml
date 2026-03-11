@@ -159,4 +159,10 @@
     <string name="skin_transparency_label">Transparency</string>
     <string name="skin_speed_label">Speed</string>
     <string name="skin_settings_title">Motion Settings</string>
+
+    <!-- New Skin Dialog -->
+    <string name="new_skin_available_title">New Skin Available!</string>
+    <string name="new_skins_available_title">New Skins Available!</string>
+    <string name="new_skin_dialog_navigate_button">Explore</string>
+    <string name="new_skin_dialog_dismiss_button">Dismiss</string>
 </resources>

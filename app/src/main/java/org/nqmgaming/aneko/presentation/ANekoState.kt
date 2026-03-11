@@ -8,4 +8,5 @@ data class ANekoState (
     val isLoading: Boolean = false,
     val isRefreshing: Boolean = false,
     val skinCollections: List<SkinCollection>? = emptyList(),
+    val newAvailableSkins: List<SkinCollection> = emptyList(),
 )

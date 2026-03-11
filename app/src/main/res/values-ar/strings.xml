@@ -133,4 +133,9 @@
     <string name="skin_transparency_label">الشفافية</string>
     <string name="skin_speed_label">السرعة</string>
     <string name="skin_settings_title">إعدادات الحركة</string>
+
+    <string name="new_skin_available_title">مظهر جديد متاح!</string>
+    <string name="new_skins_available_title">مظاهر جديدة متاحة!</string>
+    <string name="new_skin_dialog_navigate_button">استكشاف</string>
+    <string name="new_skin_dialog_dismiss_button">تجاهل</string>
 </resources>

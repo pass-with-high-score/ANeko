@@ -131,4 +131,9 @@
     <string name="skin_transparency_label">Przezroczystość</string>
     <string name="skin_speed_label">Prędkość</string>
     <string name="skin_settings_title">Ustawienia</string>
+
+    <string name="new_skin_available_title">Nowa skórka dostępna!</string>
+    <string name="new_skins_available_title">Nowe skórki dostępne!</string>
+    <string name="new_skin_dialog_navigate_button">Odkryj</string>
+    <string name="new_skin_dialog_dismiss_button">Odrzuć</string>
 </resources>

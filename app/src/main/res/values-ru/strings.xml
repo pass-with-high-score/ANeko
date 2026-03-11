@@ -130,4 +130,9 @@
     <string name="skin_transparency_label">Прозрачность</string>
     <string name="skin_speed_label">Скорость</string>
     <string name="skin_settings_title">Настройки движения</string>
+
+    <string name="new_skin_available_title">Доступен новый скин!</string>
+    <string name="new_skins_available_title">Доступны новые скины!</string>
+    <string name="new_skin_dialog_navigate_button">Смотреть</string>
+    <string name="new_skin_dialog_dismiss_button">Закрыть</string>
 </resources>

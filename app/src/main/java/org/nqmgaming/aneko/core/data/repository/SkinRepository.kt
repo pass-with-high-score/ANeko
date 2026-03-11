@@ -12,10 +12,6 @@ class SkinRepository @Inject constructor(
     fun observeSkins(): Flow<List<SkinEntity>> = skinDao.observeSkins()
 
     suspend fun upsertSkin(skin: SkinEntity) = skinDao.upsertSkin(skin)
-    suspend fun switchActive(pkg: String) {
-        Timber.d("Switching active skin to package: $pkg")
-        skinDao.switchActive(pkg)
-    }
 
     suspend fun toggleActive(pkg: String) {
         Timber.d("Toggling active state for skin: $pkg")

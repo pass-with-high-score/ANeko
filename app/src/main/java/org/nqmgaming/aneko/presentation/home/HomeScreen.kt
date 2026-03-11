@@ -24,6 +24,26 @@ import org.nqmgaming.aneko.presentation.AnekoViewModel
 import org.nqmgaming.aneko.presentation.home.component.HomeAppBar
 import org.nqmgaming.aneko.presentation.home.component.HomeContent
 import org.nqmgaming.aneko.presentation.home.component.NotificationAlertDialog
+import androidx.compose.material3.Text
+import androidx.compose.ui.unit.dp
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.TextButton
+import androidx.compose.ui.res.stringResource
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import coil.compose.AsyncImage
+import org.nqmgaming.aneko.R
+import org.nqmgaming.aneko.data.SkinCollection
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.foundation.layout.fillMaxWidth
+import com.ramcosta.composedestinations.generated.destinations.ExploreSkinScreenDestination
 
 @Destination<RootGraph>
 @OptIn(ExperimentalMaterial3Api::class)
@@ -75,6 +95,72 @@ fun HomeScreen(
                     viewModel.setFirstLaunchDone()
                 }
             )
+        } else if (uiState.value.newAvailableSkins.isNotEmpty()) {
+            NewSkinAlertDialog(
+                skins = uiState.value.newAvailableSkins,
+                onDismiss = {
+                    viewModel.dismissNewSkinDialog()
+                },
+                onNavigate = {
+                    viewModel.dismissNewSkinDialog()
+                    navigator.navigate(ExploreSkinScreenDestination())
+                }
+            )
         }
     }
+}
+
+@Composable
+fun NewSkinAlertDialog(
+    skins: List<SkinCollection>,
+    onDismiss: () -> Unit,
+    onNavigate: () -> Unit
+) {
+    if (skins.isEmpty()) return
+    val titleRes =
+        if (skins.size == 1) R.string.new_skin_available_title else R.string.new_skins_available_title
+
+    AlertDialog(
+        containerColor = MaterialTheme.colorScheme.background,
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(titleRes)) },
+        text = {
+            LazyColumn {
+                items(skins) { skin ->
+                    Row(
+                        verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp)
+                    ) {
+                        AsyncImage(
+                            model = skin.image,
+                            contentDescription = skin.name,
+                            modifier = Modifier
+                                .size(64.dp)
+                                .clip(RoundedCornerShape(8.dp)),
+                            contentScale = ContentScale.Crop
+                        )
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Text(
+                            text = skin.name,
+                            style = MaterialTheme.typography.bodyLarge,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onNavigate) {
+                Text(stringResource(R.string.new_skin_dialog_navigate_button))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.new_skin_dialog_dismiss_button))
+            }
+        }
+    )
 }

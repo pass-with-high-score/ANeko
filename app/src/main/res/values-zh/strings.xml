@@ -130,4 +130,9 @@
     <string name="skin_transparency_label">透明度</string>
     <string name="skin_speed_label">速度</string>
     <string name="skin_settings_title">动作设置</string>
+
+    <string name="new_skin_available_title">新皮肤可用！</string>
+    <string name="new_skins_available_title">多款新皮肤可用！</string>
+    <string name="new_skin_dialog_navigate_button">探索</string>
+    <string name="new_skin_dialog_dismiss_button">忽略</string>
 </resources>
