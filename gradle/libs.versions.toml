@@ -5,12 +5,12 @@ minSdk = "28"
 targetSdk = "36"
 
 # App versioning
-versionCode = "30"
-versionName = "2.2.1"
+versionCode = "31"
+versionName = "2.3.0"
 
 # Java/Kotlin
 kotlin = "2.3.10"
-kotlinStdlibJdk8 = "2.2.0"
+kotlinStdlibJdk8 = "2.2.10"
 
 # AGP
 agp = "8.13.2"
@@ -42,7 +42,7 @@ hiltWork = "1.3.0"
 hiltCompose = "1.3.0"
 
 # Ktor
-ktor = "3.4.0"
+ktor = "3.4.1"
 
 # Serialization
 serialization = "1.10.0"

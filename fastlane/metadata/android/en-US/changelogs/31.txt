@@ -1,0 +1,2 @@
+- Added Brazilian Portuguese language support.
+- Added a notification dialog for new skins.
