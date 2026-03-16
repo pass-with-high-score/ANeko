@@ -152,7 +152,6 @@ fun HomeAppScreen(
                             currentBackStack.add(ThemeKey)
                         },
                         onNavigateToExplore = {
-                            showBottomBar = false
                             currentBackStack.add(ExploreKey)
                         },
                         onNavigateToLanguage = {
