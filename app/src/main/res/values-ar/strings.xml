@@ -1,138 +1,139 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="notification_enabled">ANeko يعمل الآن.</string>
-    <string name="notification_disabled">ANeko نائم الآن.</string>
-    <string name="power_on">تشغيل</string>
-    <string name="power_off">إيقاف</string>
-    <string name="choose_skin">اختر شكلك المفضل</string>
-    <string name="invalid_selection">اختيار غير صالح</string>
-    <string name="cancel">إلغاء</string>
-    <string name="msg_skin_load_failed">فشل في تحميل الشكل. يرجى التحقق من تطبيق الشكل.</string>
-
-    <!-- Motion Settings -->
-    <string name="motion_transparency_title" translatable="false">شفافية الحركة</string>
-    <string name="motion_transparency_summary">ضبط مستوى الشفافية لتأثيرات الحركة.</string>
-    <string name="motion_focus_title" translatable="false">تركيز الحركة</string>
-    <string name="motion_focus_summary">عند التفعيل، لن يكون ANeko شفافًا، لكنه سيأخذ تركيزك.</string>
-    <string name="motion_size_title" translatable="false">حجم الحركة</string>
-    <string name="motion_size_summary">ضبط حجم عناصر الحركة.</string>
-    <string name="motion_settings_default_title">إعدادات الحركة (افتراضي)</string>
-    <string name="motion_settings_title">إعدادات الحركة</string>
-    <string name="motion_speed_title" translatable="false">سرعة الحركة</string>
-    <string name="motion_speed_summary">ضبط سرعة تأثيرات الحركة.</string>
-    <string name="motion_bottom_offset_summary">أبقِ النيكو بعيدًا عن أسفل الشاشة لتجنب التداخل مع لوحة المفاتيح.</string>
+    <string name="notification_enabled">"يتم تشغيل أنيكو"</string>
+    <string name="notification_disabled">"أنيكو متوقف"</string>
+    <string name="power_on">"مُشغل"</string>
+    <string name="power_off">"مُطفئ"</string>
+    <string name="choose_skin">"أختر مظهر"</string>
+    <string name="invalid_selection">"خيار غير صالح"</string>
+    <string name="cancel">"الغاء"</string>
+    <string name="msg_skin_load_failed">"فشل استيراد المظهر"</string>
+    <string name="motion_transparency_summary">"حدد شفافية المظهر"</string>
+    <string name="motion_focus_summary">"حين يكون مشغلاً، لن تستطيع ضغط اشياء اذا كان مظهرك واقف امامها "</string>
+    <string name="motion_size_summary">"حدد سرعة حركة مظهرك"</string>
+    <string name="motion_settings_default_title">"اعدادات المظهر"</string>
+    <string name="motion_settings_title">"اعدادات المظهر"</string>
+    <string name="motion_speed_summary">"حدد سرعة حركة مظهرك"</string>
+    <string name="motion_bottom_offset_summary">"ابقاء مظهرك بعيداً عن لوحة مفاتيح تجنبا للضغط غير مقصود"</string>
 
     <!-- Community & Contributions -->
-    <string name="community_title">المجتمع والمساهمات</string>
-    <string name="github_contribute_title">ساهم على GitHub</string>
-    <string name="github_contribute_summary">استكشف الكود المصدري وساهم بميزات جديدة على GitHub!</string>
+    <string name="community_title">"المجتمع و المساهمات"</string>
+    <string name="github_contribute_title">"ساهم في قيت هاب"</string>
+    <string name="github_contribute_summary">"التطبيق مفتوح مصدر، اكتشفه هنا! "</string>
 
     <!-- Rate App -->
-    <string name="rate_app_title">قيم هذا التطبيق</string>
-    <string name="rate_app_summary">إذا كنت تستمتع باستخدام ANeko، يرجى تقييمه!</string>
-
-    <string name="select_prompt">اختر %1$s</string>
-    <string name="make_with_love">صُنِع بحب لـ ANeko ❤️</string>
-    <string name="app_version">الإصدار: %1$s</string>
-    <string name="unknown_value">غير معروف</string>
-    <string name="toggle_theme_title">تبديل السمة</string>
-    <string name="share_title">مشاركة</string>
-    <string name="notification_permission_title">إذن الإشعارات</string>
-    <string name="notification_permission_description">يحتاج ANeko إلى إذن الإشعارات لإظهار تحديثات حول حالته، مثل عندما يكون ANeko يعمل أو نائمًا. يرجى منح هذا الإذن حتى يعمل التطبيق بالكامل.</string>
-    <string name="allow_button">السماح</string>
-    <string name="cancel_button">إلغاء</string>
-    <string name="overlay_permission_title">إذن التراكب مطلوب</string>
-    <string name="overlay_permission_description">لن يعمل ANeko دون إذن العرض فوق التطبيقات الأخرى. يرجى السماح بذلك في الإعدادات.</string>
-    <string name="notification_permission_denied_msg">تم رفض إذن الإشعارات. قد لا تعمل بعض الميزات.</string>
-    <string name="loading_skins_label">جاري تحميل الأشكال…</string>
-    <string name="default_label">(افتراضي)</string>
-    <string name="share_apk_label">مشاركة ملف APK لـ %1$s</string>
-    <string name="failed_to_share_apk_label">فشل في مشاركة ملف APK لـ %1$s</string>
-    <string name="package_skin_label">الحزمة: %1$s</string>
-    <string name="version_skin_label">الإصدار: %1$s</string>
-    <string name="unknown_skin_version">غير معروف</string>
-    <string name="notification_chanel_description">خدمة خلفية لـ ANeko</string>
-    <string name="website_title">الموقع الإلكتروني</string>
-    <string name="website_summary">الموقع الرسمي لـ ANeko</string>
-    <string name="choose_language_title">اختر اللغة</string>
-    <string name="txt_explore">استكشف</string>
-    <string name="tab_built_in">مدمج</string>
-    <string name="tab_community">المجتمع</string>
-    <string name="txt_loading">جاري التحميل</string>
-    <string name="share_skin_label">مشاركة</string>
-    <string name="label_author">المؤلف: %1$s</string>
-    <string name="importing_skin_please_wait">جاري استيراد الشكل، يرجى الانتظار…</string>
-    <string name="imported_skin_from_zip">تم استيراد الشكل من ZIP: %1$s</string>
-    <string name="failed_to_import_skin_from_zip">فشل في استيراد الشكل من ZIP</string>
-    <string name="failed_to_import_skin">فشل في استيراد الشكل: %1$s</string>
-    <string name="unknown_author">مؤلف غير معروف</string>
-    <string name="download">تنزيل</string>
-    <string name="hi_there_is_no_skin_collection_for_now">مرحبًا! لا يوجد مجموعة أشكال متاحة حاليًا.</string>
-    <string name="try_to_import_from_zip">حاول الاستيراد من ملف ZIP</string>
-    <string name="do_you_have_questions">هل لديك أسئلة؟</string>
-    <string name="open_the_skin_collection_configuration_file">افتح ملف إعدادات مجموعة الأشكال</string>
-    <string name="what_is_this">ما هذا؟</string>
-    <string name="what_is_this_answer">هذه مجموعة من الأشكال التي صنعها المجتمع لتجربتها. يمكنك تنزيلها واستيرادها بنقرة واحدة. يمكنك أيضًا استيراد الأشكال من ملفات ZIP.</string>
-    <string name="the_formats_and_structure_of_the_skins">تنسيقات وهياكل الأشكال؟</string>
-    <string name="the_formats_and_structure_of_the_skins_answer">الأشكال بتنسيق ZIP وتتبع نفس الهيكل مثل الشكل الافتراضي. يجب أن يحتوي كل شكل على ملف \'skin.xml\' في دليله الجذر الذي يحدد بيانات الشكل وإعداداته. يتم التعامل مع ذلك بأمان بواسطة التطبيق.</string>
-    <string name="queued">في الانتظار</string>
-    <string name="downloading">جاري التنزيل</string>
-    <string name="importing">جاري الاستيراد…</string>
-    <string name="installed">مثبت</string>
-    <string name="retry">إعادة المحاولة</string>
+    <string name="rate_app_title">"قَيم التطبيق"</string>
+    <string name="rate_app_summary">"اذا أعجبك التطبيق،  لا تنسى منحنا تقييما!"</string>
+    <string name="select_prompt">"اختر %1$s"</string>
+    <string name="make_with_love">"صنع بل ❤ لأنيكو"</string>
+    <string name="app_version">"أصدار : %1$s"</string>
+    <string name="unknown_value">"غيرمعرف"</string>
+    <string name="toggle_theme_title">"غَير السمة"</string>
+    <string name="share_title">"شارك"</string>
+    <string name="notification_permission_title">"اذن الاشعارات"</string>
+    <string name="notification_permission_description">"أنيكو يحتاج لأذن وصول الى اشعارات ليعلمك بحالته اذا كان يعمل او متوقف، لذا يرجى منح الأذن ليعمل بشكل كامل"</string>
+    <string name="allow_button">"منك"</string>
+    <string name="cancel_button">"رفض"</string>
+    <string name="overlay_permission_title">"رسم فوق تطبيقات"</string>
+    <string name="overlay_permission_description">"يحتاج أنكيو لأذن رسم فوق تطبيقات ليستطيع المظهر تحرك خارج تطبيق و فوق تطبيقات اخرى"</string>
+    <string name="notification_permission_denied_msg">"لن تعمل بعض مميزات بدون أذن اشعارات"</string>
+    <string name="loading_skins_label">"يتم استيراد مظاهر"</string>
+    <string name="default_label">"طبيعي"</string>
+    <string name="share_apk_label">"شارك ملف %1$s"</string>
+    <string name="failed_to_share_apk_label">"فشل ارسال %1$s "</string>
+    <string name="package_skin_label">"تطبيق %1$s"</string>
+    <string name="version_skin_label">"الأصدار: %1$s"</string>
+    <string name="unknown_skin_version">"غيرمعرف"</string>
+    <string name="notification_chanel_description">"خدمة أنيكو! "</string>
+    <string name="website_title">"مُوقعنا"</string>
+    <string name="website_summary">"موقت أنيكو الرسمي"</string>
+    <string name="choose_language_title">"اختر لغة"</string>
+    <string name="txt_explore">"اكشتف "</string>
+    <string name="search_skin_placeholder">"ابحث باستعمال اسم مظهر او المصمم"</string>
+    <string name="tab_built_in">"مسبقبناء"</string>
+    <string name="tab_community">"المجتمع"</string>
+    <string name="txt_loading">"تحميل."</string>
+    <string name="share_skin_label">"شارك"</string>
+    <string name="label_author">"المصمم: %1$s"</string>
+    <string name="importing_skin_please_wait">"يتم تحميل مظهر، يرجى انتظار"</string>
+    <string name="imported_skin_from_zip">"تم تحميل مظهر %1$s "</string>
+    <string name="failed_to_import_skin_from_zip">"فشل تحميل مظهر"</string>
+    <string name="failed_to_import_skin">"فشل تحميل مظهر"</string>
+    <string name="unknown_author">"غير معرف"</string>
+    <string name="download">"تنزيل"</string>
+    <string name="hi_there_is_no_skin_collection_for_now">"لا يوجد مظاهر متوفرة حاليا"</string>
+    <string name="try_to_import_from_zip">"جرب اضافة مظهرك خاص! "</string>
+    <string name="do_you_have_questions">"لديك سؤال؟ "</string>
+    <string name="open_the_skin_collection_configuration_file">"افتح مُعدل حزم مظاهر"</string>
+    <string name="what_is_this">"ما هذا؟ "</string>
+    <string name="what_is_this_answer">"مجموعة مظاهر تم صنعها من مجتمع تطبيق،  تسنطيع تنزيلهم او صنع مظهرك خاص! "</string>
+    <string name="the_formats_and_structure_of_the_skins">"نوع ملف مظهر؟ "</string>
+    <string name="the_formats_and_structure_of_the_skins_answer">"ملف مظهر يجب ان يكون zip و كل حركة للمظهر يجب ان يكون لها ملف xml الي تعرف كل حركة مع صورتها و كل هذا يتم فعله من قبل تطبيق"</string>
+    <string name="queued">"طابور"</string>
+    <string name="downloading">"يتم تنزيل"</string>
+    <string name="importing">"يتم استيراد"</string>
+    <string name="installed">"تم تنزيل"</string>
+    <string name="uninstall">"الغ تنزيل"</string>
+    <string name="update">"حَدث"</string>
+    <string name="retry">"اعد"</string>
+    <string name="skin_builder_title">"أبني مظهر"</string>
 
     <!-- Skin Builder Dialog -->
-    <string name="skin_share_dialog_title">إنشاء أشكال مخصصة بسهولة باستخدام منشئ ANeko</string>
-    <string name="skin_share_dialog_image_desc">معاينة منشئ الأشكال</string>
-    <string name="skin_share_dialog_body">شكرًا لتثبيت ANeko! منشئ ANeko هو أداة ويب جديدة مصممة لجعل إنشاء وتخصيص الأشكال بسيطًا وممتعًا.</string>
-    <string name="skin_share_dialog_confirm">خذني إلى هناك</string>
-    <string name="skin_share_dialog_dismiss">ربما لاحقًا</string>
-    <string name="skin_share_dialog_toast_hint">يمكنك الوصول إلى منشئ ANeko لاحقًا من علامة تبويب "استكشف".</string>
+    <string name="skin_share_dialog_title">"شارك مظهرك"</string>
+    <string name="skin_share_dialog_image_desc">"شارك مظهر"</string>
+    <string name="skin_share_dialog_body">"صممت مظهر خاص بك؟  انشره في مجتمع تطبيق"</string>
+    <string name="skin_share_dialog_confirm">"خذني هناك"</string>
+    <string name="skin_share_dialog_dismiss">"لاحقا"</string>
+    <string name="skin_share_dialog_toast_hint">"تستطيع رؤية مكان مشاركة في خانة استكشاف "</string>
 
     <!-- App Shortcuts -->
-    <string name="shortcut_toggle_short">تبديل ANeko</string>
-    <string name="shortcut_toggle_long">تبديل تشغيل/إيقاف ANeko</string>
-    <string name="button_pin_shortcut">تثبيت الاختصار</string>
-    <string name="message_shortcut_request_sent">تم إرسال طلب الاختصار. يرجى التحقق من شاشتك الرئيسية.</string>
-    <string name="message_unable_create_shortcut">تعذر إنشاء الاختصار</string>
-    <string name="message_failed_to_create_shortcut">فشل في إنشاء الاختصار</string>
+    <string name="shortcut_toggle_short">"شغل أنيكو"</string>
+    <string name="shortcut_toggle_long">"تشغيل و تعطيل أنيكو"</string>
+    <string name="button_pin_shortcut">"ثبت اختصار"</string>
+    <string name="message_shortcut_request_sent">"تم الطلب"</string>
+    <string name="message_unable_create_shortcut">"لم يتم صنع الاختصار"</string>
+    <string name="message_failed_to_create_shortcut">"فشل صنع الاختصار "</string>
 
     <!-- Permission Onboarding -->
-    <string name="permission_onboarding_appbar_title">الأذونات</string>
-    <string name="permission_onboarding_skip">ربما لاحقًا</string>
-    <string name="permission_onboarding_page1_title">اسمح لـ ANeko بالظهور على شاشتك</string>
-    <string name="permission_onboarding_page1_body">يحتاج ANeko إلى إذن "العرض فوق التطبيقات الأخرى" حتى يظهر القط في أي مكان تستخدمه.</string>
-    <string name="permission_onboarding_page1_primary">متابعة</string>
-    <string name="permission_onboarding_page1_info_title">لماذا هذا الإذن مطلوب؟</string>
-    <string name="permission_onboarding_page1_info_body1">حتى يظهر الشخصية فوق التطبيقات الأخرى.</string>
-    <string name="permission_onboarding_page1_info_body2">يمكنك إيقاف تشغيله في أي وقت من الإعدادات.</string>
-    <string name="permission_onboarding_page2_title">الخطوة 1: اختر ANeko</string>
-    <string name="permission_onboarding_page2_body">في شاشة الإعدادات، قم بالتمرير لأسفل واختر ANeko من قائمة التطبيقات.</string>
-    <string name="permission_onboarding_page2_image_desc">اختر تطبيق ANeko</string>
-    <string name="permission_onboarding_page2_primary">متابعة</string>
-    <string name="permission_onboarding_page3_title">الخطوة 2: تمكين إذن التراكب</string>
-    <string name="permission_onboarding_page3_body">قم بتشغيل "السماح بالعرض فوق التطبيقات الأخرى". ثم عد إلى ANeko ✨</string>
-    <string name="permission_onboarding_page3_image_desc">تبديل إذن التراكب</string>
-    <string name="permission_onboarding_page3_primary">افتح الإعدادات</string>
-    <string name="permission_onboarding_footer">بعد التفعيل، عد إلى ANeko — سيستمر التطبيق تلقائيًا.</string>
-    <string name="onboarding_skin_title">احصل على بعض المظاهر</string>
-    <string name="sponsor_title">ادعم هذا المشروع</string>
-    <string name="theme_picker_title">اختر المظهر</string>
-    <string name="dark_mode_label">الوضع الداكن</string>
-    <string name="dynamic_color_label">لون ديناميكي (Material You)</string>
-    <string name="sponsor_summary">ادعم تطوير ANeko ❤️</string>
-    <string name="onboarding_skin_continue">متابعة</string>
-    <string name="max_neko_reached">يمكنك اختيار ما يصل إلى 6 أشكال في وقت واحد.</string>
-    <string name="search_skin_placeholder">ابحث بالاسم أو المؤلف…</string>
-    <string name="uninstall">إلغاء التثبيت</string>
-    <string name="update">تحديث</string>
-    <string name="skin_builder_title">منشئ المظهر</string>
+    <string name="permission_onboarding_appbar_title">"اذونات"</string>
+    <string name="permission_onboarding_skip">"لاحقا"</string>
+    <string name="permission_onboarding_page1_title">"اجعل أنكيو يظهر في شاشتك"</string>
+    <string name="permission_onboarding_page1_body">"يحتاج أنيكو لاذن رسم فوق تطبيقات"</string>
+    <string name="permission_onboarding_page1_primary">"استمر"</string>
+    <string name="permission_onboarding_page1_info_title">"لماذا نحتاج هذا أذن؟ "</string>
+    <string name="permission_onboarding_page1_info_body1">"حتى نستطيع جعل مظهر يظهر على تطبيقات اخرى"</string>
+    <string name="permission_onboarding_page1_info_body2">"يمكنك الغاء خياراتك في اعدادات"</string>
+    <string name="permission_onboarding_page2_title">"اختر مظهرك"</string>
+    <string name="permission_onboarding_page2_body">"يرجى اختيار Aneko في نافذة تالية"</string>
+    <string name="permission_onboarding_page2_image_desc">"اختر Aneko"</string>
+    <string name="permission_onboarding_page2_primary">"أستمر"</string>
+    <string name="permission_onboarding_page3_title">"اعطي اذن رسم فوق تطبيقات"</string>
+    <string name="permission_onboarding_page3_body">"اعطي اذن رسم فوق تطبيقات ثم عد لAneko"</string>
+    <string name="permission_onboarding_page3_image_desc">"اعط اذن رسم فوق تطبيقات"</string>
+    <string name="permission_onboarding_page3_primary">"افتح اعدادات"</string>
+    <string name="permission_onboarding_footer">"بعد اعطاء صلاحية،  عد للتطبيق "</string>
+
+    <!-- Theme Picker -->
+    <string name="theme_picker_title">"أختر سمة"</string>
+    <string name="dark_mode_label">"وضع مظلم"</string>
+    <string name="dynamic_color_label">"وضع material you"</string>
+
+    <!-- Sponsor -->
+    <string name="sponsor_title">"شارك هذه تطبيق"</string>
+    <string name="sponsor_summary">"ادعم تطوير أنيكو ❤"</string>
+
+    <!-- Onboarding Skin -->
+    <string name="onboarding_skin_title">"احصل على مظاهر"</string>
+    <string name="onboarding_skin_continue">"أستمر "</string>
+
+    <!-- Multi-select Skins -->
+    <string name="max_neko_reached">"تستطيع اختيار لحد ست مظاهر في أن واحد"</string>
 
     <!-- Per-skin Settings -->
-    <string name="skin_size_label">الحجم</string>
-    <string name="skin_transparency_label">الشفافية</string>
-    <string name="skin_speed_label">السرعة</string>
-    <string name="skin_settings_title">إعدادات الحركة</string>
+    <string name="skin_size_label">"حجم"</string>
+    <string name="skin_transparency_label">"الشفافية"</string>
+    <string name="skin_speed_label">"سرعة"</string>
+    <string name="skin_settings_title">"اعدادات المظهر"</string>
 
     <string name="new_skin_available_title">مظهر جديد متاح!</string>
     <string name="new_skins_available_title">مظاهر جديدة متاحة!</string>
