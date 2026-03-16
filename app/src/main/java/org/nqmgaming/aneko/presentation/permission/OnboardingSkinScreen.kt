@@ -35,11 +35,6 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.annotation.RootGraph
-import com.ramcosta.composedestinations.generated.destinations.HomeScreenDestination
-import com.ramcosta.composedestinations.generated.destinations.OnboardingSkinScreenDestination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.launch
 import org.nqmgaming.aneko.R
 import org.nqmgaming.aneko.core.download.DownloadStatus
@@ -50,12 +45,11 @@ import org.nqmgaming.aneko.presentation.components.LoadingOverlay
 import org.nqmgaming.aneko.presentation.explore.component.ExploreItem
 import timber.log.Timber
 
-@Destination<RootGraph>
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OnboardingSkinScreen(
-    navigator: DestinationsNavigator,
-    viewModel: AnekoViewModel = hiltViewModel()
+    viewModel: AnekoViewModel = hiltViewModel(),
+    onNavigateToHome: () -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -102,9 +96,7 @@ fun OnboardingSkinScreen(
 
     fun navigateToHome() {
         viewModel.finishedSetup()
-        navigator.navigate(HomeScreenDestination()) {
-            popUpTo(OnboardingSkinScreenDestination) { inclusive = true }
-        }
+        onNavigateToHome()
     }
 
     Scaffold(

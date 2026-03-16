@@ -64,6 +64,7 @@ android {
     kotlin {
         compilerOptions {
             jvmTarget = JvmTarget.JVM_11
+            freeCompilerArgs = listOf("-XXLanguage:+PropertyParamAnnotationDefaultTargetMode")
         }
     }
 
@@ -106,11 +107,6 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.ui.graphics)
 
-    // Compose Destinations
-    implementation(libs.compose.destination.core)
-    implementation(libs.compose.destination.animation.core)
-    ksp(libs.compose.destination.ksp)
-
     // Accompanist
     implementation(libs.accompanist.permissions)
 
@@ -125,6 +121,7 @@ dependencies {
 
     // Ktor
     implementation(libs.bundles.ktor)
+    implementation(libs.bundles.navigation)
 
     // Serialization
     implementation(libs.bundles.serialization)

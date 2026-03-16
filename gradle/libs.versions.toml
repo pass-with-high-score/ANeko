@@ -27,14 +27,10 @@ preferenceKtx = "1.2.1"
 workRuntime = "2.11.1"
 
 # Compose
-composeBom = "2026.02.01"
-composeAnimations = "1.11.9"
+composeBom = "2026.03.00"
 material = "1.13.0"
 materialIconsExtended = "1.7.8"
-uiTooling = "1.10.4"
-
-# Compose Destinations
-composeDestinations = "2.3.0"
+uiTooling = "1.10.5"
 
 # Hilt
 hilt = "2.58"
@@ -56,6 +52,7 @@ coilCompose = "2.7.0"
 slf4jAndroid = "1.7.36"
 timber = "5.0.1"
 room = "2.8.4"
+nav3Core = "1.0.1"
 
 [libraries]
 # Accompanist
@@ -87,11 +84,6 @@ androidx-material-icons-extended = { module = "androidx.compose.material:materia
 material = { module = "com.google.android.material:material", version.ref = "material" }
 material3 = { module = "androidx.compose.material3:material3" }
 androidx-compose-animation-graphics = { group = "androidx.compose.animation", name = "animation-graphics" }
-
-# Compose Destinations
-compose-destination-core = { module = "io.github.raamcosta.compose-destinations:core", version.ref = "composeDestinations" }
-compose-destination-animation-core = { module = "io.github.raamcosta.compose-destinations:animations-core", version.ref = "composeAnimations" }
-compose-destination-ksp = { module = "io.github.raamcosta.compose-destinations:ksp", version.ref = "composeDestinations" }
 
 # Hilt
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
@@ -131,6 +123,9 @@ androidx-work-runtime = { module = "androidx.work:work-runtime", version.ref = "
 # Test
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 
+androidx-navigation3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "nav3Core" }
+androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "nav3Core" }
+
 [bundles]
 serialization = [
     "kotlinx-serialization-core",
@@ -143,6 +138,11 @@ ktor = [
     "ktor-client-content-negotiation",
     "ktor-serialization-kotlinx-json",
     "ktor-client-logging"
+]
+
+navigation = [
+    "androidx-navigation3-runtime",
+    "androidx-navigation3-ui"
 ]
 
 [plugins]

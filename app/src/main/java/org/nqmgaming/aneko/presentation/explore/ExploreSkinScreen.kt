@@ -62,8 +62,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.annotation.RootGraph
 import kotlinx.coroutines.launch
 import org.nqmgaming.aneko.R
 import org.nqmgaming.aneko.core.data.entity.SkinEntity
@@ -79,7 +77,6 @@ import org.nqmgaming.aneko.presentation.explore.component.InfoAlertDialog
 import org.nqmgaming.aneko.presentation.ui.theme.ANekoTheme
 import timber.log.Timber
 
-@Destination<RootGraph>
 @Composable
 fun ExploreSkinScreen(
     viewModel: AnekoViewModel = hiltViewModel()

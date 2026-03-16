@@ -43,19 +43,15 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.annotation.RootGraph
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import org.nqmgaming.aneko.R
 import org.nqmgaming.aneko.presentation.AnekoViewModel
 import org.nqmgaming.aneko.presentation.ui.theme.AccentColor
 
-@Destination<RootGraph>
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun ThemeScreen(
-    navigator: DestinationsNavigator,
     viewModel: AnekoViewModel = hiltViewModel(),
+    onNavigateBack: () -> Unit = {},
 ) {
     val isDarkTheme by viewModel.isDarkTheme.collectAsStateWithLifecycle()
     val accentColor by viewModel.accentColor.collectAsStateWithLifecycle()
@@ -71,7 +67,7 @@ fun ThemeScreen(
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { navigator.popBackStack() }) {
+                    IconButton(onClick = onNavigateBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.cancel)

@@ -48,13 +48,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.annotation.RootGraph
-import com.ramcosta.composedestinations.generated.destinations.HomeScreenDestination
-import com.ramcosta.composedestinations.generated.destinations.LanguageScreenDestination
-import com.ramcosta.composedestinations.generated.destinations.OnboardingSkinScreenDestination
-import com.ramcosta.composedestinations.generated.destinations.PermissionScreenDestination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.nqmgaming.aneko.R
@@ -66,11 +59,12 @@ import org.nqmgaming.aneko.presentation.permission.component.PermissionPageConte
 import org.nqmgaming.aneko.presentation.ui.theme.ANekoTheme
 import kotlin.time.Duration.Companion.seconds
 
-@Destination<RootGraph>(start = true)
 @Composable
 fun PermissionScreen(
-    navigator: DestinationsNavigator,
-    viewModel: AnekoViewModel = hiltViewModel()
+    viewModel: AnekoViewModel = hiltViewModel(),
+    onNavigateToHome: () -> Unit = {},
+    onNavigateToOnboardingSkin: () -> Unit = {},
+    onNavigateToLanguage: () -> Unit = {},
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -93,14 +87,10 @@ fun PermissionScreen(
 
             if (isFinishedSetup) {
                 hasNavigated = true
-                navigator.navigate(HomeScreenDestination()) {
-                    popUpTo(PermissionScreenDestination) { inclusive = true }
-                }
+                onNavigateToHome()
             } else if (Settings.canDrawOverlays(context)) {
                 hasNavigated = true
-                navigator.navigate(OnboardingSkinScreenDestination()) {
-                    popUpTo(PermissionScreenDestination) { inclusive = true }
-                }
+                onNavigateToOnboardingSkin()
             } else {
                 checking = false
             }
@@ -124,9 +114,7 @@ fun PermissionScreen(
         CatRunning()
     } else {
         PermissionPagerUI(
-            onNavigateToLanguage = {
-                navigator.navigate(LanguageScreenDestination())
-            },
+            onNavigateToLanguage = onNavigateToLanguage,
             onOpenSettings = {
                 val intent = Intent(
                     Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
@@ -134,13 +122,7 @@ fun PermissionScreen(
                 )
                 context.startActivity(intent)
             },
-            onSkip = {
-                navigator.navigate(OnboardingSkinScreenDestination()) {
-                    popUpTo(PermissionScreenDestination) {
-                        inclusive = true
-                    }
-                }
-            }
+            onSkip = onNavigateToOnboardingSkin
         )
     }
 }

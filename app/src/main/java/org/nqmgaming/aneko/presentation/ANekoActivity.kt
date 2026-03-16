@@ -11,20 +11,19 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.core.content.edit
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
-import com.ramcosta.composedestinations.DestinationsNavHost
-import com.ramcosta.composedestinations.generated.NavGraphs
-import com.ramcosta.composedestinations.generated.destinations.ExploreSkinScreenDestination
-import com.ramcosta.composedestinations.generated.destinations.HomeScreenDestination
-import com.ramcosta.composedestinations.rememberNavHostEngine
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.rememberNavBackStack
+import androidx.navigation3.ui.NavDisplay
 import dagger.hilt.android.AndroidEntryPoint
 import org.nqmgaming.aneko.core.service.AnimationService
 import org.nqmgaming.aneko.core.util.LocaleHelper
 import org.nqmgaming.aneko.core.util.extension.checkNotificationPermission
+import org.nqmgaming.aneko.presentation.app.HomeAppScreen
+import org.nqmgaming.aneko.presentation.permission.OnboardingSkinScreen
+import org.nqmgaming.aneko.presentation.permission.PermissionScreen
+import org.nqmgaming.aneko.presentation.setting.LanguageScreen
 import org.nqmgaming.aneko.presentation.ui.theme.ANekoTheme
 
 @AndroidEntryPoint
@@ -56,24 +55,13 @@ class ANekoActivity : AppCompatActivity() {
             val isDarkTheme by viewModel.isDarkTheme.collectAsState()
             val accentColor by viewModel.accentColor.collectAsState()
             val isDynamicColor by viewModel.isDynamicColor.collectAsState()
-            val isAnimationEnabled by viewModel.isEnabledState.collectAsState()
-            val navController = rememberNavController()
-            val navHostEngine = rememberNavHostEngine(
-                navHostContentAlignment = Alignment.TopCenter,
-            )
-
-            val newBackStackEntry by navController.currentBackStackEntryAsState()
-            val route = newBackStackEntry?.destination?.route
 
             val requestNotificationPermissionLauncher = rememberLauncherForActivityResult(
                 contract = ActivityResultContracts.RequestPermission()
             ) { isGranted ->
                 viewModel.updateNotificationPermission(isGranted)
                 viewModel.enableAnimation()
-                startService(
-                    Intent(this, AnimationService::class.java)
-                        .setAction(AnimationService.ACTION_START)
-                )
+                startAnimationService()
             }
 
             ANekoTheme(
@@ -81,37 +69,60 @@ class ANekoActivity : AppCompatActivity() {
                 dynamicColor = isDynamicColor,
                 accentColor = accentColor
             ) {
-                StandardScaffold(
-                    navController = navController,
-                    showBottomBar = route in listOf(
-                        HomeScreenDestination.route,
-                        ExploreSkinScreenDestination.route,
-                    ),
-                    isAnimationEnabled = isAnimationEnabled,
-                    onToggleAnimation = { enabled ->
-                        viewModel.updateAnimationEnabled(enabled)
-                        if (enabled) {
-                            checkNotificationPermission(requestNotificationPermissionLauncher) {
-                                viewModel.enableAnimation()
-                                startService(
-                                    Intent(this, AnimationService::class.java)
-                                        .setAction(AnimationService.ACTION_START)
-                                )
-                            }
-                        } else {
-                            viewModel.disableAnimation()
-                            stopService(
-                                Intent(this, AnimationService::class.java)
-                                    .setAction(AnimationService.ACTION_STOP)
+                val backStack = rememberNavBackStack(PermissionKey)
+
+                NavDisplay(
+                    backStack = backStack,
+                    onBack = { if (backStack.size > 1) backStack.removeLastOrNull() },
+                    entryProvider = entryProvider {
+                        entry<PermissionKey> {
+                            PermissionScreen(
+                                onNavigateToHome = {
+                                    backStack.removeLastOrNull()
+                                    backStack.add(HomeAppKey)
+                                },
+                                onNavigateToOnboardingSkin = {
+                                    backStack.removeLastOrNull()
+                                    backStack.add(OnboardingSkinKey)
+                                },
+                                onNavigateToLanguage = {
+                                    backStack.add(LanguageKey)
+                                }
                             )
                         }
-                    },
-                    content = {
-                        DestinationsNavHost(
-                            navGraph = NavGraphs.root,
-                            navController = navController,
-                            engine = navHostEngine,
-                        )
+                        entry<OnboardingSkinKey> {
+                            OnboardingSkinScreen(
+                                onNavigateToHome = {
+                                    backStack.removeLastOrNull()
+                                    backStack.add(HomeAppKey)
+                                },
+                            )
+                        }
+                        entry<LanguageKey> {
+                            LanguageScreen(
+                                onNavigateBack = {
+                                    backStack.removeLastOrNull()
+                                }
+                            )
+                        }
+                        entry<HomeAppKey> {
+                            HomeAppScreen(
+                                onToggleAnimation = { enabled ->
+                                    if (enabled) {
+                                        checkNotificationPermission(
+                                            requestNotificationPermissionLauncher
+                                        ) {
+                                            viewModel.enableAnimation()
+                                            startAnimationService()
+                                        }
+                                    } else {
+                                        viewModel.disableAnimation()
+                                        stopAnimationService()
+                                    }
+                                }
+                            )
+                        }
+
                     }
                 )
 
@@ -124,6 +135,14 @@ class ANekoActivity : AppCompatActivity() {
         startService(
             Intent(this, AnimationService::class.java)
                 .setAction(AnimationService.ACTION_START)
+        )
+    }
+
+    private fun stopAnimationService() {
+        prefs.edit { putBoolean(AnimationService.PREF_KEY_VISIBLE, false) }
+        stopService(
+            Intent(this, AnimationService::class.java)
+                .setAction(AnimationService.ACTION_STOP)
         )
     }
 

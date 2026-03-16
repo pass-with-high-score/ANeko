@@ -31,19 +31,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.annotation.RootGraph
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import org.nqmgaming.aneko.R
 import org.nqmgaming.aneko.core.util.LocaleHelper
 import org.nqmgaming.aneko.core.util.extension.changeLanguage
 import org.nqmgaming.aneko.data.Language
 
-@Destination<RootGraph>
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LanguageScreen(
-    navigator: DestinationsNavigator,
+    onNavigateBack: () -> Unit = {}
 ) {
     val context = LocalContext.current
     val codes = LocalResources.current.getStringArray(R.array.language_codes)
@@ -64,7 +60,7 @@ fun LanguageScreen(
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { navigator.popBackStack() }) {
+                    IconButton(onClick = onNavigateBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.cancel)
