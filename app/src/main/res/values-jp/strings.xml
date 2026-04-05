@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notification_enabled">ANekoは実行中です。</string>
+    <string name="notification_disabled">ANekoはスリープ中です。</string>
+    <string name="power_on">電源オン</string>
+    <string name="power_off">電源オフ</string>
+    <string name="choose_skin">着せ替えを選んでください</string>
+    <string name="invalid_selection">選択が無効です</string>
+    <string name="cancel">取り消す</string>
+    <string name="msg_skin_load_failed">着せ替えを読み込めませんでした。？？？？？？？？？？？</string>
+    <string name="motion_transparency_summary">可動部の透明度を調整します。</string>
+    <string name="motion_focus_summary">有効にすると、ANekoが完全に不透明になりますが、操作が妨害されるようになります。</string>
+    <string name="motion_size_summary">可動部の大きさを設定します。</string>
+    <string name="motion_settings_default_title">可動部の設定（既定）</string>
+    <string name="motion_settings_title">可動部の設定</string>
+    <string name="motion_speed_summary">可動部の動く速さを設定します。</string>
+    <string name="motion_bottom_offset_summary">キーボードに重なりづらくなるように、画面下部に行かないようにします。</string>
+
+    <!-- Community & Contributions -->
+    <string name="community_title">コミュニティーと貢献</string>
+    <string name="github_contribute_title">GitHubで貢献</string>
+    <string name="github_contribute_summary">GitHubでソースコードを閲覧し、新しい機能を貢献してください！</string>
+
+    <!-- Rate App -->
+    <string name="rate_app_title">アプリを評価する</string>
+    <string name="rate_app_summary">ANekoを楽しんでお使いになられているなら、評価を残していただけると幸いです。</string>
+    <string name="select_prompt">%1$sを選択してください</string>
+    <string name="make_with_love">ANekoのために❤️を込めて作り上げました</string>
+    <string name="app_version">バージョン %1$s</string>
+    <string name="unknown_value">不明</string>
+    <string name="toggle_theme_title">テーマを切り替える</string>
+    <string name="share_title">共有する</string>
+    <string name="notification_permission_title">通知権限</string>
+    <string name="notification_permission_description">ANekoは、現在の実行状態などを表示するために、通知を送信する権限を必須とします。アプリの正常な動作のために、権限を確認してください。</string>
+    <string name="allow_button">許可する</string>
+    <string name="cancel_button">取り消す</string>
+    <string name="overlay_permission_title">上に表示する権限が必要です</string>
+    <string name="overlay_permission_description">他のアプリの上に表示する権限がなくては、ANekoは機能しません。設定で権限を与えてください。</string>
+    <string name="notification_permission_denied_msg">通知権限がありません。正常に動かない機能があるでしょう。</string>
+    <string name="loading_skins_label">着せ替えを読み込んでいます…</string>
+    <string name="default_label">（既定）</string>
+    <string name="share_apk_label">%1$sのAPKを共有する</string>
+    <string name="failed_to_share_apk_label">%1$sのAPKをの共有に失敗しました。</string>
+    <string name="package_skin_label">パッケージ： %1$s</string>
+    <string name="version_skin_label">バージョン： %1$sのAPKを共有する</string>
+    <string name="unknown_skin_version">不明</string>
+    <string name="notification_chanel_description">ANekoのバックグラウンドサービス</string>
+    <string name="website_title">ウェブサイト</string>
+    <string name="website_summary">ANekoの公式ウェブページ</string>
+    <string name="choose_language_title">言語を選択してください</string>
+    <string name="txt_explore">探索する</string>
+    <string name="search_skin_placeholder">名前や作者で検索…</string>
+    <string name="tab_built_in">内蔵</string>
+    <string name="tab_community">コミュニティーから</string>
+    <string name="txt_loading">読み込み中</string>
+    <string name="share_skin_label">共有する</string>
+    <string name="label_author">%1$s作</string>
+    <string name="importing_skin_please_wait">着せ替えをインポートしています。お待ちください…</string>
+    <string name="imported_skin_from_zip">ZIPファイルから%1$sをインポートしました。</string>
+    <string name="failed_to_import_skin_from_zip">ZIPファイルから着せ替えをインポートできませんでした。</string>
+    <string name="failed_to_import_skin">%1$sのスキンをインポートできませんでした。</string>
+    <string name="unknown_author">作者不詳</string>
+    <string name="download">ダウンロード</string>
+    <string name="hi_there_is_no_skin_collection_for_now">どうも！ まだ着せ替えコレクションはございません。</string>
+    <string name="try_to_import_from_zip">ZIPファイルからインポートしてみる</string>
+    <string name="do_you_have_questions">質問はございますか？</string>
+    <string name="open_the_skin_collection_configuration_file">着せ替えコレクションの設定ファイルを開く</string>
+    <string name="what_is_this">これは何ですか？</string>
+    <string name="what_is_this_answer">これらはコミュニティーの同志が制作した、自由に使える着せ替えです。ワンクリックでダウンロード・インポートできます。他の着せ替えもZIPファイルからインポートできます。</string>
+    <string name="the_formats_and_structure_of_the_skins">着せ替えの形式と構造は？</string>
+    <string name="the_formats_and_structure_of_the_skins_answer">着せ替えはZIP形式で、既定の着せ替えと同じ構造です。着せ替えのディレクトリー直下に、メタデータと設定を定義する skin.xml ファイルが必要です。これはアプリが安全に対処します。</string>
+    <string name="queued">予約中</string>
+    <string name="downloading">ダウンロード中</string>
+    <string name="importing">インポートしています…</string>
+    <string name="installed">インストール完了</string>
+    <string name="uninstall">アンインストールする</string>
+    <string name="update">更新する</string>
+    <string name="retry">再試行</string>
+    <string name="skin_builder_title">着せ替えビルダー</string>
+
+    <!-- Skin Builder Dialog -->
+    <string name="skin_share_dialog_title">着せ替えを共有する</string>
+    <string name="skin_share_dialog_image_desc">着せ替えを共有する</string>
+    <string name="skin_share_dialog_body">ANeko用の着せ替えを自作されましたか？ コミュニティーにお見せください！</string>
+    <string name="skin_share_dialog_confirm">早速行きましょう</string>
+    <string name="skin_share_dialog_dismiss">今は結構です</string>
+    <string name="skin_share_dialog_toast_hint">「探索」タブからまた後で着せ替え共有ができます。</string>
+
+    <!-- App Shortcuts -->
+    <string name="shortcut_toggle_short">ANekoを切り替える</string>
+    <string name="shortcut_toggle_long">ANekoを実行しているかどうか切り替える</string>
+    <string name="button_pin_shortcut">ショートカットをピン留めする</string>
+    <string name="message_shortcut_request_sent">ショートカットの要求を送信しました。ランチャーアプリをご確認ください。</string>
+    <string name="message_unable_create_shortcut">ショートカットが作成できません</string>
+    <string name="message_failed_to_create_shortcut">ショートカット作成が失敗しました</string>
+
+    <!-- Permission Onboarding -->
+    <string name="permission_onboarding_appbar_title">権限</string>
+    <string name="permission_onboarding_skip">今は結構です</string>
+    <string name="permission_onboarding_page1_title">ANekoを画面に表示できるようにする</string>
+    <string name="permission_onboarding_page1_body">ANekoがどこでも表示できるように、他のアプリの上に表示する権限が必要です。</string>
+    <string name="permission_onboarding_page1_primary">続ける</string>
+    <string name="permission_onboarding_page1_info_title">なぜこの権限が必要なのですか？</string>
+    <string name="permission_onboarding_page1_info_body1">他のアプリの使用中にも、キャラクターを表示できるようにです。</string>
+    <string name="permission_onboarding_page1_info_body2">設定からいつでもオフにできます。</string>
+    <string name="permission_onboarding_page2_title">ステップ１： ANekoを選択する</string>
+    <string name="permission_onboarding_page2_body">設定画面で、下にスクロールしてANekoを選択します。</string>
+    <string name="permission_onboarding_page2_image_desc">ANekoアプリを選択</string>
+    <string name="permission_onboarding_page2_primary">続ける</string>
+    <string name="permission_onboarding_page3_title">ステップ２: 権限を与える</string>
+    <string name="permission_onboarding_page3_body">他のアプリの上に表示する権限をオンにして、ANekoに戻れば完了です✨</string>
+    <string name="permission_onboarding_page3_image_desc">上に表示する権限を切り替える</string>
+    <string name="permission_onboarding_page3_primary">設定を開く</string>
+    <string name="permission_onboarding_footer">有効にしてから、ANekoにお戻りください。アプリは正常に続けます。</string>
+
+    <!-- Theme Picker -->
+    <string name="theme_picker_title">テーマを選択する</string>
+    <string name="dark_mode_label">ダークモード</string>
+    <string name="dynamic_color_label">ダイナミックカラー（Material You）</string>
+
+    <!-- Sponsor -->
+    <string name="sponsor_title">このプロジェクトをスポンサーする</string>
+    <string name="sponsor_summary">ANekoの開発を支援してください❤️</string>
+
+    <!-- Onboarding Skin -->
+    <string name="onboarding_skin_title">着せ替えを取得する</string>
+    <string name="onboarding_skin_continue">続ける</string>
+
+    <!-- Multi-select Skins -->
+    <string name="max_neko_reached">一度に最大6種の着せ替えを適用できます。</string>
+
+    <!-- Per-skin Settings -->
+    <string name="skin_size_label">大きさ</string>
+    <string name="skin_transparency_label">透明度</string>
+    <string name="skin_speed_label">速さ</string>
+    <string name="skin_settings_title">動きの設定</string>
+
+    <!-- New Skin Dialog -->
+    <string name="new_skin_available_title">新しい着せ替えを取得できます！</string>
+    <string name="new_skins_available_title">新しい着せ替えを取得できます！</string>
+    <string name="new_skin_dialog_navigate_button">連れて行ってください！</string>
+    <string name="new_skin_dialog_dismiss_button">閉じる</string>
+</resources>

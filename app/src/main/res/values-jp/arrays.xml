@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Motion Speed -->
+    <string-array name="pref_motion_speed_entries">
+        <item>とても遅い</item>
+        <item>遅い</item>
+        <item>標準</item>
+        <item>速い</item>
+        <item>とても速い</item>
+    </string-array>
+
+</resources>
+
