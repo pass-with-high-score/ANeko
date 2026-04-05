@@ -1,0 +1,2 @@
+- Add Japanese language.
+- Fix navigate back to home.

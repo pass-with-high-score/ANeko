@@ -5,8 +5,8 @@ minSdk = "28"
 targetSdk = "36"
 
 # App versioning
-versionCode = "33"
-versionName = "2.4.1"
+versionCode = "34"
+versionName = "2.4.2"
 
 # Java/Kotlin
 kotlin = "2.3.10"
