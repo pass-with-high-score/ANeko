@@ -71,7 +71,7 @@
     <string name="choose_language_title">Choose language</string>
     <string name="txt_explore">Explore</string>
     <string name="search_skin_placeholder">Search by name or author…</string>
-    <string name="tab_built_in">Built-in</string>
+    <string name="tab_official">Originals</string>
     <string name="tab_community">Community</string>
     <string name="txt_loading">Loading</string>
     <string name="share_skin_label">Share</string>

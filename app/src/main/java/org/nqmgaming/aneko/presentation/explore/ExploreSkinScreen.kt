@@ -210,7 +210,7 @@ fun ExploreSkin(
 
     // Tab definitions
     val tabTitles = listOf(
-        stringResource(R.string.tab_built_in),
+        stringResource(R.string.tab_official),
         stringResource(R.string.tab_community),
     )
     val tabIcons = listOf(

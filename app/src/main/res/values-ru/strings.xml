@@ -52,7 +52,7 @@
     <string name="website_summary">Официальный сайт ANeko</string>
     <string name="choose_language_title">Выберите язык</string>
     <string name="txt_explore">Исследовать</string>
-    <string name="tab_built_in">Встроенные</string>
+    <string name="tab_official">Оригиналы</string>
     <string name="tab_community">Сообщество</string>
     <string name="txt_loading">Загрузка</string>
     <string name="share_skin_label">Поделиться</string>
