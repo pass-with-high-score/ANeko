@@ -71,6 +71,7 @@ class ANekoActivity : AppCompatActivity() {
             ) {
                 val backStack = rememberNavBackStack(PermissionKey)
 
+
                 NavDisplay(
                     backStack = backStack,
                     onBack = { if (backStack.size > 1) backStack.removeLastOrNull() },

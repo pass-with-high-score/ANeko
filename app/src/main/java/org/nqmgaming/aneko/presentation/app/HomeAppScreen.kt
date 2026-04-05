@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material.icons.Icons
@@ -27,8 +28,6 @@ import androidx.navigation3.ui.NavDisplay
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.nqmgaming.aneko.core.service.AnimationService
-import org.nqmgaming.aneko.core.util.extension.checkNotificationPermission
 import org.nqmgaming.aneko.presentation.AnekoViewModel
 import org.nqmgaming.aneko.presentation.BottomTab
 import org.nqmgaming.aneko.presentation.ExploreKey
@@ -41,7 +40,6 @@ import org.nqmgaming.aneko.presentation.home.HomeScreen
 import org.nqmgaming.aneko.presentation.setting.LanguageScreen
 import org.nqmgaming.aneko.presentation.setting.ThemeScreen
 import timber.log.Timber
-import kotlin.collections.forEach
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -102,6 +100,11 @@ fun HomeAppScreen(
             }
         }
     )
+
+    BackHandler(enabled = currentTab != BottomTab.HOME && currentBackStack.size <= 1) {
+        currentTab = BottomTab.HOME
+        showBottomBar = true
+    }
 
     Scaffold(
         bottomBar = {
