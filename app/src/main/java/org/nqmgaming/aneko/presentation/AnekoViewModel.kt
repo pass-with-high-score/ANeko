@@ -460,32 +460,57 @@ class AnekoViewModel @Inject constructor(
         return null
     }
 
+    private companion object {
+    const val MAX_ZIP_ENTRIES = 200
+    const val MAX_ZIP_BYTES   = 50L * 1024 * 1024
+}
 
-    fun unzipToTempDir(input: InputStream, tempDir: File): List<File> {
-        val zis = ZipInputStream(BufferedInputStream(input))
-        val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
-        val extractedFiles = mutableListOf<File>()
+fun unzipToTempDir(input: InputStream, tempDir: File): List<File> {
+    val canonicalBase = tempDir.canonicalPath + File.separator
+    val buffer        = ByteArray(DEFAULT_BUFFER_SIZE)
+    val extracted     = mutableListOf<File>()
+    var entryCount    = 0
+    var totalBytes    = 0L
 
+    ZipInputStream(BufferedInputStream(input)).use { zis ->
         var entry = zis.nextEntry
         while (entry != null) {
-            if (!entry.isDirectory && !entry.name.startsWith("__MACOSX") && !entry.name.endsWith(".DS_Store")) {
-                val outFile = File(tempDir, entry.name)
+            if (++entryCount > MAX_ZIP_ENTRIES)
+                throw SecurityException()
+
+            val name = entry.name
+            val skip = entry.isDirectory
+                || name.startsWith("__MACOSX")
+                || name.endsWith(".DS_Store")
+
+            if (!skip) {
+                if (name.startsWith("/") || name.startsWith("\\")
+                        || name.contains(".."))
+                    throw SecurityException()
+
+                val outFile = File(tempDir, name)
+                if (!outFile.canonicalPath.startsWith(canonicalBase))
+                    throw SecurityException()
+
                 outFile.parentFile?.mkdirs()
+
                 BufferedOutputStream(FileOutputStream(outFile)).use { bos ->
                     var count: Int
                     while (zis.read(buffer).also { count = it } != -1) {
+                        totalBytes += count
+                        if (totalBytes > MAX_ZIP_BYTES)
+                            throw SecurityException()
                         bos.write(buffer, 0, count)
                     }
                 }
-                extractedFiles.add(outFile)
+                extracted.add(outFile)
             }
             zis.closeEntry()
             entry = zis.nextEntry
         }
-
-        zis.close()
-        return extractedFiles
     }
+    return extracted
+}
 
     fun moveSkinFilesToFinalDestination(sourceDir: File, destDir: File, overwrite: Boolean) {
         sourceDir.walkTopDown().forEach { file ->
