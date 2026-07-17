@@ -15,6 +15,8 @@
     <string name="msg_skin_load_failed">Failed to load skin. Please check the skin application.</string>
 
     <!-- Motion Settings -->
+    <string name="motion_quiet_mode_title" tools:ignore="MissingTranslation">Quiet Mode</string>
+    <string name="motion_quiet_mode_summary" tools:ignore="MissingTranslation">Keep pets in place. You can still drag them, and their animation follows the drag direction.</string>
     <string name="motion_transparency_title" translatable="false">Motion Transparency</string>
     <string name="motion_transparency_summary">Adjust the transparency level of motion effects.</string>
     <string name="motion_focus_title" translatable="false">Motion Focus</string>

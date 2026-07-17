@@ -34,6 +34,17 @@ fun SettingsScreen(
         PreferenceContainer(
             title = R.string.motion_settings_default_title
         ) {
+            SwitchPreferenceItem(
+                title = stringResource(R.string.motion_quiet_mode_title),
+                summary = stringResource(R.string.motion_quiet_mode_summary),
+                icon = R.drawable.sleep2,
+                key = AnimationService.PREF_KEY_QUIET_MODE,
+                defaultValue = false,
+                prefs = prefs,
+            )
+            HorizontalDivider(
+                color = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f),
+            )
             SliderPreferenceItem(
                 title = stringResource(R.string.motion_transparency_title),
                 summary = stringResource(R.string.motion_transparency_summary),

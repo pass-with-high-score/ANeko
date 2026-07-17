@@ -57,6 +57,9 @@ class CodexPetMotionParams(
 
         addRowMotion("moveRight", CodexPetContract.runningRight, repeatCount = -1)
         addRowMotion("moveLeft", CodexPetContract.runningLeft, repeatCount = -1)
+        addRowMotion("dragRight", CodexPetContract.runningRight, repeatCount = -1)
+        addRowMotion("dragLeft", CodexPetContract.runningLeft, repeatCount = -1)
+        addRowMotion("dragVertical", CodexPetContract.running, repeatCount = -1)
 
         if (source.version == 2) {
             addLookMotion("moveUp", 0, repeatCount = -1)

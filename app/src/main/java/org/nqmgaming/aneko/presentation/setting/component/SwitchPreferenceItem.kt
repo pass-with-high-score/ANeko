@@ -51,6 +51,7 @@ fun SwitchPreferenceItem(
         colors = CardDefaults.cardColors(containerColor = Color.Transparent),
         onClick = {
             val newValue = !isChecked
+            isChecked = newValue
             prefs.edit { putBoolean(key, newValue) }
         }
     ) {

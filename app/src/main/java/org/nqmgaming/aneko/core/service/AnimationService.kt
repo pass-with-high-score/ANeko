@@ -23,6 +23,7 @@ import android.view.Display
 import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewConfiguration
 import android.view.WindowManager
 import android.widget.ImageView
 import androidx.annotation.NonNull
@@ -30,13 +31,14 @@ import androidx.core.content.edit
 import androidx.core.net.toUri
 import org.nqmgaming.aneko.R
 import org.nqmgaming.aneko.core.motion.CodexPetMotionParams
+import org.nqmgaming.aneko.core.motion.DragDirectionTracker
 import org.nqmgaming.aneko.core.motion.MotionConfigParser
 import org.nqmgaming.aneko.core.motion.MotionDrawable
+import org.nqmgaming.aneko.core.motion.MotionDirectionResolver
 import org.nqmgaming.aneko.core.motion.MotionParams
 import timber.log.Timber
 import java.io.File
 import kotlin.math.PI
-import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.hypot
 import kotlin.math.min
@@ -60,6 +62,7 @@ class AnimationService : Service() {
         const val PREF_KEY_NEKO_COUNT = "motion.neko_count"
         const val PREF_KEY_NOTIFICATION_ENABLE = "notification.enable"
         const val PREF_KEY_BOTTOM_OFFSET = "motion.bottom_offset"
+        const val PREF_KEY_QUIET_MODE = "motion.quiet_mode"
         const val AVOID_KEYBOARD = 33
         private const val MSG_ANIMATE = 1
         private const val ANIMATION_INTERVAL = 125L
@@ -74,6 +77,11 @@ class AnimationService : Service() {
         val motionState: MotionState,
         val imageView: ImageView,
         var imageParams: WindowManager.LayoutParams
+    )
+
+    private data class DragUpdate(
+        val positionChanged: Boolean,
+        val animationChanged: Boolean,
     )
 
     private var isStarted = false
@@ -162,6 +170,7 @@ class AnimationService : Service() {
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or
                 WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
         val isFocus = prefs.getBoolean(PREF_KEY_FOCUS, false)
+        val isQuietMode = prefs.getBoolean(PREF_KEY_QUIET_MODE, false)
 
         // Create each neko instance
         for (i in 0 until nekoCount) {
@@ -177,23 +186,9 @@ class AnimationService : Service() {
 
             val iv = ImageView(this).apply {
                 setOnClickListener {
-                    // move this neko to a random position
-                    val pnt = Point().also { wm.defaultDisplay.getSize(it) }
-                    val dw = pnt.x
-                    pnt.y
-                    val effectiveDh = ms.effectiveDisplayHeight
-                    val (x, y) = if (random.nextFloat() < 0.4f) {
-                        when (random.nextInt(4)) {
-                            0 -> 0f to random.nextInt(effectiveDh).toFloat()
-                            1 -> dw.toFloat() to random.nextInt(effectiveDh).toFloat()
-                            2 -> random.nextInt(dw).toFloat() to 0f
-                            else -> random.nextInt(dw).toFloat() to effectiveDh.toFloat()
-                        }
-                    } else {
-                        random.nextInt(dw).toFloat() to random.nextInt(effectiveDh).toFloat()
+                    if (!isQuietModeEnabled()) {
+                        moveToRandomTarget(ms)
                     }
-                    ms.setTargetPosition(x, y)
-                    requestAnimate()
                 }
             }
 
@@ -204,15 +199,19 @@ class AnimationService : Service() {
                 skinSize,
                 skinSize,
                 WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
-                if (isFocus) focusFlag else unfocusFlag,
+                if (isFocus || isQuietMode) focusFlag else unfocusFlag,
                 PixelFormat.TRANSLUCENT
             ).apply { gravity = Gravity.TOP or Gravity.START }
             wm.addView(iv, params)
 
-            nekos.add(NekoInstance(skinPkg, ms, iv, params))
+            val neko = NekoInstance(skinPkg, ms, iv, params)
+            iv.setOnTouchListener(PetDragTouchListener(neko))
+            nekos.add(neko)
+            updateDrawable(neko)
+            updatePosition(neko)
         }
 
-        requestAnimate()
+        if (!isQuietMode) requestAnimate()
     }
 
     private fun stopAnimation() {
@@ -392,6 +391,7 @@ class AnimationService : Service() {
             random.nextInt(dw).toFloat(),
             random.nextInt(effectiveDh).toFloat()
         )
+        ms.setQuietMode(prefs.getBoolean(PREF_KEY_QUIET_MODE, false))
         refreshMotionSize()
     }
 
@@ -448,6 +448,56 @@ class AnimationService : Service() {
             val opacity = 1f - (alphaStr.toFloatOrNull() ?: 0f)
             neko.motionState.alpha = (opacity * 0xff).roundToInt()
         }
+    }
+
+    private fun isQuietModeEnabled(): Boolean =
+        prefs.getBoolean(PREF_KEY_QUIET_MODE, false)
+
+    private fun moveToRandomTarget(ms: MotionState) {
+        val wm = getSystemService(WINDOW_SERVICE) as WindowManager
+        val displaySize = Point().also { wm.defaultDisplay.getSize(it) }
+        val dw = displaySize.x
+        val effectiveDh = ms.effectiveDisplayHeight
+        val (x, y) = if (random.nextFloat() < 0.4f) {
+            when (random.nextInt(4)) {
+                0 -> 0f to random.nextInt(effectiveDh).toFloat()
+                1 -> dw.toFloat() to random.nextInt(effectiveDh).toFloat()
+                2 -> random.nextInt(dw).toFloat() to 0f
+                else -> random.nextInt(dw).toFloat() to effectiveDh.toFloat()
+            }
+        } else {
+            random.nextInt(dw).toFloat() to random.nextInt(effectiveDh).toFloat()
+        }
+        ms.setTargetPosition(x, y)
+        requestAnimate()
+    }
+
+    private fun refreshPetTouchability() {
+        val wm = getSystemService(WINDOW_SERVICE) as WindowManager
+        val touchableFlag = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+        val passthroughFlags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or
+            WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
+        val isTouchable = prefs.getBoolean(PREF_KEY_FOCUS, false) || isQuietModeEnabled()
+        nekos.forEach { neko ->
+            neko.imageParams.flags = if (isTouchable) touchableFlag else passthroughFlags
+            try {
+                wm.updateViewLayout(neko.imageView, neko.imageParams)
+            } catch (e: Exception) {
+                Timber.e(e, "Failed to update pet touchability")
+            }
+        }
+    }
+
+    private fun updateQuietMode(enabled: Boolean) {
+        nekos.forEach { neko ->
+            neko.motionState.setQuietMode(enabled)
+            if (!enabled) moveToRandomTarget(neko.motionState)
+            updateDrawable(neko)
+            updatePosition(neko)
+        }
+        refreshPetTouchability()
+        if (!enabled) requestAnimate()
     }
 
     private fun requestAnimate() {
@@ -530,15 +580,12 @@ class AnimationService : Service() {
                     refreshMotionTransparency()
                 }
 
+                key == PREF_KEY_QUIET_MODE -> {
+                    updateQuietMode(prefs.getBoolean(PREF_KEY_QUIET_MODE, false))
+                }
+
                 key == PREF_KEY_FOCUS -> {
-                    val focusFlag = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-                    val unfocusFlag = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
-                            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or
-                            WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
-                    val isFocus = prefs.getBoolean(PREF_KEY_FOCUS, false)
-                    nekos.forEach {
-                        it.imageParams.flags = if (isFocus) focusFlag else unfocusFlag
-                    }
+                    refreshPetTouchability()
                 }
 
                 key == PREF_KEY_NEKO_COUNT || key == PREF_KEY_SKIN_COMPONENT -> {
@@ -572,39 +619,83 @@ class AnimationService : Service() {
     private inner class TouchListener : View.OnTouchListener {
         override fun onTouch(v: View?, ev: MotionEvent): Boolean {
             if (nekos.isEmpty()) return false
+            if (isQuietModeEnabled()) return false
             if (ev.action == MotionEvent.ACTION_UP) {
                 v?.performClick()
                 return true
             }
             if (ev.action == MotionEvent.ACTION_OUTSIDE) {
-                val wm = getSystemService(WINDOW_SERVICE) as WindowManager
-                val pnt = Point().also { wm.defaultDisplay.getSize(it) }
-                val dw = pnt.x
-
-                // Each neko gets its own random target
                 nekos.forEach { neko ->
-                    val effectiveDh = neko.motionState.effectiveDisplayHeight
-                    val (x, y) = if (random.nextFloat() < 0.4f) {
-                        when (random.nextInt(4)) {
-                            0 -> 0f to random.nextInt(effectiveDh).toFloat()
-                            1 -> dw.toFloat() to random.nextInt(effectiveDh).toFloat()
-                            2 -> random.nextInt(dw).toFloat() to 0f
-                            else -> random.nextInt(dw).toFloat() to effectiveDh.toFloat()
-                        }
-                    } else {
-                        random.nextInt(dw).toFloat() to random.nextInt(effectiveDh).toFloat()
-                    }
-                    neko.motionState.setTargetPosition(x, y)
+                    moveToRandomTarget(neko.motionState)
                 }
-
-                requestAnimate()
                 return true
             } else if (ev.action == MotionEvent.ACTION_CANCEL) {
-                nekos.forEach { it.motionState.forceStop() }
-                requestAnimate()
+                nekos.forEach { neko ->
+                    neko.motionState.forceStop()
+                    updateDrawable(neko)
+                    updatePosition(neko)
+                }
                 return true
             }
             return false
+        }
+    }
+
+    private inner class PetDragTouchListener(
+        private val neko: NekoInstance,
+    ) : View.OnTouchListener {
+        private val touchSlop = ViewConfiguration.get(this@AnimationService).scaledTouchSlop
+        private val activationThreshold = (touchSlop / 2f).coerceAtLeast(2f)
+        private val directionChangeThreshold = touchSlop.toFloat()
+        private var downRawX = 0f
+        private var downRawY = 0f
+        private var dragged = false
+
+        override fun onTouch(view: View, event: MotionEvent): Boolean {
+            if (!isQuietModeEnabled()) return false
+            return when (event.actionMasked) {
+                MotionEvent.ACTION_DOWN -> {
+                    downRawX = event.rawX
+                    downRawY = event.rawY
+                    dragged = false
+                    if (neko.motionState.beginDrag(event.rawX, event.rawY)) {
+                        updateDrawable(neko)
+                    }
+                    true
+                }
+
+                MotionEvent.ACTION_MOVE -> {
+                    if (!dragged) {
+                        dragged = hypot(event.rawX - downRawX, event.rawY - downRawY) >= touchSlop
+                    }
+                    val update = neko.motionState.dragTo(
+                        rawX = event.rawX,
+                        rawY = event.rawY,
+                        activationThreshold = activationThreshold,
+                        directionChangeThreshold = directionChangeThreshold,
+                    )
+                    if (update.animationChanged) updateDrawable(neko)
+                    if (update.positionChanged) updatePosition(neko)
+                    true
+                }
+
+                MotionEvent.ACTION_UP -> {
+                    neko.motionState.endDrag()
+                    updateDrawable(neko)
+                    updatePosition(neko)
+                    if (!dragged) {
+                        view.performClick()
+                    }
+                    true
+                }
+
+                MotionEvent.ACTION_CANCEL -> {
+                    neko.motionState.cancelDragWithoutIdle()
+                    true
+                }
+
+                else -> true
+            }
         }
     }
 
@@ -612,6 +703,10 @@ class AnimationService : Service() {
         override fun onMotionEnd(drawable: MotionDrawable) {
             if (!isStarted) return
             val neko = nekos.find { it.motionState.currentDrawable() === drawable } ?: return
+            if (neko.motionState.isDragAnimationLocked()) {
+                updateDrawable(neko)
+                return
+            }
             updateToNext(neko)
         }
     }
@@ -642,6 +737,14 @@ class AnimationService : Service() {
         private var stateChanged = false
         private var positionMoved = false
         private var speedFactor = 1.0f
+        private var quietMode = false
+        private var dragging = false
+        private var dragAnimationLocked = false
+        private var dragStartRawX = 0f
+        private var dragStartRawY = 0f
+        private var dragStartX = 0f
+        private var dragStartY = 0f
+        private val dragDirectionTracker = DragDirectionTracker()
 
         private val onMotionEnd = MotionEndListener()
 
@@ -655,6 +758,8 @@ class AnimationService : Service() {
         fun updateState() {
             stateChanged = false
             positionMoved = false
+
+            if (quietMode || dragging) return
 
             val dx = targetX - curX
             val dy = targetY - curY
@@ -711,7 +816,7 @@ class AnimationService : Service() {
 
             positionMoved = true
 
-            changeToMovingState()
+            changeToMovingState(vx, vy)
         }
 
         fun checkWall(): Boolean {
@@ -739,7 +844,7 @@ class AnimationService : Service() {
             if (!params.needCheckMove(curState!!)) return false
             val len = hypot(targetX - curX, targetY - curY)
             if (len <= params.proximityDistance) return false
-            changeToMovingState()
+            changeToMovingState(targetX - curX, targetY - curY)
             return true
         }
 
@@ -765,22 +870,40 @@ class AnimationService : Service() {
             return true
         }
 
-        private fun changeToMovingState() {
-            val dirIdx = ((atan2(vy, vx) * 4 / Math.PI) + 8.5).toInt() % 8
-            val dirs = arrayOf(
-                MotionParams.MoveDirection.RIGHT,
-                MotionParams.MoveDirection.DOWN_RIGHT,
-                MotionParams.MoveDirection.DOWN,
-                MotionParams.MoveDirection.DOWN_LEFT,
-                MotionParams.MoveDirection.LEFT,
-                MotionParams.MoveDirection.UP_LEFT,
-                MotionParams.MoveDirection.UP,
-                MotionParams.MoveDirection.UP_RIGHT
-            )
-            val nstate = params.getMoveState(dirs[dirIdx])
-            if (!params.hasState(nstate)) return
+        private fun changeToMovingState(dx: Float, dy: Float): Boolean {
+            val direction = MotionDirectionResolver.resolve(dx, dy) ?: return false
+            return changeToMovingState(direction)
+        }
+
+        private fun changeToMovingState(direction: MotionParams.MoveDirection): Boolean {
+            val nstate = params.getMoveState(direction)
+            if (!params.hasState(nstate)) return false
+            val previousState = curState
             changeState(nstate)
             movingState = true
+            return previousState != curState
+        }
+
+        private fun changeToDraggingState(direction: MotionParams.MoveDirection): Boolean {
+            val dragState = when (direction) {
+                MotionParams.MoveDirection.LEFT,
+                MotionParams.MoveDirection.UP_LEFT,
+                MotionParams.MoveDirection.DOWN_LEFT -> "dragLeft"
+
+                MotionParams.MoveDirection.RIGHT,
+                MotionParams.MoveDirection.UP_RIGHT,
+                MotionParams.MoveDirection.DOWN_RIGHT -> "dragRight"
+
+                MotionParams.MoveDirection.UP,
+                MotionParams.MoveDirection.DOWN -> "dragVertical"
+            }
+            if (params.hasState(dragState)) {
+                val previousState = curState
+                changeState(dragState)
+                movingState = true
+                return previousState != curState
+            }
+            return changeToMovingState(direction)
         }
 
         var effectiveDisplayHeight: Int = 1
@@ -803,6 +926,88 @@ class AnimationService : Service() {
         fun setCurrentPosition(x: Float, y: Float) {
             curX = x; curY = y
         }
+
+        fun setQuietMode(enabled: Boolean) {
+            quietMode = enabled
+            dragAnimationLocked = false
+            if (enabled) {
+                dragging = false
+                stopAtCurrentPosition()
+            }
+        }
+
+        fun beginDrag(rawX: Float, rawY: Float): Boolean {
+            if (!quietMode) return false
+            dragging = true
+            dragAnimationLocked = true
+            dragStartRawX = rawX
+            dragStartRawY = rawY
+            dragStartX = curX
+            dragStartY = curY
+            dragDirectionTracker.reset(rawX, rawY)
+            vx = 0f
+            vy = 0f
+            val previousState = curState
+            val initialDragState = when {
+                params.hasState("dragVertical") -> "dragVertical"
+                params.hasState(params.getMoveState(MotionParams.MoveDirection.RIGHT)) ->
+                    params.getMoveState(MotionParams.MoveDirection.RIGHT)
+                else -> null
+            }
+            if (initialDragState != null) {
+                changeState(initialDragState)
+                movingState = true
+            }
+            return previousState != curState
+        }
+
+        fun dragTo(
+            rawX: Float,
+            rawY: Float,
+            activationThreshold: Float,
+            directionChangeThreshold: Float,
+        ): DragUpdate {
+            if (!quietMode || !dragging) return DragUpdate(false, false)
+
+            val nextX = (dragStartX + rawX - dragStartRawX)
+                .coerceIn(0f, displayWidth.toFloat())
+            val nextY = (dragStartY + rawY - dragStartRawY)
+                .coerceIn(0f, effectiveDisplayHeight.toFloat())
+            val positionChanged = nextX != curX || nextY != curY
+            curX = nextX
+            curY = nextY
+            targetX = curX
+            targetY = curY
+            vx = 0f
+            vy = 0f
+            positionMoved = positionChanged
+
+            val direction = dragDirectionTracker.update(
+                rawX = rawX,
+                rawY = rawY,
+                activationThreshold = activationThreshold,
+                directionChangeThreshold = directionChangeThreshold,
+            )
+            val animationChanged = direction?.let(::changeToDraggingState) ?: false
+            return DragUpdate(positionChanged, animationChanged)
+        }
+
+        fun endDrag() {
+            if (!dragAnimationLocked) return
+            dragging = false
+            dragAnimationLocked = false
+            stopAtCurrentPosition()
+        }
+
+        fun cancelDragWithoutIdle() {
+            if (!dragging) return
+            dragging = false
+            setTargetPositionDirect(curX, curY)
+            vx = 0f
+            vy = 0f
+        }
+
+        fun isDragAnimationLocked(): Boolean = dragAnimationLocked
 
         fun setTargetPosition(x: Float, y: Float) {
             // Giữ nguyên hành vi cũ (ICS_OR_LATER = true -> whimsical)
@@ -877,8 +1082,15 @@ class AnimationService : Service() {
         }
 
         fun forceStop() {
-            setTargetPosition(curX, curY)
-            vx = 0f; vy = 0f
+            stopAtCurrentPosition()
+        }
+
+        private fun stopAtCurrentPosition() {
+            setTargetPositionDirect(curX, curY)
+            vx = 0f
+            vy = 0f
+            movingState = false
+            changeState(params.initialState)
         }
 
         fun isStateChanged(): Boolean = stateChanged

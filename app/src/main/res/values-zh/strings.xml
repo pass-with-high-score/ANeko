@@ -10,6 +10,8 @@
     <string name="msg_skin_load_failed">skin 加载失败，请检查 skin 应用是否正常。</string>
 
     <!-- Motion Settings -->
+    <string name="motion_quiet_mode_title">安静模式</string>
+    <string name="motion_quiet_mode_summary">宠物会安静待在原地；仍可拖动，拖动时会播放对应方向的动画。</string>
     <string name="motion_transparency_summary">调整动作效果的透明程度。</string>
     <string name="motion_focus_summary">启用后,ANeko 将不透明但会捕获焦点。</string>
     <string name="motion_size_summary">设置动作元素的大小。</string>
