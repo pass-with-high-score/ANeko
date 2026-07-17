@@ -146,9 +146,6 @@ class AnimationService : Service() {
 
         if (!checkPrefEnable()) return
 
-        val nekoCount = prefs.getString(PREF_KEY_NEKO_COUNT, "1")
-            ?.toFloatOrNull()?.toInt()?.coerceIn(1, 6) ?: 1
-
         val wm = getSystemService(WINDOW_SERVICE) as WindowManager
 
         // Shared touch overlay (1x1 pixel)
@@ -165,53 +162,7 @@ class AnimationService : Service() {
         ).apply { gravity = Gravity.CENTER }
         wm.addView(touchView, touchParams)
 
-        val focusFlag = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-        val unfocusFlag = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
-                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or
-                WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
-        val isFocus = prefs.getBoolean(PREF_KEY_FOCUS, false)
-        val isQuietMode = prefs.getBoolean(PREF_KEY_QUIET_MODE, false)
-
-        // Create each neko instance
-        for (i in 0 until nekoCount) {
-            val skinPkg = getSkinForSlot(i)
-            val ms = loadMotionStateForSlot(i) ?: continue
-            refreshMotionSpeedFor(ms, skinPkg)
-
-            // Per-skin transparency
-            val alphaStr = prefs.getString("motion.transparency.$skinPkg", null)
-                ?: prefs.getString(PREF_KEY_TRANSPARENCY, "0.0") ?: "0.0"
-            val opacity = 1f - (alphaStr.toFloatOrNull() ?: 0f)
-            ms.alpha = (opacity * 0xff).roundToInt()
-
-            val iv = ImageView(this).apply {
-                setOnClickListener {
-                    if (!isQuietModeEnabled()) {
-                        moveToRandomTarget(ms)
-                    }
-                }
-            }
-
-            // Per-skin size
-            val skinSize = getSizeForSkin(skinPkg)
-
-            val params = WindowManager.LayoutParams(
-                skinSize,
-                skinSize,
-                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
-                if (isFocus || isQuietMode) focusFlag else unfocusFlag,
-                PixelFormat.TRANSLUCENT
-            ).apply { gravity = Gravity.TOP or Gravity.START }
-            wm.addView(iv, params)
-
-            val neko = NekoInstance(skinPkg, ms, iv, params)
-            iv.setOnTouchListener(PetDragTouchListener(neko))
-            nekos.add(neko)
-            updateDrawable(neko)
-            updatePosition(neko)
-        }
-
-        if (!isQuietMode) requestAnimate()
+        syncNekosFromPreferences()
     }
 
     private fun stopAnimation() {
@@ -221,12 +172,7 @@ class AnimationService : Service() {
         touchView?.let { wm.removeView(it) }
         touchView = null
 
-        nekos.forEach { neko ->
-            try {
-                wm.removeView(neko.imageView)
-            } catch (_: Exception) {
-            }
-        }
+        nekos.forEach { neko -> removeNekoView(wm, neko) }
         nekos.clear()
 
         handler.removeMessages(MSG_ANIMATE)
@@ -292,11 +238,70 @@ class AnimationService : Service() {
             ?: "org.nqmgaming.aneko"
     }
 
-    /**
-     * Creates a new MotionState for a specific slot, with random spawn position.
-     */
-    private fun loadMotionStateForSlot(index: Int): MotionState? {
-        val skinPath = getSkinForSlot(index)
+    private fun desiredSkinPackages(): List<String> {
+        val nekoCount = prefs.getString(PREF_KEY_NEKO_COUNT, "1")
+            ?.toFloatOrNull()?.toInt()?.coerceIn(1, 6) ?: 1
+        return List(nekoCount, ::getSkinForSlot)
+    }
+
+    private fun syncNekosFromPreferences() {
+        val wm = getSystemService(WINDOW_SERVICE) as WindowManager
+        val reconciliation = reconcilePetInstances(
+            existing = nekos,
+            desiredKeys = desiredSkinPackages(),
+            keyOf = NekoInstance::skinPackageName,
+            create = ::createNekoInstance,
+        )
+        reconciliation.removed.forEach { neko -> removeNekoView(wm, neko) }
+        nekos.clear()
+        nekos.addAll(reconciliation.instances)
+        if (!isQuietModeEnabled()) requestAnimate()
+    }
+
+    private fun createNekoInstance(skinPkg: String): NekoInstance? {
+        val ms = loadMotionState(skinPkg) ?: return null
+        refreshMotionSpeedFor(ms, skinPkg)
+
+        val alphaStr = prefs.getString("motion.transparency.$skinPkg", null)
+            ?: prefs.getString(PREF_KEY_TRANSPARENCY, "0.0") ?: "0.0"
+        val opacity = 1f - (alphaStr.toFloatOrNull() ?: 0f)
+        ms.alpha = (opacity * 0xff).roundToInt()
+
+        val iv = ImageView(this).apply {
+            setOnClickListener {
+                if (!isQuietModeEnabled()) moveToRandomTarget(ms)
+            }
+        }
+        val focusFlag = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+        val unfocusFlag = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or
+            WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
+        val isTouchable = prefs.getBoolean(PREF_KEY_FOCUS, false) || isQuietModeEnabled()
+        val params = WindowManager.LayoutParams(
+            getSizeForSkin(skinPkg),
+            getSizeForSkin(skinPkg),
+            WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+            if (isTouchable) focusFlag else unfocusFlag,
+            PixelFormat.TRANSLUCENT,
+        ).apply { gravity = Gravity.TOP or Gravity.START }
+        (getSystemService(WINDOW_SERVICE) as WindowManager).addView(iv, params)
+
+        return NekoInstance(skinPkg, ms, iv, params).also { neko ->
+            iv.setOnTouchListener(PetDragTouchListener(neko))
+            updateDrawable(neko)
+            updatePosition(neko)
+        }
+    }
+
+    private fun removeNekoView(wm: WindowManager, neko: NekoInstance) {
+        try {
+            wm.removeView(neko.imageView)
+        } catch (_: Exception) {
+        }
+    }
+
+    /** Creates a new MotionState with a random spawn position. */
+    private fun loadMotionState(skinPath: String): MotionState? {
         if (skinPath.isBlank()) return null
         return try {
             val params = getMotionParamsInternal(skinPath)
@@ -588,12 +593,9 @@ class AnimationService : Service() {
                     refreshPetTouchability()
                 }
 
-                key == PREF_KEY_NEKO_COUNT || key == PREF_KEY_SKIN_COMPONENT -> {
-                    // Restart animation to rebuild the pet list or load a newly selected skin.
-                    if (isStarted) {
-                        stopAnimation()
-                        startAnimation()
-                    }
+                key == PREF_KEY_NEKO_COUNT || key == PREF_KEY_SKIN_COMPONENT ||
+                    (key != null && key.startsWith("motion.skin.")) -> {
+                    if (isStarted) syncNekosFromPreferences()
                 }
 
                 key == PREF_KEY_BOTTOM_OFFSET -> {
