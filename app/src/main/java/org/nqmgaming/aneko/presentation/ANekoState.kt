@@ -8,5 +8,8 @@ data class ANekoState (
     val isLoading: Boolean = false,
     val isRefreshing: Boolean = false,
     val skinCollections: List<SkinCollection>? = emptyList(),
+    val isPetdexLoading: Boolean = false,
+    val isPetdexRefreshing: Boolean = false,
+    val petdexCollections: List<SkinCollection>? = null,
     val newAvailableSkins: List<SkinCollection> = emptyList(),
 )

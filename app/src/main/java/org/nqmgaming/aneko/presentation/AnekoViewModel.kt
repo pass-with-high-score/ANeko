@@ -93,6 +93,21 @@ class AnekoViewModel @Inject constructor(
     init {
         prefs.registerOnSharedPreferenceChangeListener(preferenceChangeListener)
         viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val skinsRoot = File(getApplication<Application>().filesDir, "skins")
+                skinsRoot.listFiles()
+                    ?.asSequence()
+                    ?.filter { it.isDirectory && it.name.startsWith("codex.") }
+                    ?.map { File(it, "pet.json") }
+                    ?.filter { it.isFile }
+                    ?.forEach { manifestFile ->
+                        runCatching {
+                            CodexPetPackage.repairPreviewIfNeeded(manifestFile)
+                        }.onFailure { error ->
+                            Timber.w(error, "Could not repair Codex pet preview: %s", manifestFile)
+                        }
+                    }
+            }
             repo.observeSkins()
                 .collect { skins ->
                     _uiState.update { it.copy(skins = skins) }
@@ -305,7 +320,10 @@ class AnekoViewModel @Inject constructor(
     suspend fun importSkinFromUri(
         context: Context,
         uri: Uri,
-        overwrite: Boolean = true
+        overwrite: Boolean = true,
+        codexPetIdOverride: String? = null,
+        authorOverride: String? = null,
+        versionOverride: String? = null,
     ): String? = withContext(Dispatchers.IO) {
         val tempDir = File(context.cacheDir, "skin_import_${UUID.randomUUID()}").apply { mkdirs() }
         val displayName = queryDisplayName(context, uri) ?: uri.lastPathSegment ?: "Codex Pet"
@@ -320,7 +338,14 @@ class AnekoViewModel @Inject constructor(
                     val extension = if (displayName.endsWith(".png", true)) "png" else "webp"
                     val atlasFile = File(tempDir, "spritesheet.$extension")
                     copyWithLimit(input, atlasFile, CodexPetContract.MAX_ATLAS_BYTES)
-                    val source = CodexPetPackage.fromStandalone(atlasFile, displayName)
+                    val parsedSource = CodexPetPackage.fromStandalone(atlasFile, displayName)
+                    val source = if (codexPetIdOverride.isNullOrBlank()) {
+                        parsedSource
+                    } else {
+                        parsedSource.copy(
+                            manifest = parsedSource.manifest.copy(id = codexPetIdOverride)
+                        )
+                    }
                     val existing = repo.findByPackageName(source.packageName)
                     val skin = CodexPetPackage.install(
                         source = source,
@@ -328,11 +353,21 @@ class AnekoViewModel @Inject constructor(
                         overwrite = overwrite,
                         isBuiltin = existing?.isBuiltin ?: false,
                         isActive = existing?.isActive ?: false,
+                        author = authorOverride,
+                        catalogVersion = versionOverride,
                     )
                     repo.upsertSkin(skin)
                     skin.packageName
                 } else {
-                    importSkinFromStream(context, input, tempDir, overwrite)
+                    importSkinFromStream(
+                        context = context,
+                        inputStream = input,
+                        tempDir = tempDir,
+                        overwrite = overwrite,
+                        codexPetIdOverride = codexPetIdOverride,
+                        authorOverride = authorOverride,
+                        versionOverride = versionOverride,
+                    )
                 }
             }
         } catch (e: Exception) {
@@ -402,6 +437,9 @@ class AnekoViewModel @Inject constructor(
         overwrite: Boolean,
         isBuiltin: Boolean? = null,
         isActive: Boolean? = null,
+        codexPetIdOverride: String? = null,
+        authorOverride: String? = null,
+        versionOverride: String? = null,
     ): String? = withContext(Dispatchers.IO) {
         try {
             if (tempDir.listFiles().isNullOrEmpty()) {
@@ -411,7 +449,14 @@ class AnekoViewModel @Inject constructor(
 
             val manifestFile = CodexPetPackage.findManifest(tempDir)
             if (manifestFile != null) {
-                val source = CodexPetPackage.fromManifest(manifestFile)
+                val parsedSource = CodexPetPackage.fromManifest(manifestFile)
+                val source = if (codexPetIdOverride.isNullOrBlank()) {
+                    parsedSource
+                } else {
+                    parsedSource.copy(
+                        manifest = parsedSource.manifest.copy(id = codexPetIdOverride)
+                    )
+                }
                 val existing = repo.findByPackageName(source.packageName)
                 val skin = CodexPetPackage.install(
                     source = source,
@@ -419,6 +464,8 @@ class AnekoViewModel @Inject constructor(
                     overwrite = overwrite,
                     isBuiltin = isBuiltin ?: existing?.isBuiltin ?: false,
                     isActive = isActive ?: existing?.isActive ?: false,
+                    author = authorOverride,
+                    catalogVersion = versionOverride,
                 )
                 repo.upsertSkin(skin)
                 return@withContext skin.packageName
@@ -663,6 +710,43 @@ class AnekoViewModel @Inject constructor(
                             )
                         }
 
+                    }
+                }
+            }
+        }
+    }
+
+    fun getPetdexCollection(isRefresh: Boolean = false) {
+        viewModelScope.launch {
+            apiService.getPetdexCollection().collect { result ->
+                when (result) {
+                    is ApiResult.Error -> {
+                        _uiState.update {
+                            it.copy(
+                                isPetdexLoading = false,
+                                isPetdexRefreshing = false,
+                                petdexCollections = it.petdexCollections ?: emptyList(),
+                            )
+                        }
+                    }
+
+                    is ApiResult.Loading -> {
+                        _uiState.update {
+                            it.copy(
+                                isPetdexLoading = !isRefresh,
+                                isPetdexRefreshing = isRefresh,
+                            )
+                        }
+                    }
+
+                    is ApiResult.Success -> {
+                        _uiState.update {
+                            it.copy(
+                                petdexCollections = result.data ?: emptyList(),
+                                isPetdexLoading = false,
+                                isPetdexRefreshing = false,
+                            )
+                        }
                     }
                 }
             }

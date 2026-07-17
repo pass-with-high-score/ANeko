@@ -6,4 +6,5 @@ import org.nqmgaming.aneko.data.SkinCollection
 
 interface ApiService {
     suspend fun getSkinCollection(): Flow<ApiResult<List<SkinCollection>>>
+    suspend fun getPetdexCollection(): Flow<ApiResult<List<SkinCollection>>>
 }

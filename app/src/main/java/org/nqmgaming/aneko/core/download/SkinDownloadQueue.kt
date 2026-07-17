@@ -87,7 +87,7 @@ object SkinDownloadQueue {
                 if (result.isSuccess) {
                     _status.update { it + (task.id to DownloadStatus.Importing) }
                     withContext(Dispatchers.Main) {
-                        onImported?.invoke(task.id, result.getOrThrow())
+                        onImported?.invoke(task, result.getOrThrow())
                     }
                     _status.update { it + (task.id to DownloadStatus.Done) }
                 } else {
@@ -154,5 +154,5 @@ object SkinDownloadQueue {
     }
 
     @Volatile
-    var onImported: ((taskId: String, fileUriString: String) -> Unit)? = null
+    var onImported: ((task: DownloadTask, fileUriString: String) -> Unit)? = null
 }

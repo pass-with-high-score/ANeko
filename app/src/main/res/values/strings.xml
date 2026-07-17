@@ -75,6 +75,7 @@
     <string name="search_skin_placeholder">Search by name or author…</string>
     <string name="tab_official">Originals</string>
     <string name="tab_community">Community</string>
+    <string name="tab_petdex" translatable="false">Petdex</string>
     <string name="txt_loading">Loading</string>
     <string name="share_skin_label">Share</string>
     <string name="label_author">Author: %1$s</string>
@@ -92,7 +93,7 @@
     <string name="open_the_skin_collection_configuration_file">Open the skin collection configuration file</string>
     <string name="skin_collection_link" translatable="false">https://github.com/pass-with-high-score/Aneko-skin/blob/main/skin.json</string>
     <string name="what_is_this">What is this?</string>
-    <string name="what_is_this_answer">This is a collection of skins made by the community for you to try out. You can download and import them with a single click. You can also import skins from zip files.</string>
+    <string name="what_is_this_answer">Browse ANeko skins and approved Codex pets from Petdex. You can download and import them with one tap, or import a local ZIP or spritesheet.</string>
     <string name="the_formats_and_structure_of_the_skins">The formats and structure of the skins?</string>
     <string name="the_formats_and_structure_of_the_skins_answer">ANeko skins are ZIP files containing skin.xml. Codex pets can be imported as a pet ZIP containing pet.json and its spritesheet, or directly as a standard 8×9 or 8×11 PNG/WebP atlas.</string>
     <string name="queued">Queued</string>

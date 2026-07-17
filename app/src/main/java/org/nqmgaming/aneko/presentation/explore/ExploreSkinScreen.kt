@@ -27,6 +27,7 @@ import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.outlined.FileOpen
 import androidx.compose.material.icons.outlined.Inventory2
 import androidx.compose.material.icons.outlined.People
+import androidx.compose.material.icons.outlined.Pets
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DropdownMenu
@@ -86,14 +87,23 @@ fun ExploreSkinScreen(
     val scope = rememberCoroutineScope()
     var isImporting by rememberSaveable { mutableStateOf(false) }
 
-    SkinDownloadQueue.onImported = { _, uri ->
+    LaunchedEffect(Unit) {
+        if (uiState.value.petdexCollections == null) {
+            viewModel.getPetdexCollection()
+        }
+    }
+
+    SkinDownloadQueue.onImported = { task, uri ->
         scope.launch {
             try {
                 isImporting = true
                 val pkg = viewModel.importSkinFromUri(
                     context = context,
                     uri = uri.toUri(),
-                    overwrite = true
+                    overwrite = true,
+                    codexPetIdOverride = task.codexPetId,
+                    authorOverride = task.author,
+                    versionOverride = task.version,
                 )
                 Toast.makeText(
                     context,
@@ -118,9 +128,13 @@ fun ExploreSkinScreen(
 
     ExploreSkin(
         skinCollection = uiState.value.skinCollections,
+        petdexCollection = uiState.value.petdexCollections,
         isLoading = uiState.value.isLoading,
         isRefreshing = uiState.value.isRefreshing,
+        isPetdexLoading = uiState.value.isPetdexLoading,
+        isPetdexRefreshing = uiState.value.isPetdexRefreshing,
         onRefresh = { viewModel.getSkinCollection(isRefresh = true) },
+        onPetdexRefresh = { viewModel.getPetdexCollection(isRefresh = true) },
         skinsLocal = uiState.value.skins,
         onImportSkin = { uri ->
             if (isImporting) {
@@ -173,9 +187,13 @@ fun ExploreSkinScreen(
 fun ExploreSkin(
     modifier: Modifier = Modifier,
     skinCollection: List<SkinCollection>? = null,
+    petdexCollection: List<SkinCollection>? = null,
     isLoading: Boolean = false,
     isRefreshing: Boolean = false,
+    isPetdexLoading: Boolean = false,
+    isPetdexRefreshing: Boolean = false,
     onRefresh: () -> Unit = { },
+    onPetdexRefresh: () -> Unit = { },
     skinsLocal: List<SkinEntity> = emptyList(),
     onImportSkin: (Uri) -> Unit = { _ -> },
     onUninstall: (String) -> Unit = { },
@@ -212,10 +230,12 @@ fun ExploreSkin(
     val tabTitles = listOf(
         stringResource(R.string.tab_official),
         stringResource(R.string.tab_community),
+        stringResource(R.string.tab_petdex),
     )
     val tabIcons = listOf(
         Icons.Outlined.Inventory2,
         Icons.Outlined.People,
+        Icons.Outlined.Pets,
     )
 
     val pagerState = rememberPagerState(pageCount = { tabTitles.size })
@@ -226,6 +246,9 @@ fun ExploreSkin(
     }
     val communitySkins = remember(skinCollection) {
         skinCollection?.filter { !it.isBuiltIn } ?: emptyList()
+    }
+    val petdexSkins = remember(petdexCollection) {
+        petdexCollection ?: emptyList()
     }
 
     var isMenuExpanded by remember { mutableStateOf(false) }
@@ -351,14 +374,21 @@ fun ExploreSkin(
             }
 
             // Pager content
+            val currentIsRefreshing = if (pagerState.currentPage == 2) {
+                isPetdexRefreshing
+            } else {
+                isRefreshing
+            }
             PullToRefreshBox(
-                isRefreshing = isRefreshing,
-                onRefresh = onRefresh,
+                isRefreshing = currentIsRefreshing,
+                onRefresh = {
+                    if (pagerState.currentPage == 2) onPetdexRefresh() else onRefresh()
+                },
                 state = state,
                 indicator = {
                     Indicator(
                         modifier = Modifier.align(Alignment.TopCenter),
-                        isRefreshing = isRefreshing,
+                        isRefreshing = currentIsRefreshing,
                         containerColor = MaterialTheme.colorScheme.surface,
                         color = MaterialTheme.colorScheme.primary,
                         state = state
@@ -370,7 +400,16 @@ fun ExploreSkin(
                     state = pagerState,
                     modifier = Modifier.fillMaxSize(),
                 ) { page ->
-                    val currentSkins = if (page == 0) builtInSkins else communitySkins
+                    val currentSkins = when (page) {
+                        0 -> builtInSkins
+                        1 -> communitySkins
+                        else -> petdexSkins
+                    }
+                    val isCollectionAvailable = if (page == 2) {
+                        petdexCollection != null
+                    } else {
+                        skinCollection != null
+                    }
 
                     // Filter based on search query
                     val filteredSkins = remember(currentSkins, searchQuery) {
@@ -381,7 +420,7 @@ fun ExploreSkin(
                         }
                     }
 
-                    if (skinCollection != null) {
+                    if (isCollectionAvailable) {
                         val listState = rememberLazyListState()
 
                         LaunchedEffect(isSearchVisible) {
@@ -497,7 +536,12 @@ fun ExploreSkin(
         }
     }
 
-    LoadingOverlay(isLoading && !isRefreshing)
+    val currentPageLoading = if (pagerState.currentPage == 2) {
+        isPetdexLoading && !isPetdexRefreshing
+    } else {
+        isLoading && !isRefreshing
+    }
+    LoadingOverlay(currentPageLoading)
 
     if (isShowInfoDialog) {
         InfoAlertDialog(

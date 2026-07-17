@@ -72,7 +72,7 @@
     <string name="do_you_have_questions">你有问题吗？</string>
     <string name="open_the_skin_collection_configuration_file">打开皮肤集合配置文件</string>
     <string name="what_is_this">这是什么？</string>
-    <string name="what_is_this_answer">这是一个由社区制作的皮肤集合，供你尝试。你可以一键下载并导入它们。你也可以从 zip 文件中导入皮肤。</string>
+    <string name="what_is_this_answer">这里可以浏览 ANeko 皮肤和 Petdex 中已审核的 Codex 宠物。你可以一键下载并导入，也可以导入本地 ZIP 或精灵图。</string>
     <string name="the_formats_and_structure_of_the_skins">皮肤的格式和结构？</string>
     <string name="the_formats_and_structure_of_the_skins_answer">ANeko 皮肤是包含 skin.xml 的 ZIP。Codex 宠物可导入包含 pet.json 与精灵图的宠物 ZIP，也可直接导入标准 8×9 或 8×11 PNG/WebP 精灵图。</string>
     <string name="queued">已排队</string>

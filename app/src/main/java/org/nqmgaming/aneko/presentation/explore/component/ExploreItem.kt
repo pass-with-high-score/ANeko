@@ -1,5 +1,6 @@
 package org.nqmgaming.aneko.presentation.explore.component
 
+import android.graphics.Bitmap
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,9 +23,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -32,11 +35,18 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
+import coil.size.Size
+import coil.transform.Transformation
 import org.nqmgaming.aneko.R
 import org.nqmgaming.aneko.core.download.DownloadStatus
 import org.nqmgaming.aneko.core.download.DownloadTask
 import org.nqmgaming.aneko.core.download.SkinDownloadQueue
+import org.nqmgaming.aneko.core.pet.CodexPetContract
 import org.nqmgaming.aneko.data.SkinCollection
+
+private const val PETDEX_PREVIEW_FRAME_COUNT = 6
+private const val PETDEX_PREVIEW_WIDTH =
+    PETDEX_PREVIEW_FRAME_COUNT * CodexPetContract.CELL_WIDTH
 
 @Composable
 fun ExploreItem(
@@ -51,7 +61,25 @@ fun ExploreItem(
     val context = LocalContext.current
 
     val hasUpdate = isInstalled && localVersion.isNotBlank() &&
-            collection.version.isNotBlank() && localVersion < collection.version
+            collection.version.isNotBlank() && if (collection.isPetdex) {
+        localVersion != collection.version
+    } else {
+        localVersion < collection.version
+    }
+
+    val previewRequest = remember(context, collection.image, collection.isPetdex) {
+        ImageRequest.Builder(context)
+            .data(collection.image)
+            .diskCachePolicy(CachePolicy.ENABLED)
+            .memoryCachePolicy(CachePolicy.ENABLED)
+            .apply {
+                if (collection.isPetdex) {
+                    size(PETDEX_PREVIEW_WIDTH, CodexPetContract.CELL_HEIGHT)
+                    transformations(PetdexPreviewTransformation())
+                }
+            }
+            .build()
+    }
 
     val label = when (st) {
         is DownloadStatus.Idle -> when {
@@ -86,12 +114,9 @@ fun ExploreItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 AsyncImage(
-                    model = ImageRequest.Builder(context)
-                        .data(collection.image)
-                        .diskCachePolicy(CachePolicy.ENABLED)
-                        .memoryCachePolicy(CachePolicy.ENABLED)
-                        .build(),
+                    model = previewRequest,
                     contentDescription = null,
+                    filterQuality = FilterQuality.None,
                     modifier = Modifier
                         .size(60.dp)
                         .background(
@@ -125,7 +150,7 @@ fun ExploreItem(
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
-                    if (collection.version.isNotBlank()) {
+                    if (collection.version.isNotBlank() && !collection.isPetdex) {
                         Text(
                             text = "v${collection.version}",
                             style = MaterialTheme.typography.labelSmall,
@@ -152,7 +177,10 @@ fun ExploreItem(
                                     task = DownloadTask(
                                         id = collection.packageName,
                                         url = collection.url,
-                                        fileName = "${collection.packageName}.zip"
+                                        fileName = collection.packageName,
+                                        codexPetId = collection.codexPetId,
+                                        author = collection.author,
+                                        version = collection.version,
                                     )
                                 )
                             }
@@ -208,5 +236,15 @@ fun ExploreItem(
                 }
             }
         }
+    }
+}
+
+private class PetdexPreviewTransformation : Transformation {
+    override val cacheKey: String = "petdex-idle-strip-preview-v3"
+
+    override suspend fun transform(input: Bitmap, size: Size): Bitmap {
+        val frameWidth = input.width / PETDEX_PREVIEW_FRAME_COUNT
+        if (frameWidth <= 0 || input.height <= 0) return input
+        return Bitmap.createBitmap(input, 0, 0, frameWidth, input.height)
     }
 }

@@ -74,6 +74,8 @@ object CodexPetPackage {
         overwrite: Boolean,
         isBuiltin: Boolean,
         isActive: Boolean,
+        author: String? = null,
+        catalogVersion: String? = null,
     ): SkinEntity {
         check(skinsRoot.exists() || skinsRoot.mkdirs()) {
             "Could not create ${skinsRoot.absolutePath}"
@@ -104,13 +106,23 @@ object CodexPetPackage {
         return SkinEntity(
             packageName = source.packageName,
             name = installedManifest.displayName,
-            author = "Codex",
+            author = author?.takeIf { it.isNotBlank() } ?: "Codex",
             previewPath = preview.name,
             isActive = isActive,
             isFavorite = false,
             isBuiltin = isBuiltin,
-            version = "Codex v${source.version}",
+            version = catalogVersion?.takeIf { it.isNotBlank() } ?: "Codex v${source.version}",
         )
+    }
+
+    fun repairPreviewIfNeeded(manifestFile: File): Boolean {
+        val destination = requireNotNull(manifestFile.parentFile)
+        val preview = File(destination, "preview.png")
+        if (preview.hasVisiblePixel()) return false
+
+        val source = fromManifest(manifestFile, validateTransparency = false)
+        createPreview(source.atlasFile, preview)
+        return true
     }
 
     private fun validatedSource(
@@ -167,9 +179,12 @@ object CodexPetPackage {
     private fun createPreview(atlasFile: File, output: File) {
         val atlas = requireNotNull(BitmapFactory.decodeFile(atlasFile.absolutePath))
         try {
+            val previewColumn = (0 until CodexPetContract.idle.frameCount)
+                .maxByOrNull { column -> atlas.visiblePixelCount(row = 0, column = column) }
+                ?: 0
             val neutral = Bitmap.createBitmap(
                 atlas,
-                6 * CodexPetContract.CELL_WIDTH,
+                previewColumn * CodexPetContract.CELL_WIDTH,
                 0,
                 CodexPetContract.CELL_WIDTH,
                 CodexPetContract.CELL_HEIGHT,
@@ -182,6 +197,39 @@ object CodexPetPackage {
         } finally {
             atlas.recycle()
         }
+    }
+
+    private fun File.hasVisiblePixel(): Boolean {
+        if (!isFile) return false
+        val bitmap = BitmapFactory.decodeFile(absolutePath) ?: return false
+        return bitmap.useBitmap { it.visiblePixelCount() > 0 }
+    }
+
+    private fun Bitmap.visiblePixelCount(row: Int = 0, column: Int = 0): Int {
+        val startX = column * CodexPetContract.CELL_WIDTH
+        val startY = row * CodexPetContract.CELL_HEIGHT
+        if (
+            startX + CodexPetContract.CELL_WIDTH > width ||
+            startY + CodexPetContract.CELL_HEIGHT > height
+        ) {
+            return 0
+        }
+
+        val pixels = IntArray(CodexPetContract.CELL_WIDTH)
+        var visible = 0
+        repeat(CodexPetContract.CELL_HEIGHT) { y ->
+            getPixels(
+                pixels,
+                0,
+                CodexPetContract.CELL_WIDTH,
+                startX,
+                startY + y,
+                CodexPetContract.CELL_WIDTH,
+                1,
+            )
+            visible += pixels.count { pixel -> (pixel ushr 24) != 0 }
+        }
+        return visible
     }
 
     private inline fun <T> Bitmap.useBitmap(block: (Bitmap) -> T): T = try {
