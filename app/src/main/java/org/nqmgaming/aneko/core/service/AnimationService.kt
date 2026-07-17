@@ -29,6 +29,7 @@ import androidx.annotation.NonNull
 import androidx.core.content.edit
 import androidx.core.net.toUri
 import org.nqmgaming.aneko.R
+import org.nqmgaming.aneko.core.motion.CodexPetMotionParams
 import org.nqmgaming.aneko.core.motion.MotionConfigParser
 import org.nqmgaming.aneko.core.motion.MotionDrawable
 import org.nqmgaming.aneko.core.motion.MotionParams
@@ -339,6 +340,10 @@ class AnimationService : Service() {
         }
 
         val dir = if (folder.isBlank()) skinsRoot else File(skinsRoot, folder)
+        val codexManifest = File(dir, "pet.json")
+        if (codexManifest.isFile) {
+            return CodexPetMotionParams(resources, codexManifest)
+        }
         val skinXml = File(dir, xmlFile).let { f ->
             if (!f.exists()) {
                 dir.listFiles { _, name -> name.lowercase().endsWith(".xml") }?.firstOrNull()
@@ -536,8 +541,8 @@ class AnimationService : Service() {
                     }
                 }
 
-                key == PREF_KEY_NEKO_COUNT -> {
-                    // Restart animation to rebuild neko list
+                key == PREF_KEY_NEKO_COUNT || key == PREF_KEY_SKIN_COMPONENT -> {
+                    // Restart animation to rebuild the pet list or load a newly selected skin.
                     if (isStarted) {
                         stopAnimation()
                         startAnimation()

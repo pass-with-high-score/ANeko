@@ -11,6 +11,8 @@ class SkinRepository @Inject constructor(
 ) {
     fun observeSkins(): Flow<List<SkinEntity>> = skinDao.observeSkins()
 
+    suspend fun findByPackageName(pkg: String): SkinEntity? = skinDao.findByPackageName(pkg)
+
     suspend fun upsertSkin(skin: SkinEntity) = skinDao.upsertSkin(skin)
 
     suspend fun toggleActive(pkg: String) {

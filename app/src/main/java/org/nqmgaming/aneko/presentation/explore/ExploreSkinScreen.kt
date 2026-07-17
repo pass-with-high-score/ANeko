@@ -92,7 +92,7 @@ fun ExploreSkinScreen(
                 isImporting = true
                 val pkg = viewModel.importSkinFromUri(
                     context = context,
-                    zipUri = uri.toUri(),
+                    uri = uri.toUri(),
                     overwrite = true
                 )
                 Toast.makeText(
@@ -136,15 +136,15 @@ fun ExploreSkinScreen(
                     isImporting = true
                     val pkg = viewModel.importSkinFromUri(
                         context = context,
-                        zipUri = uri,
+                        uri = uri,
                         overwrite = true
                     )
                     Toast.makeText(
                         context,
                         if (pkg != null)
-                            context.getStringResource(R.string.imported_skin_from_zip, pkg)
+                            context.getStringResource(R.string.imported_skin_file, pkg)
                         else
-                            context.getStringResource(R.string.failed_to_import_skin_from_zip),
+                            context.getStringResource(R.string.failed_to_import_skin_file),
                         Toast.LENGTH_SHORT
                     ).show()
                 } catch (e: Exception) {
@@ -302,7 +302,9 @@ fun ExploreSkin(
                                 filePickerLauncher.launch(
                                     arrayOf(
                                         "application/zip",
-                                        "application/x-zip-compressed"
+                                        "application/x-zip-compressed",
+                                        "image/png",
+                                        "image/webp",
                                     )
                                 )
                             },
@@ -448,7 +450,9 @@ fun ExploreSkin(
                                             filePickerLauncher.launch(
                                                 arrayOf(
                                                     "application/zip",
-                                                    "application/x-zip-compressed"
+                                                    "application/x-zip-compressed",
+                                                    "image/png",
+                                                    "image/webp",
                                                 )
                                             )
                                         }) {

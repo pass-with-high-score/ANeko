@@ -68,7 +68,7 @@ fun OnboardingSkinScreen(
             try {
                 val pkg = viewModel.importSkinFromUri(
                     context = context,
-                    zipUri = uri.toUri(),
+                    uri = uri.toUri(),
                     overwrite = true
                 )
                 Toast.makeText(

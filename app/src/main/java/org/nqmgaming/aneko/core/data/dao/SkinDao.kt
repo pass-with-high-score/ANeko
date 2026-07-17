@@ -12,6 +12,10 @@ import org.nqmgaming.aneko.core.data.entity.SkinEntity
 interface SkinDao {
     @Query("SELECT * FROM skin ORDER BY name")
     fun observeSkins(): Flow<List<SkinEntity>>
+
+    @Query("SELECT * FROM skin WHERE packageName = :pkg LIMIT 1")
+    suspend fun findByPackageName(pkg: String): SkinEntity?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertSkin(skin: SkinEntity)
 
@@ -26,5 +30,4 @@ interface SkinDao {
 
     @Delete
     suspend fun deleteSkin(skin: SkinEntity)
-
 }
