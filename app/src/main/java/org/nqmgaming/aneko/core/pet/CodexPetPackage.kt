@@ -43,11 +43,23 @@ object CodexPetPackage {
         require(manifest.displayName.isNotBlank()) { "Codex pet displayName is empty" }
 
         val packageRoot = requireNotNull(manifestFile.parentFile).canonicalFile
-        val atlasFile = File(packageRoot, manifest.spritesheetPath).canonicalFile
-        require(atlasFile.path.startsWith(packageRoot.path + File.separator)) {
+        val declaredAtlasFile = File(packageRoot, manifest.spritesheetPath).canonicalFile
+        require(declaredAtlasFile.path.startsWith(packageRoot.path + File.separator)) {
             "spritesheetPath escapes the Codex pet package"
         }
+        val atlasFile = resolveAtlasFile(packageRoot, declaredAtlasFile)
         return validatedSource(manifest, manifestFile, atlasFile, validateTransparency)
+    }
+
+    internal fun resolveAtlasFile(packageRoot: File, declaredAtlasFile: File): File {
+        if (declaredAtlasFile.isFile) return declaredAtlasFile.canonicalFile
+
+        val fallbackCandidates = packageRoot.listFiles().orEmpty().filter { file ->
+            file.isFile && SUPPORTED_ATLAS_NAMES.any { supportedName ->
+                file.name.equals(supportedName, ignoreCase = true)
+            }
+        }
+        return fallbackCandidates.singleOrNull()?.canonicalFile ?: declaredAtlasFile
     }
 
     fun fromStandalone(atlasFile: File, displayName: String): CodexPetSource {
@@ -237,4 +249,6 @@ object CodexPetPackage {
     } finally {
         recycle()
     }
+
+    private val SUPPORTED_ATLAS_NAMES = setOf("spritesheet.png", "spritesheet.webp")
 }
