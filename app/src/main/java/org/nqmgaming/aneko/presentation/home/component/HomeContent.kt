@@ -56,7 +56,7 @@ fun HomeContent(
                     LazyRow(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(220.dp)
+                            .height(280.dp)
                             .padding(top = 16.dp),
                         horizontalArrangement = Arrangement.spacedBy(16.dp),
                         contentPadding = PaddingValues(horizontal = 24.dp)
@@ -79,7 +79,7 @@ fun HomeContent(
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(220.dp),
+                            .height(280.dp),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(stringResource(R.string.loading_skins_label))
