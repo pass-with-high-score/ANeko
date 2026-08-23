@@ -10,6 +10,8 @@
     <string name="msg_skin_load_failed">skin 加载失败，请检查 skin 应用是否正常。</string>
 
     <!-- Motion Settings -->
+    <string name="motion_quiet_mode_title">安静模式</string>
+    <string name="motion_quiet_mode_summary">宠物会安静待在原地；仍可拖动，拖动时会播放对应方向的动画。</string>
     <string name="motion_transparency_summary">调整动作效果的透明程度。</string>
     <string name="motion_focus_summary">启用后,ANeko 将不透明但会捕获焦点。</string>
     <string name="motion_size_summary">设置动作元素的大小。</string>
@@ -60,17 +62,19 @@
     <string name="importing_skin_please_wait">正在导入皮肤，请稍候…</string>
     <string name="imported_skin_from_zip">已从 ZIP 导入皮肤: %1$s</string>
     <string name="failed_to_import_skin_from_zip">从 ZIP 导入皮肤失败</string>
+    <string name="imported_skin_file">已导入宠物：%1$s</string>
+    <string name="failed_to_import_skin_file">无法导入所选 ZIP、PNG 或 WebP 文件</string>
     <string name="failed_to_import_skin">导入皮肤失败: %1$s</string>
     <string name="unknown_author">未知作者</string>
     <string name="download">下载</string>
     <string name="hi_there_is_no_skin_collection_for_now">嗨！目前没有皮肤收藏。</string>
-    <string name="try_to_import_from_zip">尝试从 ZIP 导入</string>
+    <string name="try_to_import_from_zip">导入 ZIP 或 Codex 宠物</string>
     <string name="do_you_have_questions">你有问题吗？</string>
     <string name="open_the_skin_collection_configuration_file">打开皮肤集合配置文件</string>
     <string name="what_is_this">这是什么？</string>
-    <string name="what_is_this_answer">这是一个由社区制作的皮肤集合，供你尝试。你可以一键下载并导入它们。你也可以从 zip 文件中导入皮肤。</string>
+    <string name="what_is_this_answer">这里可以浏览 ANeko 皮肤和 Petdex 中已审核的 Codex 宠物。你可以一键下载并导入，也可以导入本地 ZIP 或精灵图。</string>
     <string name="the_formats_and_structure_of_the_skins">皮肤的格式和结构？</string>
-    <string name="the_formats_and_structure_of_the_skins_answer">皮肤采用 zip 格式，并遵循与默认皮肤相同的结构。每个皮肤必须在根目录下包含一个“skin.xml”文件，用于定义皮肤的元数据和配置。应用会安全地处理这些内容。</string>
+    <string name="the_formats_and_structure_of_the_skins_answer">ANeko 皮肤是包含 skin.xml 的 ZIP。Codex 宠物可导入包含 pet.json 与精灵图的宠物 ZIP，也可直接导入标准 8×9 或 8×11 PNG/WebP 精灵图。</string>
     <string name="queued">已排队</string>
     <string name="downloading">正在下载</string>
     <string name="importing">正在导入…</string>

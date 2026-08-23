@@ -3,7 +3,10 @@ package org.nqmgaming.aneko.core.download
 data class DownloadTask(
     val id: String,
     val url: String,
-    val fileName: String
+    val fileName: String,
+    val codexPetId: String? = null,
+    val author: String? = null,
+    val version: String? = null,
 )
 
 sealed class DownloadStatus {

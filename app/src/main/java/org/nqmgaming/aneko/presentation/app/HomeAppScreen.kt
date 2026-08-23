@@ -28,6 +28,8 @@ import androidx.navigation3.ui.NavDisplay
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.nqmgaming.aneko.R
+import org.nqmgaming.aneko.core.util.extension.getStringResource
 import org.nqmgaming.aneko.presentation.AnekoViewModel
 import org.nqmgaming.aneko.presentation.BottomTab
 import org.nqmgaming.aneko.presentation.ExploreKey
@@ -88,12 +90,17 @@ fun HomeAppScreen(
                         if (pkg != null) {
                             Toast.makeText(
                                 context,
-                                "Imported skin from ZIP: $pkg",
+                                context.getStringResource(R.string.imported_skin_file, pkg),
                                 Toast.LENGTH_SHORT
                             ).show()
-                            Timber.d("Package name from skin XML: $pkg")
+                            Timber.d("Imported skin package: $pkg")
                         } else {
-                            Timber.e("Failed to read package name from skin XML in ZIP")
+                            Toast.makeText(
+                                context,
+                                context.getStringResource(R.string.failed_to_import_skin_file),
+                                Toast.LENGTH_SHORT,
+                            ).show()
+                            Timber.e("Failed to import selected skin file")
                         }
                     }
                 }
@@ -131,7 +138,9 @@ fun HomeAppScreen(
                         filePickerLauncher.launch(
                             arrayOf(
                                 "application/zip",
-                                "application/x-zip-compressed"
+                                "application/x-zip-compressed",
+                                "image/png",
+                                "image/webp",
                             )
                         )
                     }

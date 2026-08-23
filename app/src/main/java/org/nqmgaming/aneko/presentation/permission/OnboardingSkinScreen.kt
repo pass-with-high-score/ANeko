@@ -63,13 +63,16 @@ fun OnboardingSkinScreen(
     val state = rememberPullToRefreshState()
     val statusMap by SkinDownloadQueue.status.collectAsStateWithLifecycle()
 
-    SkinDownloadQueue.onImported = { _, uri ->
+    SkinDownloadQueue.onImported = { task, uri ->
         scope.launch {
             try {
                 val pkg = viewModel.importSkinFromUri(
                     context = context,
-                    zipUri = uri.toUri(),
-                    overwrite = true
+                    uri = uri.toUri(),
+                    overwrite = true,
+                    codexPetIdOverride = task.codexPetId,
+                    authorOverride = task.author,
+                    versionOverride = task.version,
                 )
                 Toast.makeText(
                     context,

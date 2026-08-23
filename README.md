@@ -89,6 +89,12 @@ improve the app.
 * Go to [ANeko Builder](https://devtool.pwhs.app/aneko-builder)
 * Upload your assets
 * Then create your custom skin
+
+ANeko Reborn also supports Codex pets:
+
+* Import a Codex pet ZIP containing `pet.json` and its referenced spritesheet.
+* Or import a standard Codex PNG/WebP spritesheet directly (8 columns, 9 rows for v1 or 11 rows for v2; 192×208 px per cell).
+* Codex v2 look-direction rows are mapped to ANeko's eight movement directions automatically.
 ---
 
 ## License
