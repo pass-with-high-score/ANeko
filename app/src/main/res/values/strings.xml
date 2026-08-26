@@ -170,4 +170,38 @@
     <string name="new_skins_available_title">New Skins Available!</string>
     <string name="new_skin_dialog_navigate_button">Explore</string>
     <string name="new_skin_dialog_dismiss_button">Dismiss</string>
+
+    <!-- Skin Detail Screen -->
+    <string name="skin_detail_title">Skin Details</string>
+    <string name="skin_preview_title">Live Animation Preview</string>
+    <string name="skin_actions_title">Action Animations</string>
+    <string name="skin_gallery_title">Sprite Frames</string>
+    <string name="skin_specs_title">Skin Specifications</string>
+    <string name="skin_format_label">Format</string>
+    <string name="skin_engine_type">Engine</string>
+    <string name="skin_engine_aneko">Classic ANeko XML</string>
+    <string name="skin_engine_codex">Codex Pet Atlas</string>
+    <string name="skin_active_status">Active on Screen</string>
+    <string name="skin_inactive_status">Inactive</string>
+    <string name="skin_installed_status">Installed</string>
+    <string name="skin_not_installed_status">Online (Not Installed)</string>
+    <string name="skin_action_set_active">Spawn on Screen</string>
+    <string name="skin_action_remove_active">Remove from Screen</string>
+    <string name="delete_skin_confirm_title">Uninstall Skin?</string>
+    <string name="delete_skin_confirm_msg">Are you sure you want to uninstall %1$s? All local files will be removed.</string>
+    <string name="delete_button">Delete</string>
+    <string name="tap_pet_hint">Tap pet to play animation</string>
+    <string name="skin_total_frames">%1$d frames</string>
+    <string name="skin_source_official">Official</string>
+    <string name="skin_source_community">Community</string>
+    <string name="skin_source_petdex" translatable="false">Petdex</string>
+    <string name="action_idle">Idle</string>
+    <string name="action_run_right">Run Right</string>
+    <string name="action_run_left">Run Left</string>
+    <string name="action_wave">Waving</string>
+    <string name="action_jump">Jumping</string>
+    <string name="action_sleep">Sleep</string>
+    <string name="action_scratch">Scratch</string>
+    <string name="action_yawn">Yawn</string>
+    <string name="action_wall">Climb</string>
 </resources>

@@ -138,4 +138,37 @@
     <string name="new_skins_available_title">Đã có nhiều trang phục mới!</string>
     <string name="new_skin_dialog_navigate_button">Khám phá</string>
     <string name="new_skin_dialog_dismiss_button">Bỏ qua</string>
+
+    <!-- Skin Detail Screen -->
+    <string name="skin_detail_title">Chi tiết Skin</string>
+    <string name="skin_preview_title">Xem trước hoạt ảnh</string>
+    <string name="skin_actions_title">Hoạt ảnh &amp; Hành động</string>
+    <string name="skin_gallery_title">Bộ sưu tập khung hình</string>
+    <string name="skin_specs_title">Thông số kỹ thuật</string>
+    <string name="skin_format_label">Định dạng</string>
+    <string name="skin_engine_type">Engine</string>
+    <string name="skin_engine_aneko">Classic ANeko XML</string>
+    <string name="skin_engine_codex">Codex Pet Atlas</string>
+    <string name="skin_active_status">Đang chạy trên màn hình</string>
+    <string name="skin_inactive_status">Chưa kích hoạt</string>
+    <string name="skin_installed_status">Đã cài đặt</string>
+    <string name="skin_not_installed_status">Trực tuyến (Chưa cài đặt)</string>
+    <string name="skin_action_set_active">Thả ra màn hình</string>
+    <string name="skin_action_remove_active">Tắt khỏi màn hình</string>
+    <string name="delete_skin_confirm_title">Gỡ cài đặt skin?</string>
+    <string name="delete_skin_confirm_msg">Bạn có chắc muốn gỡ cài đặt %1$s? Tất cả tệp cục bộ sẽ bị xóa.</string>
+    <string name="delete_button">Xóa</string>
+    <string name="tap_pet_hint">Chạm vào pet để phát hoạt ảnh</string>
+    <string name="skin_total_frames">%1$d khung hình</string>
+    <string name="skin_source_official">Nguyên bản</string>
+    <string name="skin_source_community">Cộng đồng</string>
+    <string name="action_idle">Nghỉ ngơi</string>
+    <string name="action_run_right">Chạy sang phải</string>
+    <string name="action_run_left">Chạy sang trái</string>
+    <string name="action_wave">Vẫy tay</string>
+    <string name="action_jump">Nhảy nhót</string>
+    <string name="action_sleep">Ngủ</string>
+    <string name="action_scratch">Cào móng</string>
+    <string name="action_yawn">Ngáp</string>
+    <string name="action_wall">Leo tường</string>
 </resources>

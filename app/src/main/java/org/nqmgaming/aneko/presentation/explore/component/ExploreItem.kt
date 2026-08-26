@@ -56,7 +56,8 @@ fun ExploreItem(
     queuePos: Int?,
     modifier: Modifier = Modifier,
     onUninstall: (() -> Unit)? = null,
-    localVersion: String = ""
+    localVersion: String = "",
+    onClick: () -> Unit = {},
 ) {
     val context = LocalContext.current
 
@@ -103,7 +104,8 @@ fun ExploreItem(
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
-        )
+        ),
+        onClick = onClick,
     ) {
         Column(
             modifier = Modifier

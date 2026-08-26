@@ -37,6 +37,7 @@ fun HomeContent(
     skins: List<SkinEntity> = emptyList(),
     onToggleSkin: (String) -> Unit = { _ -> },
     onRequestDeleteSkin: (SkinEntity) -> Unit = { _ -> },
+    onNavigateToDetail: (String) -> Unit = { _ -> },
 ) {
     val context = LocalContext.current
     val activeCount = remember(skins) { skins.count { it.isActive } }
@@ -70,6 +71,9 @@ fun HomeContent(
                                 },
                                 onRequestDeleteSkin = {
                                     onRequestDeleteSkin(skin)
+                                },
+                                onSkinDetailClick = {
+                                    onNavigateToDetail(skin.packageName)
                                 },
                             )
                         }

@@ -65,11 +65,10 @@ fun SkinCard(
     isSelected: Boolean,
     onSkinSelect: () -> Unit,
     onRequestDeleteSkin: () -> Unit,
+    onSkinDetailClick: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-    val bottomSheetState = rememberModalBottomSheetState()
-    var isBottomSheetVisible by remember { mutableStateOf(false) }
     val isDefaultSkin = skin.isBuiltin
     val model = remember(skin.packageName, skin.previewPath) {
         ImageRequest.Builder(context)
@@ -121,18 +120,16 @@ fun SkinCard(
                 )
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text("🐾", style = MaterialTheme.typography.labelSmall)
-                    if (!isDefaultSkin) {
-                        IconButton(
-                            onClick = { isBottomSheetVisible = !isBottomSheetVisible },
-                            modifier = Modifier.size(28.dp),
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.MoreVert,
-                                contentDescription = null,
-                                tint = Color.White.copy(alpha = 0.8f),
-                                modifier = Modifier.size(18.dp),
-                            )
-                        }
+                    IconButton(
+                        onClick = onSkinDetailClick,
+                        modifier = Modifier.size(28.dp),
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.MoreVert,
+                            contentDescription = "Detail",
+                            tint = Color.White.copy(alpha = 0.8f),
+                            modifier = Modifier.size(18.dp),
+                        )
                     }
                 }
             }
@@ -184,12 +181,4 @@ fun SkinCard(
             overflow = TextOverflow.Ellipsis,
         )
     }
-
-    SkinDetailsBottomSheet(
-        skin = skin,
-        onDismissRequest = { isBottomSheetVisible = false },
-        onRequestDeleteSkin = onRequestDeleteSkin,
-        isBottomSheetVisible = isBottomSheetVisible,
-        bottomSheetState = bottomSheetState,
-    )
 }

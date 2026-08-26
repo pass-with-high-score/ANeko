@@ -80,7 +80,8 @@ import timber.log.Timber
 
 @Composable
 fun ExploreSkinScreen(
-    viewModel: AnekoViewModel = hiltViewModel()
+    viewModel: AnekoViewModel = hiltViewModel(),
+    onNavigateToDetail: (String) -> Unit = {},
 ) {
     val uiState = viewModel.uiState.collectAsState()
     val context = LocalContext.current
@@ -179,6 +180,7 @@ fun ExploreSkinScreen(
                 viewModel.onDeselectSkin(skin, context)
             }
         },
+        onNavigateToDetail = onNavigateToDetail,
     )
 }
 
@@ -197,6 +199,7 @@ fun ExploreSkin(
     skinsLocal: List<SkinEntity> = emptyList(),
     onImportSkin: (Uri) -> Unit = { _ -> },
     onUninstall: (String) -> Unit = { },
+    onNavigateToDetail: (String) -> Unit = { },
 ) {
     val context = LocalContext.current
     val state = rememberPullToRefreshState()
@@ -524,6 +527,7 @@ fun ExploreSkin(
                                     localVersion = skinsLocal.find {
                                         it.packageName == collection.packageName
                                     }?.version ?: "",
+                                    onClick = { onNavigateToDetail(collection.packageName) },
                                 )
                             }
                             item {

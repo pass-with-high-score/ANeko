@@ -35,8 +35,10 @@ import org.nqmgaming.aneko.presentation.BottomTab
 import org.nqmgaming.aneko.presentation.ExploreKey
 import org.nqmgaming.aneko.presentation.HomeKey
 import org.nqmgaming.aneko.presentation.LanguageKey
+import org.nqmgaming.aneko.presentation.SkinDetailKey
 import org.nqmgaming.aneko.presentation.ThemeKey
 import org.nqmgaming.aneko.presentation.components.AppBottomBar
+import org.nqmgaming.aneko.presentation.detail.SkinDetailScreen
 import org.nqmgaming.aneko.presentation.explore.ExploreSkinScreen
 import org.nqmgaming.aneko.presentation.home.HomeScreen
 import org.nqmgaming.aneko.presentation.setting.LanguageScreen
@@ -169,6 +171,10 @@ fun HomeAppScreen(
                         onNavigateToLanguage = {
                             showBottomBar = false
                             currentBackStack.add(LanguageKey)
+                        },
+                        onNavigateToDetail = { pkg ->
+                            showBottomBar = false
+                            currentBackStack.add(SkinDetailKey(pkg))
                         }
                     )
                 }
@@ -181,7 +187,12 @@ fun HomeAppScreen(
                     )
                 }
                 entry<ExploreKey> {
-                    ExploreSkinScreen()
+                    ExploreSkinScreen(
+                        onNavigateToDetail = { pkg ->
+                            showBottomBar = false
+                            currentBackStack.add(SkinDetailKey(pkg, isOnline = true))
+                        }
+                    )
                 }
                 entry<ThemeKey> {
                     ThemeScreen(
@@ -191,7 +202,15 @@ fun HomeAppScreen(
                         }
                     )
                 }
-
+                entry<SkinDetailKey> { key ->
+                    SkinDetailScreen(
+                        packageName = key.packageName,
+                        onNavigateBack = {
+                            showBottomBar = true
+                            currentBackStack.removeLastOrNull()
+                        }
+                    )
+                }
             }
         )
     }

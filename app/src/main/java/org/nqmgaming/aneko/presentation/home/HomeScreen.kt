@@ -45,7 +45,8 @@ fun HomeScreen(
     viewModel: AnekoViewModel = hiltViewModel(),
     onNavigateToExplore: () -> Unit = {},
     onNavigateToLanguage: () -> Unit = {},
-    onNavigateToTheme: () -> Unit = {}
+    onNavigateToTheme: () -> Unit = {},
+    onNavigateToDetail: (String) -> Unit = {},
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
     val isFirstLaunch = viewModel.isFirstLaunch.collectAsStateWithLifecycle().value
@@ -75,6 +76,7 @@ fun HomeScreen(
                 onRequestDeleteSkin = {
                     viewModel.onDeselectSkin(it, context)
                 },
+                onNavigateToDetail = onNavigateToDetail,
             )
         }
 
