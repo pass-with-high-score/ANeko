@@ -160,6 +160,13 @@
     <string name="delete_button">Xóa</string>
     <string name="tap_pet_hint">Chạm vào pet để phát hoạt ảnh</string>
     <string name="skin_total_frames">%1$d khung hình</string>
+    <string name="frame_preview_title">Khung hình: %1$s</string>
+    <string name="save_frame_label">Lưu</string>
+    <string name="share_frame_label">Chia sẻ</string>
+    <string name="frame_saved_success">Đã lưu vào thư viện ảnh</string>
+    <string name="frame_saved_failed">Lưu khung hình thất bại</string>
+    <string name="frame_share_failed">Chia sẻ khung hình thất bại</string>
+    <string name="storage_permission_required">Cần quyền lưu trữ để lưu khung hình</string>
     <string name="skin_source_official">Nguyên bản</string>
     <string name="skin_source_community">Cộng đồng</string>
     <string name="action_idle">Nghỉ ngơi</string>
@@ -171,4 +178,8 @@
     <string name="action_scratch">Cào móng</string>
     <string name="action_yawn">Ngáp</string>
     <string name="action_wall">Leo tường</string>
+    <string name="motion_quiet_mode_title">Chế độ Yên tĩnh</string>
+    <string name="motion_quiet_mode_summary">Giữ thú cưng đứng yên tại chỗ. Bạn vẫn có thể kéo chúng, và hoạt ảnh sẽ theo hướng kéo.</string>
+    <string name="imported_skin_file">Đã nhập skin: %1$s</string>
+    <string name="failed_to_import_skin_file">Không thể nhập tệp ZIP, PNG hoặc WebP đã chọn</string>
 </resources>

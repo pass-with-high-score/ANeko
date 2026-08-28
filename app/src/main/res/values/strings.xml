@@ -15,8 +15,8 @@
     <string name="msg_skin_load_failed">Failed to load skin. Please check the skin application.</string>
 
     <!-- Motion Settings -->
-    <string name="motion_quiet_mode_title" tools:ignore="MissingTranslation">Quiet Mode</string>
-    <string name="motion_quiet_mode_summary" tools:ignore="MissingTranslation">Keep pets in place. You can still drag them, and their animation follows the drag direction.</string>
+    <string name="motion_quiet_mode_title">Quiet Mode</string>
+    <string name="motion_quiet_mode_summary">Keep pets in place. You can still drag them, and their animation follows the drag direction.</string>
     <string name="motion_transparency_title" translatable="false">Motion Transparency</string>
     <string name="motion_transparency_summary">Adjust the transparency level of motion effects.</string>
     <string name="motion_focus_title" translatable="false">Motion Focus</string>
@@ -82,8 +82,8 @@
     <string name="importing_skin_please_wait">Importing skin, please wait…</string>
     <string name="imported_skin_from_zip">Imported skin from ZIP: %1$s</string>
     <string name="failed_to_import_skin_from_zip">Failed to import skin from ZIP</string>
-    <string name="imported_skin_file" tools:ignore="MissingTranslation">Imported skin: %1$s</string>
-    <string name="failed_to_import_skin_file" tools:ignore="MissingTranslation">Failed to import the selected ZIP, PNG, or WebP file</string>
+    <string name="imported_skin_file">Imported skin: %1$s</string>
+    <string name="failed_to_import_skin_file">Failed to import the selected ZIP, PNG, or WebP file</string>
     <string name="failed_to_import_skin">Failed to import skin: %1$s</string>
     <string name="unknown_author">Unknown author</string>
     <string name="download">Download</string>
@@ -192,6 +192,13 @@
     <string name="delete_button">Delete</string>
     <string name="tap_pet_hint">Tap pet to play animation</string>
     <string name="skin_total_frames">%1$d frames</string>
+    <string name="frame_preview_title">Frame: %1$s</string>
+    <string name="save_frame_label">Save</string>
+    <string name="share_frame_label">Share</string>
+    <string name="frame_saved_success">Saved to gallery</string>
+    <string name="frame_saved_failed">Failed to save frame</string>
+    <string name="frame_share_failed">Failed to share frame</string>
+    <string name="storage_permission_required">Storage permission is required to save frames</string>
     <string name="skin_source_official">Official</string>
     <string name="skin_source_community">Community</string>
     <string name="skin_source_petdex" translatable="false">Petdex</string>
