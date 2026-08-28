@@ -1,0 +1,7 @@
+- Add Skin Details screen with live preview and sprite frame gallery.
+- Save or share individual sprite frames.
+- Redesign skin cards as collectible cards.
+- Support Codex pets and the Petdex catalog.
+- Add Quiet Mode: pets stay put but still respond to drags.
+- Fix pet positions resetting on selection change.
+- Fix some Codex pet files failing to import.
