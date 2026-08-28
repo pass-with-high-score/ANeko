@@ -62,15 +62,14 @@ jobs:
       - name: Decode Play Store key
         run: echo "${{ secrets.PLAY_STORE_CONFIG_JSON }}" | base64 --decode > fastlane/play-store-key.json
 
-      # Build & Deploy
+      # Build & publish the signed build first, so a Play Store deploy failure
+      # (e.g. a Play Console verification gate) never blocks us from having a
+      # signed APK/AAB to work with.
       - name: Grant execute permission
         run: chmod +x gradlew
 
-      - name: Deploy to internal track
-        run: bundle exec fastlane internal
-
-      - name: Build release APK
-        run: ./gradlew assembleRelease
+      - name: Build release APK & AAB
+        run: ./gradlew assembleRelease bundleRelease
 
       # Artifacts
       - name: Upload release AAB & APK
@@ -92,3 +91,6 @@ jobs:
           prerelease: false
           files: app/build/outputs/apk/release/app-release.apk
           token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Deploy to internal track
+        run: bundle exec fastlane internal
