@@ -1,0 +1,3 @@
+- Add festive Christmas hat seasonal Easter egg for the 2026 holiday season.
+- Support toggle in Settings or by tapping ANeko title 5 times.
+- Performance and stability improvements.
