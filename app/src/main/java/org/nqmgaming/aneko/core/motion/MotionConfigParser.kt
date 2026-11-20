@@ -55,12 +55,12 @@ class MotionConfigParser(
             for (i in start..end) {
                 val path = String.format(Locale.KOREAN, fmt, i)
                 val d = Drawable.createFromPath(path)
-                if (d != null) items.addFrame(d, duration)
+                if (d != null) items.addFrame(d, duration, String.format(Locale.KOREAN, "$prefix%03d", i))
             }
         } else {
             val d = Drawable.createFromPath("$resourceBaseDir/$filename.png")
             requireNotNull(d) { "Frame image not found: $resourceBaseDir/$filename.png" }
-            items.addFrame(d, duration)
+            items.addFrame(d, duration, filename)
         }
     }
 

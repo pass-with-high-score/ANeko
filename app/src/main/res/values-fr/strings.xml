@@ -135,7 +135,7 @@
     <string name="new_skin_dialog_navigate_button">Explorer</string>
     <string name="new_skin_dialog_dismiss_button">Ignorer</string>
     <string name="motion_quiet_mode_title">Mode silencieux</string>
-    <string name="motion_quiet_mode_summary">Les animaux restent à leur place. Tu peux toujours les faire glisser, et leur animation suit la direction du glissement.</string>
+<string name="motion_quiet_mode_summary">Les animaux restent à leur place. Tu peux toujours les faire glisser, et leur animation suit la direction du glissement.</string>
     <string name="imported_skin_file">Skin importé : %1$s</string>
     <string name="failed_to_import_skin_file">Échec de l\'importation du fichier ZIP, PNG ou WebP sélectionné</string>
     <string name="skin_detail_title">Détails du skin</string>
@@ -176,4 +176,9 @@
     <string name="action_scratch">Se gratter</string>
     <string name="action_yawn">Bâiller</string>
     <string name="action_wall">Grimper</string>
+
+    <string name="motion_christmas_hat_title">Bonnet de Noël 🎄</string>
+    <string name="motion_christmas_hat_summary">Easter egg saisonnier pour Noël 2026 (Actif automatiquement en décembre)</string>
+    <string name="christmas_easter_egg_enabled">🎄 Joyeux Noël 2026 ! Bonnet de Noël équipé ! 🎅</string>
+    <string name="christmas_easter_egg_disabled">Bonnet de Noël retiré !</string>
 </resources>

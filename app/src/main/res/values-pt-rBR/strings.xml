@@ -139,7 +139,7 @@
     <string name="new_skins_available_title">Novas skins disponíveis!</string>
     <string name="new_skin_dialog_navigate_button">Explorar</string>
     <string name="new_skin_dialog_dismiss_button">Ignorar</string>
-    <string name="motion_quiet_mode_title">Modo Silencioso</string>
+<string name="motion_quiet_mode_title">Modo Silencioso</string>
     <string name="motion_quiet_mode_summary">Mantenha os bichinhos parados no lugar. Você ainda pode arrastá-los, e a animação segue a direção do arrasto.</string>
     <string name="imported_skin_file">Skin importada: %1$s</string>
     <string name="failed_to_import_skin_file">Falha ao importar o arquivo ZIP, PNG ou WebP selecionado</string>
@@ -181,4 +181,9 @@
     <string name="action_scratch">Coçar</string>
     <string name="action_yawn">Bocejar</string>
     <string name="action_wall">Escalar</string>
+
+    <string name="motion_christmas_hat_title">Gorro de Natal 🎄</string>
+    <string name="motion_christmas_hat_summary">Easter egg sazonal para o Natal de 2026 (Ativo automaticamente em dezembro)</string>
+    <string name="christmas_easter_egg_enabled">🎄 Feliz Natal 2026! Gorro de Natal equipado! 🎅</string>
+    <string name="christmas_easter_egg_disabled">Gorro de Natal removido!</string>
 </resources>

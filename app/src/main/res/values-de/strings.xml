@@ -143,7 +143,7 @@
     <string name="new_skins_available_title">Neue Skins verfügbar!</string>
     <string name="new_skin_dialog_navigate_button">Entdecken</string>
     <string name="new_skin_dialog_dismiss_button">Schließen</string>
-    <string name="motion_quiet_mode_title">Ruhemodus</string>
+<string name="motion_quiet_mode_title">Ruhemodus</string>
     <string name="motion_quiet_mode_summary">Haustiere bleiben an ihrem Platz. Du kannst sie weiterhin ziehen, ihre Animation folgt dabei der Zugrichtung.</string>
     <string name="imported_skin_file">Skin importiert: %1$s</string>
     <string name="failed_to_import_skin_file">Die ausgewählte ZIP-, PNG- oder WebP-Datei konnte nicht importiert werden</string>
@@ -185,4 +185,9 @@
     <string name="action_scratch">Kratzen</string>
     <string name="action_yawn">Gähnen</string>
     <string name="action_wall">Klettern</string>
+
+    <string name="motion_christmas_hat_title">Weihnachtsmütze 🎄</string>
+    <string name="motion_christmas_hat_summary">Saisonales Easter Egg für Weihnachten 2026 (Im Dezember automatisch aktiv)</string>
+    <string name="christmas_easter_egg_enabled">🎄 Frohe Weihnachten 2026! Weihnachtsmütze aufgesetzt! 🎅</string>
+    <string name="christmas_easter_egg_disabled">Weihnachtsmütze abgenommen!</string>
 </resources>

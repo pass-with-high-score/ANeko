@@ -171,7 +171,7 @@
     <string name="new_skin_dialog_navigate_button">Explore</string>
     <string name="new_skin_dialog_dismiss_button">Dismiss</string>
 
-    <!-- Skin Detail Screen -->
+<!-- Skin Detail Screen -->
     <string name="skin_detail_title">Skin Details</string>
     <string name="skin_preview_title">Live Animation Preview</string>
     <string name="skin_actions_title">Action Animations</string>
@@ -211,4 +211,10 @@
     <string name="action_scratch">Scratch</string>
     <string name="action_yawn">Yawn</string>
     <string name="action_wall">Climb</string>
+
+    <!-- Christmas 2026 Seasonal Easter Egg -->
+    <string name="motion_christmas_hat_title">Christmas Hat 🎄</string>
+    <string name="motion_christmas_hat_summary">Seasonal Easter egg for Christmas 2026 (Active automatically in December)</string>
+    <string name="christmas_easter_egg_enabled">🎄 Merry Christmas 2026! Christmas hat equipped! 🎅</string>
+    <string name="christmas_easter_egg_disabled">Christmas hat removed!</string>
 </resources>

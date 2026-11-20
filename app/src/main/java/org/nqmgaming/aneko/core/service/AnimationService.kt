@@ -30,6 +30,7 @@ import androidx.annotation.NonNull
 import androidx.core.content.edit
 import androidx.core.net.toUri
 import org.nqmgaming.aneko.R
+import org.nqmgaming.aneko.core.festive.ChristmasSeasonHelper
 import org.nqmgaming.aneko.core.motion.CodexPetMotionParams
 import org.nqmgaming.aneko.core.motion.DragDirectionTracker
 import org.nqmgaming.aneko.core.motion.MotionConfigParser
@@ -63,6 +64,7 @@ class AnimationService : Service() {
         const val PREF_KEY_NOTIFICATION_ENABLE = "notification.enable"
         const val PREF_KEY_BOTTOM_OFFSET = "motion.bottom_offset"
         const val PREF_KEY_QUIET_MODE = "motion.quiet_mode"
+        const val PREF_KEY_CHRISTMAS_HAT = ChristmasSeasonHelper.PREF_KEY_CHRISTMAS_HAT
         const val AVOID_KEYBOARD = 33
         private const val MSG_ANIMATE = 1
         private const val ANIMATION_INTERVAL = 125L
@@ -514,6 +516,7 @@ class AnimationService : Service() {
     private fun updateDrawable(neko: NekoInstance) {
         val drawable = neko.motionState.currentDrawable()
         drawable.alpha = neko.motionState.alpha
+        drawable.isChristmasHatEnabled = ChristmasSeasonHelper.isChristmasHatEnabled(prefs)
         neko.imageView.setImageDrawable(drawable)
         drawable.stop()
         drawable.start()
@@ -587,6 +590,12 @@ class AnimationService : Service() {
 
                 key == PREF_KEY_QUIET_MODE -> {
                     updateQuietMode(prefs.getBoolean(PREF_KEY_QUIET_MODE, false))
+                }
+
+                key == PREF_KEY_CHRISTMAS_HAT -> {
+                    nekos.forEach { neko ->
+                        updateDrawable(neko)
+                    }
                 }
 
                 key == PREF_KEY_FOCUS -> {

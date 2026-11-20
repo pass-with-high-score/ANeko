@@ -140,7 +140,7 @@
     <string name="new_skin_dialog_navigate_button">استكشاف</string>
     <string name="new_skin_dialog_dismiss_button">تجاهل</string>
     <string name="motion_quiet_mode_title">الوضع الهادئ</string>
-    <string name="motion_quiet_mode_summary">أبقِ الحيوانات الأليفة في مكانها. لا يزال بإمكانك سحبها، وستتبع حركتها اتجاه السحب.</string>
+<string name="motion_quiet_mode_summary">أبقِ الحيوانات الأليفة في مكانها. لا يزال بإمكانك سحبها، وستتبع حركتها اتجاه السحب.</string>
     <string name="imported_skin_file">تم استيراد المظهر: %1$s</string>
     <string name="failed_to_import_skin_file">فشل استيراد ملف ZIP أو PNG أو WebP المحدد</string>
     <string name="skin_detail_title">تفاصيل المظهر</string>
@@ -181,4 +181,9 @@
     <string name="action_scratch">خدش</string>
     <string name="action_yawn">تثاؤب</string>
     <string name="action_wall">تسلق</string>
+
+    <string name="motion_christmas_hat_title">قبعة عيد الميلاد 🎄</string>
+    <string name="motion_christmas_hat_summary">مفاجأة موسمية لعيد الميلاد 2026 (تتفاعل تلقائيًا في ديسمبر)</string>
+    <string name="christmas_easter_egg_enabled">🎄 عيد ميلاد مجيد 2026! تم ارتداء قبعة عيد الميلاد! 🎅</string>
+    <string name="christmas_easter_egg_disabled">تمت إزالة قبعة عيد الميلاد!</string>
 </resources>

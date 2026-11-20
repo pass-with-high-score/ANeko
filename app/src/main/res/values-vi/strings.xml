@@ -139,7 +139,7 @@
     <string name="new_skin_dialog_navigate_button">Khám phá</string>
     <string name="new_skin_dialog_dismiss_button">Bỏ qua</string>
 
-    <!-- Skin Detail Screen -->
+<!-- Skin Detail Screen -->
     <string name="skin_detail_title">Chi tiết Skin</string>
     <string name="skin_preview_title">Xem trước hoạt ảnh</string>
     <string name="skin_actions_title">Hoạt ảnh &amp; Hành động</string>
@@ -181,5 +181,11 @@
     <string name="motion_quiet_mode_title">Chế độ Yên tĩnh</string>
     <string name="motion_quiet_mode_summary">Giữ thú cưng đứng yên tại chỗ. Bạn vẫn có thể kéo chúng, và hoạt ảnh sẽ theo hướng kéo.</string>
     <string name="imported_skin_file">Đã nhập skin: %1$s</string>
+
+    <!-- Christmas 2026 Seasonal Easter Egg -->
+    <string name="motion_christmas_hat_title">Mũ Giáng sinh 🎄</string>
+    <string name="motion_christmas_hat_summary">Trứng phục sinh mùa Giáng sinh 2026 (Tự động kích hoạt vào tháng 12)</string>
+    <string name="christmas_easter_egg_enabled">🎄 Giáng sinh 2026 an lành! Đã đội mũ Noel cho mèo! 🎅</string>
+    <string name="christmas_easter_egg_disabled">Đã cởi mũ Noel!</string>
     <string name="failed_to_import_skin_file">Không thể nhập tệp ZIP, PNG hoặc WebP đã chọn</string>
 </resources>

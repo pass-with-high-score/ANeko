@@ -136,7 +136,7 @@
     <string name="new_skin_dialog_navigate_button">Смотреть</string>
     <string name="new_skin_dialog_dismiss_button">Закрыть</string>
     <string name="motion_quiet_mode_title">Тихий режим</string>
-    <string name="motion_quiet_mode_summary">Питомцы остаются на месте. Вы всё ещё можете их перетаскивать, и их анимация будет соответствовать направлению перетаскивания.</string>
+<string name="motion_quiet_mode_summary">Питомцы остаются на месте. Вы всё ещё можете их перетаскивать, и их анимация будет соответствовать направлению перетаскивания.</string>
     <string name="imported_skin_file">Скин импортирован: %1$s</string>
     <string name="failed_to_import_skin_file">Не удалось импортировать выбранный файл ZIP, PNG или WebP</string>
     <string name="skin_detail_title">Сведения о скине</string>
@@ -177,4 +177,9 @@
     <string name="action_scratch">Царапается</string>
     <string name="action_yawn">Зевает</string>
     <string name="action_wall">Взбирается</string>
+
+    <string name="motion_christmas_hat_title">Новогодняя шапка 🎄</string>
+    <string name="motion_christmas_hat_summary">Сезонная пасхалка к Рождеству 2026 (Автоматически включается в декабре)</string>
+    <string name="christmas_easter_egg_enabled">🎄 Счастливого Рождества 2026! Новогодняя шапка надета! 🎅</string>
+    <string name="christmas_easter_egg_disabled">Новогодняя шапка снята!</string>
 </resources>

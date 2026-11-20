@@ -36,15 +36,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.preference.PreferenceManager
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import org.nqmgaming.aneko.R
 import org.nqmgaming.aneko.core.data.entity.SkinEntity
 import org.nqmgaming.aneko.core.data.entity.previewModel
+import org.nqmgaming.aneko.core.festive.ChristmasSeasonHelper
 import kotlin.math.abs
 
 private val collectibleCardColors = listOf(
@@ -70,6 +73,10 @@ fun SkinCard(
 ) {
     val context = LocalContext.current
     val isDefaultSkin = skin.isBuiltin
+    val prefs = remember { PreferenceManager.getDefaultSharedPreferences(context) }
+    val isChristmasHatEnabled = remember(prefs) {
+        ChristmasSeasonHelper.isChristmasHatEnabled(prefs)
+    }
     val model = remember(skin.packageName, skin.previewPath) {
         ImageRequest.Builder(context)
             .data(skin.previewModel(context))
@@ -166,6 +173,17 @@ fun SkinCard(
                         modifier = Modifier.size(90.dp),
                         contentScale = ContentScale.Fit,
                     )
+                    if (isChristmasHatEnabled) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_christmas_hat),
+                            contentDescription = null,
+                            tint = Color.Unspecified,
+                            modifier = Modifier
+                                .align(Alignment.TopEnd)
+                                .padding(4.dp)
+                                .size(22.dp)
+                        )
+                    }
                 }
             }
         }

@@ -137,7 +137,7 @@
     <string name="new_skin_dialog_navigate_button">Odkryj</string>
     <string name="new_skin_dialog_dismiss_button">Odrzuć</string>
     <string name="motion_quiet_mode_title">Tryb cichy</string>
-    <string name="motion_quiet_mode_summary">Zwierzaki pozostają na swoim miejscu. Nadal możesz je przeciągać, a ich animacja podąża za kierunkiem przeciągnięcia.</string>
+<string name="motion_quiet_mode_summary">Zwierzaki pozostają na swoim miejscu. Nadal możesz je przeciągać, a ich animacja podąża za kierunkiem przeciągnięcia.</string>
     <string name="imported_skin_file">Zaimportowano skina: %1$s</string>
     <string name="failed_to_import_skin_file">Nie udało się zaimportować wybranego pliku ZIP, PNG lub WebP</string>
     <string name="skin_detail_title">Szczegóły skina</string>
@@ -178,4 +178,9 @@
     <string name="action_scratch">Drapanie</string>
     <string name="action_yawn">Ziewanie</string>
     <string name="action_wall">Wspinaczka</string>
+
+    <string name="motion_christmas_hat_title">Czapka mikołaja 🎄</string>
+    <string name="motion_christmas_hat_summary">Sezonowy easter egg na Boże Narodzenie 2026 (Aktywny automatycznie w grudniu)</string>
+    <string name="christmas_easter_egg_enabled">🎄 Wesołych Świąt 2026! Założono czapkę mikołaja! 🎅</string>
+    <string name="christmas_easter_egg_disabled">Zdjęto czapkę mikołaja!</string>
 </resources>

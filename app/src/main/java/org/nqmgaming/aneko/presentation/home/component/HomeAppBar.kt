@@ -1,6 +1,8 @@
 package org.nqmgaming.aneko.presentation.home.component
 
 import android.content.Intent
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -14,6 +16,11 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -21,7 +28,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
+import androidx.preference.PreferenceManager
 import org.nqmgaming.aneko.R
+import org.nqmgaming.aneko.core.festive.ChristmasSeasonHelper
 import org.nqmgaming.aneko.core.util.extension.getStringResource
 import timber.log.Timber
 import java.util.Locale
@@ -34,15 +43,32 @@ fun HomeAppBar(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+    val prefs = remember {
+        PreferenceManager.getDefaultSharedPreferences(context)
+    }
+    var isHatEnabled by remember {
+        mutableStateOf(ChristmasSeasonHelper.isChristmasHatEnabled(prefs))
+    }
+    var tapCount by remember { mutableIntStateOf(0) }
 
     CenterAlignedTopAppBar(
         modifier = modifier,
         title = {
             Text(
-                text = stringResource(R.string.app_name),
+                text = if (isHatEnabled) "${stringResource(R.string.app_name)} 🎄" else stringResource(R.string.app_name),
                 style = MaterialTheme.typography.headlineSmall.copy(
                     fontWeight = FontWeight.Black
                 ),
+                modifier = Modifier.clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null
+                ) {
+                    tapCount++
+                    if (tapCount >= 5) {
+                        tapCount = 0
+                        isHatEnabled = ChristmasSeasonHelper.toggleChristmasHat(context, prefs)
+                    }
+                }
             )
         },
         navigationIcon = {

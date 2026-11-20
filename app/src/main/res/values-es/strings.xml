@@ -136,7 +136,7 @@
     <string name="new_skin_dialog_navigate_button">Explorar</string>
     <string name="new_skin_dialog_dismiss_button">Descartar</string>
     <string name="motion_quiet_mode_title">Modo silencioso</string>
-    <string name="motion_quiet_mode_summary">Mantén a las mascotas en su lugar. Aún puedes arrastrarlas, y su animación seguirá la dirección del arrastre.</string>
+<string name="motion_quiet_mode_summary">Mantén a las mascotas en su lugar. Aún puedes arrastrarlas, y su animación seguirá la dirección del arrastre.</string>
     <string name="imported_skin_file">Skin importado: %1$s</string>
     <string name="failed_to_import_skin_file">No se pudo importar el archivo ZIP, PNG o WebP seleccionado</string>
     <string name="skin_detail_title">Detalles del skin</string>
@@ -177,4 +177,9 @@
     <string name="action_scratch">Rascarse</string>
     <string name="action_yawn">Bostezar</string>
     <string name="action_wall">Trepar</string>
+
+    <string name="motion_christmas_hat_title">Gorro de Navidad 🎄</string>
+    <string name="motion_christmas_hat_summary">Huevo de pascua estacional para Navidad 2026 (Activo automáticamente en diciembre)</string>
+    <string name="christmas_easter_egg_enabled">🎄 ¡Feliz Navidad 2026! ¡Gorro de Navidad equipado! 🎅</string>
+    <string name="christmas_easter_egg_disabled">¡Gorro de Navidad retirado!</string>
 </resources>

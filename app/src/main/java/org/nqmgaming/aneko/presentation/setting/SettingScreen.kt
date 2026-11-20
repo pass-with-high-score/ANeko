@@ -14,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.preference.PreferenceManager
 import org.nqmgaming.aneko.R
+import org.nqmgaming.aneko.core.festive.ChristmasSeasonHelper
 import org.nqmgaming.aneko.core.service.AnimationService
 import org.nqmgaming.aneko.core.util.extension.getStringResource
 import org.nqmgaming.aneko.core.util.extension.openUrl
@@ -109,6 +110,19 @@ fun SettingsScreen(
                 icon = R.drawable.ic_keyboard,
                 key = AnimationService.PREF_KEY_BOTTOM_OFFSET,
                 defaultValue = false,
+                prefs = prefs
+            )
+            HorizontalDivider(
+                color = MaterialTheme.colorScheme.outline.copy(
+                    alpha = 0.5f
+                ),
+            )
+            SwitchPreferenceItem(
+                title = stringResource(R.string.motion_christmas_hat_title),
+                summary = stringResource(R.string.motion_christmas_hat_summary),
+                icon = R.drawable.ic_christmas_hat,
+                key = ChristmasSeasonHelper.PREF_KEY_CHRISTMAS_HAT,
+                defaultValue = ChristmasSeasonHelper.isChristmasHatEnabled(prefs),
                 prefs = prefs
             )
         }

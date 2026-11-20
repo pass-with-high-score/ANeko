@@ -140,7 +140,7 @@
     <string name="new_skins_available_title">新しい着せ替えを取得できます！</string>
     <string name="new_skin_dialog_navigate_button">連れて行ってください！</string>
     <string name="new_skin_dialog_dismiss_button">閉じる</string>
-    <string name="motion_quiet_mode_title">静音モード</string>
+<string name="motion_quiet_mode_title">静音モード</string>
     <string name="motion_quiet_mode_summary">ペットをその場に留めます。ドラッグすることはでき、アニメーションはドラッグした方向に従います。</string>
     <string name="imported_skin_file">着せ替えをインポートしました：%1$s</string>
     <string name="failed_to_import_skin_file">選択したZIP、PNG、またはWebPファイルのインポートに失敗しました</string>
@@ -182,4 +182,9 @@
     <string name="action_scratch">引っかく</string>
     <string name="action_yawn">あくび</string>
     <string name="action_wall">壁を登る</string>
+
+    <string name="motion_christmas_hat_title">サンタ帽子 🎄</string>
+    <string name="motion_christmas_hat_summary">2026年クリスマス限定イースターエッグ（12月は自動で有効）</string>
+    <string name="christmas_easter_egg_enabled">🎄 メリークリスマス2026！サンタ帽子をかぶせました！🎅</string>
+    <string name="christmas_easter_egg_disabled">サンタ帽子を脱ぎました！</string>
 </resources>

@@ -11,6 +11,7 @@ import android.graphics.drawable.AnimationDrawable
 import android.graphics.drawable.Drawable
 import android.os.SystemClock
 import androidx.core.graphics.drawable.toDrawable
+import org.nqmgaming.aneko.core.festive.ChristmasHatOverlay
 import java.io.File
 
 class MotionDrawable() : Drawable(), Animatable {
@@ -21,6 +22,18 @@ class MotionDrawable() : Drawable(), Animatable {
 
     // ----- State -----
     private val constantState = MotionConstantState()
+
+    var isChristmasHatEnabled: Boolean = false
+        set(value) {
+            if (field != value) {
+                field = value
+                constantState.propagateHatEnabled(value)
+                invalidateSelf()
+            }
+        }
+
+    var curFrameName: String? = null
+        private set
 
     private var curFrame = -1
     private var curRepeat = 0
@@ -51,7 +64,7 @@ class MotionDrawable() : Drawable(), Animatable {
         constantState.repeatCount = count
     }
 
-    fun addFrame(drawable: Drawable, duration: Int) {
+    fun addFrame(drawable: Drawable, duration: Int, name: String? = null) {
         var d = drawable
         if (d is AnimationDrawable) {
             val md = MotionDrawable(d)
@@ -60,9 +73,10 @@ class MotionDrawable() : Drawable(), Animatable {
         }
         if (d is MotionDrawable) {
             d.setOnMotionEndListener(childEnd)
+            d.isChristmasHatEnabled = isChristmasHatEnabled
         }
         d.callback = childCallback
-        constantState.addFrame(d, duration)
+        constantState.addFrame(d, duration, name)
     }
 
     private fun currentFrame(): Drawable? = constantState.getFrame(curFrame)
@@ -83,7 +97,12 @@ class MotionDrawable() : Drawable(), Animatable {
     override fun getConstantState(): ConstantState = constantState
 
     override fun draw(canvas: Canvas) {
-        currentFrame()?.draw(canvas)
+        val frame = currentFrame()
+        frame?.draw(canvas)
+        if (isChristmasHatEnabled && frame !is MotionDrawable) {
+            val frameName = curFrameName ?: constantState.getFrameName(curFrame.coerceAtLeast(0))
+            ChristmasHatOverlay.drawHat(canvas, bounds, frameName, alphaValue)
+        }
     }
 
     @Deprecated("Deprecated in Java but still required by Drawable contract")
@@ -181,6 +200,7 @@ class MotionDrawable() : Drawable(), Animatable {
 
         curFrame = next
         curRepeat = nextRepeat
+        curFrameName = constantState.getFrameName(next)
 
         val nextDrawable = constantState.getFrame(next)!!
         nextDrawable.setVisible(isVisible, true)
@@ -212,7 +232,7 @@ class MotionDrawable() : Drawable(), Animatable {
     }
 
     // ----- ConstantState -----
-    private class ItemInfo(val drawable: Drawable, val duration: Int)
+    private class ItemInfo(val drawable: Drawable, val duration: Int, val name: String? = null)
 
     private class MotionConstantState : ConstantState() {
         private val drawables = ArrayList<ItemInfo>()
@@ -224,8 +244,8 @@ class MotionDrawable() : Drawable(), Animatable {
         var totalDuration: Int = 0
         var repeatCount: Int = 1
 
-        fun addFrame(drawable: Drawable, duration: Int) {
-            drawables.add(ItemInfo(drawable, duration))
+        fun addFrame(drawable: Drawable, duration: Int, name: String? = null) {
+            drawables.add(ItemInfo(drawable, duration, name))
             totalDuration = if (duration >= 0 && totalDuration >= 0) {
                 totalDuration + duration
             } else {
@@ -245,9 +265,22 @@ class MotionDrawable() : Drawable(), Animatable {
             return if (i >= drawables.size) null else drawables[i].drawable
         }
 
+        fun getFrameName(idx: Int): String? {
+            val i = idx.coerceAtLeast(0)
+            return if (i >= drawables.size) null else drawables[i].name
+        }
+
         fun getFrameDuration(idx: Int): Int {
             val i = idx.coerceAtLeast(0)
             return if (i >= drawables.size) 0 else drawables[i].duration
+        }
+
+        fun propagateHatEnabled(enabled: Boolean) {
+            for (item in drawables) {
+                if (item.drawable is MotionDrawable) {
+                    item.drawable.isChristmasHatEnabled = enabled
+                }
+            }
         }
 
         val frameCount: Int get() = drawables.size
@@ -297,6 +330,6 @@ class MotionDrawable() : Drawable(), Animatable {
 
         val bmp = BitmapFactory.decodeFile(candidate.absolutePath) ?: return
         val dr = bmp.toDrawable(Resources.getSystem())
-        addFrame(dr, durationMs.coerceAtLeast(0))
+        addFrame(dr, durationMs.coerceAtLeast(0), base)
     }
 }

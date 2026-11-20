@@ -139,7 +139,7 @@
     <string name="new_skins_available_title">多款新皮肤可用！</string>
     <string name="new_skin_dialog_navigate_button">探索</string>
     <string name="new_skin_dialog_dismiss_button">忽略</string>
-    <string name="skin_detail_title">皮肤详情</string>
+<string name="skin_detail_title">皮肤详情</string>
     <string name="skin_preview_title">实时动画预览</string>
     <string name="skin_actions_title">动作动画</string>
     <string name="skin_gallery_title">精灵帧</string>
@@ -177,4 +177,9 @@
     <string name="action_scratch">抓挠</string>
     <string name="action_yawn">打哈欠</string>
     <string name="action_wall">爬墙</string>
+
+    <string name="motion_christmas_hat_title">圣诞帽 🎄</string>
+    <string name="motion_christmas_hat_summary">2026年圣诞节季节彩蛋（12月自动开启）</string>
+    <string name="christmas_easter_egg_enabled">🎄 2026圣诞快乐！已戴上圣诞帽！🎅</string>
+    <string name="christmas_easter_egg_disabled">已摘下圣诞帽！</string>
 </resources>
